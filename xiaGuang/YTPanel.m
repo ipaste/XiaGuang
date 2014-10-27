@@ -66,6 +66,7 @@
 }
 
 -(void)clickToButton:(UIButton *)sender{
+    sender.userInteractionEnabled = NO;
     CGRect frame = sender.frame;
     [UIView animateWithDuration:.5 animations:^{
         for (UIButton *tmpButton in _items) {
@@ -95,6 +96,7 @@
         if ([self.delegate respondsToSelector:@selector(clickedPanelAtIndex:)]) {
             [self.delegate clickedPanelAtIndex:currentButton.tag];
         }
+        currentButton.userInteractionEnabled = YES;
         currentButton.frame = frame;
         for (UIButton *tmpButton in _items) {
             if (![tmpButton isEqual:currentButton]) {

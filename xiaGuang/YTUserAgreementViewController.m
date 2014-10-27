@@ -22,21 +22,16 @@
     _scrollerView  = [[UIScrollView alloc]initWithFrame:self.view.bounds];
     _scrollerView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     [self.view addSubview:_scrollerView];
-    
-    
-    
+    self.automaticallyAdjustsScrollViewInsets = NO;
     _titleLabel = [[UILabel alloc]init];
-    
     [_scrollerView addSubview:_titleLabel];
 }
 
 -(void)viewWillLayoutSubviews{
-    CGFloat topHeight = [self.topLayoutGuide length];
     NSString *userAgreementPath = [[NSBundle mainBundle]pathForResource:@"userAgreement" ofType:@"txt"];
     NSString *text = [NSString stringWithContentsOfFile:userAgreementPath encoding:NSUTF8StringEncoding error:nil];
     CGSize textSize = [text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame) - 30, 2000) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],NSForegroundColorAttributeName : [UIColor colorWithString:@"202020"]} context:nil].size;
-    
-    _scrollerView.contentSize = CGSizeMake(CGRectGetWidth(_scrollerView.frame), textSize.height + topHeight + 25);
+    _scrollerView.contentSize = CGSizeMake(CGRectGetWidth(_scrollerView.frame), textSize.height + 100);
     
     
     _titleLabel.frame = CGRectMake(15, 25, 290, textSize.height);

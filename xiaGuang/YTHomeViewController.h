@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "YTPanel.h"
 #import "YTSettingViewController.h"
+#import "YTSearchViewController.h"
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTHomeViewController : UIViewController<YTPanelDelegate>
 
 

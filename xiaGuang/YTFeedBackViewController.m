@@ -21,27 +21,26 @@
     self.navigationItem.title = @"意见反馈";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"提交" style:UIBarButtonItemStyleDone target:self action:@selector(sender)];
     
-    _textView = [[UITextView alloc]initWithFrame:CGRectMake(-1, 20, CGRectGetWidth(self.view.frame) + 1, 160)];
+    _textView = [[UITextView alloc]initWithFrame:CGRectMake(0, 10, CGRectGetWidth(self.view.frame), 160)];
     _textView.textColor = [UIColor colorWithString:@"909090"];
     _textView.layer.borderWidth = 0.5;
     _textView.layer.borderColor = [UIColor colorWithString:@"dcdcdc"].CGColor;
     _textView.font = [UIFont systemFontOfSize:14];
     _textView.text = @"写写您使用感受和建议...";
     _textView.delegate = self;
+    _textView.textContainerInset = UIEdgeInsetsMake(15, 15, 0, 15);
     [self.view addSubview:_textView];
+    self.automaticallyAdjustsScrollViewInsets = NO;
    
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-     [_textView becomeFirstResponder];
-}
-- (void)viewWillLayoutSubviews{
     NSRange range;
     range.location = 0;
     range.length = 0;
     _textView.selectedRange = range;
-    _textView.textContainerInset = UIEdgeInsetsMake(15, 15, 0, 15);
-    
+     [_textView becomeFirstResponder];
+
 }
 
 - (void)sender{

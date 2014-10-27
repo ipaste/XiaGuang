@@ -21,8 +21,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.navigationItem.title = @"邀请好友使用虾逛";
-    _mainView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), 142)];
+    _mainView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 142)];
     _mainView.backgroundColor = [UIColor whiteColor];
     UIImageView *shadowView = [[UIImageView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_mainView.frame), CGRectGetWidth(_mainView.frame), 3)];
     shadowView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"set_img_shadow"]];
