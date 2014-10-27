@@ -1,0 +1,35 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "fill",
+          "width" : 10,
+          "height" : 4
+        },
+        "capInsets" : {
+          "bottom" : 43,
+          "top" : 41,
+          "right" : 42,
+          "left" : 40
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "shop_btn_nav_un@2x.png",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

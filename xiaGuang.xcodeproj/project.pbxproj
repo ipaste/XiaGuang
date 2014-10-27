@@ -7,13 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4BF7CC9BD04D8440972CC36F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DCAE2C2A48A5B340C97B34E /* libPods.a */; };
+		D9216C6B19FE2C5300AAF555 /* YTSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */; };
+		D9216C6E19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C6D19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m */; };
+		D9216C7819FE2CB800AAF555 /* YTFeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C7019FE2CB800AAF555 /* YTFeedBackViewController.m */; };
+		D9216C7919FE2CB800AAF555 /* YTInvitationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C7219FE2CB800AAF555 /* YTInvitationViewController.m */; };
+		D9216C7A19FE2CB800AAF555 /* YTUserAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C7419FE2CB800AAF555 /* YTUserAgreementViewController.m */; };
+		D9216C7B19FE2CB800AAF555 /* userAgreement.txt in Resources */ = {isa = PBXBuildFile; fileRef = D9216C7519FE2CB800AAF555 /* userAgreement.txt */; };
+		D9216C7C19FE2CB800AAF555 /* YTAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C7719FE2CB800AAF555 /* YTAboutViewController.m */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
 		D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BC19FA5825004128FD /* AppDelegate.m */; };
-		D93CE4C019FA5825004128FD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BF19FA5825004128FD /* ViewController.m */; };
-		D93CE4C319FA5825004128FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C119FA5825004128FD /* Main.storyboard */; };
+		D93CE4C019FA5825004128FD /* YTHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BF19FA5825004128FD /* YTHomeViewController.m */; };
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
-		D93CE4C819FA5825004128FD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C619FA5825004128FD /* LaunchScreen.xib */; };
 		D93CE4D419FA5825004128FD /* xiaGuangTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4D319FA5825004128FD /* xiaGuangTests.m */; };
+		D93CE4E019FA6095004128FD /* YTPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4DF19FA6095004128FD /* YTPanel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,19 +34,35 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		6DCAE2C2A48A5B340C97B34E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		D9216C6919FE2C5300AAF555 /* YTSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTSettingViewController.h; sourceTree = "<group>"; };
+		D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTSettingViewController.m; sourceTree = "<group>"; };
+		D9216C6C19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ExtensionColor_UIImage+ExtensionImage.h"; sourceTree = "<group>"; };
+		D9216C6D19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ExtensionColor_UIImage+ExtensionImage.m"; sourceTree = "<group>"; };
+		D9216C6F19FE2CB800AAF555 /* YTFeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTFeedBackViewController.h; sourceTree = "<group>"; };
+		D9216C7019FE2CB800AAF555 /* YTFeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTFeedBackViewController.m; sourceTree = "<group>"; };
+		D9216C7119FE2CB800AAF555 /* YTInvitationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTInvitationViewController.h; sourceTree = "<group>"; };
+		D9216C7219FE2CB800AAF555 /* YTInvitationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTInvitationViewController.m; sourceTree = "<group>"; };
+		D9216C7319FE2CB800AAF555 /* YTUserAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTUserAgreementViewController.h; sourceTree = "<group>"; };
+		D9216C7419FE2CB800AAF555 /* YTUserAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTUserAgreementViewController.m; sourceTree = "<group>"; };
+		D9216C7519FE2CB800AAF555 /* userAgreement.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = userAgreement.txt; sourceTree = "<group>"; };
+		D9216C7619FE2CB800AAF555 /* YTAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTAboutViewController.h; sourceTree = "<group>"; };
+		D9216C7719FE2CB800AAF555 /* YTAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTAboutViewController.m; sourceTree = "<group>"; };
 		D93CE4B419FA5825004128FD /* xiaGuang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xiaGuang.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D93CE4B919FA5825004128FD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D93CE4BB19FA5825004128FD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D93CE4BC19FA5825004128FD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D93CE4BE19FA5825004128FD /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D93CE4BF19FA5825004128FD /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		D93CE4C219FA5825004128FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D93CE4BE19FA5825004128FD /* YTHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTHomeViewController.h; sourceTree = "<group>"; };
+		D93CE4BF19FA5825004128FD /* YTHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTHomeViewController.m; sourceTree = "<group>"; };
 		D93CE4C419FA5825004128FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		D93CE4C719FA5825004128FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		D93CE4CD19FA5825004128FD /* xiaGuangTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xiaGuangTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4D219FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D93CE4D319FA5825004128FD /* xiaGuangTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xiaGuangTests.m; sourceTree = "<group>"; };
+		D93CE4DE19FA6095004128FD /* YTPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPanel.h; sourceTree = "<group>"; };
+		D93CE4DF19FA6095004128FD /* YTPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPanel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF7CC9BD04D8440972CC36F /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,12 +84,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		ACF92A6A230A5189D341655C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */,
+				C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6DCAE2C2A48A5B340C97B34E /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D9216C6819FE2C1D00AAF555 /* SettingVC */ = {
+			isa = PBXGroup;
+			children = (
+				D9216C6919FE2C5300AAF555 /* YTSettingViewController.h */,
+				D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */,
+				D9216C6F19FE2CB800AAF555 /* YTFeedBackViewController.h */,
+				D9216C7019FE2CB800AAF555 /* YTFeedBackViewController.m */,
+				D9216C7119FE2CB800AAF555 /* YTInvitationViewController.h */,
+				D9216C7219FE2CB800AAF555 /* YTInvitationViewController.m */,
+				D9216C7319FE2CB800AAF555 /* YTUserAgreementViewController.h */,
+				D9216C7419FE2CB800AAF555 /* YTUserAgreementViewController.m */,
+				D9216C7519FE2CB800AAF555 /* userAgreement.txt */,
+				D9216C7619FE2CB800AAF555 /* YTAboutViewController.h */,
+				D9216C7719FE2CB800AAF555 /* YTAboutViewController.m */,
+			);
+			name = SettingVC;
+			sourceTree = "<group>";
+		};
 		D93CE4AB19FA5824004128FD = {
 			isa = PBXGroup;
 			children = (
 				D93CE4B619FA5825004128FD /* xiaGuang */,
 				D93CE4D019FA5825004128FD /* xiaGuangTests */,
 				D93CE4B519FA5825004128FD /* Products */,
+				ACF92A6A230A5189D341655C /* Pods */,
+				C24C7B38DA5A13A70A15E2FD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,13 +142,15 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
+				D9216C6C19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.h */,
+				D9216C6D19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m */,
+				D9216C6819FE2C1D00AAF555 /* SettingVC */,
 				D93CE4BB19FA5825004128FD /* AppDelegate.h */,
 				D93CE4BC19FA5825004128FD /* AppDelegate.m */,
-				D93CE4BE19FA5825004128FD /* ViewController.h */,
-				D93CE4BF19FA5825004128FD /* ViewController.m */,
-				D93CE4C119FA5825004128FD /* Main.storyboard */,
+				D93CE4DD19FA5F0B004128FD /* subVlew */,
+				D93CE4BE19FA5825004128FD /* YTHomeViewController.h */,
+				D93CE4BF19FA5825004128FD /* YTHomeViewController.m */,
 				D93CE4C419FA5825004128FD /* Images.xcassets */,
-				D93CE4C619FA5825004128FD /* LaunchScreen.xib */,
 				D93CE4B719FA5825004128FD /* Supporting Files */,
 			);
 			path = xiaGuang;
@@ -119,6 +182,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D93CE4DD19FA5F0B004128FD /* subVlew */ = {
+			isa = PBXGroup;
+			children = (
+				D93CE4DE19FA6095004128FD /* YTPanel.h */,
+				D93CE4DF19FA6095004128FD /* YTPanel.m */,
+			);
+			name = subVlew;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -126,9 +198,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D93CE4D719FA5825004128FD /* Build configuration list for PBXNativeTarget "xiaGuang" */;
 			buildPhases = (
+				893BA81A2526C183EB214D59 /* Check Pods Manifest.lock */,
 				D93CE4B019FA5825004128FD /* Sources */,
 				D93CE4B119FA5825004128FD /* Frameworks */,
 				D93CE4B219FA5825004128FD /* Resources */,
+				8327A838B95A878356B338FE /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -168,6 +242,7 @@
 				TargetAttributes = {
 					D93CE4B319FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 8MJ58NP699;
 					};
 					D93CE4CC19FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
@@ -199,9 +274,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93CE4C319FA5825004128FD /* Main.storyboard in Resources */,
-				D93CE4C819FA5825004128FD /* LaunchScreen.xib in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
+				D9216C7B19FE2CB800AAF555 /* userAgreement.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,14 +288,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		8327A838B95A878356B338FE /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		893BA81A2526C183EB214D59 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D93CE4B019FA5825004128FD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93CE4C019FA5825004128FD /* ViewController.m in Sources */,
+				D9216C7919FE2CB800AAF555 /* YTInvitationViewController.m in Sources */,
+				D9216C7819FE2CB800AAF555 /* YTFeedBackViewController.m in Sources */,
+				D93CE4C019FA5825004128FD /* YTHomeViewController.m in Sources */,
+				D9216C6B19FE2C5300AAF555 /* YTSettingViewController.m in Sources */,
+				D93CE4E019FA6095004128FD /* YTPanel.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */,
 				D93CE4BA19FA5825004128FD /* main.m in Sources */,
+				D9216C7C19FE2CB800AAF555 /* YTAboutViewController.m in Sources */,
+				D9216C7A19FE2CB800AAF555 /* YTUserAgreementViewController.m in Sources */,
+				D9216C6E19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,25 +356,6 @@
 			targetProxy = D93CE4CE19FA5825004128FD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		D93CE4C119FA5825004128FD /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D93CE4C219FA5825004128FD /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		D93CE4C619FA5825004128FD /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D93CE4C719FA5825004128FD /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D93CE4D519FA5825004128FD /* Debug */ = {
@@ -341,9 +436,13 @@
 		};
 		D93CE4D819FA5825004128FD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = xiaGuang/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -351,9 +450,13 @@
 		};
 		D93CE4D919FA5825004128FD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = xiaGuang/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -412,6 +515,7 @@
 				D93CE4D919FA5825004128FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D93CE4DA19FA5825004128FD /* Build configuration list for PBXNativeTarget "xiaGuangTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +524,7 @@
 				D93CE4DC19FA5825004128FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

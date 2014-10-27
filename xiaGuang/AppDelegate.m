@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "YTHomeViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -17,6 +17,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc]init];
+    self.window.frame = [UIScreen mainScreen].bounds;
+    self.window.backgroundColor = [UIColor blackColor];
+    self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[YTHomeViewController alloc]init]];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

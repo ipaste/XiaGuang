@@ -1,0 +1,35 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "fill",
+          "width" : 8,
+          "height" : 3
+        },
+        "capInsets" : {
+          "bottom" : 28,
+          "top" : 27,
+          "right" : 28,
+          "left" : 30
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "search_btn_pr@2x.png",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}
