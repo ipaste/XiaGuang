@@ -32,7 +32,7 @@
             button.backgroundColor = [UIColor redColor];
             button.tag = i;
             [button addTarget:self action:@selector(clickToButton:) forControlEvents:UIControlEventTouchUpInside];
-            [_background addSubview:button];
+            [self addSubview:button];
             [_items addObject:button];
         }
         [self setButtonPosition];
@@ -78,14 +78,23 @@
         [UIView animateWithDuration:.5 animations:^{
             sender.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
         } completion:^(BOOL finished) {
+            _background.hidden = YES;
             CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-            scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(5.0, 5.0, 1.0)];
-            scaleAnimation.duration = .5;
-            scaleAnimation.repeatCount = 1;
-            scaleAnimation.delegate = self;
-            [scaleAnimation setValue:[NSValue valueWithCGRect:frame] forKey:@"Identity"];
-            [scaleAnimation setValue:sender forKey:@"animtionWithObject"];
-            [sender.layer addAnimation:scaleAnimation forKey:@"scale"];
+            scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(10.0, 10.0, 1.0)];
+            
+            
+            CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            opacityAnimation.toValue = [NSNumber numberWithFloat:0.0f];
+            
+            CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+            animationGroup.animations = @[scaleAnimation,opacityAnimation];
+            animationGroup.delegate = self;
+            animationGroup.duration = .5;
+            animationGroup.repeatCount = 1;
+            [animationGroup setValue:[NSValue valueWithCGRect:frame] forKey:@"Identity"];
+            [animationGroup setValue:sender forKey:@"animtionWithObject"];
+            [sender.layer addAnimation:animationGroup forKey:@"group"];
+            
         }];
     }];
 }
@@ -98,6 +107,7 @@
         }
         currentButton.userInteractionEnabled = YES;
         currentButton.frame = frame;
+        _background.hidden = NO;
         for (UIButton *tmpButton in _items) {
             if (![tmpButton isEqual:currentButton]) {
                 tmpButton.alpha = 1;
