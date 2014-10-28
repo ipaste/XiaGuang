@@ -13,6 +13,7 @@
 #import "MJRefreshBaseView.h"
 #import "MJRefreshConst.h"
 #import "UIView+MJExtension.h"
+#import <objc/message.h>
 #import "UIScrollView+MJExtension.h"
 
 @interface  MJRefreshBaseView()
@@ -255,8 +256,7 @@ typedef void (*send_type)(void *, SEL, UIView *);
             
             // 回调
             if ([self.beginRefreshingTaget respondsToSelector:self.beginRefreshingAction]) {
-                
-               // objc_msgSend(self.beginRefreshingTaget, self.beginRefreshingAction, self);
+                objc_msgSend(self.beginRefreshingTaget, self.beginRefreshingAction, self);
             }
             
             if (self.beginRefreshingCallback) {
