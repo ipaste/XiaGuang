@@ -82,7 +82,6 @@
             CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
             scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(10.0, 10.0, 1.0)];
             
-            
             CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
             opacityAnimation.toValue = [NSNumber numberWithFloat:0.0f];
             

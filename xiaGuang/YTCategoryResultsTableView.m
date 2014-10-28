@@ -122,8 +122,8 @@
 
             }
         }
-        _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 44 * _floorObjects.count);
-        height = CGRectGetHeight(_floorView.frame);
+        height = 44 * _floorObjects.count > 274 ? 274:44 * _floorObjects.count;
+        _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
         [_floorView reloadData];
 
     }else if (style == YTCategoryResultsStyleAllMall){
@@ -143,8 +143,8 @@
             [_mallObjects addObject:[mall mallName]];
         }
         [_mallObjects insertObject:@"全部商圈" atIndex:0];
+        height = 44 * _floorObjects.count > 274 ? 274:44 * _floorObjects.count;
         _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 44 * _mallObjects.count);
-         height = CGRectGetHeight(_mallView.frame);
         [_mallView reloadData];
     }
     [UIView animateWithDuration:.5 animations:^{

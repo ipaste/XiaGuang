@@ -84,22 +84,27 @@
     [_addressLable setTextColor:[UIColor colorWithString:@"aaaaaa"]];
     
     NSArray *subType = [self.merchant type];
+    UIImageView *beforeImageView = nil;
     for (int i = 0; i < _subCategoryImageView.count; i++) {
         UIImageView *imageView = _subCategoryImageView[i];
         if ( i < subType.count ) {
             imageView.hidden = NO;
             NSString *typeName = subType[i];
-            CGRect frame = CGRectZero;
+            CGRect frame = CGRectMake(0, CGRectGetMaxY(_addressLable.frame) + 8, 0, 16);;
             UIImage *image = nil;
             if (typeName.length > 2) {
-                frame = CGRectMake(CGRectGetMinX(_addressLable.frame) + i * 47, CGRectGetMaxY(_addressLable.frame) + 8, 60, 16);
+                frame.origin.x = CGRectGetMaxX(beforeImageView.frame) == 0 ? CGRectGetMinX(_addressLable.frame):CGRectGetMaxX(beforeImageView.frame) + 5;
+                frame.size.width = 60;
                 image = [UIImage imageNamed:@"shop_img_label_4"];
             }else{
-                frame = CGRectMake(CGRectGetMinX(_addressLable.frame) + i * 47, CGRectGetMaxY(_addressLable.frame) + 8, 42, 16);
+                frame.origin.x = CGRectGetMaxX(beforeImageView.frame) == 0 ? CGRectGetMinX(_addressLable.frame):CGRectGetMaxX(beforeImageView.frame) + 5;
+                frame.size.width = 42;
                 image = [UIImage imageNamed:@"shop_img_label_2"];
             }
+
             imageView.image = image;
             imageView.frame = frame;
+            beforeImageView = imageView;
             
             UILabel *label = _subCategoryLabel[i];
             label.text = subType[i];

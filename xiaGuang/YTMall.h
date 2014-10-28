@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
+#define MERCHANTLOCATION_CLASS_NAME @"MerchantLocation"
+#define MERCHANTLOCATION_CLASS_MALL_KEY @"Mall"
 @protocol YTMall <NSObject>
 
 @property(weak,nonatomic)NSString *identifier;
@@ -23,7 +25,7 @@
 @property(nonatomic)CLLocationCoordinate2D coord;
 
 
--(void)getMallInfoTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
+-(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getInfoBackgroundImageWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)iconsFromStartIndex:(int)start
