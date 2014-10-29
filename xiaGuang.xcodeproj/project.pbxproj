@@ -55,6 +55,11 @@
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
 		D93CE4D419FA5825004128FD /* xiaGuangTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4D319FA5825004128FD /* xiaGuangTests.m */; };
 		D93CE4E019FA6095004128FD /* YTPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4DF19FA6095004128FD /* YTPanel.m */; };
+		D9A2AF0319FF3A6500AF61D7 /* YTMallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0219FF3A6500AF61D7 /* YTMallViewController.m */; };
+		D9A2AF0619FF3ACA00AF61D7 /* YTMallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0519FF3ACA00AF61D7 /* YTMallCell.m */; };
+		D9A2AF0919FF3B0700AF61D7 /* YTMallMerchantBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0819FF3B0700AF61D7 /* YTMallMerchantBundle.m */; };
+		D9A2AF0C19FF3B6000AF61D7 /* YTMallInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0B19FF3B6000AF61D7 /* YTMallInfoViewController.m */; };
+		D9A2AF0F19FF3BA400AF61D7 /* YTMoreCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0E19FF3BA400AF61D7 /* YTMoreCategoryViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +177,16 @@
 		D93CE4D319FA5825004128FD /* xiaGuangTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xiaGuangTests.m; sourceTree = "<group>"; };
 		D93CE4DE19FA6095004128FD /* YTPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPanel.h; sourceTree = "<group>"; };
 		D93CE4DF19FA6095004128FD /* YTPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPanel.m; sourceTree = "<group>"; };
+		D9A2AF0119FF3A6500AF61D7 /* YTMallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallViewController.h; sourceTree = "<group>"; };
+		D9A2AF0219FF3A6500AF61D7 /* YTMallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallViewController.m; sourceTree = "<group>"; };
+		D9A2AF0419FF3ACA00AF61D7 /* YTMallCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallCell.h; sourceTree = "<group>"; };
+		D9A2AF0519FF3ACA00AF61D7 /* YTMallCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallCell.m; sourceTree = "<group>"; };
+		D9A2AF0719FF3B0700AF61D7 /* YTMallMerchantBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallMerchantBundle.h; sourceTree = "<group>"; };
+		D9A2AF0819FF3B0700AF61D7 /* YTMallMerchantBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallMerchantBundle.m; sourceTree = "<group>"; };
+		D9A2AF0A19FF3B6000AF61D7 /* YTMallInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallInfoViewController.h; sourceTree = "<group>"; };
+		D9A2AF0B19FF3B6000AF61D7 /* YTMallInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallInfoViewController.m; sourceTree = "<group>"; };
+		D9A2AF0D19FF3BA400AF61D7 /* YTMoreCategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMoreCategoryViewController.h; sourceTree = "<group>"; };
+		D9A2AF0E19FF3BA400AF61D7 /* YTMoreCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMoreCategoryViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -361,6 +376,7 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
+				D9A2AF0019FF3A2800AF61D7 /* MallVC */,
 				D9216D1F19FE444500AAF555 /* Extension */,
 				D9216CF819FE408700AAF555 /* MapVC */,
 				D9216CD719FE3EE000AAF555 /* DB */,
@@ -413,6 +429,23 @@
 				D93CE4DF19FA6095004128FD /* YTPanel.m */,
 			);
 			name = subVlew;
+			sourceTree = "<group>";
+		};
+		D9A2AF0019FF3A2800AF61D7 /* MallVC */ = {
+			isa = PBXGroup;
+			children = (
+				D9A2AF0D19FF3BA400AF61D7 /* YTMoreCategoryViewController.h */,
+				D9A2AF0E19FF3BA400AF61D7 /* YTMoreCategoryViewController.m */,
+				D9A2AF0A19FF3B6000AF61D7 /* YTMallInfoViewController.h */,
+				D9A2AF0B19FF3B6000AF61D7 /* YTMallInfoViewController.m */,
+				D9A2AF0119FF3A6500AF61D7 /* YTMallViewController.h */,
+				D9A2AF0219FF3A6500AF61D7 /* YTMallViewController.m */,
+				D9A2AF0719FF3B0700AF61D7 /* YTMallMerchantBundle.h */,
+				D9A2AF0819FF3B0700AF61D7 /* YTMallMerchantBundle.m */,
+				D9A2AF0419FF3ACA00AF61D7 /* YTMallCell.h */,
+				D9A2AF0519FF3ACA00AF61D7 /* YTMallCell.m */,
+			);
+			name = MallVC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -555,6 +588,7 @@
 			files = (
 				D9216D3619FE446000AAF555 /* MJRefreshHeaderView.m in Sources */,
 				D9216CF419FE3F4C00AAF555 /* YTSearchDetailsView.m in Sources */,
+				D9A2AF0F19FF3BA400AF61D7 /* YTMoreCategoryViewController.m in Sources */,
 				D9216D0219FE425C00AAF555 /* YTCloudMerchant.m in Sources */,
 				D9216C7919FE2CB800AAF555 /* YTInvitationViewController.m in Sources */,
 				D9216D3319FE446000AAF555 /* MJRefreshBaseView.m in Sources */,
@@ -570,11 +604,15 @@
 				D9216CE919FE3F0B00AAF555 /* YTCategoryViewCell.m in Sources */,
 				D9216CDB19FE3EF000AAF555 /* YTDBManager.m in Sources */,
 				D93CE4E019FA6095004128FD /* YTPanel.m in Sources */,
+				D9A2AF0C19FF3B6000AF61D7 /* YTMallInfoViewController.m in Sources */,
 				D9216CEE19FE3F2E00AAF555 /* YTSearchView.m in Sources */,
+				D9A2AF0619FF3ACA00AF61D7 /* YTMallCell.m in Sources */,
 				D9216CEB19FE3F0B00AAF555 /* YTSelectCategoryViewCell.m in Sources */,
 				D9216D1419FE42B000AAF555 /* YTCloudBeacon.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */,
+				D9A2AF0319FF3A6500AF61D7 /* YTMallViewController.m in Sources */,
 				D9216CC119FE3EBE00AAF555 /* YTCommonlyUsed.m in Sources */,
+				D9A2AF0919FF3B0700AF61D7 /* YTMallMerchantBundle.m in Sources */,
 				D9216D1B19FE43B900AAF555 /* YTMerchantViewCell.m in Sources */,
 				D9216D0E19FE429900AAF555 /* YTCloudMinorArea.m in Sources */,
 				D9216D1819FE430000AAF555 /* YTFileManager.m in Sources */,
@@ -699,6 +737,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				INFOPLIST_FILE = xiaGuang/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -713,6 +752,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				INFOPLIST_FILE = xiaGuang/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

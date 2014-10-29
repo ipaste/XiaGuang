@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "YTMall.h"
+
 @class YTSearchView;
 @protocol YTSearchViewDelegate <NSObject>
 @optional
@@ -20,7 +21,7 @@
 @property (weak,nonatomic) id<YTSearchViewDelegate> delegate;
 
 // mall == nil ? searchAllMall : searchMall
--(instancetype)initWithMall:(id<YTMall>)mall placeholder:(NSString *)placeholder;
+-(instancetype)initWithMall:(id<YTMall>)mall placeholder:(NSString *)placeholder indent:(BOOL)indent;
 
 
 //image == nil 背景为透明

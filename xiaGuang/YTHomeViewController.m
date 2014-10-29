@@ -63,7 +63,7 @@
     UIViewController *controller = nil;
     switch (index) {
         case 0:
-            
+            controller = [[YTMallViewController alloc]init];
             break;
         case 1:
             

@@ -49,7 +49,7 @@
     _categorys = [YTCategory allCategorys];
     
     _isManualSwitch = YES;
-    _searchView = [[YTSearchView alloc]initWithMall:nil placeholder:@"搜索"];
+    _searchView = [[YTSearchView alloc]initWithMall:nil placeholder:@"搜索" indent:YES];
     _searchView.delegate = self;
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:YES];
     

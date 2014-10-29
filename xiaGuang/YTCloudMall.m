@@ -241,8 +241,8 @@
 }
 
 
--(void)getMallInfoTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];
+-(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
+    AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
     [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         
         if(error != nil){

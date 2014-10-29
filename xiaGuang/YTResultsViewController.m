@@ -154,7 +154,6 @@
 
 
 -(void)pullToRefresh{
-    
     if (!_isLoading) {
         _isLoading = YES;
         [self getMerchantsWithSkip:(int)_merchants.count numbers:10 andBlock:^(NSArray *merchants) {

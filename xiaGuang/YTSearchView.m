@@ -19,16 +19,27 @@
     UIButton *_cancelButton;
     BOOL _isAddInNavigationBar;
     BOOL _displayFirstResponder;
+    BOOL _isIndent;
     YTSearchDetailsView *_detailsView;
+    CGFloat _searchBarWidth;
 }
 @end
 @implementation YTSearchView
--(instancetype)initWithMall:(id<YTMall>)mall placeholder:(NSString *)placeholder{
+-(instancetype)initWithMall:(id<YTMall>)mall placeholder:(NSString *)placeholder indent:(BOOL)indent{
     _mall = mall;
     CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds);
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
-        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(-10,27, CGRectGetWidth(self.frame) - 40, 30)];
+        CGFloat searchBarX = 0;
+        _searchBarWidth =  CGRectGetWidth(self.frame);
+        CGFloat cancelX = CGRectGetWidth(self.frame)- 45;
+        if (indent) {
+            _isIndent = indent;
+            searchBarX = -10;
+            _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
+            cancelX = CGRectGetWidth(self.frame)- 85;
+        }
+        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(searchBarX,27, _searchBarWidth, 30)];
         _placeholder = placeholder;
         _searchBar.delegate = self;
         _searchBar.placeholder = @"搜索";
@@ -47,7 +58,7 @@
         _searchClearButton.hidden = YES;
         [_searchBar addSubview:_searchClearButton];
         
-        _cancelButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - 85, 20, 30, 40)];
+        _cancelButton = [[UIButton alloc]initWithFrame:CGRectMake(cancelX, 20, 30, 40)];
         _cancelButton.hidden = YES;
         [_cancelButton addTarget:self action:@selector(clickCancelButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_cancelButton];
@@ -85,8 +96,10 @@
 -(void)addInNavigationBar:(UINavigationBar *)naviBar show:(BOOL)show{
     _isAddInNavigationBar = YES;
     CGRect frame = self.frame;
+    if (_isIndent) {
+        frame.origin.x = 40;
+    }
     frame.origin.y -= 20;
-    frame.origin.x = 40;
     frame.size.height = CGRectGetHeight(naviBar.frame) + 20;
     self.frame = frame;
     [naviBar addSubview:self];
@@ -166,7 +179,7 @@
     _detailsView.hidden = NO;
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _searchTextField.frame;
-        frame.size.width = 230;
+        frame.size.width = frame.size.width - 43;
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         _cancelButton.hidden = NO;
@@ -221,7 +234,7 @@
     }
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = _searchTextField.frame;
-        frame.size.width = 264;
+        frame.size.width = _searchBarWidth - 20;
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         if (completion != nil) {
