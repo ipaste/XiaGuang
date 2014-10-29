@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "YTHomeViewController.h"
+#import "YTNavigationController.h"
 #import <AVOSCloud/AVOSCloud.h>
 @interface AppDelegate ()
 
@@ -22,7 +22,7 @@
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
     self.window.backgroundColor = [UIColor blackColor];
-    self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[YTHomeViewController alloc]init]];
+    self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
     return YES;
 }

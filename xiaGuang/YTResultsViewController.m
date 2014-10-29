@@ -74,7 +74,7 @@
     [super viewDidLoad];
     
     self.navigationItem.title = @"搜索结果";
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
+
     _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
     
     _tableView.delegate = self;

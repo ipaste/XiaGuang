@@ -17,18 +17,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
+    [self.view addSubview:backgroundView];
+    
     // Do any additional setup after loading the view, typically from a nib.
     _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, 300, 300) items:@[@"商城",@"停车",@"设置",@"地图"]];
     _panel.delegate = self;
     [self.view addSubview:_panel];
     
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
     self.navigationItem.title = @"虾逛";
     self.view.backgroundColor = [UIColor whiteColor];
+    
+    
+    
 }
 
 - (void)viewWillLayoutSubviews{
@@ -39,7 +45,7 @@
 -(UIView *)leftBarButtonItemCustomView{
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, 60, 40)];
     [leftButton setTitle:@"深圳" forState:UIControlStateNormal];
-    [leftButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [leftButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
     [leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [leftButton setTitleColor:[UIColor colorWithString:@"#fac890"] forState:UIControlStateHighlighted];
     [leftButton setTitleEdgeInsets:UIEdgeInsetsMake(0 , -10, 0, 0)];
@@ -74,9 +80,13 @@
         }
             break;
         case 3:
-            
-            break;
+        {
+            controller = [[YTMapViewController2 alloc]initWithMinorArea:nil];
+            [self presentViewController:controller animated:NO completion:nil];
+        }
+            return;
     }
+    
     [self.navigationController pushViewController:controller animated:NO];
 }
 
@@ -84,4 +94,5 @@
     YTSearchViewController *searchVC = [[YTSearchViewController alloc]init];
     [self.navigationController pushViewController:searchVC animated:YES];
 }
+
 @end

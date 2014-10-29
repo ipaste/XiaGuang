@@ -50,9 +50,6 @@
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
-    [_mall getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
-        [self.navigationController.navigationBar setBackgroundImage:result forBarMetrics:UIBarMetricsDefault];
-    }];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
