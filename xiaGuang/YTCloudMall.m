@@ -235,11 +235,19 @@
     }
 }
 
--(UIImage *)mallInfoTitleImage{
-    AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];
-    return  [UIImage imageWithData:[file getData]];
-}
 
+-(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback{
+    AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if(error != nil){
+            callback(nil,error);
+            return;
+        }
+        
+        UIImage *mallImage = [UIImage imageWithData:data];
+        callback(mallImage,nil);
+    }];
+}
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
     AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];

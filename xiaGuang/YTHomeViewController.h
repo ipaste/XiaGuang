@@ -13,6 +13,7 @@
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
 #import "YTMallViewController.h"
+#import "YTBluetoothManager.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTHomeViewController : UIViewController<YTPanelDelegate>
 

@@ -10,12 +10,6 @@
 #import "YTMall.h"
 #import "YTMerchant.h"
 #import "YTMallMerchantBundle.h"
-
-@protocol YTMallDelegate <NSObject>
--(void)selectMerchant:(id<YTMerchant>)merchant;
-@end
-
 @interface YTMallCell : UITableViewCell<UIScrollViewDelegate>
-@property (weak,nonatomic) id<YTMallDelegate> delegate;
-@property (nonatomic,weak) YTMallMerchantBundle *mallMerchantBundle;
+@property (nonatomic,strong) YTMallMerchantBundle *mallMerchantBundle;
 @end

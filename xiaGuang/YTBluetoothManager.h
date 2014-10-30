@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-extern NSString *const YTBluetoothStateHasChangedNotification;
 typedef void(^YTBluetoothCallBack)(BOOL isOpen);
+
 @interface YTBluetoothManager : NSObject
+
 +(instancetype)shareBluetoothManager;
 -(void)refreshBluetoothState;
 -(void)refreshBluetoothStateForCallBack:(YTBluetoothCallBack)callback;
+
+extern NSString *const YTBluetoothStateHasChangedNotification;
 @end

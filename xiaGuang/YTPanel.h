@@ -17,5 +17,8 @@
 
 // items for NSString class the Array
 -(instancetype)initWithFrame:(CGRect)frame items:(NSArray *)itmes;
--(void)setItemsTheImage:(NSArray *)images;
+-(void)setItemsTheImage:(NSArray *)images highlightImages:(NSArray *)highlightImages;
+-(void)setBluetoothState:(BOOL)on;
+-(void)startAnimationWithBackgroundAndCircle;
+-(void)stopAnimationWithBackgroundAndCircle;
 @end

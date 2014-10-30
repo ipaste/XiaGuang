@@ -35,7 +35,6 @@
     [super viewDidLoad];
     _scrollView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
     _scrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    //_locationViewManager = [[YTMallLocationViewManager alloc]initWithMall:self.mall];
     _searchView = [[YTSearchView alloc]initWithMall:self.mall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"]];
@@ -58,20 +57,9 @@
 }
 #pragma mark Navigation
 -(void)setNavigation{
-    NSDictionary *attributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
-    [self.navigationController.navigationBar setTitleTextAttributes:attributes];
-    self.navigationItem.titleView = [self titleView];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButton]];
 }
--(UIView *)titleView{
-    UIImage *titleImage = [_mall mallInfoTitleImage];
-    UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
-    UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, titleImage.size.width / 2, titleImage.size.height / 2)];
-    titleImageView.center = titleView.center;
-    titleImageView.image = titleImage;
-    [titleView addSubview:titleImageView];
-    return titleView;
-}
+
 
 -(UIView *)rightBarButton{
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];

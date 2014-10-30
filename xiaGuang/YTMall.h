@@ -27,6 +27,7 @@
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
+-(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback;
 -(void)getInfoBackgroundImageWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)iconsFromStartIndex:(int)start
                      toEnd:(int)end

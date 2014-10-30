@@ -29,6 +29,7 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
 }
 
 -(void)refreshBluetoothState{
+    
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
    [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
 }
@@ -88,7 +89,6 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
         [timer invalidate];
     }
 }
-
 
 
 @end

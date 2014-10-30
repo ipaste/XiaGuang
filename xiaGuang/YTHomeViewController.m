@@ -7,9 +7,14 @@
 //
 
 #import "YTHomeViewController.h"
-
+#define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
+#define PANEL_SIZE 250
 @interface YTHomeViewController (){
     YTPanel *_panel;
+    UIViewController *_mapViewController;
+    YTBluetoothManager *_bluetoothManager;
+    
+    BOOL _blueToothOn;
 }
 @end
 
@@ -17,12 +22,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
-    [self.view addSubview:backgroundView];
-    
     // Do any additional setup after loading the view, typically from a nib.
-    _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, 300, 300) items:@[@"商城",@"停车",@"设置",@"地图"]];
+    _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, PANEL_SIZE, PANEL_SIZE) items:@[@"商城",@"停车",@"设置",@"地图"]];
+    [_panel setItemsTheImage:@[[UIImage imageNamed:@"home_ico_mall_pr"],[UIImage imageNamed:@"home_ico_parking_pr"],[UIImage imageNamed:@"home_ico_set_pr"],[UIImage imageNamed:@"home_ico_map_pr"]] highlightImages:@[[UIImage imageNamed:@"home_ico_mall_un"],[UIImage imageNamed:@"home_ico_parking_un"],[UIImage imageNamed:@"home_ico_set_un"],[UIImage imageNamed:@"home_ico_map_un"]]];
     _panel.delegate = self;
     [self.view addSubview:_panel];
     
@@ -33,13 +35,24 @@
     self.navigationItem.title = @"虾逛";
     self.view.backgroundColor = [UIColor whiteColor];
     
-    
-    
+    _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [_panel startAnimationWithBackgroundAndCircle];
+}
+
+
 - (void)viewWillLayoutSubviews{
-    _panel.center = CGPointMake(self.view.center.x, self.view.center.y - 64);
-    
+    CGFloat y = 0;
+    if (BIGGER_THEN_IPHONE5) {
+        y = CGRectGetHeight(self.view.frame) - 165 - PANEL_SIZE / 2;
+    }else{
+        y = CGRectGetHeight(self.view.frame) - 100 - PANEL_SIZE / 2;
+    }
+    _panel.center = CGPointMake(self.view.center.x, y);
 }
 
 -(UIView *)leftBarButtonItemCustomView{
@@ -81,12 +94,15 @@
             break;
         case 3:
         {
-            controller = [[YTMapViewController2 alloc]initWithMinorArea:nil];
-            [self presentViewController:controller animated:NO completion:nil];
+            if (_mapViewController == nil) {
+                _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:nil];
+            }
+            [self presentViewController:_mapViewController animated:NO completion:nil];
         }
             return;
     }
-    
+    if(controller == nil) return;
+    [_panel stopAnimationWithBackgroundAndCircle];
     [self.navigationController pushViewController:controller animated:NO];
 }
 
@@ -95,4 +111,16 @@
     [self.navigationController pushViewController:searchVC animated:YES];
 }
 
+-(void)detectedBluetoothStateHasChanged:(NSNotification *)notification{
+    NSDictionary *userInfo = notification.userInfo;
+    BOOL isOpen = [userInfo[@"isOpen"] boolValue];
+    _blueToothOn = isOpen;
+    [_panel setBluetoothState:isOpen];
+}
+-(BOOL)prefersStatusBarHidden{
+    return NO;
+}
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
+}
 @end

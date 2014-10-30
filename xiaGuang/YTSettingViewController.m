@@ -12,8 +12,11 @@
 #import "YTInvitationViewController.h"
 #import "YTAboutViewController.h"
 #import "YTFeedBackViewController.h"
+#import <POP.h>
 @interface YTSettingViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
+    CGFloat _duration;
+    BOOL _isShowAnimation;
 }
 @end
 
@@ -21,15 +24,27 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _duration = 0.0f;
+    _isShowAnimation = YES;
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    [_tableView setBackgroundColor:[UIColor clearColor]];
+    //_tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     _tableView.separatorColor = [UIColor colorWithString:@"dcdcdc"];
     [self.view addSubview:_tableView];
     self.navigationItem.title = @"设置";
 }
 
+-(void)viewWillLayoutSubviews{
+    CGFloat topHeight = [self.topLayoutGuide length];
+    CGRect frame = _tableView.frame;
+    frame.origin.y = topHeight;
+    frame.size.height = CGRectGetHeight(self.view.bounds) - topHeight;
+    _tableView.frame = frame;
+    
+
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 3;
 }
@@ -51,12 +66,28 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"Cell"];
+    [cell pop_animationForKey:@"show"];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     UIView *selectView = [[UIView alloc]initWithFrame:CGRectZero];
-    selectView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_2_pr"]];
+    //selectView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_2_pr"]];
+    [selectView setBackgroundColor:[UIColor colorWithString:@"e95e37"]];
     cell.selectedBackgroundView = selectView;
-    cell.textLabel.textColor = [UIColor colorWithString:@"202020"];
+    cell.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    
+    //cellAnimation
+    if (_isShowAnimation) {
+        _duration += 0.2;
+        POPBasicAnimation *showAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
+        showAnimation.fromValue = [NSNumber numberWithFloat:CGRectGetWidth(tableView.frame)];
+        showAnimation.toValue = [NSNumber numberWithFloat:CGRectGetWidth(tableView.frame) / 2];
+        showAnimation.duration = _duration;
+        showAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        [cell.layer pop_addAnimation:showAnimation forKey:@"show"];
+    }
+    
+    //cell.textLabel.textColor = [UIColor colorWithString:@"202020"];
     if (indexPath.section == 0) {
         cell.textLabel.text = @"邀请好友使用虾逛";
     }else if (indexPath.section == 1) {
@@ -79,7 +110,8 @@
                     [latestBtn setTitle:@"新版本" forState:UIControlStateNormal];
                     [latestBtn.titleLabel setFont:[UIFont systemFontOfSize:11]];
                     [latestBtn setTitleColor:[UIColor colorWithString:@"ffffff"] forState:UIControlStateNormal];
-                    [latestBtn setBackgroundColor:[UIColor colorWithString:@"e95e37"]];
+                    //[latestBtn setBackgroundColor:[UIColor colorWithString:@"e95e37"]];
+                    [latestBtn setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]];
                     latestBtn.layer.cornerRadius = CGRectGetHeight(latestBtn.frame) / 2;
                     [cell addSubview:latestBtn];
                 }else{
@@ -97,6 +129,7 @@
                 break;
             case 2:
                 cell.textLabel.text = @"用户协议";
+                _isShowAnimation = NO;
                 break;
         }
     }
