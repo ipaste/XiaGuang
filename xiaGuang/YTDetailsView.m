@@ -14,7 +14,7 @@
     UILabel *_label;
     UIButton *_startNavigationButton;
     UIImageView *_merchantLogo;
-    id<YTMerchantLocation> _merchantLocation;
+    id<YTPoiSource> _poiSource;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -62,13 +62,19 @@
     [merchantLocation getCloudMerchantTypeWithCallBack:^(NSArray *result, NSError *error) {
         [self setType:result];
     }];
-    _merchantLocation = merchantLocation;
+    _poiSource = merchantLocation;
 }
 
 
 -(void)setCommonPoi:(id<YTPoiSource>)poi{
-    _label.text = @"厕所";
-    _merchantLogo.image = [UIImage imageNamed:@"nav_ico_9"];
+    if([poi isMemberOfClass:[YTLocalMerchantInstance class]]){
+        [self setMerchantInfo:(id<YTMerchantLocation>)poi];
+        return;
+    }
+    _label.text = poi.name;
+    _merchantLogo.image = [UIImage imageNamed:poi.iconName];
+    _poiSource = poi;
+    [self setType:@[@"公共设施"]];
 }
 
 -(void)setPoiSource:(id<YTPoiSource>)source{
@@ -76,7 +82,7 @@
 }
 
 -(void)clickStartNavigationButton:(UIButton *)sender{
-    [self.delegate startNavigatingToMerchantLocation:_merchantLocation];
+    [self.delegate navigatingToPoiSourceClicked:_poiSource];
 }
 
 
@@ -116,6 +122,7 @@
         categoryLabel.textColor = [UIColor colorWithString:@"969696"];
         [categoryImageView addSubview:categoryLabel];
         beforeImageView = categoryImageView;
+    
     }
 }
 

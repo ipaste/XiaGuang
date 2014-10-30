@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "YTMerchantLocation.h"
+#import "YTLocalMerchantInstance.h"
 @class YTDetailsView;
 @protocol YTDetailsDelegate <NSObject>
--(void)startNavigatingToMerchantLocation:(id<YTMerchantLocation>)merchantLocation;
+-(void)navigatingToPoiSourceClicked:(id<YTPoiSource>)source;
 @end
 
 @interface YTDetailsView : UIView
 @property(weak,nonatomic)id <YTDetailsDelegate> delegate;
--(void)setMerchantInfo:(id<YTMerchantLocation>)merchantLocation;
 -(void)setCommonPoi:(id<YTPoiSource>)poi;
 @end
