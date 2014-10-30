@@ -18,6 +18,7 @@
     NSMutableArray *_tmpMerchantAreas;
     NSMutableArray *_tmpElevators;
     NSMutableArray *_tmpBathrooms;
+    NSMutableArray *_tmpExits;
     
     id<YTFloor> _tmpFloor;
 }
@@ -29,6 +30,7 @@
 @synthesize identifier;
 @synthesize floor;
 @synthesize bathrooms;
+@synthesize exits;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -84,6 +86,25 @@
     
     return _tmpBathrooms;
 }
+
+-(NSArray *)exits{
+    if(_tmpExits == nil){
+        
+        FMDatabase *db = [YTDBManager sharedManager];
+        FMResultSet *resultSet = [db executeQuery:@"select * from Exit where majorAreaId = ?",_tmpMajorAreaId];
+        
+        _tmpExits = [[NSMutableArray alloc] init];
+        
+        while ([resultSet next]) {
+            YTLocalExit *tmp = [[YTLocalExit alloc] initWithDBResultSet:resultSet];
+            [_tmpExits addObject:tmp];
+        }
+        
+    }
+    
+    return _tmpExits;
+}
+
 
 -(NSArray *)merchantLocations{
     

@@ -15,6 +15,8 @@
 #import "YTLocalElevator.h"
 #import "YTLocalMerchantInstance.h"
 #import "YTLocalBathroom.h"
+#import "YTLocalExit.h"
+
 @interface YTLocalMajorArea : NSObject<YTMajorArea>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;
