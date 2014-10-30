@@ -82,11 +82,20 @@
     UIViewController *controller = nil;
     switch (index) {
         case 0:
+        {
             controller = [[YTMallViewController alloc]init];
+        }
             break;
         case 1:
-            
-            break;
+        {
+            controller = [[YTStopCarController alloc]init];
+            controller.modalPresentationStyle = UIModalPresentationFullScreen;
+            controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
+            [self presentViewController:controller animated:YES completion:^{
+                
+            }];
+        }
+            return;
         case 2:
         {
             controller = [[YTSettingViewController alloc]init];
@@ -103,7 +112,7 @@
     }
     if(controller == nil) return;
     [_panel stopAnimationWithBackgroundAndCircle];
-    [self.navigationController pushViewController:controller animated:NO];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)jumpToSearch:(UIButton *)sender{

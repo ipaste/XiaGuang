@@ -39,7 +39,6 @@
         _tableView.dataSource = self;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.backgroundColor = [UIColor clearColor];
-        //_tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.view addSubview:_tableView];
     }
@@ -48,23 +47,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-/*    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
-    self.navigationController.navigationBar.translucent = NO;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
-    self.navigationItem.title = @"商圈";
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-*/
-    
-    //[_tableView addHeaderWithTarget:self action:@selector(dropDown)];
+
+    [self loadTableView];
     
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    [self dropDown];
-    
-}
+
 -(void)viewWillLayoutSubviews{
     CGFloat topHeight = [self.topLayoutGuide length];
     CGRect frame = _tableView.frame;
@@ -74,8 +62,7 @@
 }
 
 
--(void)dropDown{
- 
+-(void)loadTableView{
         __block BOOL isFetch = NO;
         _mallObjects = [NSMutableArray array];
         _bundleObjects = [NSMutableArray array];

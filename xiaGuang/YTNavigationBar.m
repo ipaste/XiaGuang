@@ -88,7 +88,9 @@
 
 -(void)clickToBackButtonWithUpInside{
     _backImageView.image = _defaultBackImage;
-    [self.delegate backButtonClicked];
+    if ([self.delegate respondsToSelector:@selector(backButtonClicked)]) {
+        [self.delegate backButtonClicked];
+    }
 }
 -(void)clickToSearchButtonWithDown{
     _searchImageView.image = [UIImage imageNamed:@"nav_ico_search_pr"];
@@ -96,6 +98,9 @@
 
 -(void)clickToSearchButtonWithUpInside{
     _searchImageView.image = _defaultSearchImage;
-    [self.delegate searchButtonClicked];
+    if ([self.delegate respondsToSelector:@selector(searchButtonClicked)]) {
+        [self.delegate searchButtonClicked];
+    }
+    
 }
 @end

@@ -83,9 +83,9 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
 
 -(void)enterForegroundAfterZeroPointTwoSeconds:(NSTimer *)timer{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
+    _isEnterBackground = NO;
     if (_curBlueState != curState) {
         [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
-        _isEnterBackground = NO;
         [timer invalidate];
     }
 }

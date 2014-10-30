@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @class YTNavigationBar;
 @protocol YTNavigationBarDelegate <NSObject>
-@required
+@optional
 -(void)backButtonClicked;
 -(void)searchButtonClicked;
 @end

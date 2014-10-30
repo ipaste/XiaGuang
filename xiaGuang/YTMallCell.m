@@ -41,7 +41,7 @@
 }
 
 -(void)layoutSubviews{
-    
+    _mallLogo.image = nil;
     //mallInfoImage;
     if(self.mallMerchantBundle.mallInfoImageReady){
         _mallLogo.image = self.mallMerchantBundle.mallInfoImage;
@@ -58,7 +58,9 @@
         }];
     }
 
-    
+    _mallBackground.layer.cornerRadius = 10;
+    _mallBackground.layer.masksToBounds = YES;
+    _mallBackground.image = nil;
     //mallbackground image;
     if(self.mallMerchantBundle.mallBackgroundImageReady){
         _mallBackground.image = self.mallMerchantBundle.mallBackgroundImage;
@@ -70,8 +72,6 @@
                 return;
             }
             _mallBackground.image = result;
-            _mallBackground.layer.cornerRadius = 10;
-            _mallBackground.layer.masksToBounds = YES;
         }];
     }
     

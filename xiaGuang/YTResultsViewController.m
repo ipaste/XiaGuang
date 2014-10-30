@@ -65,6 +65,36 @@
             _mallName = [mall mallName];
         }
         _isFirst = YES;
+        
+        _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
+        
+        _tableView.delegate = self;
+        
+        _tableView.dataSource = self;
+        
+        _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+        
+        _tableView.tableFooterView = [[UIView alloc]init];
+        
+        _tableView.showsVerticalScrollIndicator = NO;
+        
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        [_tableView addFooterWithTarget:self action:@selector(pullToRefresh)];
+        
+        [self.view addSubview:_tableView];
+        
+        _notLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,100, CGRectGetWidth(self.view.frame), 45)];
+        _notLabel.font = [UIFont systemFontOfSize:20];
+        _notLabel.textColor = [UIColor colorWithString:@"c8c8c8"];
+        _notLabel.text = @"无结果";
+        _notLabel.textAlignment = 1;
+        _notLabel.hidden = YES;
+        [_tableView addSubview:_notLabel];
+        
+        _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
+        _categoryResultsView.delegate = self;
+        [self.view addSubview:_categoryResultsView];
     }
     return self;
 }
@@ -74,60 +104,21 @@
     [super viewDidLoad];
     
     self.navigationItem.title = @"搜索结果";
-
-    _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
-    
-    _tableView.delegate = self;
-    
-    _tableView.dataSource = self;
-    
-    _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    
-    _tableView.tableFooterView = [[UIView alloc]init];
-    
-    _tableView.showsVerticalScrollIndicator = NO;
-    
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    [_tableView addFooterWithTarget:self action:@selector(pullToRefresh)];
-    
-    [self.view addSubview:_tableView];
-    
-    
-    _notLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,100, CGRectGetWidth(self.view.frame), 45)];
-    _notLabel.font = [UIFont systemFontOfSize:20];
-    _notLabel.textColor = [UIColor colorWithString:@"c8c8c8"];
-    _notLabel.text = @"无结果";
-    _notLabel.textAlignment = 1;
-    _notLabel.hidden = YES;
-    [_tableView addSubview:_notLabel];
-    
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     
-    _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
-    _categoryResultsView.delegate = self;
-    [self.view addSubview:_categoryResultsView];
-    
-    
-}
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    if (_isFirst) {
-        _isFirst = NO;
-        [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
-            _merchants = [NSMutableArray arrayWithArray:merchants];
-            if (_merchantName != nil) {
-                for (id<YTMerchant> merchant in merchants) {
-                    _subCategory = [[merchant type] lastObject];
-                    _category = [[merchant type] firstObject];
-                }
+    [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
+        _merchants = [NSMutableArray arrayWithArray:merchants];
+        if (_merchantName != nil) {
+            for (id<YTMerchant> merchant in merchants) {
+                _subCategory = [[merchant type] lastObject];
+                _category = [[merchant type] firstObject];
             }
-            [_categoryResultsView setKey:_category subKey:_subCategory];
-            [self reloadData];
-        }];
-        
-    }
+        }
+        [_categoryResultsView setKey:_category subKey:_subCategory];
+        [self reloadData];
+    }];
 }
+
 -(void)viewWillLayoutSubviews{
     CGFloat topHeight = [self.topLayoutGuide length];
     
@@ -171,7 +162,6 @@
     
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query orderByAscending:@"name"];
-    
     query.limit = number;
     query.skip = skip;
     if (_isCategory) {

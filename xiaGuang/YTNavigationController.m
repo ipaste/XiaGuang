@@ -11,12 +11,14 @@
 @implementation YTNavigationController{
     YTHomeViewController *_homeVC;
     UIViewController *_displayController;
+    BOOL _isReGet;
 }
 -(instancetype)initWithCreateHomeViewController{
     _homeVC = [[YTHomeViewController alloc]init];
     self = [super initWithRootViewController:_homeVC];
     if (self) {
         self.delegate = self;
+        _isReGet = YES;
     }
     return self;
 }
@@ -41,15 +43,17 @@
         [[(YTMallInfoViewController *)viewController mall] getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
             [navigationController.navigationBar setBackgroundImage:result forBarMetrics:UIBarMetricsDefault];
         }];
-        [[(YTMallInfoViewController *)viewController mall] getMallInfoTitleCallBack:^(UIImage *result, NSError *error) {
-           
-            UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
-            UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, result.size.width / 2, result.size.height / 2)];
-            titleImageView.center = titleView.center;
-            titleImageView.image = result;
-            [titleView addSubview:titleImageView];
-            viewController.navigationItem.titleView = titleView;
-        }];
+        if (_isReGet) {
+            _isReGet = NO;
+            [[(YTMallInfoViewController *)viewController mall] getMallInfoTitleCallBack:^(UIImage *result, NSError *error) {
+                UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
+                UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, result.size.width / 2, result.size.height / 2)];
+                titleImageView.center = titleView.center;
+                titleImageView.image = result;
+                [titleView addSubview:titleImageView];
+                viewController.navigationItem.titleView = titleView;
+            }];
+        }
     }else{
         navigationController.navigationBar.clipsToBounds = NO;
         [navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
@@ -60,6 +64,8 @@
 -(UIViewController *)popViewControllerAnimated:(BOOL)animated{
     if ([_displayController isMemberOfClass:[YTSettingViewController class]]) {
         animated = NO;
+    }else if ([_displayController isMemberOfClass:[YTMallInfoViewController class]]){
+        _isReGet = YES;
     }
     return [super popViewControllerAnimated:animated];
 }

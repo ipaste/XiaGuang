@@ -83,7 +83,7 @@
         showAnimation.fromValue = [NSNumber numberWithFloat:CGRectGetWidth(tableView.frame)];
         showAnimation.toValue = [NSNumber numberWithFloat:CGRectGetWidth(tableView.frame) / 2];
         showAnimation.duration = _duration;
-        showAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        //showAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         [cell.layer pop_addAnimation:showAnimation forKey:@"show"];
     }
     
@@ -197,6 +197,9 @@
 }
 
 -(void)dealloc{
+    for (UITableViewCell *tmpCell in [_tableView visibleCells]) {
+        [tmpCell pop_removeAllAnimations];
+    }
     NSLog(@"settingDealloc");
 }
 @end
