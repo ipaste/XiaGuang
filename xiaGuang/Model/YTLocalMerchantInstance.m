@@ -41,7 +41,7 @@
 @synthesize address;
 @synthesize lableHeight;
 @synthesize lableWidth;
-
+@synthesize name;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -97,6 +97,10 @@
 }
 
 -(NSString *)merchantLocationName{
+    return _tmpMerchantInstanceName;
+}
+
+-(NSString *)name{
     return _tmpMerchantInstanceName;
 }
 
@@ -175,8 +179,8 @@
         }
         }];
    
-    
 }
+
 -(void)getCloudMerchantTypeWithCallBack:(void (^)(NSArray *result,NSError *error))callback{
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
     [query whereKey:@"localDBId" equalTo:_tmpMerchantInstanceId];
