@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		4BBE78B237D5A241D65373FE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DCAE2C2A48A5B340C97B34E /* libPods.a */; };
+		AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */; };
+		AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */; };
+		AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */; };
+		AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FD1A022E1B00A0CE91 /* haianchengparking1.mbtiles */; };
+		AE24A8051A022E1B00A0CE91 /* haianchengparking2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */; };
+		AE24A8061A022E1B00A0CE91 /* huanlehaian.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */; };
+		AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */; };
 		D9216C6B19FE2C5300AAF555 /* YTSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */; };
 		D9216C6E19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C6D19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m */; };
 		D9216C7819FE2CB800AAF555 /* YTFeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C7019FE2CB800AAF555 /* YTFeedBackViewController.m */; };
@@ -60,8 +67,8 @@
 		D9A2AF0919FF3B0700AF61D7 /* YTMallMerchantBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0819FF3B0700AF61D7 /* YTMallMerchantBundle.m */; };
 		D9A2AF0C19FF3B6000AF61D7 /* YTMallInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0B19FF3B6000AF61D7 /* YTMallInfoViewController.m */; };
 		D9A2AF0F19FF3BA400AF61D7 /* YTMoreCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A2AF0E19FF3BA400AF61D7 /* YTMoreCategoryViewController.m */; };
-		D9CFFDB91A02206900BEAFD8 /* YTStopCarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CFFDB81A02206900BEAFD8 /* YTStopCarController.m */; };
-		D9CFFDBC1A02242100BEAFD8 /* nav_bg_pic.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9CFFDBB1A02242100BEAFD8 /* nav_bg_pic.jpg */; };
+		D9CFFDBE1A02395E00BEAFD8 /* nav_bg_pic.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9CFFDBD1A02395E00BEAFD8 /* nav_bg_pic.jpg */; };
+		D9CFFDC11A02398000BEAFD8 /* YTStopCarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CFFDC01A02398000BEAFD8 /* YTStopCarController.m */; };
 		D9D309891A00818000BE8E21 /* YTCloudElevator.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3096E1A00818000BE8E21 /* YTCloudElevator.m */; };
 		D9D3098A1A00818000BE8E21 /* YTCloudMerchantLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309701A00818000BE8E21 /* YTCloudMerchantLocation.m */; };
 		D9D3098B1A00818000BE8E21 /* YTLocalBathroom.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309731A00818000BE8E21 /* YTLocalBathroom.m */; };
@@ -124,6 +131,13 @@
 /* Begin PBXFileReference section */
 		580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		6DCAE2C2A48A5B340C97B34E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
+		AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
+		AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
+		AE24A7FD1A022E1B00A0CE91 /* haianchengparking1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengparking1.mbtiles; sourceTree = "<group>"; };
+		AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengparking2.mbtiles; sourceTree = "<group>"; };
+		AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = huanlehaian.mbtiles; sourceTree = "<group>"; };
+		AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = huanlehaianpark.mbtiles; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D9216C6919FE2C5300AAF555 /* YTSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTSettingViewController.h; sourceTree = "<group>"; };
 		D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTSettingViewController.m; sourceTree = "<group>"; };
@@ -236,9 +250,9 @@
 		D9A2AF0B19FF3B6000AF61D7 /* YTMallInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallInfoViewController.m; sourceTree = "<group>"; };
 		D9A2AF0D19FF3BA400AF61D7 /* YTMoreCategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMoreCategoryViewController.h; sourceTree = "<group>"; };
 		D9A2AF0E19FF3BA400AF61D7 /* YTMoreCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMoreCategoryViewController.m; sourceTree = "<group>"; };
-		D9CFFDB71A02206900BEAFD8 /* YTStopCarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStopCarController.h; sourceTree = "<group>"; };
-		D9CFFDB81A02206900BEAFD8 /* YTStopCarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStopCarController.m; sourceTree = "<group>"; };
-		D9CFFDBB1A02242100BEAFD8 /* nav_bg_pic.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nav_bg_pic.jpg; sourceTree = "<group>"; };
+		D9CFFDBD1A02395E00BEAFD8 /* nav_bg_pic.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nav_bg_pic.jpg; sourceTree = "<group>"; };
+		D9CFFDBF1A02398000BEAFD8 /* YTStopCarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStopCarController.h; sourceTree = "<group>"; };
+		D9CFFDC01A02398000BEAFD8 /* YTStopCarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStopCarController.m; sourceTree = "<group>"; };
 		D9D3096C1A00818000BE8E21 /* YTBathroom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBathroom.h; sourceTree = "<group>"; };
 		D9D3096D1A00818000BE8E21 /* YTCloudElevator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTCloudElevator.h; sourceTree = "<group>"; };
 		D9D3096E1A00818000BE8E21 /* YTCloudElevator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTCloudElevator.m; sourceTree = "<group>"; };
@@ -362,6 +376,20 @@
 				C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		AE24A7F91A022E1B00A0CE91 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */,
+				AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */,
+				AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */,
+				AE24A7FD1A022E1B00A0CE91 /* haianchengparking1.mbtiles */,
+				AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */,
+				AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */,
+				AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
@@ -557,9 +585,10 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
-				D9CFFDBA1A02206D00BEAFD8 /* StopCar */,
+				D9CFFDBF1A02398000BEAFD8 /* YTStopCarController.h */,
+				D9CFFDC01A02398000BEAFD8 /* YTStopCarController.m */,
+				AE24A7F91A022E1B00A0CE91 /* Map */,
 				D9D309FB1A00868600BE8E21 /* imageWithJPEG */,
-				D9D309E31A00837400BE8E21 /* map */,
 				D9A2AF0019FF3A2800AF61D7 /* MallVC */,
 				D9216D1F19FE444500AAF555 /* Extension */,
 				D9216CF819FE408700AAF555 /* MapVC */,
@@ -631,15 +660,6 @@
 				D9A2AF0519FF3ACA00AF61D7 /* YTMallCell.m */,
 			);
 			name = MallVC;
-			sourceTree = "<group>";
-		};
-		D9CFFDBA1A02206D00BEAFD8 /* StopCar */ = {
-			isa = PBXGroup;
-			children = (
-				D9CFFDB71A02206900BEAFD8 /* YTStopCarController.h */,
-				D9CFFDB81A02206900BEAFD8 /* YTStopCarController.m */,
-			);
-			name = StopCar;
 			sourceTree = "<group>";
 		};
 		D9D309E01A0082AB00BE8E21 /* View */ = {
@@ -723,17 +743,10 @@
 			name = beacon;
 			sourceTree = "<group>";
 		};
-		D9D309E31A00837400BE8E21 /* map */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = map;
-			sourceTree = "<group>";
-		};
 		D9D309FB1A00868600BE8E21 /* imageWithJPEG */ = {
 			isa = PBXGroup;
 			children = (
-				D9CFFDBB1A02242100BEAFD8 /* nav_bg_pic.jpg */,
+				D9CFFDBD1A02395E00BEAFD8 /* nav_bg_pic.jpg */,
 				D9D309FC1A00869B00BE8E21 /* home_bg960@2x.jpg */,
 				D9D309FD1A00869B00BE8E21 /* home_bg1136@2x.jpg */,
 			);
@@ -832,14 +845,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE24A8051A022E1B00A0CE91 /* haianchengparking2.mbtiles in Resources */,
+				AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */,
 				D9D309FF1A00869B00BE8E21 /* home_bg1136@2x.jpg in Resources */,
+				AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */,
 				D9216CDC19FE3EF000AAF555 /* highGuangDB in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
+				AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */,
 				D9216D3119FE446000AAF555 /* MJRefresh.bundle in Resources */,
 				D9D309FE1A00869B00BE8E21 /* home_bg960@2x.jpg in Resources */,
-				D9CFFDBC1A02242100BEAFD8 /* nav_bg_pic.jpg in Resources */,
 				D9216D3219FE446000AAF555 /* shop_load_down@2x.png in Resources */,
+				AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */,
 				D9216C7B19FE2CB800AAF555 /* userAgreement.txt in Resources */,
+				AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */,
+				AE24A8061A022E1B00A0CE91 /* huanlehaian.mbtiles in Resources */,
+				D9CFFDBE1A02395E00BEAFD8 /* nav_bg_pic.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -891,7 +911,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9216D3619FE446000AAF555 /* MJRefreshHeaderView.m in Sources */,
-				D9CFFDB91A02206900BEAFD8 /* YTStopCarController.m in Sources */,
+				D9CFFDC11A02398000BEAFD8 /* YTStopCarController.m in Sources */,
 				D9216CF419FE3F4C00AAF555 /* YTSearchDetailsView.m in Sources */,
 				D9D309DC1A00824500BE8E21 /* YTUserAnnotation.m in Sources */,
 				D9A2AF0F19FF3BA400AF61D7 /* YTMoreCategoryViewController.m in Sources */,
