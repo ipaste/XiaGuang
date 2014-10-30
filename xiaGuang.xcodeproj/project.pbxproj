@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		4BBE78B237D5A241D65373FE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DCAE2C2A48A5B340C97B34E /* libPods.a */; };
-		AE24A7F11A022D5900A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7EB1A022D5900A0CE91 /* hac2.mbtiles */; };
-		AE24A7F21A022D5900A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7EC1A022D5900A0CE91 /* hac3.mbtiles */; };
-		AE24A7F31A022D5900A0CE91 /* haianchengparking1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7ED1A022D5900A0CE91 /* haianchengparking1.mbtiles */; };
-		AE24A7F41A022D5900A0CE91 /* haianchengparking2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7EE1A022D5900A0CE91 /* haianchengparking2.mbtiles */; };
-		AE24A7F51A022D5900A0CE91 /* huanlehaian.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7EF1A022D5900A0CE91 /* huanlehaian.mbtiles */; };
-		AE24A7F61A022D5900A0CE91 /* huanlehaianpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7F01A022D5900A0CE91 /* huanlehaianpark.mbtiles */; };
-		AE24A7F81A022D6F00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7F71A022D6F00A0CE91 /* hac1.mbtiles */; };
+		AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */; };
+		AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */; };
+		AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */; };
+		AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FD1A022E1B00A0CE91 /* haianchengparking1.mbtiles */; };
+		AE24A8051A022E1B00A0CE91 /* haianchengparking2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */; };
+		AE24A8061A022E1B00A0CE91 /* huanlehaian.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */; };
+		AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */; };
 		D9216C6B19FE2C5300AAF555 /* YTSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */; };
 		D9216C6E19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C6D19FE2C7D00AAF555 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m */; };
 		D9216C7819FE2CB800AAF555 /* YTFeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9216C7019FE2CB800AAF555 /* YTFeedBackViewController.m */; };
@@ -129,13 +129,13 @@
 /* Begin PBXFileReference section */
 		580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		6DCAE2C2A48A5B340C97B34E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE24A7EB1A022D5900A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = hac2.mbtiles; path = ../../HighGuang/HighGuang/hac2.mbtiles; sourceTree = "<group>"; };
-		AE24A7EC1A022D5900A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = hac3.mbtiles; path = ../../HighGuang/HighGuang/hac3.mbtiles; sourceTree = "<group>"; };
-		AE24A7ED1A022D5900A0CE91 /* haianchengparking1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = haianchengparking1.mbtiles; path = ../../HighGuang/HighGuang/haianchengparking1.mbtiles; sourceTree = "<group>"; };
-		AE24A7EE1A022D5900A0CE91 /* haianchengparking2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = haianchengparking2.mbtiles; path = ../../HighGuang/HighGuang/haianchengparking2.mbtiles; sourceTree = "<group>"; };
-		AE24A7EF1A022D5900A0CE91 /* huanlehaian.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = huanlehaian.mbtiles; path = ../../HighGuang/HighGuang/huanlehaian.mbtiles; sourceTree = "<group>"; };
-		AE24A7F01A022D5900A0CE91 /* huanlehaianpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = huanlehaianpark.mbtiles; path = ../../HighGuang/HighGuang/huanlehaianpark.mbtiles; sourceTree = "<group>"; };
-		AE24A7F71A022D6F00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; name = hac1.mbtiles; path = ../../Work/highGuang/HighGuang/hac1.mbtiles; sourceTree = "<group>"; };
+		AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
+		AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
+		AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
+		AE24A7FD1A022E1B00A0CE91 /* haianchengparking1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengparking1.mbtiles; sourceTree = "<group>"; };
+		AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengparking2.mbtiles; sourceTree = "<group>"; };
+		AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = huanlehaian.mbtiles; sourceTree = "<group>"; };
+		AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = huanlehaianpark.mbtiles; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D9216C6919FE2C5300AAF555 /* YTSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTSettingViewController.h; sourceTree = "<group>"; };
 		D9216C6A19FE2C5300AAF555 /* YTSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTSettingViewController.m; sourceTree = "<group>"; };
@@ -373,6 +373,20 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		AE24A7F91A022E1B00A0CE91 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */,
+				AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */,
+				AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */,
+				AE24A7FD1A022E1B00A0CE91 /* haianchengparking1.mbtiles */,
+				AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */,
+				AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */,
+				AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
 		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -566,8 +580,8 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
+				AE24A7F91A022E1B00A0CE91 /* Map */,
 				D9D309FB1A00868600BE8E21 /* imageWithJPEG */,
-				D9D309E31A00837400BE8E21 /* map */,
 				D9A2AF0019FF3A2800AF61D7 /* MallVC */,
 				D9216D1F19FE444500AAF555 /* Extension */,
 				D9216CF819FE408700AAF555 /* MapVC */,
@@ -722,20 +736,6 @@
 			name = beacon;
 			sourceTree = "<group>";
 		};
-		D9D309E31A00837400BE8E21 /* map */ = {
-			isa = PBXGroup;
-			children = (
-				AE24A7F71A022D6F00A0CE91 /* hac1.mbtiles */,
-				AE24A7EB1A022D5900A0CE91 /* hac2.mbtiles */,
-				AE24A7EC1A022D5900A0CE91 /* hac3.mbtiles */,
-				AE24A7ED1A022D5900A0CE91 /* haianchengparking1.mbtiles */,
-				AE24A7EE1A022D5900A0CE91 /* haianchengparking2.mbtiles */,
-				AE24A7EF1A022D5900A0CE91 /* huanlehaian.mbtiles */,
-				AE24A7F01A022D5900A0CE91 /* huanlehaianpark.mbtiles */,
-			);
-			name = map;
-			sourceTree = "<group>";
-		};
 		D9D309FB1A00868600BE8E21 /* imageWithJPEG */ = {
 			isa = PBXGroup;
 			children = (
@@ -837,20 +837,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE24A7F11A022D5900A0CE91 /* hac2.mbtiles in Resources */,
+				AE24A8051A022E1B00A0CE91 /* haianchengparking2.mbtiles in Resources */,
+				AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */,
 				D9D309FF1A00869B00BE8E21 /* home_bg1136@2x.jpg in Resources */,
+				AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */,
 				D9216CDC19FE3EF000AAF555 /* highGuangDB in Resources */,
-				AE24A7F51A022D5900A0CE91 /* huanlehaian.mbtiles in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
+				AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */,
 				D9216D3119FE446000AAF555 /* MJRefresh.bundle in Resources */,
 				D9D309FE1A00869B00BE8E21 /* home_bg960@2x.jpg in Resources */,
 				D9216D3219FE446000AAF555 /* shop_load_down@2x.png in Resources */,
+				AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */,
 				D9216C7B19FE2CB800AAF555 /* userAgreement.txt in Resources */,
-				AE24A7F61A022D5900A0CE91 /* huanlehaianpark.mbtiles in Resources */,
-				AE24A7F21A022D5900A0CE91 /* hac3.mbtiles in Resources */,
-				AE24A7F41A022D5900A0CE91 /* haianchengparking2.mbtiles in Resources */,
-				AE24A7F31A022D5900A0CE91 /* haianchengparking1.mbtiles in Resources */,
-				AE24A7F81A022D6F00A0CE91 /* hac1.mbtiles in Resources */,
+				AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */,
+				AE24A8061A022E1B00A0CE91 /* huanlehaian.mbtiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
