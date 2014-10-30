@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTMerchantLocation.h"
 #import "YTNavigationModePlan.h"
 @class YTNavigationView;
 @protocol YTNavigationDelegate <NSObject>
@@ -21,7 +20,7 @@
 @property (weak,nonatomic) id<YTNavigationDelegate> delegate;
 @property (strong,nonatomic) YTNavigationModePlan *plan;
 
--(void)startNavigationAndSetTargetMerchant:(id <YTMerchantLocation>)merchantLocation;
+-(void)startNavigationAndSetDestination:(id<YTPoiSource>)poiSource;
 -(void)updateInstruction;
 
 @end

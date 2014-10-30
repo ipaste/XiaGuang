@@ -10,6 +10,6 @@
 #import "YTMapView2.h"
 #import "YTZoomStepper.h"
 #import "YTNavigationBar.h"
-@interface YTStopCarController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate>
+@interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate>
 
 @end

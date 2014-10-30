@@ -6,9 +6,9 @@
 //  Copyright (c) 2014年 YunTop. All rights reserved.
 //
 
-#import "YTStopCarController.h"
+#import "YTParkingViewController.h"
 
-@implementation YTStopCarController{
+@implementation YTParkingViewController{
     YTMapView2 *_mapView;
     YTNavigationBar *_navigationBar;
     YTZoomStepper *_zoomStepper;

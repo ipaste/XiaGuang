@@ -88,7 +88,7 @@
             break;
         case 1:
         {
-            controller = [[YTStopCarController alloc]init];
+            controller = [[YTParkingViewController alloc]init];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:controller animated:YES completion:^{
                 
@@ -109,6 +109,7 @@
             _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:_mapViewController animated:YES completion:nil];
         }
+            
             return;
     }
     if(controller == nil) return;

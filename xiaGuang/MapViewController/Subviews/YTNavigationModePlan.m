@@ -10,10 +10,10 @@
 
 @implementation YTNavigationModePlan
 
--(id)initWithTargetMerchantLocation:(id<YTMerchantLocation>)merchantLocation{
+-(id)initWithTargetPoiSource:(id<YTPoiSource>)poiSource{
     self = [super init];
     if(self != nil){
-        self.targetMerchantLocation = merchantLocation;
+        self.targetPoiSource = poiSource;
     }
     return self;
 }
@@ -28,7 +28,7 @@
 
 -(YTNavigationInstruction *)getInstruction{
     YTNavigationInstruction *instrunction;
-    if([[[_userMinorArea majorArea] identifier] isEqualToString:[[self.targetMerchantLocation majorArea] identifier]]){
+    if([[[_userMinorArea majorArea] identifier] isEqualToString:[[self.targetPoiSource majorArea] identifier]]){
         
         instrunction = [[YTNavigationInstruction alloc] init];
         instrunction.type = YTNavigationInstructionSameFloor;
@@ -41,11 +41,11 @@
         instrunction.type = YTNavigationInstructionDifferentFloor;
         instrunction.mainInstruction = @"请乘坐电梯";
         instrunction.leftInstruction = [NSString stringWithFormat:@"你在%@",[[[_userMinorArea majorArea] floor] floorName]];
-        instrunction.rightInstruction = [NSString stringWithFormat:@"终点在%@",[[_targetMerchantLocation floor] floorName]];
+        instrunction.rightInstruction = [NSString stringWithFormat:@"终点在%@",[[[_targetPoiSource majorArea] floor] floorName]];
         
     }
     
-    if([[[_targetMerchantLocation inMinorArea] identifier] isEqualToString:[_userMinorArea identifier]])
+    if([[[_targetPoiSource inMinorArea] identifier] isEqualToString:[_userMinorArea identifier]])
     {
         instrunction = [[YTNavigationInstruction alloc] init];
         instrunction.type = YTNavigationInstructionApproachingDestination;
