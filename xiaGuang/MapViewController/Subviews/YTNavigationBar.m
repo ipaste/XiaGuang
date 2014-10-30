@@ -33,7 +33,7 @@
         [_searchButton addTarget:self action:@selector(clickToSearchButtonWithDown) forControlEvents:UIControlEventTouchDown];
         [_searchButton addTarget:self action:@selector(clickToSearchButtonWithUpInside) forControlEvents:UIControlEventTouchUpInside];
         _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, TopHeight,CGRectGetWidth(self.frame), height)];
-        
+        _titleLabel.text = @"地图导航";
         [self addSubview:_backButton];
         [self addSubview:_searchButton];
         [self addSubview:_titleLabel];
@@ -64,7 +64,7 @@
     _backImageView.center = CGPointMake(_backImageView.center.x, _searchButton.center.y);
     
     _titleLabel.backgroundColor = [UIColor clearColor];
-    _titleLabel.text = @"地图导航";
+    
     _titleLabel.textColor = [UIColor whiteColor];
     _titleLabel.textAlignment = 1;
     _titleLabel.font = [UIFont systemFontOfSize:17];
@@ -72,7 +72,10 @@
     _searchImageView.center = CGPointMake(CGRectGetWidth(_searchButton.frame) / 2 + CGRectGetWidth(_searchImageView.frame) / 2, CGRectGetHeight(_searchButton.frame) / 2 );
     
 }
-
+-(void)setTitleName:(NSString *)titleName{
+    _titleLabel.text = titleName;
+    _titleName = titleName;
+}
 -(void)changeSearchButton{
     _searchButton.hidden = !_searchButton.hidden;
 }

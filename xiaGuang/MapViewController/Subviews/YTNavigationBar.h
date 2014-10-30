@@ -16,7 +16,7 @@
 @interface YTNavigationBar : UIView
 @property (weak,nonatomic) id<YTNavigationBarDelegate> delegate;
 @property (strong,nonatomic) NSString *backTitle;
-
+@property (strong,nonatomic) NSString *titleName;
 -(void)changeSearchButton;
 
 -(void)changeBackButton;

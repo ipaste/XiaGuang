@@ -159,7 +159,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_detailsView setCommonPoi:_merchantLocation];
         [self showCallOut];
     }
-    [_bluetoothManager refreshBluetoothState];
 }
 
 -(void)createMapView{
@@ -232,6 +231,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             break;
     }
     _navigationBar.backTitle = title;
+    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
     [self.view addSubview:_navigationBar];
 }
 -(void)createSearchView{
