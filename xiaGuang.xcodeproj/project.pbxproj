@@ -97,13 +97,6 @@
 		D9D309DB1A00824500BE8E21 /* YTSwitchFloorView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309C21A00824500BE8E21 /* YTSwitchFloorView.m */; };
 		D9D309DC1A00824500BE8E21 /* YTUserAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309C41A00824500BE8E21 /* YTUserAnnotation.m */; };
 		D9D309DD1A00824500BE8E21 /* YTZoomStepper.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309C61A00824500BE8E21 /* YTZoomStepper.m */; };
-		D9D309EB1A00838200BE8E21 /* huanlehaian.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309E41A00838200BE8E21 /* huanlehaian.mbtiles */; };
-		D9D309EC1A00838200BE8E21 /* huanlehaianpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309E51A00838200BE8E21 /* huanlehaianpark.mbtiles */; };
-		D9D309ED1A00838200BE8E21 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309E61A00838200BE8E21 /* hac1.mbtiles */; };
-		D9D309EE1A00838200BE8E21 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309E71A00838200BE8E21 /* hac2.mbtiles */; };
-		D9D309EF1A00838200BE8E21 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309E81A00838200BE8E21 /* hac3.mbtiles */; };
-		D9D309F01A00838200BE8E21 /* haianchengparking1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309E91A00838200BE8E21 /* haianchengparking1.mbtiles */; };
-		D9D309F11A00838200BE8E21 /* haianchengparking2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D309EA1A00838200BE8E21 /* haianchengparking2.mbtiles */; };
 		D9D309F41A00839000BE8E21 /* YTMapViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309F31A00839000BE8E21 /* YTMapViewController2.m */; };
 		D9D309F71A0083A800BE8E21 /* YTMapView2.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309F61A0083A800BE8E21 /* YTMapView2.m */; };
 		D9D309FA1A0084B600BE8E21 /* YTNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D309F91A0084B600BE8E21 /* YTNavigationBar.m */; };
@@ -318,13 +311,6 @@
 		D9D309C41A00824500BE8E21 /* YTUserAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTUserAnnotation.m; sourceTree = "<group>"; };
 		D9D309C51A00824500BE8E21 /* YTZoomStepper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTZoomStepper.h; sourceTree = "<group>"; };
 		D9D309C61A00824500BE8E21 /* YTZoomStepper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTZoomStepper.m; sourceTree = "<group>"; };
-		D9D309E41A00838200BE8E21 /* huanlehaian.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = huanlehaian.mbtiles; sourceTree = "<group>"; };
-		D9D309E51A00838200BE8E21 /* huanlehaianpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = huanlehaianpark.mbtiles; sourceTree = "<group>"; };
-		D9D309E61A00838200BE8E21 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
-		D9D309E71A00838200BE8E21 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
-		D9D309E81A00838200BE8E21 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
-		D9D309E91A00838200BE8E21 /* haianchengparking1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengparking1.mbtiles; sourceTree = "<group>"; };
-		D9D309EA1A00838200BE8E21 /* haianchengparking2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengparking2.mbtiles; sourceTree = "<group>"; };
 		D9D309F21A00839000BE8E21 /* YTMapViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapViewController2.h; sourceTree = "<group>"; };
 		D9D309F31A00839000BE8E21 /* YTMapViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMapViewController2.m; sourceTree = "<group>"; };
 		D9D309F51A0083A800BE8E21 /* YTMapView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapView2.h; sourceTree = "<group>"; };
@@ -725,13 +711,6 @@
 		D9D309E31A00837400BE8E21 /* map */ = {
 			isa = PBXGroup;
 			children = (
-				D9D309E41A00838200BE8E21 /* huanlehaian.mbtiles */,
-				D9D309E51A00838200BE8E21 /* huanlehaianpark.mbtiles */,
-				D9D309E61A00838200BE8E21 /* hac1.mbtiles */,
-				D9D309E71A00838200BE8E21 /* hac2.mbtiles */,
-				D9D309E81A00838200BE8E21 /* hac3.mbtiles */,
-				D9D309E91A00838200BE8E21 /* haianchengparking1.mbtiles */,
-				D9D309EA1A00838200BE8E21 /* haianchengparking2.mbtiles */,
 			);
 			name = map;
 			sourceTree = "<group>";
@@ -837,20 +816,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9D309F11A00838200BE8E21 /* haianchengparking2.mbtiles in Resources */,
 				D9D309FF1A00869B00BE8E21 /* home_bg1136@2x.jpg in Resources */,
-				D9D309F01A00838200BE8E21 /* haianchengparking1.mbtiles in Resources */,
 				D9216CDC19FE3EF000AAF555 /* highGuangDB in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
 				D9216D3119FE446000AAF555 /* MJRefresh.bundle in Resources */,
-				D9D309EF1A00838200BE8E21 /* hac3.mbtiles in Resources */,
 				D9D309FE1A00869B00BE8E21 /* home_bg960@2x.jpg in Resources */,
-				D9D309EC1A00838200BE8E21 /* huanlehaianpark.mbtiles in Resources */,
-				D9D309EB1A00838200BE8E21 /* huanlehaian.mbtiles in Resources */,
 				D9216D3219FE446000AAF555 /* shop_load_down@2x.png in Resources */,
-				D9D309EE1A00838200BE8E21 /* hac2.mbtiles in Resources */,
 				D9216C7B19FE2CB800AAF555 /* userAgreement.txt in Resources */,
-				D9D309ED1A00838200BE8E21 /* hac1.mbtiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
