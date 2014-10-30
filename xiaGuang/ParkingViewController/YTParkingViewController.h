@@ -10,6 +10,7 @@
 #import "YTMapView2.h"
 #import "YTZoomStepper.h"
 #import "YTNavigationBar.h"
+#import "YTBluetoothManager.h"
 @interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate>
 
 @end

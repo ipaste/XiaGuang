@@ -12,7 +12,16 @@
     YTMapView2 *_mapView;
     YTNavigationBar *_navigationBar;
     YTZoomStepper *_zoomStepper;
-    UIImageView *_shadeView;
+    UIView *_shadeView;
+    UIView *_beforeMarkView;
+    UILabel *_firstLabel;
+    UILabel *_firstSubLable;
+    UILabel *_secondLable;
+    UILabel *_secondSubLabel;
+    UIButton *_parkingView;
+    UILabel *_promptLable;
+    YTBluetoothManager *_bluetoothManager;
+    BOOL _bluetoothOn;
 }
 -(instancetype)init{
     self = [super init];
@@ -20,20 +29,29 @@
         UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
         backgroundView.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
         [self.view addSubview:backgroundView];
+        [self createNavigationBar];
         [self createMapView];
+        [self createLabel];
         [self createZoomStepper];
         [self createShadeView];
-        [self createNavigationBar];
     }
     return self;
+}
+
+-(void)viewDidLoad{
+    _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blueStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
 }
 
 -(void)createNavigationBar{
     _navigationBar = [[YTNavigationBar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 64)];
     _navigationBar.backTitle = @"首页";
+    _navigationBar.titleName = @"停车标记";
     _navigationBar.delegate = self;
+    
     [_navigationBar changeSearchButton];
-    [self.view addSubview:_navigationBar];
+    UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
+    [window addSubview:_navigationBar];
 }
 #pragma mark mapView
 -(void)createMapView{
@@ -60,11 +78,69 @@
     _zoomStepper.delegate = self;
     [self.view addSubview:_zoomStepper];
 }
-
+-(void)createLabel{
+    _beforeMarkView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_mapView.frame) + 10, CGRectGetWidth(_mapView.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(_mapView.frame) - 20)];
+    [self.view addSubview:_beforeMarkView];
+    
+    _firstLabel =[[UILabel alloc]initWithFrame:CGRectMake(5, 10, 70, 14)];
+    [_beforeMarkView addSubview:_firstLabel];
+    
+    _firstSubLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_firstLabel.frame), CGRectGetMinY(_firstLabel.frame), 100, 14)];
+    [_beforeMarkView addSubview:_firstSubLable];
+    
+    _secondLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_firstLabel.frame), CGRectGetMaxY(_firstLabel.frame) + 5, CGRectGetWidth(_firstLabel.frame), CGRectGetHeight(_firstLabel.frame))];
+    [_beforeMarkView addSubview:_secondLable];
+    
+    _secondSubLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_secondLable.frame), CGRectGetMinY(_secondLable.frame), CGRectGetWidth(_secondLable.frame), CGRectGetHeight(_secondLable.frame))];
+    [_beforeMarkView addSubview:_secondSubLabel];
+    
+    _firstLabel.textColor = [UIColor colorWithString:@"969696"];
+    _firstLabel.font = [UIFont systemFontOfSize:14];
+    
+    _firstSubLable.textColor = [UIColor whiteColor];
+    _firstSubLable.font = _firstLabel.font;
+    
+    _secondLable.textColor = _firstLabel.textColor;
+    _secondLable.font  = _firstLabel.font;
+    
+    _secondSubLabel.textColor = [UIColor colorWithString:@"e95e37"];
+    _secondSubLabel.font = _firstLabel.font;
+    
+    _firstLabel.text = @"计费标准:";
+    
+    _firstSubLable.text = @"6元/时";
+    
+    _secondLable.text = @"剩余车位:";
+    
+    _secondSubLabel.text = @"25个";
+}
 -(void)createShadeView{
-    _shadeView = [[UIImageView alloc]initWithFrame:CGRectMake(0,0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
-    _shadeView.image = [UIImage imageNamed:@"xg_map_fz.png"];
+    _shadeView = [[UIView alloc]initWithFrame:CGRectMake(0,0, CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame))];
+    _shadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     [self.view addSubview:_shadeView];
+    
+    UIImage *parkingImage = [UIImage imageNamed:@"parking_img_mark_unable"];
+    _parkingView = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, parkingImage.size.width, parkingImage.size.height)];
+    [_parkingView setEnabled:NO];
+    [_parkingView setBackgroundImage:parkingImage forState:UIControlStateDisabled];
+    [_parkingView setBackgroundImage:[UIImage imageNamed:@"parking_img_mark_un"] forState:UIControlStateNormal];
+    [_parkingView setBackgroundImage:[UIImage imageNamed:@"parking_img_mark_pr"] forState:UIControlStateHighlighted];
+    [_parkingView setTitle:@"标记车位" forState:UIControlStateNormal];
+    [_parkingView.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    [_parkingView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_parkingView setTitleEdgeInsets:UIEdgeInsetsMake(34, 0, 0, 0)];
+    _parkingView.center = CGPointMake(self.view.center.x, self.view.center.y - 32);
+    [self.view addSubview:_parkingView];
+    
+    _promptLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_parkingView.frame) * 1.9 , 32)];
+    _promptLable.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_parkingView.frame) + 15 + CGRectGetHeight(_promptLable.frame) / 2);
+    _promptLable.lineBreakMode = NSLineBreakByWordWrapping;
+    _promptLable.numberOfLines = 2;
+    _promptLable.textColor = [UIColor colorWithString:@"c8c8c8"];
+    _promptLable.font = [UIFont systemFontOfSize:13];
+    _promptLable.text = @"检测到您为开蓝牙或不在商城内实时定位请到达商城后打开蓝牙";
+    [self.view addSubview:_promptLable];
+
 }
 
 -(void)increasing{
@@ -74,7 +150,24 @@
     [_mapView zoomOut];
 }
 
+-(void)blueStateChange:(NSNotification *)notification{
+    NSDictionary *userInfo = notification.userInfo;
+    _bluetoothOn = [userInfo[@"isOpen"] boolValue];
+    if (_bluetoothOn) {
+        _promptLable.hidden = YES;
+        _shadeView.hidden = YES;
+        [_parkingView setEnabled:YES];
+        
+    }else{
+        _promptLable.hidden = NO;
+        _shadeView.hidden = NO;
+        [_parkingView setEnabled:NO];
+    }
+
+}
+
 -(void)backButtonClicked{
+    [_navigationBar removeFromSuperview];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -82,4 +175,9 @@
     return UIStatusBarStyleLightContent;
 }
 
+-(void)dealloc{
+    NSLog(@"parking Dealloc");
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
+    
+}
 @end
