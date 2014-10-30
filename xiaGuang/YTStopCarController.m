@@ -12,6 +12,7 @@
     YTMapView2 *_mapView;
     YTNavigationBar *_navigationBar;
     YTZoomStepper *_zoomStepper;
+    UIImageView *_shadeView;
 }
 -(instancetype)init{
     self = [super init];
@@ -19,11 +20,10 @@
         UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
         backgroundView.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
         [self.view addSubview:backgroundView];
-        
-        [self createNavigationBar];
         [self createMapView];
         [self createZoomStepper];
-        
+        [self createShadeView];
+        [self createNavigationBar];
     }
     return self;
 }
@@ -61,6 +61,12 @@
     [self.view addSubview:_zoomStepper];
 }
 
+-(void)createShadeView{
+    _shadeView = [[UIImageView alloc]initWithFrame:CGRectMake(0,0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
+    _shadeView.image = [UIImage imageNamed:@"xg_map_fz.png"];
+    [self.view addSubview:_shadeView];
+}
+
 -(void)increasing{
     [_mapView zoomIn];
 }
@@ -69,7 +75,7 @@
 }
 
 -(void)backButtonClicked{
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{

@@ -89,8 +89,7 @@
         case 1:
         {
             controller = [[YTStopCarController alloc]init];
-            controller.modalPresentationStyle = UIModalPresentationFullScreen;
-            controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
+            controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:controller animated:YES completion:^{
                 
             }];
@@ -105,8 +104,10 @@
         {
             if (_mapViewController == nil) {
                 _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:nil];
+                
             }
-            [self presentViewController:_mapViewController animated:NO completion:nil];
+            _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            [self presentViewController:_mapViewController animated:YES completion:nil];
         }
             return;
     }
