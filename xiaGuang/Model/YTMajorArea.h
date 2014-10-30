@@ -17,5 +17,6 @@
 @property (nonatomic,weak) NSArray *merchantLocations;
 @property (nonatomic,weak) NSArray *elevators;
 @property (nonatomic,weak) NSArray *bathrooms;
+@property (nonatomic,weak) NSArray *exits;
 
 @end

@@ -14,4 +14,5 @@
 @interface YTSelectedPoiButton : UIButton
 @property (weak,nonatomic) id<YTSelectedPoiDelegate> delegate;
 -(void)setPoiImage:(UIImage *)image;
+-(void)hide;
 @end

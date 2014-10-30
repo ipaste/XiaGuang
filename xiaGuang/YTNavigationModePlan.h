@@ -14,11 +14,11 @@
 
 @interface YTNavigationModePlan : NSObject
 
-@property (nonatomic,weak) id<YTMerchantLocation> targetMerchantLocation;
+@property (nonatomic,weak) id<YTPoiSource> targetPoiSource;
 @property (nonatomic,weak) id<YTMajorArea> displayMajorArea;
 @property (nonatomic,weak) id<YTMinorArea> userMinorArea;
 
--(id)initWithTargetMerchantLocation:(id<YTMerchantLocation>)merchantLocation;
+-(id)initWithTargetPoiSource:(id<YTMerchantLocation>)merchantLocation;
 -(void)updateWithCurrentUserMinorArea:(id<YTMinorArea>)userMinor
                 andDisplayedMajorArea:(id<YTMajorArea>)displayMajorArea;
 -(YTNavigationInstruction *)getInstruction;

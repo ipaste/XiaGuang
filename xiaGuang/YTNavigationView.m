@@ -21,7 +21,7 @@
     UIButton *_switchButton;
     UIImageView *_icon;
     YTMessageBox *_messageBox;
-    id <YTMerchantLocation> _merchantLocation;
+    id <YTPoiSource> _poiSource;
 }
 @end
 
@@ -56,7 +56,7 @@
     
     _label.font = [UIFont systemFontOfSize:14];
     _label.textColor = TEXTCOLOR_AND_ARROWCOLOR;
-    _label.text = [NSString stringWithFormat:@"终点:%@",[_merchantLocation merchantLocationName]];
+    _label.text = [NSString stringWithFormat:@"终点:%@",_poiSource.name];
     
     
     _subLabel.font = [UIFont systemFontOfSize:17];
@@ -87,11 +87,17 @@
     }
 }
 
--(void)startNavigationAndSetTargetMerchant:(id <YTMerchantLocation>)merchantLocation{
-    _merchantLocation = merchantLocation;
+-(void)startNavigationAndSetDestination:(id <YTPoiSource>)source{
+    _poiSource = source;
     _isNavigating = YES;
     [self setNeedsLayout];
 }
+
+
+
+
+
+
 
 -(void)clickStopNavigationButton:(UIButton *)sender{
     [_messageBox show];
@@ -106,7 +112,7 @@
    
     YTNavigationInstruction *instruction = [self.plan getInstruction];
     
-    NSString *target = [[[self.plan.targetMerchantLocation floor] floorName] componentsSeparatedByString:@"F"][0];
+    NSString *target = [[[[self.plan.targetPoiSource majorArea] floor] floorName] componentsSeparatedByString:@"F"][0];
     NSString *current = [[[[self.plan.userMinorArea majorArea] floor] floorName]componentsSeparatedByString:@"F"][0];
     if ([target integerValue] > [current integerValue]) {
         

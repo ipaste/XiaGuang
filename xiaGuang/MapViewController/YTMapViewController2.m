@@ -28,9 +28,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTMerchantLocation> _merchantLocation;
     
     BOOL _bluetoothOn;
-    BOOL _isBluetoothPrompt;
-    BOOL _isCurrentDisplay;
-
+    BOOL _isFirstBluetoothPrompt;
+    BOOL _isFirstEnter;
     
     YTMapViewControllerType _type;
     
@@ -51,7 +50,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTMinorArea> _userMinorArea;
     BOOL _switchingFloor;
     NSArray *_activePois;
-    
+    id<YTMajorArea> _activePoiMajorArea;
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -62,6 +61,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTPoi *_selectedPoi;
     CLLocationCoordinate2D _userCord;
     CLLocationCoordinate2D _targetCord;
+    
+    
+    
+    
 }
 
 @end
@@ -109,6 +112,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    _isFirstBluetoothPrompt = YES;
+    _isFirstEnter = YES;
     _curDisplayedMajorArea = _majorArea;
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
@@ -140,8 +145,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_beaconManager startRangingBeacons];
     
 }
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     if (_beaconManager.delegate == nil) {
         _beaconManager.delegate = self;
     }
@@ -150,16 +156,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView setCenterCoordinate:[_merchantLocation coordinate] animated:NO];
         _selectedPoi = [_merchantLocation producePoi];
         [_mapView highlightPoi:_selectedPoi animated:YES];
-        [_detailsView setMerchantInfo:_merchantLocation];
+        [_detailsView setCommonPoi:_merchantLocation];
         [self showCallOut];
     }
-    _isBluetoothPrompt = NO;
-    _isCurrentDisplay = YES;
     [_bluetoothManager refreshBluetoothState];
-}
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-     _isCurrentDisplay = NO;
 }
 
 -(void)createMapView{
@@ -206,9 +206,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView highlightPoi:highlightPoi animated:NO];
     }
     
-    if(_activePois != nil && _activePois.count > 0){
+    if(_activePois != nil && _activePois.count > 0 && [[_activePoiMajorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
         [_mapView addPois:_activePois];
         [_mapView highlightPois:_activePois animated:NO];
+        [_mapView superHighlightPoi:_selectedPoi];
     }
     
 }
@@ -314,27 +315,53 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
     id<YTPoiSource> sourceModel = [poi sourceModel];
+    
+    //if there's activePoi
+    if(_activePois != nil && [sourceModel isKindOfClass:[YTLocalMerchantInstance class]]){
+        
+        return;
+    }
+    
     if([mapView currentState] == YTMapViewDetailStateNormal){
-        _selectedPoi = poi;
+        
         if([sourceModel isMemberOfClass:[YTLocalMerchantInstance class]]){
-            [mapView highlightPoi:_selectedPoi animated:YES];
-            [_detailsView setMerchantInfo:sourceModel];
-            [self showCallOut];
-        }
-        else if([sourceModel isMemberOfClass:[YTLocalBathroom class]]){
+            [mapView highlightPoi:poi animated:YES];
             [_detailsView setCommonPoi:sourceModel];
             [self showCallOut];
+            _selectedPoi = poi;
+        }
+        else{
+            
+            if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+                [mapView highlightPoi:_selectedPoi animated:YES];
+                _selectedPoi = poi;
+                [mapView superHighlightPoi:_selectedPoi];
+                [_detailsView setCommonPoi:sourceModel];
+                [self showCallOut];
+            }
         }
     }
     else if([mapView currentState] == YTMapViewDetailStateNavigating){
         
     }
     else if([mapView currentState] == YTMapViewDetailStateShowDetail){
-        if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
-            [mapView hidePoi:_selectedPoi animated:YES];
-            _selectedPoi = poi;
-            [mapView highlightPoi:_selectedPoi animated:YES];
-            [_detailsView setMerchantInfo:sourceModel];
+        
+        if([sourceModel isMemberOfClass:[YTLocalMerchantInstance class]]){
+            
+            if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+                [mapView hidePoi:_selectedPoi animated:YES];
+                _selectedPoi = poi;
+                [mapView highlightPoi:_selectedPoi animated:YES];
+                [_detailsView setCommonPoi:sourceModel];
+            }
+        }
+        else{
+            if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+                [mapView highlightPoi:_selectedPoi animated:YES];
+                _selectedPoi = poi;
+                [mapView superHighlightPoi:_selectedPoi];
+                [_detailsView setCommonPoi:sourceModel];
+            }
         }
     }
 }
@@ -356,9 +383,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y -= HOISTING_HEIGHT;
         _zoomStepper.frame = frame;
         
+        frame = _selectedPoiButton.frame;
+        frame.origin.y -= HOISTING_HEIGHT;
+        _selectedPoiButton.frame = frame;
+        
+        
         frame = _detailsView.frame;
         frame.origin.y -= HOISTING_HEIGHT;
         _detailsView.frame = frame;
+        
+        
         
     } completion:^(BOOL finished) {
         
@@ -381,6 +415,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y += HOISTING_HEIGHT;
         _zoomStepper.frame = frame;
         
+        frame = _selectedPoiButton.frame;
+        frame.origin.y += HOISTING_HEIGHT;
+        _selectedPoiButton.frame = frame;
+        
         frame = _detailsView.frame;
         frame.origin.y += HOISTING_HEIGHT;
         _detailsView.frame = frame;
@@ -388,7 +426,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     } completion:^(BOOL finished) {
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
+        if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
+            [_mapView highlightPoi:_selectedPoi animated:NO];
+        }
         _selectedPoi = nil;
+        
     }];
 }
 
@@ -489,7 +531,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 -(void)switchFloor:(id<YTFloor>)floor{
-    [self cancelCommonPoiState];
+
     id<YTMajorArea> majorArea = [[floor majorAreas] firstObject];
     if (![[floor floorName] isEqualToString:[[_curDisplayedMajorArea floor]floorName]]) {
         [_switchFloorView promptFloorChange:floor];
@@ -513,14 +555,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark moveToTarget/self
 
 -(void)moveToTargetLocationButtonClicked{
-    id<YTMerchantLocation>tmpMerchantLocation = [_selectedPoi sourceModel];
-    id<YTFloor> floor = [tmpMerchantLocation floor];
+    id<YTPoiSource>target = [_selectedPoi sourceModel];
+    id<YTFloor> floor = [[target majorArea] floor];
     if (![[[_curDisplayedMajorArea floor] floorName] isEqualToString:[ floor floorName]]) {
         [self switchFloor:floor];
-        [_mapView setCenterCoordinate:[tmpMerchantLocation coordinate] animated:YES];
+        [_mapView setCenterCoordinate:[target coordinate] animated:YES];
         
     }else{
-        [_mapView setCenterCoordinate:[tmpMerchantLocation coordinate] animated:YES];
+        [_mapView setCenterCoordinate:[target coordinate] animated:YES];
     }
 }
 
@@ -554,7 +596,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_mapView zoomOut];
 }
 #pragma mark DetailsView delegate
--(void)startNavigatingToMerchantLocation:(id<YTMerchantLocation>)merchantLocation{
+-(void)navigatingToPoiSourceClicked:(id<YTPoiSource>)merchantLocation{
     NSString *message = nil;
     if (!_bluetoothOn) {
         message = @"蓝牙尚未打开";
@@ -568,9 +610,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     
-    [_navigationView startNavigationAndSetTargetMerchant:merchantLocation];
+    [_navigationView startNavigationAndSetDestination:merchantLocation];
     
-    _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetMerchantLocation:merchantLocation];
+    _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetPoiSource:merchantLocation];
     _navigationView.plan = _navigationPlan;
     
     if (![[[_userMinorArea majorArea] identifier]isEqualToString:[_curDisplayedMajorArea identifier]]) {
@@ -583,7 +625,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     
-    if([[[merchantLocation floor] floorName] isEqualToString:[[[_userMinorArea majorArea] floor] floorName]]){
+    if([[[[merchantLocation majorArea]floor] floorName] isEqualToString:[[[_userMinorArea majorArea] floor] floorName]]){
         [_mapView zoomToShowPoint1:[merchantLocation coordinate]  point2:[_userMinorArea coordinate]];
         YTPoi *poi = [merchantLocation producePoi];
         [_mapView superHighlightPoi:poi];
@@ -687,12 +729,21 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y += 44;
         _switchFloorView.frame = frame;
         
+        frame = _selectedPoiButton.frame;
+        frame.origin.y += HOISTING_HEIGHT;
+        _selectedPoiButton.frame = frame;
+        
+        
     } completion:^(BOOL finished) {
         _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60);
         _navigationView.frame = CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60);
         _selectedPoi = nil;
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
+        
+        if(_activePois != nil){
+            [self cancelCommonPoiState];
+        }
     }];
 }
 #pragma mark poiButton & poiView  delegate
@@ -711,6 +762,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }else{
         YTCommonlyUsed *commonlyUsed = poiObject;
         _activePois = [self getPoisForGroupName:[poiObject name]];
+        _activePoiMajorArea = _curDisplayedMajorArea;
         if(_activePois != nil && _activePois.count > 0){
             [_mapView addPois:_activePois];
             [_mapView setCenterCoordinate:CLLocationCoordinate2DMake(0, 0) animated:YES];
@@ -732,6 +784,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([groupName isEqualToString:@"洗手间"]){
         models = [_curDisplayedMajorArea bathrooms];
     }
+    if([groupName isEqualToString:@"出入口"]){
+        models = [_curDisplayedMajorArea exits];
+    }
     
     if([models count] <= 0){
         
@@ -746,13 +801,20 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark selectedPoi delegate
 -(void)selectedPoiButtonClicked{
+    if(_navigationView.isNavigating || [_mapView currentState] == YTMapViewDetailStateShowDetail){
+        return;
+    }
     [self cancelCommonPoiState];
+    [_selectedPoiButton hide];
 }
 
 -(void)cancelCommonPoiState{
     _activePois = nil;
+    _activePoiMajorArea = nil;
     [_poiView deleteSelectedPoi];
     [_mapView removePois:_activePois];
+    _selectedPoiButton.hidden = YES;
+    [self handlePoiForMajorArea:_curDisplayedMajorArea];
 }
 
 //设置状态栏颜色
@@ -769,17 +831,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
-    if (_isCurrentDisplay) {
-        NSDictionary *userInfo = notification.userInfo;
-        _bluetoothOn = [userInfo[@"isOpen"] boolValue];
-        if (_bluetoothOn) {
-            
+    NSDictionary *userInfo = notification.userInfo;
+    _bluetoothOn = [userInfo[@"isOpen"] boolValue];
+    if (_bluetoothOn) {
+        
+    }else{
+        if (!_isFirstBluetoothPrompt) {
+            [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
         }else{
-            if (_isBluetoothPrompt) {
-                [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
-            }else{
-                _isBluetoothPrompt = YES;
-            }
+            _isFirstBluetoothPrompt = NO;
         }
     }
 }
@@ -802,4 +862,5 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     return subMessage;
 }
+
 @end

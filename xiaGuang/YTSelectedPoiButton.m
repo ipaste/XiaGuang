@@ -42,7 +42,11 @@
 }
 
 -(void)clickToButton:(UIButton *)sender{
-    self.hidden = YES;
+    //self.hidden = YES;
     [self.delegate selectedPoiButtonClicked];
+}
+
+-(void)hide{
+    self.hidden = YES;
 }
 @end
