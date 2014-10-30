@@ -33,7 +33,7 @@
     self = [super init];
     if (self) {
         self.navigationItem.title = @"商圈";
-        
+        self.automaticallyAdjustsScrollViewInsets = NO;
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
