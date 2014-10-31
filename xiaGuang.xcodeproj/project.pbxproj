@@ -122,6 +122,9 @@
 		D94C28431A0263EE009FF2F3 /* YTCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C283E1A0263EE009FF2F3 /* YTCategory.m */; };
 		D94C28441A0263EE009FF2F3 /* YTCommonlyUsed.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C28401A0263EE009FF2F3 /* YTCommonlyUsed.m */; };
 		D94C28451A0263EE009FF2F3 /* YTMallMerchantBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C28421A0263EE009FF2F3 /* YTMallMerchantBundle.m */; };
+		D94C28481A033414009FF2F3 /* YTCurrentParkingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C28471A033414009FF2F3 /* YTCurrentParkingButton.m */; };
+		D94C284C1A03566F009FF2F3 /* YTParkingAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C284B1A03566F009FF2F3 /* YTParkingAnnotation.m */; };
+		D94C284F1A035D34009FF2F3 /* YTParkingPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C284E1A035D34009FF2F3 /* YTParkingPoi.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -367,6 +370,12 @@
 		D94C28401A0263EE009FF2F3 /* YTCommonlyUsed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTCommonlyUsed.m; sourceTree = "<group>"; };
 		D94C28411A0263EE009FF2F3 /* YTMallMerchantBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallMerchantBundle.h; sourceTree = "<group>"; };
 		D94C28421A0263EE009FF2F3 /* YTMallMerchantBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallMerchantBundle.m; sourceTree = "<group>"; };
+		D94C28461A033414009FF2F3 /* YTCurrentParkingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTCurrentParkingButton.h; path = subView/YTCurrentParkingButton.h; sourceTree = "<group>"; };
+		D94C28471A033414009FF2F3 /* YTCurrentParkingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTCurrentParkingButton.m; path = subView/YTCurrentParkingButton.m; sourceTree = "<group>"; };
+		D94C284A1A03566F009FF2F3 /* YTParkingAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingAnnotation.h; path = subView/YTParkingAnnotation.h; sourceTree = "<group>"; };
+		D94C284B1A03566F009FF2F3 /* YTParkingAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingAnnotation.m; path = subView/YTParkingAnnotation.m; sourceTree = "<group>"; };
+		D94C284D1A035D34009FF2F3 /* YTParkingPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingPoi.h; path = subView/YTParkingPoi.h; sourceTree = "<group>"; };
+		D94C284E1A035D34009FF2F3 /* YTParkingPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingPoi.m; path = subView/YTParkingPoi.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -765,6 +774,7 @@
 		D94C27F11A0263C6009FF2F3 /* ParkingViewController */ = {
 			isa = PBXGroup;
 			children = (
+				D94C28491A03558E009FF2F3 /* subViews */,
 				D94C27F21A0263C6009FF2F3 /* YTParkingViewController.h */,
 				D94C27F31A0263C6009FF2F3 /* YTParkingViewController.m */,
 			);
@@ -816,6 +826,19 @@
 				D94C28301A0263CF009FF2F3 /* UIView+MJExtension.m */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D94C28491A03558E009FF2F3 /* subViews */ = {
+			isa = PBXGroup;
+			children = (
+				D94C28461A033414009FF2F3 /* YTCurrentParkingButton.h */,
+				D94C28471A033414009FF2F3 /* YTCurrentParkingButton.m */,
+				D94C284A1A03566F009FF2F3 /* YTParkingAnnotation.h */,
+				D94C284B1A03566F009FF2F3 /* YTParkingAnnotation.m */,
+				D94C284D1A035D34009FF2F3 /* YTParkingPoi.h */,
+				D94C284E1A035D34009FF2F3 /* YTParkingPoi.m */,
+			);
+			name = subViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -977,6 +1000,7 @@
 				AE24A83A1A02430300A0CE91 /* YTBluetoothManager.m in Sources */,
 				AE24A89A1A02432000A0CE91 /* YTCloudBlock.m in Sources */,
 				D94C27A91A02639F009FF2F3 /* YTAnnotationSource.m in Sources */,
+				D94C28481A033414009FF2F3 /* YTCurrentParkingButton.m in Sources */,
 				AE24A8A31A02432000A0CE91 /* YTLocalBeacon.m in Sources */,
 				D94C27AC1A02639F009FF2F3 /* YTMerchantAnnotation.m in Sources */,
 				AE24A8A21A02432000A0CE91 /* YTLocalBathroom.m in Sources */,
@@ -1001,6 +1025,7 @@
 				AE24A89F1A02432000A0CE91 /* YTCloudMerchant.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */,
 				D94C27B71A02639F009FF2F3 /* YTMallBuildingSelector.m in Sources */,
+				D94C284C1A03566F009FF2F3 /* YTParkingAnnotation.m in Sources */,
 				AE24A89E1A02432000A0CE91 /* YTCloudMall.m in Sources */,
 				D94C28331A0263CF009FF2F3 /* MJRefreshBaseView.m in Sources */,
 				AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */,
@@ -1021,6 +1046,7 @@
 				D94C27B81A02639F009FF2F3 /* YTMessageBox.m in Sources */,
 				D94C28161A0263C6009FF2F3 /* YTSettingViewController.m in Sources */,
 				D94C27AB1A02639F009FF2F3 /* YTExitAnnotation.m in Sources */,
+				D94C284F1A035D34009FF2F3 /* YTParkingPoi.m in Sources */,
 				D94C27A81A02639F009FF2F3 /* YTAnnotation.m in Sources */,
 				D94C283A1A0263CF009FF2F3 /* UIScrollView+MJExtension.m in Sources */,
 				D94C28371A0263CF009FF2F3 /* RMMapView+RMMapViewTileSourceHelpers.m in Sources */,

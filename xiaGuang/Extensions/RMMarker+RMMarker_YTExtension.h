@@ -33,4 +33,8 @@ typedef void (^YTCompletion)(void);
 
 -(void)superHightlightMerchantLayer;
 -(void)cancelSuperHighlight;
+
+-(instancetype)initWithParkingLayer;
+-(void)startRespirationLampAnimation;
+-(void)stopRespirationLampAnimation;
 @end
