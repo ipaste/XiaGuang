@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <Accelerate/Accelerate.h>
 @interface UIColor (YTColor)
 + (UIColor *)colorWithString:(NSString *)string;
 @end
@@ -18,4 +18,5 @@
 + (UIImage *)imageRotateOneHundredAndEightyDegreesWithImageName:(NSString *)name;
 + (UIImage *)originImage:(UIImage *)image scaleToSize:(CGSize)size;
 + (UIImage *)imageFromImage:(UIImage *)image rect:(CGRect)rect;
+
 @end

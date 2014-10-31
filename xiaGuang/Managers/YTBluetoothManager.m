@@ -29,7 +29,6 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
 }
 
 -(void)refreshBluetoothState{
-    
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
    [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
 }
@@ -41,7 +40,7 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     self = [super init];
     if (self) {
         _centralManager = [[CBCentralManager alloc]initWithDelegate:self queue:nil];
-        _isFirst = false;
+        _isFirst = true;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         
@@ -52,8 +51,8 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     if (!_isEnterBackground) {
         BOOL curState = central.state == CBCentralManagerStatePoweredOff ? NO : YES;
         _curBlueState = curState;
-        if (_isOpen != curState || _isFirst == false) {
-            _isFirst = true;
+        if (_isOpen != curState || _isFirst == true) {
+            _isFirst = false;
             central.delegate = nil;
             _isOpen = curState;
             if (_timer == nil) {

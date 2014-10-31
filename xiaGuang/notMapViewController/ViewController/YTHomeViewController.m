@@ -88,7 +88,7 @@
             break;
         case 1:
         {
-            controller = [[YTParkingViewController alloc]init];
+            controller = [[YTParkingViewController alloc]initWithMinorArea:nil];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:controller animated:YES completion:^{
                 

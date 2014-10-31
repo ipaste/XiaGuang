@@ -11,6 +11,9 @@
 #import "YTZoomStepper.h"
 #import "YTNavigationBar.h"
 #import "YTBluetoothManager.h"
-@interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate>
-
+#import "YTMinorArea.h"
+#import "YTParkingPoi.h"
+#import "YTCurrentParkingButton.h"
+@interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate,YTCurrentParkingDelegate>
+-(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea;
 @end

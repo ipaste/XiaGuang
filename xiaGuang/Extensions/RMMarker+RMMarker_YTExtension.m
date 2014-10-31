@@ -533,4 +533,48 @@ static YTCompletion Completion = nil;
         }
     }
 }
+
+-(instancetype)initWithParkingLayer{
+    self = [super init];
+    if (self) {
+        self.bounds = CGRectMake(0, 0, 0, 0);
+        self.masksToBounds = NO;
+        
+        CALayer *respirationLamp = [CALayer layer];
+        respirationLamp.backgroundColor = [UIColor redColor].CGColor;
+        respirationLamp.frame = CGRectMake(0, 0, 100, 100);
+        respirationLamp.name = @"respirationLamp";
+        respirationLamp.cornerRadius = CGRectGetWidth(respirationLamp.frame) / 2;
+        [self addSublayer:respirationLamp];
+    }
+    return self;
+}
+
+-(void)startRespirationLampAnimation{
+    for (CALayer *tmpLayer in self.sublayers) {
+        if ([tmpLayer.name isEqualToString:@"respirationLamp"]) {
+            [tmpLayer removeAllAnimations];
+            CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+            boundsAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)];
+            boundsAnimation.fromValue  = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)];
+            boundsAnimation.duration = 4;
+            boundsAnimation.repeatCount = MAXFLOAT;
+            [tmpLayer addAnimation:boundsAnimation forKey:@"LampScale"];
+            
+            
+            CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            opacityAnimation.fromValue = [NSNumber numberWithFloat:0.6];
+            opacityAnimation.toValue   = [NSNumber numberWithFloat:-1.0];
+            opacityAnimation.duration = 4;
+            opacityAnimation.repeatCount = MAXFLOAT;
+            [tmpLayer addAnimation:opacityAnimation forKey:@"LampOpacity"];
+            break;
+        }
+    }
+}
+
+-(void)stopRespirationLampAnimation{
+    
+}
+
 @end
