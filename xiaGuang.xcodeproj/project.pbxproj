@@ -44,6 +44,9 @@
 		AE24A8A91A02432100A0CE91 /* YTLocalMerchantInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8901A02432000A0CE91 /* YTLocalMerchantInstance.m */; };
 		AE24A8AA1A02432100A0CE91 /* YTLocalMinorArea.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8921A02432000A0CE91 /* YTLocalMinorArea.m */; };
 		AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8AD1A0258D500A0CE91 /* YTLocalExit.m */; };
+		AE24A8BA1A03855500A0CE91 /* BlurMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8B71A03855500A0CE91 /* BlurMenu.m */; };
+		AE24A8BB1A03855500A0CE91 /* BlurMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8B91A03855500A0CE91 /* BlurMenuItemCell.m */; };
+		AE24A8BE1A03861E00A0CE91 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8BD1A03861E00A0CE91 /* UIImage+ImageEffects.m */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
 		D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BC19FA5825004128FD /* AppDelegate.m */; };
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
@@ -206,6 +209,12 @@
 		AE24A8AB1A0258D500A0CE91 /* YTExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTExit.h; sourceTree = "<group>"; };
 		AE24A8AC1A0258D500A0CE91 /* YTLocalExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalExit.h; sourceTree = "<group>"; };
 		AE24A8AD1A0258D500A0CE91 /* YTLocalExit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalExit.m; sourceTree = "<group>"; };
+		AE24A8B61A03855500A0CE91 /* BlurMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlurMenu.h; sourceTree = "<group>"; };
+		AE24A8B71A03855500A0CE91 /* BlurMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlurMenu.m; sourceTree = "<group>"; };
+		AE24A8B81A03855500A0CE91 /* BlurMenuItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlurMenuItemCell.h; sourceTree = "<group>"; };
+		AE24A8B91A03855500A0CE91 /* BlurMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlurMenuItemCell.m; sourceTree = "<group>"; };
+		AE24A8BC1A03861E00A0CE91 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		AE24A8BD1A03861E00A0CE91 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D93CE4B419FA5825004128FD /* xiaGuang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xiaGuang.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -512,6 +521,19 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		AE24A8B51A03855500A0CE91 /* BlurMenu */ = {
+			isa = PBXGroup;
+			children = (
+				AE24A8BC1A03861E00A0CE91 /* UIImage+ImageEffects.h */,
+				AE24A8BD1A03861E00A0CE91 /* UIImage+ImageEffects.m */,
+				AE24A8B61A03855500A0CE91 /* BlurMenu.h */,
+				AE24A8B71A03855500A0CE91 /* BlurMenu.m */,
+				AE24A8B81A03855500A0CE91 /* BlurMenuItemCell.h */,
+				AE24A8B91A03855500A0CE91 /* BlurMenuItemCell.m */,
+			);
+			path = BlurMenu;
+			sourceTree = "<group>";
+		};
 		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -543,6 +565,7 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
+				AE24A8B51A03855500A0CE91 /* BlurMenu */,
 				D94C28181A0263CF009FF2F3 /* Extensions */,
 				D94C27C61A0263C6009FF2F3 /* notMapViewController */,
 				D94C27F11A0263C6009FF2F3 /* ParkingViewController */,
@@ -990,6 +1013,7 @@
 				D94C280B1A0263C6009FF2F3 /* YTMerchantViewCell.m in Sources */,
 				AE24A8A41A02432000A0CE91 /* YTLocalBlock.m in Sources */,
 				D94C28351A0263CF009FF2F3 /* MJRefreshFooterView.m in Sources */,
+				AE24A8BA1A03855500A0CE91 /* BlurMenu.m in Sources */,
 				D94C27BD1A02639F009FF2F3 /* YTNavigationModePlan.m in Sources */,
 				D94C27B31A02639F009FF2F3 /* JWBlurView.m in Sources */,
 				D94C28031A0263C6009FF2F3 /* YTNavigationController.m in Sources */,
@@ -1014,6 +1038,7 @@
 				D94C28011A0263C6009FF2F3 /* YTMerchantInfoViewController.m in Sources */,
 				AE24A89D1A02432000A0CE91 /* YTCloudMajorArea.m in Sources */,
 				D94C27BC1A02639F009FF2F3 /* YTNavigationInstruction.m in Sources */,
+				AE24A8BE1A03861E00A0CE91 /* UIImage+ImageEffects.m in Sources */,
 				D94C28441A0263EE009FF2F3 /* YTCommonlyUsed.m in Sources */,
 				D94C28171A0263C6009FF2F3 /* YTUserAgreementViewController.m in Sources */,
 				D94C27B21A02639F009FF2F3 /* YTPoi.m in Sources */,
@@ -1038,6 +1063,7 @@
 				D94C28041A0263C6009FF2F3 /* YTResultsViewController.m in Sources */,
 				D94C28081A0263C6009FF2F3 /* YTCategoryViewCell.m in Sources */,
 				AE24A89C1A02432000A0CE91 /* YTCloudFloor.m in Sources */,
+				AE24A8BB1A03855500A0CE91 /* BlurMenuItemCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

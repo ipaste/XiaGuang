@@ -226,6 +226,9 @@
     return nil;
 }
 
+-(ESTBeacon *)currentClosest{
+    return _currentClosest;
+}
 
 -(void)dealloc{
     NSLog(@"BeaconManager销毁");

@@ -15,6 +15,10 @@
     YTBluetoothManager *_bluetoothManager;
     
     BOOL _blueToothOn;
+    
+    YTBeaconManager *_beaconManager;
+    
+    id<YTMinorArea> _recordMinorArea;
 }
 @end
 
@@ -37,6 +41,32 @@
     
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
+    
+    _beaconManager = [YTBeaconManager sharedBeaconManager];
+    [_beaconManager startRangingBeacons];
+    _beaconManager.delegate = self;
+    
+    
+}
+
+-(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
+    _recordMinorArea = [self getMinorArea:beacon];
+}
+
+-(void)noBeaconsFound{
+    NSLog(@"no beacons found");
+}
+
+-(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
+    
+    FMDatabase *db = [YTDBManager sharedManager];
+    [db open];
+    FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
+    [result next];
+    YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
+    
+    YTLocalMinorArea * minorArea = [localBeacon minorArea];
+    return minorArea;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -103,7 +133,7 @@
         case 3:
         {
             if (_mapViewController == nil) {
-                _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:nil];
+                _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
                 
             }
             _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;

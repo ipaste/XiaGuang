@@ -16,7 +16,7 @@
 #import "YTParkingViewController.h"
 #import "YTBluetoothManager.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-@interface YTHomeViewController : UIViewController<YTPanelDelegate>
+@interface YTHomeViewController : UIViewController<YTPanelDelegate,YTBeaconManagerDelegate>
 
 
 @end
