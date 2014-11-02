@@ -15,7 +15,7 @@ typedef void (^YTCompletion)(void);
 - (id)initWithUserLocation;
 - (void)userLocationDirection:(CATransform3D)transform3D;
 - (id)initWithMerchantImage:(UIImage *)image;
--(id)initWithElevator;
+- (id)initWithElevator;
 
 - (id)initWithBeacon;
 - (void)showMerchantAnimation:(BOOL)animation;
@@ -35,6 +35,7 @@ typedef void (^YTCompletion)(void);
 -(void)cancelSuperHighlight;
 
 -(instancetype)initWithParkingLayer;
--(void)startRespirationLampAnimation;
--(void)stopRespirationLampAnimation;
+-(instancetype)initWithParkingMarkLayer;
+-(void)showParkingMark;
+-(void)hideParkingMark;
 @end

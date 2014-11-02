@@ -90,6 +90,7 @@
         {
             controller = [[YTParkingViewController alloc]initWithMinorArea:nil];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            if (controller == nil) return;
             [self presentViewController:controller animated:YES completion:^{
                 
             }];

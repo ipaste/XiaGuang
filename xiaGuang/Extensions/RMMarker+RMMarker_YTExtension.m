@@ -382,20 +382,22 @@ static YTCompletion Completion = nil;
         if ([curLayer.name isEqualToString:@"halo"]) {
             [curLayer removeAllAnimations];
             CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-            boundsAnimation.repeatCount = MAXFLOAT;
+            
             boundsAnimation.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)];
             boundsAnimation.toValue   = [NSValue valueWithCATransform3D:CATransform3DMakeScale(2.0, 2.0, 1.0)];
-            boundsAnimation.removedOnCompletion = NO;
-            boundsAnimation.duration = 1;
-            [curLayer addAnimation:boundsAnimation forKey:@"animateScale"];
+
             
             CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            opacityAnimation.repeatCount = MAXFLOAT;
             opacityAnimation.fromValue = [NSNumber numberWithFloat:1.0];
             opacityAnimation.toValue   = [NSNumber numberWithFloat:-1.0];
-            opacityAnimation.removedOnCompletion = NO;
-            opacityAnimation.duration = 1;
-            [curLayer addAnimation:opacityAnimation forKey:@"animateOpacity"];
+
+            
+            CAAnimationGroup *group = [CAAnimationGroup animation];
+            group.animations = @[boundsAnimation,opacityAnimation];
+            group.repeatCount = MAXFLOAT;
+            group.removedOnCompletion = NO;
+            group.duration = 1;
+            [curLayer addAnimation:group forKey:@"group"];
             break;
         }
     }
@@ -442,10 +444,7 @@ static YTCompletion Completion = nil;
     }
 }
 
-- (void)showMerchantAnimation:(BOOL)animation completion:(YTCompletion)completion{
-    [self showMerchantAnimation:animation];
-    Completion = completion;
-}
+
 - (void)hideMerchantAnimation:(BOOL)animation{
     Completion = nil;
     for (CALayer *curLayer in self.sublayers) {
@@ -488,10 +487,6 @@ static YTCompletion Completion = nil;
     }
 }
 
--(void)hideMerchantAnimation:(BOOL)animation completion:(YTCompletion)completion{
-    [self hideMerchantAnimation:animation];
-    Completion = completion;
-}
 
 -(void)showElevatorAnimation{
     for (CALayer *curLayer in self.sublayers) {
@@ -537,44 +532,41 @@ static YTCompletion Completion = nil;
 -(instancetype)initWithParkingLayer{
     self = [super init];
     if (self) {
+        self.zPosition = 0;
         self.bounds = CGRectMake(0, 0, 0, 0);
         self.masksToBounds = NO;
         
         CALayer *respirationLamp = [CALayer layer];
         respirationLamp.backgroundColor = [UIColor redColor].CGColor;
-        respirationLamp.frame = CGRectMake(0, 0, 100, 100);
-        respirationLamp.name = @"respirationLamp";
+        respirationLamp.bounds = CGRectMake(0, 0, 100, 100);
+        respirationLamp.name = @"halo";
         respirationLamp.cornerRadius = CGRectGetWidth(respirationLamp.frame) / 2;
         [self addSublayer:respirationLamp];
+        [self didAppear];
     }
     return self;
 }
-
--(void)startRespirationLampAnimation{
-    for (CALayer *tmpLayer in self.sublayers) {
-        if ([tmpLayer.name isEqualToString:@"respirationLamp"]) {
-            [tmpLayer removeAllAnimations];
-            CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-            boundsAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)];
-            boundsAnimation.fromValue  = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)];
-            boundsAnimation.duration = 4;
-            boundsAnimation.repeatCount = MAXFLOAT;
-            [tmpLayer addAnimation:boundsAnimation forKey:@"LampScale"];
-            
-            
-            CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            opacityAnimation.fromValue = [NSNumber numberWithFloat:0.6];
-            opacityAnimation.toValue   = [NSNumber numberWithFloat:-1.0];
-            opacityAnimation.duration = 4;
-            opacityAnimation.repeatCount = MAXFLOAT;
-            [tmpLayer addAnimation:opacityAnimation forKey:@"LampOpacity"];
-            break;
-        }
+-(instancetype)initWithParkingMarkLayer{
+    self = [super init];
+    if (self) {
+        
+        self.bounds = CGRectMake(0, 0, 0, 0);
+        self.masksToBounds = NO;
+        self.opacity = 0.0f;
+        CALayer *car = [CALayer layer];
+        UIImage *carImage = [UIImage imageNamed:@"parking_img_car"];
+        car.contents = (id)[carImage CGImage];
+        car.contentsScale = carImage.scale;
+        car.frame = CGRectMake(-(carImage.size.width / 2), -(carImage.size.height / 2), carImage.size.width, carImage.size.height);
+        [self addSublayer:car];
     }
+    self.zPosition = 10;
+    return self;
 }
-
--(void)stopRespirationLampAnimation{
-    
+-(void)showParkingMark{
+    self.opacity = 1.0f;
 }
-
+-(void)hideParkingMark{
+    self.opacity = 0.0f;
+}
 @end

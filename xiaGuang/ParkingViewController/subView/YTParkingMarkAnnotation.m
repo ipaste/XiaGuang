@@ -1,14 +1,14 @@
 //
-//  YTParkingAnnotation.m
+//  YTParkingMarkAnnotation.m
 //  xiaGuang
 //
 //  Created by YunTop on 14/10/31.
 //  Copyright (c) 2014年 YunTop. All rights reserved.
 //
 
-#import "YTParkingAnnotation.h"
+#import "YTParkingMarkAnnotation.h"
 
-@implementation YTParkingAnnotation{
+@implementation YTParkingMarkAnnotation{
     RMMarker *_resultLayer;
 }
 -(id)initWithMapView:(RMMapView *)aMapView coordinate:(CLLocationCoordinate2D)aCoordinate andTitle:(NSString *)aTitle{
@@ -19,16 +19,17 @@
     return self;
 }
 -(RMMapLayer *)produceLayer{
-   _resultLayer = [[RMMarker alloc]initWithParkingLayer];
-
+    _resultLayer = [[RMMarker alloc]initWithParkingMarkLayer];
+    
     return _resultLayer;
 }
 -(void)highlightAnimated:(BOOL)animated{
     [super highlightAnimated:animated];
-    [_resultLayer didAppear];
+    [_resultLayer showParkingMark];
 }
 -(void)hideAnimated:(BOOL)animated{
     [super hideAnimated:animated];
+    [_resultLayer hideParkingMark];
 }
 -(void)superHighlight:(BOOL)animated{
     [super superHighlight:animated];

@@ -7,7 +7,11 @@
 //
 
 #import "YTParkingViewController.h"
-
+typedef NS_ENUM(NSInteger, YTParkingState) {
+    YTParkingStateNormal = 0,
+    YTParkingStateNotMark,
+    YTParkingStateMarked
+};
 @implementation YTParkingViewController{
     id<YTMinorArea> _minorArea;
     YTMapView2 *_mapView;
@@ -23,35 +27,62 @@
     UILabel *_promptLable;
     YTBluetoothManager *_bluetoothManager;
     YTCurrentParkingButton *_currentParkingButton;
+    YTMoveCurrentLocationButton *_moveCurrentLocationButton;
     BOOL _bluetoothOn;
+    CLLocationCoordinate2D _userCoordinate;
+    CLLocationCoordinate2D _carCoordinate;
+    YTParkingMarkPoi *_poiMarked;
+    YTParkingPoi *_currenPoi;
+    YTUserDefaults *_userDefaults;
+    YTParkingState _state;
 }
 
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
     self = [super init];
     if (self) {
         _minorArea = minorArea;
-        UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
-        backgroundView.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
-        [self.view addSubview:backgroundView];
-        [self createNavigationBar];
-        [self createMapView];
-        [self createMarkView];
-        [self createZoomStepper];
-        [self createCurrentParking];
-        [self createShadeView];
-        [self createParkingButton];
-        
-        //test
-        YTParkingPoi *poi = [[YTParkingPoi alloc]initWithParkingCoordinat:CLLocationCoordinate2DMake(0, 0)];
-        [_mapView addPoi:poi];
-
+        _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blueStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
+        [_bluetoothManager refreshBluetoothState];
     }
     return self;
 }
+
 -(void)viewDidLoad{
-    _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blueStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
-     [_bluetoothManager refreshBluetoothState];
+    UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    backgroundView.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
+    [self.view addSubview:backgroundView];
+    
+    [self createNavigationBar];
+    [self createMapView];
+    [self createMarkView];
+    [self createZoomStepper];
+    [self createFunctionButton];
+    [self createShadeView];
+    [self createParkingButton];
+    /*
+    if (_minorArea == nil || _bluetoothOn == NO) {
+        [self setParkingState:YTParkingStateNormal animation:NO];
+        return ;
+    }else{
+        _userCoordinate = [_minorArea coordinate];
+        _currenPoi = [[YTParkingPoi alloc]initWithParkingCoordinat:_userCoordinate];
+        [_mapView addPoi:_currenPoi];
+        [_mapView highlightPoi:_currenPoi animated:NO];
+    }
+    */
+    _userDefaults = [YTUserDefaults standardUserDefaults];
+    CLLocationCoordinate2D coord = [_userDefaults coord];
+    if (coord.latitude == MAXFLOAT && coord.longitude == MAXFLOAT) {
+        [self setParkingState:YTParkingStateNotMark animation:NO];
+    }else{
+        _carCoordinate = coord;
+        [self setParkingState:YTParkingStateMarked animation:NO];
+    }
+    _userCoordinate = [_minorArea coordinate];
+    _currenPoi = [[YTParkingPoi alloc]initWithParkingCoordinat:_userCoordinate];
+    [_mapView addPoi:_currenPoi];
+    [_mapView highlightPoi:_currenPoi animated:NO];
 }
 
 -(void)createNavigationBar{
@@ -76,15 +107,15 @@
 }
 
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
-
+    
 }
 
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
-
+    
 }
 
 -(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction{
-
+    
 }
 
 #pragma mark zoomStepper
@@ -174,47 +205,122 @@
     [self.view addSubview:_promptLable];
 }
 -(void)markedButtonClicked:(UIButton *)sender{
-    [UIView animateWithDuration:.5 animations:^{
-        sender.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        
-    }];
+    _carCoordinate = _userCoordinate;
+    [self setParkingState:YTParkingStateMarked animation:YES];
 }
 
 #pragma mark bluetoothState
 -(void)blueStateChange:(NSNotification *)notification{
     NSDictionary *userInfo = notification.userInfo;
     _bluetoothOn = [userInfo[@"isOpen"] boolValue];
-    if (_bluetoothOn /*&& _minorArea != nil*/) {
-        [UIView animateWithDuration:.5 animations:^{
-            _promptLable.alpha = 0;
-            _shadeView.alpha = 0;
-        } completion:^(BOOL finished) {
-            _promptLable.hidden = YES;
-            _shadeView.hidden = YES;
-            [_parkingView setEnabled:YES];
-        }];
+    if (_bluetoothOn && _minorArea != nil) {
         
     }else{
-        _promptLable.alpha = 1;
-        _shadeView.alpha = 1;
-        _promptLable.hidden = NO;
-        _shadeView.hidden = NO;
-        [_parkingView setEnabled:NO];
+        
     }
 }
+
 #pragma mark currentParking
--(void)createCurrentParking{
-    _currentParkingButton = [[YTCurrentParkingButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
+-(void)createFunctionButton{
+    _moveCurrentLocationButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
+    _moveCurrentLocationButton.delegate = self;
+    [self.view addSubview:_moveCurrentLocationButton];
+    
+    _currentParkingButton = [[YTCurrentParkingButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
     _currentParkingButton.delegate = self;
     [self.view addSubview:_currentParkingButton];
 }
 
--(void)moveCurrentParkingPositionClicked{
-
+-(void)moveToUserLocationButtonClicked{
+    [_mapView setCenterCoordinate:_userCoordinate animated:YES];
 }
 
+-(void)moveCurrentParkingPositionClicked{
+    CLLocationCoordinate2D target;
+    if (_state == YTParkingStateMarked) {
+        target = _carCoordinate;
+    }else{
+        target = _userCoordinate;
+    }
+    [_mapView setCenterCoordinate:target animated:YES];
+}
 
+-(void)setParkingState:(YTParkingState)state animation:(BOOL)animation{
+    CGFloat time = animation == YES ? 0.5:0;
+    switch (state) {
+        case YTParkingStateNormal:
+        {
+            _shadeView.hidden = NO;
+            _promptLable.hidden = NO;
+            _parkingView.hidden = NO;
+            [UIView animateWithDuration:time animations:^{
+                _shadeView.alpha = 1;
+                _promptLable.alpha = 1;
+                _parkingView.alpha = 1;
+            } completion:^(BOOL finished) {
+                [_parkingView setEnabled:NO];
+            }];
+        }
+            break;
+        case YTParkingStateMarked:
+        {
+            _moveCurrentLocationButton.hidden = NO;
+            _moveCurrentLocationButton.alpha = 0;
+            [UIView animateWithDuration:time animations:^{
+                CGRect frame = _currentParkingButton.frame;
+                frame.origin.x = CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10;
+                _currentParkingButton.frame = frame;
+    
+                _moveCurrentLocationButton.alpha = 1;
+                
+                 _parkingView.alpha = 0;
+                _shadeView.alpha = 0;
+                _promptLable.alpha = 0;
+            } completion:^(BOOL finished) {
+                [_userDefaults setCoord:_carCoordinate];
+                [self parkingMarkedShowInMap:YES];
+                _shadeView.hidden = YES;
+                _promptLable.hidden = YES;
+            }];
+        }
+            break;
+        case YTParkingStateNotMark:
+        {
+            [UIView animateWithDuration:time animations:^{
+                _shadeView.alpha = 0;
+                _promptLable.alpha = 0;
+                _parkingView.alpha = 1;
+                
+                CGRect frame = _currentParkingButton.frame;
+                frame.origin.x = CGRectGetMinX(_moveCurrentLocationButton.frame);
+                _currentParkingButton.frame = frame;
+                
+            } completion:^(BOOL finished) {
+                _shadeView.hidden = YES;
+                _promptLable.hidden = YES;
+                [_parkingView setEnabled:YES];
+                _moveCurrentLocationButton.hidden = YES;
+                [_userDefaults removeCoord];
+                [self parkingMarkedShowInMap:NO];
+            }];
+        }
+            break;
+    }
+    
+    _state = state;
+    
+}
+-(void)parkingMarkedShowInMap:(BOOL)show{
+    if (show){
+        _poiMarked = [[YTParkingMarkPoi alloc]initWithParkingMarkCoordinat:_carCoordinate];
+        [_mapView addPoi:_poiMarked];
+        [_mapView highlightPoi:_poiMarked animated:NO];
+    }else{
+        [_mapView hidePoi:_poiMarked animated:NO];
+        [_mapView removeAnnotationForPoi:_poiMarked];
+        _poiMarked = nil;
+    }
+}
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
@@ -223,6 +329,5 @@
 -(void)dealloc{
     NSLog(@"parking Dealloc");
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
-    
 }
 @end
