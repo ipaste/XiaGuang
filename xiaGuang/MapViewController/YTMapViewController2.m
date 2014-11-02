@@ -8,6 +8,8 @@
 
 #import "YTMapViewController2.h"
 
+#define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
+
 #define HOISTING_HEIGHT 70
 typedef NS_ENUM(NSInteger, YTMapViewControllerType){
     YTMapViewControllerTypeNavigation = 0,
@@ -44,6 +46,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTSwitchBlockView *_switchBlockView;
     YTDetailsView *_detailsView;
     YTSelectedPoiButton *_selectedPoiButton;
+    UIImageView *_noBeaconCover;
+    
     
     //states
     id<YTMajorArea> _curDisplayedMajorArea;
@@ -133,17 +137,49 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
+    [self createNoBeaconCover];
     
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
+
+    [_beaconManager startRangingBeacons];
+    
+    //[self showNoBeaconCover];
+    if(_minorArea == nil){
+        [self showNoBeaconCover];
+    }
     
     if (_type == YTMapViewControllerTypeNavigation) {
         [self userMoveToMinorArea:_minorArea];
         [_beaconManager startRangingBeacons];
         return;
     }
-    [_beaconManager startRangingBeacons];
+
+}
+
+-(void)createNoBeaconCover{
+    UIImage *fake;
+    if (BIGGER_THEN_IPHONE5) {
+        fake = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
+    }else{
+        fake = [UIImage imageNamed:@"home_bg960@2x.jpg"];
+    }
     
+    _noBeaconCover = [[UIImageView alloc] initWithImage:fake];
+    //_noBeaconCover.backgroundColor = [UIColor blackColor];
+    //_noBeaconCover.alpha = 0.5;
+    _noBeaconCover.hidden = YES;
+    
+    [self.view addSubview:_noBeaconCover];
+}
+
+-(void)showNoBeaconCover{
+    _noBeaconCover.hidden = NO;
+    NSArray *items = [[NSArray alloc] initWithObjects:@"海岸城", @"欢乐海岸", @"Coco Park", @"鸡鸡一百", nil];
+    
+    BlurMenu *menu = [[BlurMenu alloc] initWithItems:items parentView:self.view delegate:self];
+    
+    [menu show];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -861,6 +897,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             break;
     }
     return subMessage;
+}
+
+
+#pragma mark blurMenu
+-(void)menuDidHide{
+    
+}
+-(void)menuDidShow{
+    
+}
+-(void)selectedItemAtIndex:(NSInteger)index{
+    
 }
 
 @end
