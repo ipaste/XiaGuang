@@ -30,8 +30,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [_tableView setBackgroundColor:[UIColor clearColor]];
-    //_tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    _tableView.separatorColor = [UIColor colorWithString:@"dcdcdc"];
+    _tableView.separatorColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.2];
     [self.view addSubview:_tableView];
     self.navigationItem.title = @"设置";
 }
@@ -73,7 +72,7 @@
     //selectView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_2_pr"]];
     [selectView setBackgroundColor:[UIColor colorWithString:@"e95e37"]];
     cell.selectedBackgroundView = selectView;
-    cell.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+    cell.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.2];
     cell.textLabel.textColor = [UIColor whiteColor];
     
     //cellAnimation
@@ -90,13 +89,16 @@
     //cell.textLabel.textColor = [UIColor colorWithString:@"202020"];
     if (indexPath.section == 0) {
         cell.textLabel.text = @"邀请好友使用虾逛";
+        cell.imageView.image = [UIImage imageNamed:@"set_ico_1"];
     }else if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 0:
                 cell.textLabel.text = @"给虾逛评分";
+                cell.imageView.image = [UIImage imageNamed:@"set_ico_2"];
                 break;
             case 1:
                 cell.textLabel.text = @"意见反馈";
+                cell.imageView.image = [UIImage imageNamed:@"set_ico_3"];
                 break;
         }
     }else if (indexPath.section == 2) {
@@ -104,6 +106,7 @@
             case 0:
             {
                 cell.textLabel.text = @"版本更新";
+                cell.imageView.image = [UIImage imageNamed:@"set_ico_4"];
                 if (!self.isLatest) {
                     UIButton *latestBtn  = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 45, 20)];
                     latestBtn.center = CGPointMake(CGRectGetWidth(self.view.frame) - 50, 22);
@@ -126,9 +129,11 @@
                 break;
             case 1:
                 cell.textLabel.text = @"关于虾逛";
+                cell.imageView.image = [UIImage imageNamed:@"set_ico_5"];
                 break;
             case 2:
                 cell.textLabel.text = @"用户协议";
+                cell.imageView.image = [UIImage imageNamed:@"set_ico_6"];
                 _isShowAnimation = NO;
                 break;
         }

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @class YTMessageBox;
 @protocol YTMessageBoxDelegate <NSObject>
-
+@optional
 -(void)clickToButtonAtTag:(NSInteger)tag;
 
 @end
@@ -18,4 +18,5 @@
 -(id)initWithTitle:(NSString *)title Message:(NSString *)message;
 -(id)initWithTitle:(NSString *)title Message:(NSString *)message cancelButtonTitle:(NSString *)buttonTitle;
 -(void)show;
+-(void)callBack:(void(^)(NSInteger tag))callBack;
 @end

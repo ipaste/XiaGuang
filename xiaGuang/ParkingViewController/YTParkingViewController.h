@@ -11,12 +11,15 @@
 #import "YTZoomStepper.h"
 #import "YTNavigationBar.h"
 #import "YTBluetoothManager.h"
+#import "YTLocalBeacon.h"
 #import "YTMinorArea.h"
 #import "YTParkingPoi.h"
+#import "YTMessageBox.h"
 #import "YTParkingMarkPoi.h"
 #import "YTCurrentParkingButton.h"
 #import "YTUserDefaults.h"
+#import "YTBeaconManager.h"
 #import "YTMoveCurrentLocationButton.h"
-@interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate,YTCurrentParkingDelegate,YTMoveCurrentLocationDelegate>
+@interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate,YTCurrentParkingDelegate,YTMoveCurrentLocationDelegate,YTBeaconManagerDelegate,YTMessageBoxDelegate>
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea;
 @end

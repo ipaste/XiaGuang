@@ -8,6 +8,8 @@
 
 #import "YTMessageBox.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+
+typedef void(^YTMessageBoxCallBack)(NSInteger tag);
 @interface YTMessageBox(){
     UILabel *_titleLable;
     UILabel *_messageLabel;
@@ -15,6 +17,7 @@
     UIButton *_cancelButton;
     UIButton *_enterButton;
     UIWindow *_window;
+    YTMessageBoxCallBack tmpCallBack;
 }
 @end
 @implementation YTMessageBox
@@ -27,6 +30,7 @@
     if (self) {
         self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
         [self initUiWith:title Message:message cancelButtonTitle:buttonTitle];
+        tmpCallBack = nil;
 
     }
     return self;
@@ -83,9 +87,16 @@
 -(void)show{
     [_window addSubview:self];
 }
-
+-(void)callBack:(void(^)(NSInteger tag))callBack{
+    tmpCallBack = callBack;
+}
 -(void)clickToButton:(UIButton *)sender{
-    [self.delegate clickToButtonAtTag:sender.tag];
+    if ([self.delegate respondsToSelector:@selector(clickToButtonAtTag:)]) {
+        [self.delegate clickToButtonAtTag:sender.tag];
+    }
+    if (tmpCallBack != nil) {
+         tmpCallBack(sender.tag);
+    }
     [self removeFromSuperview];
 }
 @end

@@ -118,7 +118,7 @@
             break;
         case 1:
         {
-            controller = [[YTParkingViewController alloc]initWithMinorArea:nil];
+            controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             if (controller == nil) return;
             [self presentViewController:controller animated:YES completion:^{
@@ -129,6 +129,7 @@
         case 2:
         {
             controller = [[YTSettingViewController alloc]init];
+            [(YTSettingViewController *)controller setIsLatest:YES];
         }
             break;
         case 3:

@@ -370,6 +370,8 @@ static YTCompletion Completion = nil;
             opacityAnimation.fromValue = [NSNumber numberWithFloat:0.6];
             opacityAnimation.toValue   = [NSNumber numberWithFloat:-1.0];
             opacityAnimation.duration = 4;
+            opacityAnimation.removedOnCompletion = NO;
+            opacityAnimation.fillMode = kCAFillModeForwards;
             [curLayer addAnimation:opacityAnimation forKey:@"animateOpacity"];
             break;
         }

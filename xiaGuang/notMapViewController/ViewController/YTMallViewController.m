@@ -18,7 +18,7 @@
 #import "MJRefresh.h"
 #import <AVQuery.h>
 #define DEVICE_VERSION [[[UIDevice currentDevice]systemVersion] floatValue]
-#define TABLEVIEWCELL_HEIGHT 110
+#define TABLEVIEWCELL_HEIGHT 90
 @interface YTMallViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     NSMutableArray *_mallObjects;
@@ -124,7 +124,7 @@
     if (section == 0) {
         return 0;
     }
-    return 7;
+    return 10;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{

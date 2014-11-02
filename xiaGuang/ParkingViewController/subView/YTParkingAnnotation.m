@@ -29,6 +29,7 @@
 }
 -(void)hideAnimated:(BOOL)animated{
     [super hideAnimated:animated];
+    [_resultLayer disappear];
 }
 -(void)superHighlight:(BOOL)animated{
     [super superHighlight:animated];

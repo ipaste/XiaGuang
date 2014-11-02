@@ -11,11 +11,12 @@
 NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasChanged";
 @interface YTBluetoothManager ()<CBCentralManagerDelegate>{
     CBCentralManager *_centralManager;
-    NSTimer *_timer;
+    NSRunLoop *_runLoop;
     BOOL _isEnterBackground;
     BOOL _isOpen;
     BOOL _isFirst;
     BOOL _curBlueState;
+    BOOL _isReceivedMessage;
 }
 @end
 @implementation YTBluetoothManager
@@ -25,12 +26,13 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     dispatch_once(&onceToken, ^{
         bluetoothManager = [[YTBluetoothManager alloc]init];
     });
+    [bluetoothManager refreshBluetoothState];
     return bluetoothManager;
 }
 
 -(void)refreshBluetoothState{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
-   [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
+    [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
 }
 -(void)refreshBluetoothStateForCallBack:(YTBluetoothCallBack)callback{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
@@ -43,21 +45,22 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
         _isFirst = true;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-        
+        _isReceivedMessage = YES;
     }
     return self;
 }
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central{
-    if (!_isEnterBackground) {
+    [_runLoop cancelPerformSelectorsWithTarget:self];
+    if (!_isEnterBackground && _isReceivedMessage) {
         BOOL curState = central.state == CBCentralManagerStatePoweredOff ? NO : YES;
         _curBlueState = curState;
         if (_isOpen != curState || _isFirst == true) {
+            _isReceivedMessage = NO;
             _isFirst = false;
-            central.delegate = nil;
             _isOpen = curState;
-            if (_timer == nil) {
-                _timer = [NSTimer scheduledTimerWithTimeInterval:.2 target:self selector:@selector(setCenterDelegate:) userInfo:nil repeats:NO];
-            }
+            _runLoop = [NSRunLoop currentRunLoop];
+            [_runLoop addTimer:[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(postBluetoothSate:) userInfo:nil repeats:NO] forMode:NSRunLoopCommonModes];
+            [_runLoop runMode:NSRunLoopCommonModes beforeDate:[NSDate distantFuture]];
             
         }
     }
@@ -72,12 +75,11 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(enterForegroundAfterZeroPointTwoSeconds:) userInfo:nil repeats:NO];
 }
 
--(void)setCenterDelegate:(NSTimer *)timer{
-    [timer invalidate];
-    _timer = nil;
+-(void)postBluetoothSate:(NSTimer *)timer{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
     [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
-    _centralManager.delegate = self;
+    _isReceivedMessage = YES;
+    [timer invalidate];
 }
 
 -(void)enterForegroundAfterZeroPointTwoSeconds:(NSTimer *)timer{
@@ -89,5 +91,7 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     }
 }
 
-
+-(void)dealloc{
+    [_runLoop cancelPerformSelectorsWithTarget:self];
+}
 @end
