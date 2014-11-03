@@ -18,7 +18,7 @@
     NSMutableArray *_merchants;
     NSMutableArray *_resultArray;
     NSMutableArray *_resultMerchants;
-    //YTLocalMall *_tmpLocalMall;
+    YTLocalMall *_tmpLocalMall;
 }
 
 @synthesize mallName;
@@ -262,23 +262,23 @@
         callback(mallImage,nil);
     }];
 }
-//
-//-(YTLocalMall *)getLocalCopy{
-//    
-//    if(_tmpLocalMall == nil){
-//        
-//        FMDatabase *db = [YTDBManager sharedManager];
-//        if([db open]){
-//            
-//            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",_internalObject[@"localDBId"]];
-//            [result next];
-//            
-//            _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
-//        }
-//    }
-//    return _tmpLocalMall;
-//    
-//}
+
+-(YTLocalMall *)getLocalCopy{
+    
+    if(_tmpLocalMall == nil){
+        
+        FMDatabase *db = [YTDBManager sharedManager];
+        if([db open]){
+            
+            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",_internalObject[@"localDBId"]];
+            [result next];
+            
+            _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
+        }
+    }
+    return _tmpLocalMall;
+    
+}
 
 -(AVObject *)getCloudObj{
     return _internalObject;

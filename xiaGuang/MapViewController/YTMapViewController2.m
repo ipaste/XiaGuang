@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTDetailsView *_detailsView;
     YTSelectedPoiButton *_selectedPoiButton;
     UIImageView *_noBeaconCover;
-    
+    BlurMenu *_menu;
     
     //states
     id<YTMajorArea> _curDisplayedMajorArea;
@@ -66,7 +66,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _userCord;
     CLLocationCoordinate2D _targetCord;
     
-    
+    NSMutableArray *_malls;
     
     
 }
@@ -115,7 +115,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)viewDidLoad{
+    
+    
     [super viewDidLoad];
+    _malls = [NSMutableArray array];
     _isFirstBluetoothPrompt = YES;
     _isFirstEnter = YES;
     _curDisplayedMajorArea = _majorArea;
@@ -139,6 +142,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     
+    
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
 
@@ -146,7 +150,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     //[self showNoBeaconCover];
     if(_minorArea == nil){
-        [self showNoBeaconCover];
+        [self createBlurMenu];
     }
     
     if (_type == YTMapViewControllerTypeNavigation) {
@@ -155,6 +159,27 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
 
+}
+
+-(void)createBlurMenu{
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    [query whereKeyExists:@"localDBId" ];
+    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+    query.maxCacheAge = 24 * 3600;
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (AVObject *mallObject in objects) {
+                YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
+                [_malls addObject:mall];
+                
+            }
+            [self showNoBeaconCover];
+            
+        }else{
+            //获取失败
+        }
+        
+    }];
 }
 
 -(void)createNoBeaconCover{
@@ -168,19 +193,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _noBeaconCover = [[UIImageView alloc] initWithImage:fake];
     //_noBeaconCover.backgroundColor = [UIColor blackColor];
     //_noBeaconCover.alpha = 0.5;
-    _noBeaconCover.hidden = YES;
+    _noBeaconCover.hidden = NO;
     
     [self.view addSubview:_noBeaconCover];
 }
 
 -(void)showNoBeaconCover{
-    _noBeaconCover.hidden = NO;
-    NSArray *items = [[NSArray alloc] initWithObjects:@"海岸城", @"欢乐海岸", @"Coco Park", @"鸡鸡一百", nil];
+    NSMutableArray *mallNames = [NSMutableArray array];
+    for(id<YTMall> mall in _malls){
+        [mallNames addObject:[mall mallName]];
+    }
     
-    BlurMenu *menu = [[BlurMenu alloc] initWithItems:items parentView:self.view delegate:self];
+    _menu = [[BlurMenu alloc] initWithItems:mallNames parentView:self.view delegate:self];
     
-    [menu show];
+    [_menu show];
 }
+
+
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -308,10 +337,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlockAndFloorSwitch{
+    [_switchBlockView removeFromSuperview];
     _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
     _switchBlockView.delegate = self;
     [self.view addSubview:_switchBlockView];
     
+    [_switchFloorView removeFromSuperview];
     _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
     _switchFloorView.delegate = self;
     [self.view addSubview:_switchFloorView];
@@ -902,12 +933,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark blurMenu
 -(void)menuDidHide{
-    
+    //[self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)menuDidShow{
     
 }
 -(void)selectedItemAtIndex:(NSInteger)index{
+    _noBeaconCover.hidden = YES;
+    
+    YTCloudMall *selected = [_malls objectAtIndex:index];
+    YTLocalMall *local = [selected getLocalCopy];
+    id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
+    id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
+    _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
+    [_mapView displayMapNamed:[_majorArea mapName]];
+    [self injectPoisForMajorArea:_majorArea];
+    [self createBlockAndFloorSwitch];
+    [_menu hide];
     
 }
 
