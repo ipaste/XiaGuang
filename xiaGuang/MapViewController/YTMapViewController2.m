@@ -169,12 +169,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if(_minorArea == nil){
+    if(_userMinorArea == nil){
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
             _switchFloorView.hidden = YES;
             _switchBlockView.hidden = YES;
-            [_menu show];
+            if(_menu == nil){
+                [self createBlurMenu];
+            }
+            else{
+                [_menu show];
+            }
         }
     }
 }
@@ -564,6 +569,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     
+    if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
+        [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
+        _curDisplayedMajorArea = [minorArea majorArea];
+        [self createBlockAndFloorSwitch];
+        [self handlePoiForMajorArea:_curDisplayedMajorArea];
+    }
     //if this minorArea is in a different major area or _userMinorArea is not created yet
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
@@ -922,6 +933,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_bluetoothOn) {
         
     }else{
+        _userMinorArea = nil;
+        [_mapView removeUserLocation];
         if (!_isFirstBluetoothPrompt) {
             [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
         }else{
@@ -967,7 +980,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
     [_mapView displayMapNamed:[_majorArea mapName]];
-    [self injectPoisForMajorArea:_majorArea];
+    _curDisplayedMajorArea = _majorArea;
+    [self handlePoiForMajorArea:_majorArea];
     [self createBlockAndFloorSwitch];
     [_menu hide];
     
