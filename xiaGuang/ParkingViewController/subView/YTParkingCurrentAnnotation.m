@@ -6,9 +6,9 @@
 //  Copyright (c) 2014年 YunTop. All rights reserved.
 //
 
-#import "YTParkingAnnotation.h"
+#import "YTParkingCurrentAnnotation.h"
 
-@implementation YTParkingAnnotation{
+@implementation YTParkingCurrentAnnotation{
     RMMarker *_resultLayer;
 }
 -(id)initWithMapView:(RMMapView *)aMapView coordinate:(CLLocationCoordinate2D)aCoordinate andTitle:(NSString *)aTitle{

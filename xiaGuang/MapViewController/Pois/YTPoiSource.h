@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "YTMinorArea.h"
 #import "YTPoi.h"
 
 @protocol YTPoiSource <NSObject>

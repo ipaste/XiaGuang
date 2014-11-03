@@ -12,6 +12,7 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
 @interface YTBluetoothManager ()<CBCentralManagerDelegate>{
     CBCentralManager *_centralManager;
     NSRunLoop *_runLoop;
+    NSTimer *_timer;
     BOOL _isEnterBackground;
     BOOL _isOpen;
     BOOL _isFirst;
@@ -50,17 +51,20 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     return self;
 }
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central{
-    [_runLoop cancelPerformSelectorsWithTarget:self];
+    
     if (!_isEnterBackground && _isReceivedMessage) {
+        if (_timer) {
+            [_timer invalidate];
+            _timer = nil;
+        }
         BOOL curState = central.state == CBCentralManagerStatePoweredOff ? NO : YES;
         _curBlueState = curState;
         if (_isOpen != curState || _isFirst == true) {
             _isReceivedMessage = NO;
             _isFirst = false;
             _isOpen = curState;
-            _runLoop = [NSRunLoop currentRunLoop];
-            [_runLoop addTimer:[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(postBluetoothSate:) userInfo:nil repeats:NO] forMode:NSRunLoopCommonModes];
-            [_runLoop runMode:NSRunLoopCommonModes beforeDate:[NSDate distantFuture]];
+        
+           _timer = [NSTimer scheduledTimerWithTimeInterval:.5 target:self selector:@selector(postBluetoothSate) userInfo:nil repeats:NO];
             
         }
     }
@@ -75,11 +79,14 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(enterForegroundAfterZeroPointTwoSeconds:) userInfo:nil repeats:NO];
 }
 
--(void)postBluetoothSate:(NSTimer *)timer{
+-(void)postBluetoothSate{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
     [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
     _isReceivedMessage = YES;
-    [timer invalidate];
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
 }
 
 -(void)enterForegroundAfterZeroPointTwoSeconds:(NSTimer *)timer{

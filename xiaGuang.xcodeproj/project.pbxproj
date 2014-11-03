@@ -123,11 +123,12 @@
 		D94C28441A0263EE009FF2F3 /* YTCommonlyUsed.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C28401A0263EE009FF2F3 /* YTCommonlyUsed.m */; };
 		D94C28451A0263EE009FF2F3 /* YTMallMerchantBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C28421A0263EE009FF2F3 /* YTMallMerchantBundle.m */; };
 		D94C28481A033414009FF2F3 /* YTCurrentParkingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C28471A033414009FF2F3 /* YTCurrentParkingButton.m */; };
-		D94C284C1A03566F009FF2F3 /* YTParkingAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C284B1A03566F009FF2F3 /* YTParkingAnnotation.m */; };
+		D94C284C1A03566F009FF2F3 /* YTParkingCurrentAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C284B1A03566F009FF2F3 /* YTParkingCurrentAnnotation.m */; };
 		D95B153F1A0379CE002077AD /* YTParkingMarkPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B153E1A0379CE002077AD /* YTParkingMarkPoi.m */; };
-		D95B15431A037A37002077AD /* YTParkingPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15421A037A37002077AD /* YTParkingPoi.m */; };
+		D95B15431A037A37002077AD /* YTParkingCurrentPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15421A037A37002077AD /* YTParkingCurrentPoi.m */; };
 		D95B15461A037AE4002077AD /* YTParkingMarkAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15451A037AE4002077AD /* YTParkingMarkAnnotation.m */; };
 		D95B15491A0390C1002077AD /* YTUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15481A0390C1002077AD /* YTUserDefaults.m */; };
+		D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15521A072E57002077AD /* YTLocalParkingMarked.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -375,16 +376,19 @@
 		D94C28421A0263EE009FF2F3 /* YTMallMerchantBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallMerchantBundle.m; sourceTree = "<group>"; };
 		D94C28461A033414009FF2F3 /* YTCurrentParkingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTCurrentParkingButton.h; path = subView/YTCurrentParkingButton.h; sourceTree = "<group>"; };
 		D94C28471A033414009FF2F3 /* YTCurrentParkingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTCurrentParkingButton.m; path = subView/YTCurrentParkingButton.m; sourceTree = "<group>"; };
-		D94C284A1A03566F009FF2F3 /* YTParkingAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingAnnotation.h; path = subView/YTParkingAnnotation.h; sourceTree = "<group>"; };
-		D94C284B1A03566F009FF2F3 /* YTParkingAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingAnnotation.m; path = subView/YTParkingAnnotation.m; sourceTree = "<group>"; };
+		D94C284A1A03566F009FF2F3 /* YTParkingCurrentAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingCurrentAnnotation.h; path = subView/YTParkingCurrentAnnotation.h; sourceTree = "<group>"; };
+		D94C284B1A03566F009FF2F3 /* YTParkingCurrentAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingCurrentAnnotation.m; path = subView/YTParkingCurrentAnnotation.m; sourceTree = "<group>"; };
 		D95B153D1A0379CE002077AD /* YTParkingMarkPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingMarkPoi.h; path = pois/YTParkingMarkPoi.h; sourceTree = "<group>"; };
 		D95B153E1A0379CE002077AD /* YTParkingMarkPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingMarkPoi.m; path = pois/YTParkingMarkPoi.m; sourceTree = "<group>"; };
-		D95B15411A037A37002077AD /* YTParkingPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingPoi.h; path = pois/YTParkingPoi.h; sourceTree = "<group>"; };
-		D95B15421A037A37002077AD /* YTParkingPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingPoi.m; path = pois/YTParkingPoi.m; sourceTree = "<group>"; };
+		D95B15411A037A37002077AD /* YTParkingCurrentPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingCurrentPoi.h; path = pois/YTParkingCurrentPoi.h; sourceTree = "<group>"; };
+		D95B15421A037A37002077AD /* YTParkingCurrentPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingCurrentPoi.m; path = pois/YTParkingCurrentPoi.m; sourceTree = "<group>"; };
 		D95B15441A037AE4002077AD /* YTParkingMarkAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTParkingMarkAnnotation.h; path = subView/YTParkingMarkAnnotation.h; sourceTree = "<group>"; };
 		D95B15451A037AE4002077AD /* YTParkingMarkAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTParkingMarkAnnotation.m; path = subView/YTParkingMarkAnnotation.m; sourceTree = "<group>"; };
 		D95B15471A0390C1002077AD /* YTUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTUserDefaults.h; sourceTree = "<group>"; };
 		D95B15481A0390C1002077AD /* YTUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTUserDefaults.m; sourceTree = "<group>"; };
+		D95B15501A072858002077AD /* YTParkingMarked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTParkingMarked.h; sourceTree = "<group>"; };
+		D95B15511A072E57002077AD /* YTLocalParkingMarked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalParkingMarked.h; sourceTree = "<group>"; };
+		D95B15521A072E57002077AD /* YTLocalParkingMarked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalParkingMarked.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -535,6 +539,9 @@
 				AE24A8961A02432000A0CE91 /* YTMerchant.h */,
 				AE24A8971A02432000A0CE91 /* YTMerchantLocation.h */,
 				AE24A8981A02432000A0CE91 /* YTMinorArea.h */,
+				D95B15501A072858002077AD /* YTParkingMarked.h */,
+				D95B15511A072E57002077AD /* YTLocalParkingMarked.h */,
+				D95B15521A072E57002077AD /* YTLocalParkingMarked.m */,
 				D95B15471A0390C1002077AD /* YTUserDefaults.h */,
 				D95B15481A0390C1002077AD /* YTUserDefaults.m */,
 			);
@@ -845,8 +852,8 @@
 			children = (
 				D94C28461A033414009FF2F3 /* YTCurrentParkingButton.h */,
 				D94C28471A033414009FF2F3 /* YTCurrentParkingButton.m */,
-				D94C284A1A03566F009FF2F3 /* YTParkingAnnotation.h */,
-				D94C284B1A03566F009FF2F3 /* YTParkingAnnotation.m */,
+				D94C284A1A03566F009FF2F3 /* YTParkingCurrentAnnotation.h */,
+				D94C284B1A03566F009FF2F3 /* YTParkingCurrentAnnotation.m */,
 				D95B15441A037AE4002077AD /* YTParkingMarkAnnotation.h */,
 				D95B15451A037AE4002077AD /* YTParkingMarkAnnotation.m */,
 			);
@@ -856,8 +863,8 @@
 		D95B15401A0379DA002077AD /* pois */ = {
 			isa = PBXGroup;
 			children = (
-				D95B15411A037A37002077AD /* YTParkingPoi.h */,
-				D95B15421A037A37002077AD /* YTParkingPoi.m */,
+				D95B15411A037A37002077AD /* YTParkingCurrentPoi.h */,
+				D95B15421A037A37002077AD /* YTParkingCurrentPoi.m */,
 				D95B153D1A0379CE002077AD /* YTParkingMarkPoi.h */,
 				D95B153E1A0379CE002077AD /* YTParkingMarkPoi.m */,
 			);
@@ -1048,7 +1055,7 @@
 				AE24A89F1A02432000A0CE91 /* YTCloudMerchant.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */,
 				D94C27B71A02639F009FF2F3 /* YTMallBuildingSelector.m in Sources */,
-				D94C284C1A03566F009FF2F3 /* YTParkingAnnotation.m in Sources */,
+				D94C284C1A03566F009FF2F3 /* YTParkingCurrentAnnotation.m in Sources */,
 				AE24A89E1A02432000A0CE91 /* YTCloudMall.m in Sources */,
 				D94C28331A0263CF009FF2F3 /* MJRefreshBaseView.m in Sources */,
 				AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */,
@@ -1076,6 +1083,7 @@
 				AE24A8A51A02432100A0CE91 /* YTLocalElevator.m in Sources */,
 				D94C28431A0263EE009FF2F3 /* YTCategory.m in Sources */,
 				D94C27B51A02639F009FF2F3 /* YTDirectionIndicator.m in Sources */,
+				D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */,
 				D94C27BA1A02639F009FF2F3 /* YTMoveTargetLocationButton.m in Sources */,
 				D93CE4BA19FA5825004128FD /* main.m in Sources */,
 				D95B153F1A0379CE002077AD /* YTParkingMarkPoi.m in Sources */,
@@ -1104,7 +1112,7 @@
 				AE24A8A91A02432100A0CE91 /* YTLocalMerchantInstance.m in Sources */,
 				D94C28071A0263C6009FF2F3 /* YTCategoryResultsView.m in Sources */,
 				AE24A8391A02430300A0CE91 /* YTBeaconManager.m in Sources */,
-				D95B15431A037A37002077AD /* YTParkingPoi.m in Sources */,
+				D95B15431A037A37002077AD /* YTParkingCurrentPoi.m in Sources */,
 				D94C28121A0263C6009FF2F3 /* YTParkingViewController.m in Sources */,
 				D95B15461A037AE4002077AD /* YTParkingMarkAnnotation.m in Sources */,
 				D94C280F1A0263C6009FF2F3 /* YTSearchDetailsView.m in Sources */,

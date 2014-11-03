@@ -7,7 +7,7 @@
 //
 
 #import "YTPoi.h"
-#import "YTParkingAnnotation.h"
-@interface YTParkingPoi : YTPoi
+#import "YTParkingCurrentAnnotation.h"
+@interface YTParkingCurrentPoi : YTPoi
 -(instancetype)initWithParkingCoordinat:(CLLocationCoordinate2D)coord;
 @end

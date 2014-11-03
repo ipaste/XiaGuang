@@ -87,6 +87,7 @@
                 [_tableView reloadData];
             }else{
                 //获取失败
+                NSLog(@"无网络");
             }
             
         }];

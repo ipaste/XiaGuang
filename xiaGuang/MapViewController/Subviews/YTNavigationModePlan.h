@@ -18,7 +18,7 @@
 @property (nonatomic,weak) id<YTMajorArea> displayMajorArea;
 @property (nonatomic,weak) id<YTMinorArea> userMinorArea;
 
--(id)initWithTargetPoiSource:(id<YTMerchantLocation>)merchantLocation;
+-(id)initWithTargetPoiSource:(id<YTPoiSource>)poiSource;
 -(void)updateWithCurrentUserMinorArea:(id<YTMinorArea>)userMinor
                 andDisplayedMajorArea:(id<YTMajorArea>)displayMajorArea;
 -(YTNavigationInstruction *)getInstruction;

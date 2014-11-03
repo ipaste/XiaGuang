@@ -94,9 +94,11 @@ typedef void(^YTMessageBoxCallBack)(NSInteger tag);
     if ([self.delegate respondsToSelector:@selector(clickToButtonAtTag:)]) {
         [self.delegate clickToButtonAtTag:sender.tag];
     }
+    
     if (tmpCallBack != nil) {
          tmpCallBack(sender.tag);
     }
     [self removeFromSuperview];
+    
 }
 @end

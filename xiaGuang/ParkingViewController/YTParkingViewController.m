@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTParkingStateMarked
 };
 @implementation YTParkingViewController{
-    id<YTMinorArea> _minorArea;
+    id<YTMinorArea> _userMinorArea;
+    id<YTMajorArea> _currenDisplayMajorArea;
     YTMapView2 *_mapView;
     YTNavigationBar *_navigationBar;
     YTZoomStepper *_zoomStepper;
@@ -34,18 +35,20 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     BOOL _marked;
     BOOL _isReceivedMessage;
     CLLocationCoordinate2D _carCoordinate;
-    YTParkingMarkPoi *_poiMarked;
-    YTParkingPoi *_currenPoi;
-    YTUserDefaults *_userDefaults;
+    id<YTParkingMarked> _tmpMarker;
+    YTParkingCurrentPoi *_currenPoi;
     YTParkingState _state;
     YTBeaconManager *_beaconManager;
+    YTNavigationView *_navigationView;
+    YTNavigationModePlan *_navigationModePlan;
 }
 
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
     self = [super init];
     if (self) {
         _isReceivedMessage = NO;
-        _minorArea = minorArea;
+        _userMinorArea = minorArea;
+        _currenDisplayMajorArea = [minorArea majorArea];
         _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blueStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
         
@@ -67,26 +70,27 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [self createMarkView];
     [self createZoomStepper];
     [self createFunctionButton];
+    [self createNavigationView];
     [self createShadeView];
     [self createParkingButton];
     
-    _userDefaults = [YTUserDefaults standardUserDefaults];
-    CLLocationCoordinate2D coord = [_userDefaults coord];
+    
+    _tmpMarker = [YTLocalParkingMarked standardParking];
     YTParkingState state;
-    if (coord.latitude == MAXFLOAT && coord.longitude == MAXFLOAT) {
+    if (![_tmpMarker whetherMark]) {
         _marked = NO;
         state = YTParkingStateNotMark;
     }else{
         _marked = YES;
-        _carCoordinate = coord;
+        _carCoordinate = [_tmpMarker coordinate];
         state = YTParkingStateMarked;
     }
     
-    if (_minorArea == nil || _bluetoothOn == NO) {
-        _minorArea = nil;
+    if (_userMinorArea == nil || _bluetoothOn == NO) {
+        _userMinorArea = nil;
         state = YTParkingStateNormal;
     }else{
-        [self userMoveToMinorArea:_minorArea];
+        [self userMoveToMinorArea:_userMinorArea];
     }
     [self setParkingState:state animation:NO];
 }
@@ -106,8 +110,20 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [window addSubview:_navigationBar];
 }
 -(void)backButtonClicked{
-    [_navigationBar removeFromSuperview];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (_navigationView.isNavigating) {
+       YTMessageBox *box = [[YTMessageBox alloc]initWithTitle:@"导航进行中" Message:@"点击确定退出导航"] ;
+        [box show];
+        [box callBack:^(NSInteger tag) {
+            if (tag == 1) {
+                [_navigationBar removeFromSuperview];
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+        }];
+    }else{
+        [_navigationBar removeFromSuperview];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+
 }
 #pragma mark mapView
 -(void)createMapView{
@@ -212,7 +228,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [messageBox show];
     [messageBox callBack:^(NSInteger tag) {
         if (tag == 1) {
-            [_userDefaults removeCoord];
             _marked = NO;
             [self setParkingState:YTParkingStateNotMark animation:YES];
         }
@@ -220,6 +235,24 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)clickStarNavigationButton:(UIButton *)sender{
+    [_navigationView startNavigationAndSetDestination:_tmpMarker];
+    _navigationModePlan = [[YTNavigationModePlan alloc]initWithTargetPoiSource:_tmpMarker];
+    _navigationView.plan = _navigationModePlan;
+    
+    [UIView animateWithDuration:.2 animations:^{
+        CGRect frame = _navigationView.frame;
+        frame.origin.x = 15;
+        _navigationView.frame = frame;
+        
+        _beforeMarkView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [_navigationView.layer pop_removeAllAnimations];
+        POPSpringAnimation *animation = [POPSpringAnimation animation];
+        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
+        animation.velocity = @1000;
+        animation.springBounciness = 20;
+        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
+    }];
     
 }
 #pragma mark parkingButton
@@ -248,7 +281,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [self.view addSubview:_promptLable];
 }
 -(void)markedButtonClicked:(UIButton *)sender{
-    _carCoordinate = [_minorArea coordinate];
+    _carCoordinate = [_userMinorArea coordinate];
     _marked = YES;
     [self setParkingState:YTParkingStateMarked animation:YES];
 }
@@ -258,7 +291,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     NSDictionary *userInfo = notification.userInfo;
     _bluetoothOn = [userInfo[@"isOpen"] boolValue];
     if(_isReceivedMessage){
-        if (!_bluetoothOn && _minorArea != nil) {
+        if (!_bluetoothOn && _userMinorArea != nil) {
             [self setParkingState:YTParkingStateNormal animation:YES];
         }else{
             if (_marked) {
@@ -268,6 +301,30 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             }
         }
     }
+}
+#pragma mark navigationView
+-(void)createNavigationView{
+    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 65 , CGRectGetWidth(self.view.frame) - 20, 60)];
+    _navigationView.isShowSwitchButton = NO;
+    _navigationView.delegate = self;
+    [self.view addSubview:_navigationView];
+    [_navigationView.layer pop_animationForKey:@"shake"];
+}
+
+-(void)stopNavigationMode{
+    _navigationView.alpha = 0.0f;
+    [UIView animateWithDuration:.5 animations:^{
+        _beforeMarkView.alpha = 1.0f;
+    } completion:^(BOOL finished) {
+        CGRect frame = _navigationView.frame;
+        frame.origin.x = CGRectGetWidth(self.view.frame);
+        _navigationView.frame = frame;
+        _navigationView.alpha = 1.0f;
+    }];
+}
+
+-(void)jumToUserFloor{
+
 }
 
 #pragma mark currentParking
@@ -282,15 +339,22 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)moveToUserLocationButtonClicked{
-    [_mapView setCenterCoordinate:[_minorArea coordinate] animated:YES];
+    if (![[_currenDisplayMajorArea identifier]isEqualToString:[[_userMinorArea majorArea] identifier]]) {
+        [self displayMapWithMajorArea:[_userMinorArea majorArea]];
+    }
+
+   [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:YES];
 }
 
 -(void)moveCurrentParkingPositionClicked{
     CLLocationCoordinate2D target;
     if (_state == YTParkingStateMarked) {
-        target = _carCoordinate;
+        target = [[_tmpMarker inMinorArea] coordinate];
+        if (![[[_tmpMarker majorArea] identifier] isEqualToString:[_currenDisplayMajorArea identifier]]) {
+            [self displayMapWithMajorArea:[_tmpMarker majorArea]];
+        }
     }else{
-        target = [_minorArea coordinate];
+        target = [_userMinorArea coordinate];
     }
     [_mapView setCenterCoordinate:target animated:YES];
 }
@@ -341,20 +405,18 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _moveCurrentLocationButton.hidden = NO;
     
     if (_state != YTParkingStateNormal) _moveCurrentLocationButton.alpha = 0;
+    if(_state == YTParkingStateNotMark) [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
     [UIView animateWithDuration:time animations:^{
         CGRect frame = _currentParkingButton.frame;
         frame.origin.x = CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10;
         _currentParkingButton.frame = frame;
-        
         _moveCurrentLocationButton.alpha = 1;
-        
         _parkingView.alpha = 0;
         _shadeView.alpha = 0;
         _promptLable.alpha = 0;
         _starNavigationButton.alpha = 1;
         _cancelMarkedButton.alpha = 1;
     } completion:^(BOOL finished) {
-        [_userDefaults setCoord:_carCoordinate];
         [self parkingMarkedShowInMap:YES];
         [self parkingCurrentPoiShowInMap:YES];
         _shadeView.hidden = YES;
@@ -378,29 +440,41 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _promptLable.hidden = YES;
         [_parkingView setEnabled:YES];
         _moveCurrentLocationButton.hidden = YES;
-        [_userDefaults removeCoord];
         [self parkingMarkedShowInMap:NO];
         [self parkingCurrentPoiShowInMap:YES];
+        [_tmpMarker clearParkingInfo];
     }];
 }
 
 -(void)parkingMarkedShowInMap:(BOOL)show{
     if (show){
-        _poiMarked = [[YTParkingMarkPoi alloc]initWithParkingMarkCoordinat:_carCoordinate];
-        [_mapView addPoi:_poiMarked];
-        [_mapView highlightPoi:_poiMarked animated:NO];
+        [_mapView addPoi:[_tmpMarker producePoi]];
+        [_mapView highlightPoi:[_tmpMarker producePoi] animated:NO];
     }else{
-        if(_poiMarked == nil) return;
-        [_mapView hidePoi:_poiMarked animated:NO];
-        [_mapView removeAnnotationForPoi:_poiMarked];
-        _poiMarked = nil;
+        if([_tmpMarker producePoi] == nil) return;
+        [_mapView hidePoi:[_tmpMarker producePoi] animated:NO];
+        [_mapView removeAnnotationForPoi:[_tmpMarker producePoi]];
     }
 }
 
 -(void)parkingCurrentPoiShowInMap:(BOOL)show{
+    
     if (show) {
-        [_mapView highlightPoi:_currenPoi animated:YES];
+        if (_currenPoi == nil) {
+            _currenPoi = [[YTParkingCurrentPoi alloc]initWithParkingCoordinat:[_userMinorArea coordinate]];
+            [_mapView addPoi:_currenPoi];
+            [_mapView highlightPoi:_currenPoi animated:YES];
+        }else{
+            [_mapView hidePoi:_currenPoi animated:YES];
+            [_mapView removeAnnotationForPoi:_currenPoi];
+            _currenPoi = [[YTParkingCurrentPoi alloc]initWithParkingCoordinat:[_userMinorArea coordinate]];
+            [_mapView addPoi:_currenPoi];
+            [_mapView highlightPoi:_currenPoi animated:YES];
+        }
     }else{
+        if (!_currenPoi) {
+            return;
+        }
         [_mapView hidePoi:_currenPoi animated:YES];
     }
 }
@@ -410,8 +484,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     if (_isReceivedMessage){
         id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
         
-        if (![[tmpMinorArea identifier]isEqualToString:[_minorArea identifier]] || _minorArea == nil) {
-            _minorArea = tmpMinorArea;
+        if (![[tmpMinorArea identifier]isEqualToString:[_userMinorArea identifier]] || _userMinorArea == nil) {
+            _userMinorArea = tmpMinorArea;
             if (_state == YTParkingStateNormal) {
                 if (_marked) {
                     [self setParkingState:YTParkingStateMarked animation:YES];
@@ -430,19 +504,18 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
-    if (_currenPoi == nil) {
-        _currenPoi = [[YTParkingPoi alloc]initWithParkingCoordinat:[_minorArea coordinate]];
-        [_mapView addPoi:_currenPoi];
-        [_mapView highlightPoi:_currenPoi animated:YES];
+    BOOL showCurrenPoi = NO;
+    if ([[_currenDisplayMajorArea identifier]isEqualToString:[[minorArea majorArea] identifier]]) {
+        showCurrenPoi = YES;
     }else{
-        [_mapView hidePoi:_currenPoi animated:YES];
-        [_mapView removeAnnotationForPoi:_currenPoi];
-        _currenPoi = nil;
-        
-        _currenPoi = [[YTParkingPoi alloc]initWithParkingCoordinat:[minorArea coordinate]];
-        [_mapView addPoi:_currenPoi];
-        [_mapView highlightPoi:_currenPoi animated:YES];
+        if (_navigationView.isNavigating) {
+            _navigationView.isShowSwitchButton = YES;
+        }else{
+            [_moveCurrentLocationButton promptFloorChange:[[[minorArea majorArea]floor] floorName]];
+        }
     }
+    [self parkingCurrentPoiShowInMap:showCurrenPoi];
+    [self updateNavManagerIfNeeded];
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
@@ -455,6 +528,30 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     YTLocalMinorArea * minorArea = [localBeacon minorArea];
     return minorArea;
+}
+
+-(void)updateNavManagerIfNeeded{
+    if(_navigationView.isNavigating == YES){
+        [_navigationModePlan updateWithCurrentUserMinorArea:_userMinorArea andDisplayedMajorArea:_currenDisplayMajorArea];
+        [_navigationView updateInstruction];
+    }
+}
+
+-(void)displayMapWithMajorArea:(id<YTMajorArea>)majorArea{
+    _currenDisplayMajorArea = majorArea;
+    [_mapView displayMapNamed:[majorArea mapName]];
+    
+    if ([[majorArea identifier]isEqualToString:[[_userMinorArea majorArea] identifier]]) {
+         [self parkingCurrentPoiShowInMap:YES];
+    }else{
+        [self parkingCurrentPoiShowInMap:NO];
+    }
+    
+    if ([[[_tmpMarker majorArea] identifier] isEqualToString:[majorArea identifier]]) {
+        [self parkingMarkedShowInMap:YES];
+    }else{
+        [self parkingMarkedShowInMap:NO];
+    }
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{

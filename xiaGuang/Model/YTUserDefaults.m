@@ -7,7 +7,6 @@
 //
 
 #import "YTUserDefaults.h"
-
 @implementation YTUserDefaults{
     NSUserDefaults *_userDefaults;
 }
@@ -26,6 +25,8 @@
     }
     return self;
 }
+
+
 -(void)setCoord:(CLLocationCoordinate2D)coord{
     float latitude = coord.latitude;
     float longitude = coord.longitude;
@@ -55,9 +56,24 @@
 
 -(void)setDictionary:(NSDictionary *)dictionary forKey:(NSString *)key{
     [_userDefaults setObject:dictionary forKey:key];
+    [_userDefaults synchronize];
 }
 
 -(NSDictionary *)dictionaryWithKey:(NSString *)key{
-    return [_userDefaults objectForKey:key];
+    return [_userDefaults dictionaryForKey:key];
+}
+
+
+-(void)removeDictionaryForKey:(NSString *)key{
+    [_userDefaults removeObjectForKey:key];
+    [_userDefaults synchronize];
+}
+
+-(BOOL)existenceOfTheKey:(NSString *)key{
+    if (key == nil) {
+        return [_userDefaults boolForKey:@"mark"];
+    }
+  
+    return [_userDefaults objectForKey:key] == nil ? NO : YES;
 }
 @end

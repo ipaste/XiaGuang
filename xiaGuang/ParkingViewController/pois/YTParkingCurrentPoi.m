@@ -6,9 +6,9 @@
 //  Copyright (c) 2014年 YunTop. All rights reserved.
 //
 
-#import "YTParkingPoi.h"
+#import "YTParkingCurrentPoi.h"
 
-@implementation YTParkingPoi{
+@implementation YTParkingCurrentPoi{
     CLLocationCoordinate2D _coord;
     NSString *_key;
 }
@@ -16,7 +16,7 @@
     self = [super init];
     if (self) {
         _coord = coord;
-        _key = @"parking";
+        _key = @"Current";
     }
     return self;
 }
@@ -24,7 +24,7 @@
     return _key;
 }
 -(YTAnnotation *)produceAnnotationWithMapView:(RMMapView *)mapView{
-    YTParkingAnnotation *resultAnnotation = [[YTParkingAnnotation alloc]initWithMapView:mapView coordinate:_coord andTitle:_key];
+    YTParkingCurrentAnnotation *resultAnnotation = [[YTParkingCurrentAnnotation alloc]initWithMapView:mapView coordinate:_coord andTitle:_key];
     return resultAnnotation;
 }
 @end

@@ -23,6 +23,7 @@
 -(NSString *)poiKey{
     return _key;
 }
+
 -(YTAnnotation *)produceAnnotationWithMapView:(RMMapView *)mapView{
     YTParkingMarkAnnotation *resultAnnotation = [[YTParkingMarkAnnotation alloc]initWithMapView:mapView coordinate:_coord andTitle:_key];
     return resultAnnotation;
