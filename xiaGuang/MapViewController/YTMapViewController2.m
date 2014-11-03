@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTDetailsView *_detailsView;
     YTSelectedPoiButton *_selectedPoiButton;
     UIImageView *_noBeaconCover;
-    
+    BlurMenu *_menu;
     
     //states
     id<YTMajorArea> _curDisplayedMajorArea;
@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _switchingFloor;
     NSArray *_activePois;
     id<YTMajorArea> _activePoiMajorArea;
+    BOOL _blurMenuShown;
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -66,7 +67,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _userCord;
     CLLocationCoordinate2D _targetCord;
     
-    
+    NSMutableArray *_malls;
     
     
 }
@@ -115,7 +116,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)viewDidLoad{
+    
+    
     [super viewDidLoad];
+    _malls = [NSMutableArray array];
     _isFirstBluetoothPrompt = YES;
     _isFirstEnter = YES;
     _curDisplayedMajorArea = _majorArea;
@@ -139,6 +143,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     
+    
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
 
@@ -146,15 +151,58 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     //[self showNoBeaconCover];
     if(_minorArea == nil){
-        [self showNoBeaconCover];
+        [self createBlurMenu];
+        
+    }
+    else{
+        _noBeaconCover.hidden = YES;
     }
     
     if (_type == YTMapViewControllerTypeNavigation) {
+        
         [self userMoveToMinorArea:_minorArea];
         [_beaconManager startRangingBeacons];
         return;
     }
 
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if(_userMinorArea == nil){
+        if(!_blurMenuShown){
+            _noBeaconCover.hidden = NO;
+            _switchFloorView.hidden = YES;
+            _switchBlockView.hidden = YES;
+            if(_menu == nil){
+                [self createBlurMenu];
+            }
+            else{
+                [_menu show];
+            }
+        }
+    }
+}
+
+-(void)createBlurMenu{
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    [query whereKeyExists:@"localDBId" ];
+    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+    query.maxCacheAge = 24 * 3600;
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (AVObject *mallObject in objects) {
+                YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
+                [_malls addObject:mall];
+                
+            }
+            [self showNoBeaconCover];
+            
+        }else{
+            //获取失败
+        }
+        
+    }];
 }
 
 -(void)createNoBeaconCover{
@@ -168,19 +216,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _noBeaconCover = [[UIImageView alloc] initWithImage:fake];
     //_noBeaconCover.backgroundColor = [UIColor blackColor];
     //_noBeaconCover.alpha = 0.5;
-    _noBeaconCover.hidden = YES;
+    _noBeaconCover.hidden = NO;
     
     [self.view addSubview:_noBeaconCover];
 }
 
 -(void)showNoBeaconCover{
-    _noBeaconCover.hidden = NO;
-    NSArray *items = [[NSArray alloc] initWithObjects:@"海岸城", @"欢乐海岸", @"Coco Park", @"鸡鸡一百", nil];
+    NSMutableArray *mallNames = [NSMutableArray array];
+    for(id<YTMall> mall in _malls){
+        [mallNames addObject:[mall mallName]];
+    }
     
-    BlurMenu *menu = [[BlurMenu alloc] initWithItems:items parentView:self.view delegate:self];
+    _menu = [[BlurMenu alloc] initWithItems:mallNames parentView:self.view delegate:self];
     
-    [menu show];
+    [_menu show];
 }
+
+
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -193,6 +245,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _selectedPoi = [_merchantLocation producePoi];
         [_mapView highlightPoi:_selectedPoi animated:YES];
         [_detailsView setCommonPoi:_merchantLocation];
+        
         [self showCallOut];
     }
 }
@@ -308,10 +361,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlockAndFloorSwitch{
+    [_switchBlockView removeFromSuperview];
     _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
     _switchBlockView.delegate = self;
     [self.view addSubview:_switchBlockView];
     
+    [_switchFloorView removeFromSuperview];
     _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
     _switchFloorView.delegate = self;
     [self.view addSubview:_switchFloorView];
@@ -514,6 +569,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     
+    if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
+        [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
+        _curDisplayedMajorArea = [minorArea majorArea];
+        [self createBlockAndFloorSwitch];
+        [self handlePoiForMajorArea:_curDisplayedMajorArea];
+    }
     //if this minorArea is in a different major area or _userMinorArea is not created yet
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
@@ -872,6 +933,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_bluetoothOn) {
         
     }else{
+        _userMinorArea = nil;
+        [_mapView removeUserLocation];
         if (!_isFirstBluetoothPrompt) {
             [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
         }else{
@@ -902,12 +965,25 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark blurMenu
 -(void)menuDidHide{
-    
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    _blurMenuShown = NO;
 }
 -(void)menuDidShow{
-    
+    _blurMenuShown = YES;
 }
 -(void)selectedItemAtIndex:(NSInteger)index{
+    _noBeaconCover.hidden = YES;
+    
+    YTCloudMall *selected = [_malls objectAtIndex:index];
+    YTLocalMall *local = [selected getLocalCopy];
+    id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
+    id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
+    _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
+    [_mapView displayMapNamed:[_majorArea mapName]];
+    _curDisplayedMajorArea = _majorArea;
+    [self handlePoiForMajorArea:_majorArea];
+    [self createBlockAndFloorSwitch];
+    [_menu hide];
     
 }
 

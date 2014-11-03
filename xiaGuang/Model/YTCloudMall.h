@@ -10,7 +10,7 @@
 #import "YTMall.h"
 #import <AVOSCloud.h>
 #import "YTCloudFloor.h"
-//#import "YTLocalMall.h"
+#import "YTLocalMall.h"
 #import "YTCloudBlock.h"
 
 #define MALL_CLASS_LOGO_KEY @"mallNameLogo"
@@ -24,6 +24,6 @@
 
 -(id)initWithAVObject:(AVObject *)object;
 -(AVObject *)getCloudObj;
-//-(YTLocalMall *)getLocalCopy;
+-(YTLocalMall *)getLocalCopy;
 
 @end
