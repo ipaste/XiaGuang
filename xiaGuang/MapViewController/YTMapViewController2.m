@@ -815,6 +815,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     [_mapView hidePoi:_selectedPoi animated:YES];
     
+    
     [UIView animateWithDuration:.2 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
         CGRect frame = _navigationView.frame;
@@ -943,6 +944,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
+    if([_mapView currentState] != YTMapViewDetailStateNormal){
+        
+        [_navigationView stopNavigationMode];
+    }
     if (_currentViewDisplay) {
         NSDictionary *userInfo = notification.userInfo;
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
@@ -955,12 +960,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 }
             }
             
-            if([_mapView currentState] != YTMapViewDetailStateNormal){
-                [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
-                [self hideCallOut];
-            }
+            
             
         }else{
+            
+            
             _userMinorArea = nil;
             [_mapView removeUserLocation];
             [_beaconManager stopRanging];

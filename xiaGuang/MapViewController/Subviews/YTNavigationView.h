@@ -22,5 +22,6 @@
 
 -(void)startNavigationAndSetDestination:(id<YTPoiSource>)poiSource;
 -(void)updateInstruction;
+-(void)stopNavigationMode;
 
 @end

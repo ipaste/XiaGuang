@@ -151,13 +151,17 @@
 -(void)clickToButtonAtTag:(NSInteger)tag{
     
     if (tag == 1) {        
-        _isCancelling = YES;
-        [self.delegate stopNavigationMode];
-        _isCancelling = NO;
-        _isNavigating = NO;
+        [self stopNavigationMode];
     }
 }
 
+
+-(void)stopNavigationMode{
+    _isCancelling = YES;
+    [self.delegate stopNavigationMode];
+    _isCancelling = NO;
+    _isNavigating = NO;
+}
 
 
 -(void)shakeView{
