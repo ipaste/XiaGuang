@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _bluetoothOn;
     BOOL _isFirstBluetoothPrompt;
     BOOL _isFirstEnter;
+    BOOL _currentViewDisplay;
     
     YTMapViewControllerType _type;
     
@@ -116,8 +117,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)viewDidLoad{
-    
-    
     [super viewDidLoad];
     _malls = [NSMutableArray array];
     _isFirstBluetoothPrompt = YES;
@@ -147,7 +146,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
 
-    [_beaconManager startRangingBeacons];
+    
     
     //[self showNoBeaconCover];
     if(_minorArea == nil){
@@ -169,6 +168,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
     if(_userMinorArea == nil){
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
@@ -236,10 +236,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    if (_beaconManager.delegate == nil) {
-        _beaconManager.delegate = self;
-    }
-    
+    _currentViewDisplay = YES;
+    [_bluetoothManager refreshBluetoothState];
     if (_type == YTMapViewControllerTypeMerchant) {
         [_mapView setCenterCoordinate:[_merchantLocation coordinate] animated:NO];
         _selectedPoi = [_merchantLocation producePoi];
@@ -248,6 +246,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         [self showCallOut];
     }
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    _currentViewDisplay = NO;
 }
 
 -(void)createMapView{
@@ -928,17 +930,20 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
-    NSDictionary *userInfo = notification.userInfo;
-    _bluetoothOn = [userInfo[@"isOpen"] boolValue];
-    if (_bluetoothOn) {
-        
-    }else{
-        _userMinorArea = nil;
-        [_mapView removeUserLocation];
-        if (!_isFirstBluetoothPrompt) {
-            [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
+    if (_currentViewDisplay) {
+        NSDictionary *userInfo = notification.userInfo;
+        _bluetoothOn = [userInfo[@"isOpen"] boolValue];
+        if (_bluetoothOn) {
+            [_beaconManager startRangingBeacons];
         }else{
-            _isFirstBluetoothPrompt = NO;
+            _userMinorArea = nil;
+            [_mapView removeUserLocation];
+            [_beaconManager stopRanging];
+            if (!_isFirstBluetoothPrompt) {
+                [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
+            }else{
+                _isFirstBluetoothPrompt = NO;
+            }
         }
     }
 }
@@ -986,5 +991,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_menu hide];
     
 }
-
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
+}
 @end

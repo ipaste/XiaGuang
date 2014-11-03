@@ -136,7 +136,6 @@
         {
             if (_mapViewController == nil) {
                 _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
-                
             }
             
             _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -160,6 +159,9 @@
     BOOL isOpen = [userInfo[@"isOpen"] boolValue];
     _blueToothOn = isOpen;
     [_panel setBluetoothState:isOpen];
+    if (!isOpen) {
+        _recordMinorArea = nil;
+    }
 }
 -(BOOL)prefersStatusBarHidden{
     return NO;
