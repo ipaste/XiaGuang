@@ -138,6 +138,7 @@
                 _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
                 
             }
+            
             _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:_mapViewController animated:YES completion:nil];
         }

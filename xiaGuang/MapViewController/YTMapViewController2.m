@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _switchingFloor;
     NSArray *_activePois;
     id<YTMajorArea> _activePoiMajorArea;
+    BOOL _blurMenuShown;
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -151,14 +152,31 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //[self showNoBeaconCover];
     if(_minorArea == nil){
         [self createBlurMenu];
+        
+    }
+    else{
+        _noBeaconCover.hidden = YES;
     }
     
     if (_type == YTMapViewControllerTypeNavigation) {
+        
         [self userMoveToMinorArea:_minorArea];
         [_beaconManager startRangingBeacons];
         return;
     }
 
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if(_minorArea == nil){
+        if(!_blurMenuShown){
+            _noBeaconCover.hidden = NO;
+            _switchFloorView.hidden = YES;
+            _switchBlockView.hidden = YES;
+            [_menu show];
+        }
+    }
 }
 
 -(void)createBlurMenu{
@@ -222,6 +240,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _selectedPoi = [_merchantLocation producePoi];
         [_mapView highlightPoi:_selectedPoi animated:YES];
         [_detailsView setCommonPoi:_merchantLocation];
+        
         [self showCallOut];
     }
 }
@@ -934,9 +953,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark blurMenu
 -(void)menuDidHide{
     //[self dismissViewControllerAnimated:YES completion:nil];
+    _blurMenuShown = NO;
 }
 -(void)menuDidShow{
-    
+    _blurMenuShown = YES;
 }
 -(void)selectedItemAtIndex:(NSInteger)index{
     _noBeaconCover.hidden = YES;
