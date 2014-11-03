@@ -180,6 +180,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             else{
                 [_menu show];
             }
+            
+            if([_mapView currentState] != YTMapViewDetailStateNormal){
+                [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
+                [self hideCallOut];
+            }
+            
         }
     }
 }
@@ -259,6 +265,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_mapView];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
+    [_mapView setZoom:1 animated:NO];
     [self injectPoisForMajorArea:_majorArea];
 }
     
@@ -567,6 +574,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                         _noBeaconCover.hidden = YES;
                     
                     }
+                    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
                 }
             }
         }
@@ -947,6 +955,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 }
             }
             
+            if([_mapView currentState] != YTMapViewDetailStateNormal){
+                [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
+                [self hideCallOut];
+            }
+            
         }else{
             _userMinorArea = nil;
             [_mapView removeUserLocation];
@@ -999,6 +1012,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
     [self createBlockAndFloorSwitch];
+    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
     [_menu hide];
     
 }
