@@ -562,6 +562,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
                     [self userMoveToMinorArea:minorArea];
+                    if(_blurMenuShown){
+                        [_menu hide];
+                        _noBeaconCover.hidden = YES;
+                    
+                    }
                 }
             }
         }
@@ -935,13 +940,19 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
         if (_bluetoothOn) {
             [_beaconManager startRangingBeacons];
+            if(_userMinorArea != nil){
+                if(_blurMenuShown){
+                    [_menu hide];
+                    _noBeaconCover.hidden = YES;
+                }
+            }
+            
         }else{
             _userMinorArea = nil;
             [_mapView removeUserLocation];
             [_beaconManager stopRanging];
             if (!_isFirstBluetoothPrompt) {
-                [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
-            }else{
+                
                 _isFirstBluetoothPrompt = NO;
             }
         }
