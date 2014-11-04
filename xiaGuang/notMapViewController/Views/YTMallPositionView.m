@@ -9,7 +9,7 @@
 #import "YTMallPositionView.h"
 
 @implementation YTMallPositionView{
-    UIImage
+    
 }
 
 -(instancetype)initWithImage:(UIImage *)image phoneNumber:(NSInteger)number address:(NSString *)address{

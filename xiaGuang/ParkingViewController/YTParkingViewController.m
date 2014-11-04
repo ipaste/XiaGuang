@@ -86,7 +86,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         state = YTParkingStateMarked;
     }
     
-    if (_userMinorArea == nil || _bluetoothOn == NO) {
+    if (_userMinorArea == nil || _bluetoothOn == NO || ![[_userMinorArea majorArea] isParking]) {
         _userMinorArea = nil;
         state = YTParkingStateNormal;
     }else{
@@ -284,7 +284,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     NSDictionary *userInfo = notification.userInfo;
     _bluetoothOn = [userInfo[@"isOpen"] boolValue];
     if(_isReceivedMessage){
-        if (!_bluetoothOn && _userMinorArea != nil) {
+        if ((!_bluetoothOn && _userMinorArea != nil) || ![[_userMinorArea majorArea] isParking]) {
             [self setParkingState:YTParkingStateNormal animation:YES];
         }else{
             if (_marked) {
