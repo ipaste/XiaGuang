@@ -45,13 +45,13 @@
         [_collectionView setBackgroundColor:[UIColor clearColor]];
         [self addSubview:_collectionView];
         
+        
         UIButton *close = [UIButton buttonWithType:UIButtonTypeCustom];
         close.frame = CGRectMake(0, self.frame.size.height - COLLECTION_VIEW_PADDING, self.frame.size.width, COLLECTION_VIEW_PADDING);
         close.backgroundColor = [UIColor clearColor];
-        [close setTitle:@"Close" forState:UIControlStateNormal];
+        [close setTitle:@"您没打开蓝牙或者不在商圈范围内" forState:UIControlStateNormal];
         [close setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         close.titleLabel.font = [UIFont fontWithName:@"GillSans-Light" size:18.0f];
-        [close addTarget:self action:@selector(hide) forControlEvents:UIControlEventTouchDown];
         [self addSubview:close];
         
     }
