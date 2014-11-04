@@ -12,6 +12,7 @@
 @protocol YTParkingMarked <YTPoiSource>
 @property (nonatomic,weak) NSString *name;
 @property (nonatomic,assign) CLLocationCoordinate2D coordinate;
+@property (nonatomic,assign) NSTimeInterval parkingDuration;
 @property (nonatomic,weak) id<YTMajorArea> majorArea;
 @property (nonatomic,weak) id<YTMinorArea> inMinorArea;
 

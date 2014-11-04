@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface YTMallPositionView : UIView
-
+-(instancetype)initWithImage:(UIImage *)image phoneNumber:(NSInteger)number address:(NSString *)address;
 @end
