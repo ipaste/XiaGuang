@@ -8,11 +8,14 @@
 
 #import "YTMallPositionView.h"
 
-@implementation YTMallPositionView
+@implementation YTMallPositionView{
+    UIImage
+}
+
 -(instancetype)initWithImage:(UIImage *)image phoneNumber:(NSInteger)number address:(NSString *)address{
     self = [super initWithFrame:[UIScreen mainScreen].bounds];
     if (self) {
-        
+        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     }
     return self;
 }

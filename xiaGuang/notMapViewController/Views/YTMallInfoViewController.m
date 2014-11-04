@@ -17,6 +17,7 @@
 #import "YTMerchantInfoViewController.h"
 #import "YTResultsViewController.h"
 @interface YTMallInfoViewController ()<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
+    YTMallPositionView *_positionView;
     YTSearchView *_searchView;
     UIImageView *_searchBackgroundView;
     UIScrollView *_scrollView;
@@ -172,6 +173,9 @@
         [_tableView reloadData];
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
     }];
+    
+    _positionView = [[YTMallPositionView alloc]initWithImage:nil phoneNumber:1200 address:nil];
+    [self.view addSubview:_positionView];
 
 }
 
