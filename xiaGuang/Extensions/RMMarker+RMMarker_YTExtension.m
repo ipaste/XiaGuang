@@ -193,7 +193,7 @@ static YTCompletion Completion = nil;
         textLayer.name = @"textLayer";
         textLayer.fontSize = 10;
         textLayer.foregroundColor =[[UIColor colorWithString:@"404040"] CGColor];
-        textLayer.backgroundColor = [[UIColor blackColor] CGColor];
+        //textLayer.backgroundColor = [[UIColor blackColor] CGColor];
         self.masksToBounds = NO;
         
         CALayer *imageLayer = [CALayer layer];

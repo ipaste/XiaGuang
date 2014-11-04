@@ -180,6 +180,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             else{
                 [_menu show];
             }
+            
+            if([_mapView currentState] != YTMapViewDetailStateNormal){
+                [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
+                [self hideCallOut];
+            }
+            
         }
     }
 }
@@ -259,6 +265,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_mapView];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
+    [_mapView setZoom:1 animated:NO];
     [self injectPoisForMajorArea:_majorArea];
 }
     
@@ -562,6 +569,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
                     [self userMoveToMinorArea:minorArea];
+                    if(_blurMenuShown){
+                        [_menu hide];
+                        _noBeaconCover.hidden = YES;
+                    
+                    }
+                    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
                 }
             }
         }
@@ -802,6 +815,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     [_mapView hidePoi:_selectedPoi animated:YES];
     
+    
     [UIView animateWithDuration:.2 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
         CGRect frame = _navigationView.frame;
@@ -930,18 +944,32 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
+    if([_mapView currentState] != YTMapViewDetailStateNormal){
+        
+        [_navigationView stopNavigationMode];
+    }
     if (_currentViewDisplay) {
         NSDictionary *userInfo = notification.userInfo;
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
         if (_bluetoothOn) {
             [_beaconManager startRangingBeacons];
+            if(_userMinorArea != nil){
+                if(_blurMenuShown){
+                    [_menu hide];
+                    _noBeaconCover.hidden = YES;
+                }
+            }
+            
+            
+            
         }else{
+            
+            
             _userMinorArea = nil;
             [_mapView removeUserLocation];
             [_beaconManager stopRanging];
             if (!_isFirstBluetoothPrompt) {
-                [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:@"蓝牙已关闭" cancelButtonTitle:@"知道了"]show];
-            }else{
+                
                 _isFirstBluetoothPrompt = NO;
             }
         }
@@ -988,6 +1016,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
     [self createBlockAndFloorSwitch];
+    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
     [_menu hide];
     
 }
