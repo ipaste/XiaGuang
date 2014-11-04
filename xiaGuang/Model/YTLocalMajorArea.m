@@ -13,6 +13,7 @@
     NSString *_tmpMajorAreaId;
     NSString *_tmpFloorId;
     NSString *_tmpName;
+    NSString *_tmpIsParking;
     NSMutableArray *_tmpMinorAreas;
     
     NSMutableArray *_tmpMerchantAreas;
@@ -31,6 +32,7 @@
 @synthesize floor;
 @synthesize bathrooms;
 @synthesize exits;
+@synthesize isParking;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -40,6 +42,7 @@
             _tmpMajorAreaId = [findResultSet stringForColumn:@"majorAreaId"];
             _tmpFloorId = [findResultSet stringForColumn:@"floorId"];
             _tmpName = [findResultSet stringForColumn:@"majorAreaName"];
+            _tmpIsParking = [findResultSet stringForColumn:@"isParking"];
             
         }
     }
@@ -162,7 +165,9 @@
     return _tmpFloor;
 }
 
-
+-(BOOL)isParking{
+    return [_tmpIsParking isEqualToString:@"1"];
+}
 
 
 
