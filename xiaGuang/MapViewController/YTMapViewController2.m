@@ -1022,6 +1022,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_menu hide];
     
 }
+
+-(void)backClicked{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }

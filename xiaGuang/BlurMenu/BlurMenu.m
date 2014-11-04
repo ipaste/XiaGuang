@@ -52,7 +52,7 @@
         close.frame = CGRectMake(0, self.frame.size.height - COLLECTION_VIEW_PADDING, self.frame.size.width, COLLECTION_VIEW_PADDING);
         close.backgroundColor = [UIColor clearColor];
         [close setTitle:@"您没打开蓝牙或者不在商圈范围内" forState:UIControlStateNormal];
-        [close setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        [close setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         close.titleLabel.font = [UIFont fontWithName:@"GillSans-Light" size:18.0f];
         [self addSubview:close];
         
@@ -62,14 +62,22 @@
         _backImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 30, defaultBackImage.size.width, defaultBackImage.size.height)];
         _backImageView.image = defaultBackImage;
         _backImageView.backgroundColor = [UIColor clearColor];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15+defaultBackImage.size.width, 30, 50, defaultBackImage.size.height)];
-        label.text = @"主页";
-        label.textColor = [UIColor whiteColor];
+        UIButton *label = [[UIButton alloc] initWithFrame:CGRectMake(15+defaultBackImage.size.width, 30, 50, defaultBackImage.size.height)];
+        [label setTitle:@"主页" forState:UIControlStateNormal];
+        [label setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [label addTarget:self action:@selector(backClicked) forControlEvents:UIControlEventTouchDown];
+        
         [self addSubview:label];
         
         [self addSubview:_backImageView];
+        
+        
     }
     return self;
+}
+
+-(void)backClicked{
+    [self.delegate backClicked];
 }
 
 - (void)show {

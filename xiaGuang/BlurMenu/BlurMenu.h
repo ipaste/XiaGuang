@@ -21,6 +21,7 @@
 - (void)menuDidShow;
 - (void)menuDidHide;
 - (void)selectedItemAtIndex:(NSInteger)index;
+- (void)backClicked;
 @end
 
 @interface BlurMenu : UIView <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout> {
