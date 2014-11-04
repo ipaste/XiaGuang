@@ -148,9 +148,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
     
     
+    
     //[self showNoBeaconCover];
     if(_minorArea == nil){
-        [self createBlurMenu];
+        //[self createBlurMenu];
         
     }
     else{
@@ -218,8 +219,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }else{
         fake = [UIImage imageNamed:@"home_bg960@2x.jpg"];
     }
-    
-    _noBeaconCover = [[UIImageView alloc] initWithImage:fake];
+    _noBeaconCover = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    _noBeaconCover.image = fake;
     //_noBeaconCover.backgroundColor = [UIColor blackColor];
     //_noBeaconCover.alpha = 0.5;
     _noBeaconCover.hidden = NO;
@@ -380,6 +381,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _switchFloorView.delegate = self;
     [self.view addSubview:_switchFloorView];
 }
+
 
 
 -(void)createNavigationView{
