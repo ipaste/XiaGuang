@@ -23,7 +23,8 @@
 @synthesize inMinorArea;
 @synthesize coordinate;
 @synthesize identifier;
-
+@synthesize name;
+@synthesize iconName;
 
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
@@ -87,4 +88,11 @@
     return result;
 }
 
+-(NSString *)name{
+    return @"洗手间";
+}
+
+-(NSString *)iconName{
+    return @"nav_ico_9";
+}
 @end

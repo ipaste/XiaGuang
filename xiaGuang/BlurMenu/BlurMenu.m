@@ -17,7 +17,9 @@
 #define ITEM_HEIGHT 50
 #define ITEM_LINE_SPACING 10
 
-@implementation BlurMenu
+@implementation BlurMenu{
+    UIImageView *_backImageView;
+}
 @synthesize parent, delegate, menuItems, _collectionView;
 
 - (id)initWithItems:(NSArray*)items parentView:(UIView *)p delegate:(id<BlurMenuDelegate>)d {
@@ -45,17 +47,37 @@
         [_collectionView setBackgroundColor:[UIColor clearColor]];
         [self addSubview:_collectionView];
         
+        
         UIButton *close = [UIButton buttonWithType:UIButtonTypeCustom];
         close.frame = CGRectMake(0, self.frame.size.height - COLLECTION_VIEW_PADDING, self.frame.size.width, COLLECTION_VIEW_PADDING);
         close.backgroundColor = [UIColor clearColor];
-        [close setTitle:@"Close" forState:UIControlStateNormal];
-        [close setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [close setTitle:@"您没打开蓝牙或者不在商圈范围内" forState:UIControlStateNormal];
+        [close setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         close.titleLabel.font = [UIFont fontWithName:@"GillSans-Light" size:18.0f];
-        [close addTarget:self action:@selector(hide) forControlEvents:UIControlEventTouchDown];
         [self addSubview:close];
+        
+        
+        UIImage *defaultBackImage = [UIImage imageNamed:@"nav_ico_back_un"];
+        
+        _backImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 30, defaultBackImage.size.width, defaultBackImage.size.height)];
+        _backImageView.image = defaultBackImage;
+        _backImageView.backgroundColor = [UIColor clearColor];
+        UIButton *label = [[UIButton alloc] initWithFrame:CGRectMake(15+defaultBackImage.size.width, 30, 50, defaultBackImage.size.height)];
+        [label setTitle:@"主页" forState:UIControlStateNormal];
+        [label setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [label addTarget:self action:@selector(backClicked) forControlEvents:UIControlEventTouchDown];
+        
+        [self addSubview:label];
+        
+        [self addSubview:_backImageView];
+        
         
     }
     return self;
+}
+
+-(void)backClicked{
+    [self.delegate backClicked];
 }
 
 - (void)show {
