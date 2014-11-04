@@ -458,7 +458,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)parkingCurrentPoiShowInMap:(BOOL)show{
-    
     if (show) {
         if (_currenPoi == nil) {
             _currenPoi = [[YTParkingCurrentPoi alloc]initWithParkingCoordinat:[_userMinorArea coordinate]];
@@ -519,7 +518,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
-    
     FMDatabase *db = [YTDBManager sharedManager];
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
@@ -560,6 +558,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)dealloc{
     NSLog(@"parking Dealloc");
+    [_beaconManager stopRanging];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
 @end
