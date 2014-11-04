@@ -17,6 +17,7 @@
 #define PARKING_MINOR_KEY @"minorAreaID"
 #define PARKING_MAJOR_KEY @"majorAreaID"
 #define PARKING_NAME_KEY @"name"
+#define PARKING_TIME_KEY @"time"
 @interface YTLocalParkingMarked : NSObject<YTParkingMarked>
 +(instancetype)standardParking;
 

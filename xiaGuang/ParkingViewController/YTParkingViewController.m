@@ -46,12 +46,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
     self = [super init];
     if (self) {
+        
         _isReceivedMessage = NO;
         _userMinorArea = minorArea;
         _currenDisplayMajorArea = [minorArea majorArea];
         _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blueStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
-        
         _beaconManager = [YTBeaconManager sharedBeaconManager];
         _beaconManager.delegate = self;
         [_beaconManager startRangingBeacons];
@@ -111,7 +111,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 -(void)backButtonClicked{
     if (_navigationView.isNavigating) {
-       YTMessageBox *box = [[YTMessageBox alloc]initWithTitle:@"导航进行中" Message:@"点击确定退出导航"] ;
+        YTMessageBox *box = [[YTMessageBox alloc]initWithTitle:@"导航进行中" Message:@"点击确定退出导航"] ;
         [box show];
         [box callBack:^(NSInteger tag) {
             if (tag == 1) {
@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [_navigationBar removeFromSuperview];
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-
+    
 }
 #pragma mark mapView
 -(void)createMapView{
@@ -189,14 +189,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     _secondSubLabel.textColor = [UIColor colorWithString:@"e95e37"];
     _secondSubLabel.font = _firstLabel.font;
-    
-    _firstLabel.text = @"计费标准:";
-    
-    _firstSubLable.text = @"6元/时";
-    
-    _secondLable.text = @"剩余车位:";
-    
-    _secondSubLabel.text = @"25个";
+
     
     _cancelMarkedButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_beforeMarkView.frame) - 75, 0, 75, 57)];
     _cancelMarkedButton.layer.cornerRadius = CGRectGetHeight(_cancelMarkedButton.frame) / 2;
@@ -324,7 +317,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)jumToUserFloor{
-
+    
 }
 
 #pragma mark currentParking
@@ -342,8 +335,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     if (![[_currenDisplayMajorArea identifier]isEqualToString:[[_userMinorArea majorArea] identifier]]) {
         [self displayMapWithMajorArea:[_userMinorArea majorArea]];
     }
-
-   [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:YES];
+    
+    [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:YES];
 }
 
 -(void)moveCurrentParkingPositionClicked{
@@ -403,9 +396,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 -(void)markedStateWithTime:(CGFloat)time{
     _moveCurrentLocationButton.hidden = NO;
-    
     if (_state != YTParkingStateNormal) _moveCurrentLocationButton.alpha = 0;
     if(_state == YTParkingStateNotMark) [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
+    [self changeLabel:YTParkingStateMarked];
     [UIView animateWithDuration:time animations:^{
         CGRect frame = _currentParkingButton.frame;
         frame.origin.x = CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10;
@@ -424,6 +417,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }];
 }
 -(void)notMarkStateWithTime:(CGFloat)time{
+    [self changeLabel:YTParkingStateNotMark];
     [UIView animateWithDuration:time animations:^{
         _shadeView.alpha = 0;
         _promptLable.alpha = 0;
@@ -540,7 +534,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [_mapView displayMapNamed:[majorArea mapName]];
     
     if ([[majorArea identifier]isEqualToString:[[_userMinorArea majorArea] identifier]]) {
-         [self parkingCurrentPoiShowInMap:YES];
+        [self parkingCurrentPoiShowInMap:YES];
     }else{
         [self parkingCurrentPoiShowInMap:NO];
     }
@@ -550,6 +544,42 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }else{
         [self parkingMarkedShowInMap:NO];
     }
+}
+
+-(void)changeLabel:(YTParkingState)state{
+    if (state == YTParkingStateMarked) {
+        _firstLabel.text = @"停车计时:";
+        
+        _firstSubLable.text = [self stringWithTime:[_tmpMarker parkingDuration]];
+        
+        _secondLable.text = @"实时计费:";
+        
+        _secondSubLabel.text = @"";
+        
+    }else{
+        _firstLabel.text = @"计费标准:";
+        
+        _firstSubLable.text = @"6元/时";
+        
+        _secondLable.text = @"剩余车位:";
+        
+        _secondSubLabel.text = @"25个";
+    }
+}
+-(NSString *)stringWithTime:(NSTimeInterval)time{
+    int hours = 0;
+    int minute = 0;
+    NSString *timeFormat = nil;
+    
+    hours = (int)time / 3600;
+    minute = (int)time % 3600 / 60;
+   
+    if (hours == 0) {
+        timeFormat = [NSString stringWithFormat:@"%d分",minute];
+    }else{
+        timeFormat = [NSString stringWithFormat:@"%d时%d分",hours,minute];
+    }
+    return timeFormat;
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{

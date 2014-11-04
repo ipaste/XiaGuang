@@ -9,5 +9,11 @@
 #import "YTMallPositionView.h"
 
 @implementation YTMallPositionView
-
+-(instancetype)initWithImage:(UIImage *)image phoneNumber:(NSInteger)number address:(NSString *)address{
+    self = [super initWithFrame:[UIScreen mainScreen].bounds];
+    if (self) {
+        
+    }
+    return self;
+}
 @end
