@@ -40,6 +40,29 @@
     return self;
 }
 
+-(void)redrawWithMajorArea:(id<YTMajorArea>)majorArea{
+    
+    _majorArea = majorArea;
+    
+    _floor = [majorArea floor];
+    
+    [_floorButton removeFromSuperview];
+    [_floorView removeFromSuperview];
+    
+    _floorButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
+    
+    _floorView = [[YTFloorView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_floorButton.frame), CGRectGetMaxY(_floorButton.frame), WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[_majorArea floor]block]floors]];
+    [_floorButton setTitle:[[_majorArea floor]floorName] forState:UIControlStateNormal];
+    _floorView.floorDelegate = self;
+    _floorView.curFloor = [_majorArea floor];
+    [self addSubview:_floorView];
+    [self addSubview:_floorButton];
+    UIImageView *floorImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"nav_ico_floor"]];
+    floorImage.frame = CGRectMake(BUTTON_PADDING, BUTTON_PADDING, WIDTH_AND_HEIGHT - BUTTON_PADDING*2, WIDTH_AND_HEIGHT - BUTTON_PADDING * 2);
+    [_floorButton addSubview:floorImage];
+    
+}
+
 -(void)layoutSubviews{
    
     
