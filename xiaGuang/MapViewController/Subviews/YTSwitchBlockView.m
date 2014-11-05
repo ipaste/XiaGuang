@@ -16,6 +16,8 @@
     UIScrollView * _scrollView;
     UIView *_verticalLine;
     CGFloat _scrollViewWidth;
+    
+    NSMutableArray *_blockButtons;
 }
 @end
 
@@ -43,17 +45,60 @@
         [self addSubview:_verticalLine];
         
         _blocks = [[[[majorArea floor] block] mall] blocks];
-        
+        _blockButtons = [NSMutableArray array];
         for (int i = 0 ; i < _blocks.count; i++) {
             id<YTBlock> block = _blocks[i];
             CGFloat width = [block blockName].length * 14;
             UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * width , 0,width , HEIGHT)];
             [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
             blockButton.tag = i;
+            [_blockButtons addObject:_blockButton];
             [_scrollView addSubview:blockButton];
         }
     }
     return self;
+}
+
+-(void)redrawWithMajorArea:(id<YTMajorArea>)majorArea{
+    CGFloat width = HEIGHT;
+    _textLenght = [[[majorArea floor] block] blockName].length * 14;
+    width += 10;
+    width += 5;
+    width += _textLenght ;
+    CGFloat offsetX = (width - 75) / 14 * 5 ;
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,width, HEIGHT);
+    
+    [_blockButton removeFromSuperview];
+    [_scrollView removeFromSuperview];
+    [_verticalLine removeFromSuperview];
+    
+    
+    _blockButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - _textLenght - 37, 0, _textLenght, HEIGHT)];
+    [_blockButton setTitle:[[[majorArea floor] block] blockName] forState:UIControlStateNormal];
+    
+    [_blockButton addTarget:self action:@selector(switchBlock:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_blockButton];
+    
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 0, HEIGHT)];
+    [self addSubview:_scrollView];
+    
+    _verticalLine = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_blockButton.frame) - 10, 10, 1, 12)];
+    _verticalLine.backgroundColor = [UIColor colorWithString:@"c8c8c8"];
+    [self addSubview:_verticalLine];
+    
+    _blocks = [[[[majorArea floor] block] mall] blocks];
+    _blockButtons = [NSMutableArray array];
+
+    for (int i = 0 ; i < _blocks.count; i++) {
+        id<YTBlock> block = _blocks[i];
+        CGFloat width = [block blockName].length * 14;
+        UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * width , 0,width , HEIGHT)];
+        [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
+        blockButton.tag = i;
+        [_blockButtons addObject:blockButton];
+        [_scrollView addSubview:blockButton];
+    }
+
 }
 
 -(void)promptBlockChange:(id<YTBlock>)block{
@@ -70,7 +115,10 @@
     UIColor *color = [UIColor colorWithString:@"202020"];
     for (int i = 0 ; i < _blocks.count; i++) {
         id<YTBlock> block = _blocks[i];
-        UIButton *blockButton = _scrollView.subviews[i];
+        
+        
+        UIButton *blockButton = _blockButtons[i];
+        
         [blockButton setTitle:[block blockName] forState:UIControlStateNormal];
         if ([[block blockName] isEqualToString:_blockButton.titleLabel.text]) {
             color = [UIColor colorWithString:@"e95e37"];

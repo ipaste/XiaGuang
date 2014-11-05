@@ -386,6 +386,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_switchFloorView];
 }
 
+-(void)redrawBlockAndFloorSwitch{
+    [_switchBlockView redrawWithMajorArea:_majorArea];
+    [_switchFloorView redrawWithMajorArea:_majorArea];
+}
+
 
 
 -(void)createNavigationView{
@@ -594,14 +599,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if(_blurMenuShown){
         [_menu hide];
         _noBeaconCover.hidden = YES;
-        [self createBlockAndFloorSwitch];
+        [self redrawBlockAndFloorSwitch];
     }
     
     
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
         _curDisplayedMajorArea = [minorArea majorArea];
-        [self createBlockAndFloorSwitch];
+        [self redrawBlockAndFloorSwitch];
         [self handlePoiForMajorArea:_curDisplayedMajorArea];
     }
     //if this minorArea is in a different major area or _userMinorArea is not created yet
