@@ -10,4 +10,5 @@
 
 @interface YTMallPositionView : UIView
 -(instancetype)initWithImage:(UIImage *)image phoneNumber:(NSInteger)number address:(NSString *)address;
+-(void)show;
 @end

@@ -16,7 +16,12 @@
     self = [super initWithFrame:[UIScreen mainScreen].bounds];
     if (self) {
         self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+        self.hidden = YES;
     }
     return self;
+}
+
+-(void)show{
+    self.hidden = NO;
 }
 @end

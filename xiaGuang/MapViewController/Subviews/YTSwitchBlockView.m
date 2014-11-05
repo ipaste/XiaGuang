@@ -59,6 +59,7 @@
 }
 
 -(void)redrawWithMajorArea:(id<YTMajorArea>)majorArea{
+    
     CGFloat width = HEIGHT;
     _textLenght = [[[majorArea floor] block] blockName].length * 14;
     width += 10;

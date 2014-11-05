@@ -480,8 +480,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
     if (_isReceivedMessage){
         id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
-        
-        if ([[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
+    
+        if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
             return;
         }
         
@@ -515,6 +515,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         }else{
             [_moveCurrentLocationButton promptFloorChange:[[[minorArea majorArea]floor] floorName]];
         }
+    }
+    if (showCurrenPoi) {
+        [self displayMapWithMajorArea:[_userMinorArea majorArea]];
     }
     [self parkingCurrentPoiShowInMap:showCurrenPoi];
     [self updateNavManagerIfNeeded];
