@@ -151,7 +151,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     //[self showNoBeaconCover];
     if(_minorArea == nil){
-        //[self createBlurMenu];
+        
+        NSLog(@"didload");
+        [self createBlurMenu];
         
     }
     else{
@@ -170,7 +172,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    NSLog(@"didAppear");
     if(_userMinorArea == nil){
+        
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
             _switchFloorView.hidden = YES;
@@ -570,12 +574,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             for(id<YTBeacon> tempBeacon in beacons){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
-                    [self userMoveToMinorArea:minorArea];
+                    
                     if(_blurMenuShown){
                         [_menu hide];
                         _noBeaconCover.hidden = YES;
                     
                     }
+                    [self userMoveToMinorArea:minorArea];
                     _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
                 }
             }
@@ -585,6 +590,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
+    
+    if(_blurMenuShown){
+        [_menu hide];
+        _noBeaconCover.hidden = YES;
+        [self createBlockAndFloorSwitch];
+    }
+    
     
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
@@ -948,17 +960,26 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)bluetoothStateChange:(NSNotification *)notification{
     if([_mapView currentState] != YTMapViewDetailStateNormal){
         
-        [_navigationView stopNavigationMode];
+        
+        if([_mapView currentState] == YTMapViewDetailStateNavigating){
+            [_navigationView stopNavigationMode];
+        }
+        if([_mapView currentState] == YTMapViewDetailStateShowDetail){
+            [self hideCallOut];
+        }
+        [self handlePoiForMajorArea:_curDisplayedMajorArea];
     }
     if (_currentViewDisplay) {
         NSDictionary *userInfo = notification.userInfo;
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
         if (_bluetoothOn) {
+            
             [_beaconManager startRangingBeacons];
             if(_userMinorArea != nil){
                 if(_blurMenuShown){
                     [_menu hide];
                     _noBeaconCover.hidden = YES;
+                    [self createBlockAndFloorSwitch];
                 }
             }
             
