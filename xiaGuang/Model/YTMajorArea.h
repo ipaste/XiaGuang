@@ -19,5 +19,6 @@
 @property (nonatomic,weak) NSArray *bathrooms;
 @property (nonatomic,weak) NSArray *exits;
 @property (nonatomic) BOOL isParking;
+@property (nonatomic) double worldToMapRatio;
 
 @end

@@ -66,6 +66,10 @@
     return [[YTCloudFloor alloc] initWithAVObject:_internalObject[MAJORAREA_CLASS_FLOOR_KEY]];
 }
 
+-(double)worldToMapRatio {
+    return [_internalObject[MAJORAREA_CLASS_WORLDTOMAPRATIO_KEY] doubleValue];
+}
+
 //-(NSArray *)merchantLocations{
 //    if(_merchantLocations == nil){
 //        AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANTLOCATION_CLASS_NAME];

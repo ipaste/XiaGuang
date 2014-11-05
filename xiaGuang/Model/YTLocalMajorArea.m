@@ -22,6 +22,8 @@
     NSMutableArray *_tmpExits;
     
     id<YTFloor> _tmpFloor;
+    
+    double _tmpWorldToMapRatio;
 }
 
 @synthesize mapName;
@@ -43,7 +45,7 @@
             _tmpFloorId = [findResultSet stringForColumn:@"floorId"];
             _tmpName = [findResultSet stringForColumn:@"majorAreaName"];
             _tmpIsParking = [findResultSet stringForColumn:@"isParking"];
-            
+            _tmpWorldToMapRatio = [findResultSet doubleForColumn:@"worldToMapDistRatio"];
         }
     }
     return self;
@@ -170,6 +172,8 @@
 }
 
 
-
+-(double)worldToMapRatio {
+    return _tmpWorldToMapRatio;
+}
 
 @end

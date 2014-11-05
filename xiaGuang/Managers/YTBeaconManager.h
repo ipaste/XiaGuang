@@ -24,7 +24,12 @@
 
 @end
 
+@protocol YTBeaconManagerUpdateListener <NSObject>
 
+-(void)YTBeaconManager:(YTBeaconManager *)manager
+         rangedBeacons:(NSArray *)beacons;
+
+@end
 
 
 @interface YTBeaconManager : NSObject<ESTBeaconManagerDelegate>
@@ -44,5 +49,11 @@
 
 
 -(BOOL) isBeaconInRange:(ESTBeacon *)beacon;
+
+#pragma mark -
+#pragma mark Listener
+
+- (void)addListener:(id<YTBeaconManagerUpdateListener>)listener;
+- (void)removeListener:(id<YTBeaconManagerUpdateListener>)listener;
 
 @end
