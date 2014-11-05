@@ -563,7 +563,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         
         _secondLable.text = @"实时计费:";
         
-        _secondSubLabel.text = @"";
+        _secondSubLabel.text = [self chargeWithTime:[_tmpMarker parkingDuration]];
         
     }else{
         _firstLabel.text = @"计费标准:";
@@ -590,6 +590,20 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }
     
     return timeFormat;
+}
+
+-(NSString *)chargeWithTime:(NSTimeInterval)time{
+    int hours = 0;
+    
+    hours = (int)time / 3600;
+    if (hours == 0) {
+        hours = 1;
+    }else{
+        int tmpHours = (int)time % 3600 / 60 >= 0 ? 1:0;
+        hours += tmpHours;
+    }
+    
+    return nil;
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
