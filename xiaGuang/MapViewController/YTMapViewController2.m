@@ -141,15 +141,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNavigationView];
     [self createPoiView];
     [self createNoBeaconCover];
-    
+    [self createBlurMenu];
     
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
 
     
+    /*
     
-    
-    //[self showNoBeaconCover];
     if(_minorArea == nil){
         
         NSLog(@"didload");
@@ -165,22 +164,25 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self userMoveToMinorArea:_minorArea];
         [_beaconManager startRangingBeacons];
         return;
-    }
+    }*/
 
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    
+    
     NSLog(@"didAppear");
     if(_userMinorArea == nil){
         
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
-            _switchFloorView.hidden = YES;
-            _switchBlockView.hidden = YES;
+            //_switchFloorView.hidden = YES;
+            //_switchBlockView.hidden = YES;
             if(_menu == nil){
                 [self createBlurMenu];
+                [_menu show];
             }
             else{
                 [_menu show];
@@ -192,6 +194,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
             
         }
+    }
+    else{
+        _noBeaconCover.hidden = YES;
+        [_menu hide];
     }
 }
 
@@ -207,7 +213,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 [_malls addObject:mall];
                 
             }
-            [self showNoBeaconCover];
+            [self instantiateMenu];
             
         }else{
             //获取失败
@@ -232,7 +238,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_noBeaconCover];
 }
 
--(void)showNoBeaconCover{
+-(void)instantiateMenu{
     NSMutableArray *mallNames = [NSMutableArray array];
     for(id<YTMall> mall in _malls){
         [mallNames addObject:[mall mallName]];
@@ -240,7 +246,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     _menu = [[BlurMenu alloc] initWithItems:mallNames parentView:self.view delegate:self];
     
-    [_menu show];
+    //[_menu show];
 }
 
 
@@ -387,8 +393,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)redrawBlockAndFloorSwitch{
-    [_switchBlockView redrawWithMajorArea:_majorArea];
-    [_switchFloorView redrawWithMajorArea:_majorArea];
+    [_switchBlockView redrawWithMajorArea:_curDisplayedMajorArea];
+    [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
 }
 
 
@@ -580,13 +586,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
                     
-                    if(_blurMenuShown){
-                        [_menu hide];
-                        _noBeaconCover.hidden = YES;
-                    
-                    }
                     [self userMoveToMinorArea:minorArea];
                     _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                    
                 }
             }
         }
@@ -963,6 +965,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
+    
+    if([_beaconManager currentClosest] != nil){
+        [self userMoveToMinorArea:[self getMinorArea:[_beaconManager currentClosest]]];
+    }
+    
+    
+    
     if([_mapView currentState] != YTMapViewDetailStateNormal){
         
         
@@ -984,7 +993,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if(_blurMenuShown){
                     [_menu hide];
                     _noBeaconCover.hidden = YES;
-                    [self createBlockAndFloorSwitch];
+                    [self redrawBlockAndFloorSwitch];
                 }
             }
             
@@ -1043,7 +1052,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_mapView displayMapNamed:[_majorArea mapName]];
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
-    [self createBlockAndFloorSwitch];
+    [self redrawBlockAndFloorSwitch];
     _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
     [_menu hide];
     
@@ -1055,5 +1064,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
+}
+
+-(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
+    
+    FMDatabase *db = [YTDBManager sharedManager];
+    [db open];
+    FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
+    [result next];
+    YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
+    
+    YTLocalMinorArea * minorArea = [localBeacon minorArea];
+    return minorArea;
 }
 @end

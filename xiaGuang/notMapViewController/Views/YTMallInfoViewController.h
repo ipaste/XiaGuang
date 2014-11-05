@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YTMall.h"
 #import "YTMallPositionView.h"
+#import "YTMallPosistionViewController.h"
 @interface YTMallInfoViewController : UIViewController
 @property (strong,nonatomic) id<YTMall> mall;
 @end
