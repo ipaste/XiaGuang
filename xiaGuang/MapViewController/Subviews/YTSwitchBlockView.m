@@ -33,7 +33,6 @@
     if (self) {
         _blockButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - _textLenght - 37, 0, _textLenght, HEIGHT)];
        [_blockButton setTitle:[[[majorArea floor] block] blockName] forState:UIControlStateNormal];
-        
         [_blockButton addTarget:self action:@selector(switchBlock:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_blockButton];
         
@@ -52,7 +51,7 @@
             UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * width , 0,width , HEIGHT)];
             [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
             blockButton.tag = i;
-            [_blockButtons addObject:_blockButton];
+            [_blockButtons addObject:blockButton];
             [_scrollView addSubview:blockButton];
         }
     }
@@ -66,7 +65,8 @@
     width += 5;
     width += _textLenght ;
     CGFloat offsetX = (width - 75) / 14 * 5 ;
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,width, HEIGHT);
+    CGPoint position = CGPointMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame));
+    self.frame = CGRectMake(position.x - offsetX, position.y, width, HEIGHT);
     
     [_blockButton removeFromSuperview];
     [_scrollView removeFromSuperview];
@@ -107,7 +107,6 @@
 
 
 -(void)layoutSubviews{
-    
     [_blockButton setTitleColor:[UIColor colorWithString:@"202020"] forState:UIControlStateNormal];
     [_blockButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     
@@ -115,11 +114,9 @@
     UIColor *color = [UIColor colorWithString:@"202020"];
     for (int i = 0 ; i < _blocks.count; i++) {
         id<YTBlock> block = _blocks[i];
-        
-        
         UIButton *blockButton = _blockButtons[i];
-        
         [blockButton setTitle:[block blockName] forState:UIControlStateNormal];
+        
         if ([[block blockName] isEqualToString:_blockButton.titleLabel.text]) {
             color = [UIColor colorWithString:@"e95e37"];
         }
@@ -133,6 +130,7 @@
     _scrollViewWidth = width;
     
     _verticalLine.frame = CGRectMake(CGRectGetMinX(_blockButton.frame) - 10, 10, 1, 12);
+    
     
     self.backgroundColor = [UIColor whiteColor];
     self.layer.cornerRadius = HEIGHT / 2;
