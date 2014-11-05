@@ -16,6 +16,8 @@
 #import "YTMerchantViewCell.h"
 #import "YTMerchantInfoViewController.h"
 #import "YTResultsViewController.h"
+#import "YTCloudMall.h"
+#import "YTMapViewController2.h"
 @interface YTMallInfoViewController ()<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
     YTMallPositionView *_positionView;
     YTSearchView *_searchView;
@@ -235,18 +237,18 @@
     }
 }
 -(void)jumpToFloorMap:(UIButton *)sender{
-//    id <YTFloor> floor = nil;
-//    YTLocalMall *mall = [(YTCloudMall *)self.mall getLocalCopy];
-//    
-//    NSArray * temp = [[[mall blocks] objectAtIndex:0] floors];
-//    floor = [temp objectAtIndex:0];
-//    if (floor != nil) {
-//        YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
-//        mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//        [self presentViewController:mapVC animated:YES completion:nil];
-//    }
+    id <YTFloor> floor = nil;
+    YTLocalMall *localmall = [(YTCloudMall *)self.mall getLocalCopy];
     
+    NSArray * temp = [[[localmall blocks] objectAtIndex:0] floors];
+    floor = [temp objectAtIndex:0];
+    if (floor != nil) {
+        YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
+        mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:mapVC animated:YES completion:nil];
+    }
 }
+
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];

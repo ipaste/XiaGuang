@@ -141,15 +141,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNavigationView];
     [self createPoiView];
     [self createNoBeaconCover];
-    
+    [self createBlurMenu];
     
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
 
     
+    /*
     
-    
-    //[self showNoBeaconCover];
     if(_minorArea == nil){
         
         NSLog(@"didload");
@@ -165,7 +164,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self userMoveToMinorArea:_minorArea];
         [_beaconManager startRangingBeacons];
         return;
-    }
+    }*/
 
 }
 
@@ -181,6 +180,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             //_switchBlockView.hidden = YES;
             if(_menu == nil){
                 [self createBlurMenu];
+                [_menu show];
             }
             else{
                 [_menu show];
@@ -192,6 +192,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
             
         }
+    }
+    else{
+        _noBeaconCover.hidden = YES;
+        [_menu hide];
     }
 }
 
@@ -207,7 +211,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 [_malls addObject:mall];
                 
             }
-            [self showNoBeaconCover];
+            [self instantiateMenu];
             
         }else{
             //获取失败
@@ -232,7 +236,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_noBeaconCover];
 }
 
--(void)showNoBeaconCover{
+-(void)instantiateMenu{
     NSMutableArray *mallNames = [NSMutableArray array];
     for(id<YTMall> mall in _malls){
         [mallNames addObject:[mall mallName]];
@@ -240,7 +244,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     _menu = [[BlurMenu alloc] initWithItems:mallNames parentView:self.view delegate:self];
     
-    [_menu show];
+    //[_menu show];
 }
 
 
