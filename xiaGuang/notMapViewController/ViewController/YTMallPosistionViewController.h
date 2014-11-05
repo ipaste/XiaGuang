@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTMallPosistionViewController : UIViewController
 -(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber;
 @end
