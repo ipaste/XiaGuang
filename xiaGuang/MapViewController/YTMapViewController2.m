@@ -393,8 +393,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)redrawBlockAndFloorSwitch{
-    [_switchBlockView redrawWithMajorArea:_majorArea];
-    [_switchFloorView redrawWithMajorArea:_majorArea];
+    [_switchBlockView redrawWithMajorArea:_curDisplayedMajorArea];
+    [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
 }
 
 
@@ -586,13 +586,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
                     
-                    if(_blurMenuShown){
-                        [_menu hide];
-                        _noBeaconCover.hidden = YES;
-                    
-                    }
                     [self userMoveToMinorArea:minorArea];
                     _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                    
                 }
             }
         }
@@ -1056,7 +1052,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_mapView displayMapNamed:[_majorArea mapName]];
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
-    [self createBlockAndFloorSwitch];
+    [self redrawBlockAndFloorSwitch];
     _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
     [_menu hide];
     
