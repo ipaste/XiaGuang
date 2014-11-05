@@ -262,6 +262,18 @@
         callback(mallImage,nil);
     }];
 }
+-(void)getMallBasicInfoWithCallBack:(void(^)(UIImage *mapImage,NSString *address,NSString *phoneNumber,NSError *error))callback{
+    NSString *address = _internalObject[@"address"];
+    NSString *phoneNumber = _internalObject[@"phoneNumber"];
+    AVFile *file = _internalObject[@"mallMap"];
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if (!error) {
+            UIImage *tmpImage = [UIImage imageWithData:data];
+            callback(tmpImage,address,phoneNumber,nil);
+        }
+    }];
+
+}
 
 -(YTLocalMall *)getLocalCopy{
     

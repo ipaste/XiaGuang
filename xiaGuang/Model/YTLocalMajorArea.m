@@ -166,7 +166,7 @@
 }
 
 -(BOOL)isParking{
-    return [_tmpIsParking isEqualToString:@"1"];
+    return [_tmpIsParking boolValue];
 }
 
 

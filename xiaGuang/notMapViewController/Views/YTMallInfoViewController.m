@@ -176,8 +176,10 @@
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
     }];
     
-//    _positionView = [[YTMallPositionView alloc]initWithImage:nil phoneNumber:1200 address:nil];
-//    [self.view addSubview:_positionView];
+    [_mall getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
+        _positionView = [[YTMallPositionView alloc]initWithImage:mapImage phoneNumber:[phoneNumber integerValue] address:address];
+        [self.view addSubview:_positionView];
+    }];
 
 }
 
