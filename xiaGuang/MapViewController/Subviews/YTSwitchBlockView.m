@@ -16,20 +16,21 @@
     UIScrollView * _scrollView;
     UIView *_verticalLine;
     CGFloat _scrollViewWidth;
-    
+    CGPoint _selfPosition;
     NSMutableArray *_blockButtons;
 }
 @end
 
 @implementation YTSwitchBlockView
 -(instancetype)initWithPosition:(CGPoint)position currentMajorArea:(id <YTMajorArea>)majorArea{
+    _selfPosition = position;
     CGFloat width = HEIGHT;
-    _textLenght = [[[majorArea floor] block] blockName].length * 14;
+    NSString *blockName = [[[majorArea floor] block] blockName];
+    _textLenght = [blockName boundingRectWithSize:CGSizeMake(320, HEIGHT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
     width += 10;
     width += 5;
     width += _textLenght ;
-    CGFloat offsetX = (width - 75) / 14 * 5 ;
-    self = [super initWithFrame:CGRectMake(position.x - offsetX, position.y, width, HEIGHT)];
+    self = [super initWithFrame:CGRectMake(position.x - _textLenght - 10, position.y, width, HEIGHT)];
     if (self) {
         _blockButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - _textLenght - 37, 0, _textLenght, HEIGHT)];
        [_blockButton setTitle:[[[majorArea floor] block] blockName] forState:UIControlStateNormal];
@@ -59,16 +60,13 @@
 }
 
 -(void)redrawWithMajorArea:(id<YTMajorArea>)majorArea{
-    
     CGFloat width = HEIGHT;
-    _textLenght = [[[majorArea floor] block] blockName].length * 14;
+    NSString *blockName = [[[majorArea floor] block] blockName];
+    _textLenght = [blockName boundingRectWithSize:CGSizeMake(320, HEIGHT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
     width += 10;
     width += 5;
     width += _textLenght ;
-    CGFloat offsetX = (width - 75) / 14 * 5 ;
-    CGPoint position = CGPointMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame));
-    self.frame = CGRectMake(position.x - offsetX, position.y, width, HEIGHT);
-    
+    self.frame = CGRectMake(_selfPosition.x - _textLenght - 10, _selfPosition.y, width, HEIGHT);
     [_blockButton removeFromSuperview];
     [_scrollView removeFromSuperview];
     [_verticalLine removeFromSuperview];
@@ -138,7 +136,6 @@
     self.layer.borderColor = [UIColor colorWithString:@"c8c8c8"].CGColor;
     self.layer.borderWidth = 1;
     self.layer.masksToBounds = YES;
-    self.layer.anchorPoint = CGPointMake(1, 0.5);
 }
 -(void)toggleBlockView{
     [self switchBlock:_blockButton];
