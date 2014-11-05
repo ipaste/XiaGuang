@@ -171,6 +171,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    
+    
     NSLog(@"didAppear");
     if(_userMinorArea == nil){
         
@@ -967,6 +969,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
+    
+    if([_beaconManager currentClosest] != nil){
+        [self userMoveToMinorArea:[self getMinorArea:[_beaconManager currentClosest]]];
+    }
+    
+    
+    
     if([_mapView currentState] != YTMapViewDetailStateNormal){
         
         
@@ -1059,5 +1068,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
+}
+
+-(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
+    
+    FMDatabase *db = [YTDBManager sharedManager];
+    [db open];
+    FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
+    [result next];
+    YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
+    
+    YTLocalMinorArea * minorArea = [localBeacon minorArea];
+    return minorArea;
 }
 @end
