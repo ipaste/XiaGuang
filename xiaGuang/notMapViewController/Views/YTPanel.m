@@ -35,7 +35,7 @@
        [self addSubview:_circle];
 
         _bluetooth = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-        [self setBluetoothState:YES];
+        [self setBluetoothState:NO];
         [self addSubview:_bluetooth];
         
         _items = [NSMutableArray array];
