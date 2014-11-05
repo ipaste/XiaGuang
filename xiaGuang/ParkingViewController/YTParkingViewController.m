@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [self createNavigationView];
     [self createShadeView];
     [self createParkingButton];
-    
+    [self.view addSubview:_navigationBar];
     
     _tmpMarker = [YTLocalParkingMarked standardParking];
     YTParkingState state;
@@ -106,21 +106,20 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _navigationBar.titleName = @"停车标记";
     _navigationBar.delegate = self;
     [_navigationBar changeSearchButton];
-    UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
-    [window addSubview:_navigationBar];
 }
+
 -(void)backButtonClicked{
     if (_navigationView.isNavigating) {
         YTMessageBox *box = [[YTMessageBox alloc]initWithTitle:@"导航进行中" Message:@"点击确定退出导航"] ;
         [box show];
         [box callBack:^(NSInteger tag) {
             if (tag == 1) {
-                [_navigationBar removeFromSuperview];
+                
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }];
     }else{
-        [_navigationBar removeFromSuperview];
+        
         [self dismissViewControllerAnimated:YES completion:nil];
     }
     
@@ -129,6 +128,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(self.view.bounds) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 70)];
     _mapView.delegate = self;
+    [_mapView displayMapNamed:@"haianchengparking1"];
     [_mapView setZoom:1.0 animated:YES];
     [self.view addSubview:_mapView];
 }
@@ -190,7 +190,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _secondSubLabel.textColor = [UIColor colorWithString:@"e95e37"];
     _secondSubLabel.font = _firstLabel.font;
 
-    
     _cancelMarkedButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_beforeMarkView.frame) - 75, 0, 75, 57)];
     _cancelMarkedButton.layer.cornerRadius = CGRectGetHeight(_cancelMarkedButton.frame) / 2;
     [_cancelMarkedButton setTitle:@"取消" forState:UIControlStateNormal];
@@ -208,6 +207,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [_starNavigationButton addTarget:self action:@selector(clickStarNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
     [_beforeMarkView addSubview:_starNavigationButton];
     
+    [self changeLabel:_state];
     
 }
 -(void)createShadeView{
@@ -228,6 +228,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)clickStarNavigationButton:(UIButton *)sender{
+    _navigationView.hidden = NO;
     [_navigationView startNavigationAndSetDestination:_tmpMarker];
     _navigationModePlan = [[YTNavigationModePlan alloc]initWithTargetPoiSource:_tmpMarker];
     _navigationView.plan = _navigationModePlan;
@@ -273,6 +274,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _promptLable.text = @"检测到您为开蓝牙或不在商城内实时定位请到达商城后打开蓝牙";
     [self.view addSubview:_promptLable];
 }
+
 -(void)markedButtonClicked:(UIButton *)sender{
     _carCoordinate = [_userMinorArea coordinate];
     _marked = YES;
@@ -300,6 +302,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 65 , CGRectGetWidth(self.view.frame) - 20, 60)];
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
+    _navigationView.hidden = YES;
     [self.view addSubview:_navigationView];
     [_navigationView.layer pop_animationForKey:@"shake"];
 }
@@ -313,6 +316,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         frame.origin.x = CGRectGetWidth(self.view.frame);
         _navigationView.frame = frame;
         _navigationView.alpha = 1.0f;
+        _navigationView.hidden = YES;
     }];
 }
 
@@ -477,6 +481,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     if (_isReceivedMessage){
         id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
         
+        if ([[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
+            return;
+        }
+        
         if (![[tmpMinorArea identifier]isEqualToString:[_userMinorArea identifier]] || _userMinorArea == nil) {
             _userMinorArea = tmpMinorArea;
             if (_state == YTParkingStateNormal) {
@@ -497,6 +505,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
+    _navigationBar.titleName = [[[[[minorArea majorArea] floor] block] mall] mallName];
     BOOL showCurrenPoi = NO;
     if ([[_currenDisplayMajorArea identifier]isEqualToString:[[minorArea majorArea] identifier]]) {
         showCurrenPoi = YES;
@@ -561,9 +570,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         
         _firstSubLable.text = @"6元/时";
         
-        _secondLable.text = @"剩余车位:";
+        _secondLable.text = @"";
         
-        _secondSubLabel.text = @"25个";
+        _secondSubLabel.text = @"";
     }
 }
 -(NSString *)stringWithTime:(NSTimeInterval)time{
@@ -579,6 +588,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }else{
         timeFormat = [NSString stringWithFormat:@"%d时%d分",hours,minute];
     }
+    
     return timeFormat;
 }
 

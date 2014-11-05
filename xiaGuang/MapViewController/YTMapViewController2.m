@@ -683,7 +683,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)moveToUserLocationButtonClicked{
     //if user is not present
     if(_userMinorArea == nil){
-        [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:[self messageFromButtonType:YTMessageTypeFromCurrentButton] cancelButtonTitle:@"知道了"]show];
+        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromCurrentButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
     
@@ -714,12 +714,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSString *message = nil;
     if (!_bluetoothOn) {
         message = @"蓝牙尚未打开";
-        [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:message cancelButtonTitle:@"知道了"]show];
+        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:message cancelButtonTitle:@"知道了"]show];
         return;
     }
     if(_userMinorArea == nil){
         
-        [[[YTMessageBox alloc]initWithTitle:@"瞎逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
+        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
     

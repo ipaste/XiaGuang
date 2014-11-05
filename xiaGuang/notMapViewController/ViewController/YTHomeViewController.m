@@ -36,7 +36,6 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
-    self.navigationItem.title = @"虾逛";
     self.view.backgroundColor = [UIColor whiteColor];
     
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
@@ -68,10 +67,15 @@
     YTLocalMinorArea * minorArea = [localBeacon minorArea];
     return minorArea;
 }
-
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [_panel startAnimationWithBackgroundAndCircle];
+    self.navigationItem.title = @"虾逛";
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationItem.title = @"首页";
 }
 
 
