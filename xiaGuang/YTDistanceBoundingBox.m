@@ -17,13 +17,15 @@
     int _outOfRangeCount;
     
     RMMapView *_mapView;
+    id<YTMajorArea> _majorArea;
 }
 
 @end
 
 @implementation YTDistanceBoundingBox
 
-- (id)initWithMapView:(RMMapView *)mapView {
+- (id)initWithMapView:(RMMapView *)mapView
+            majorArea:(id<YTMajorArea>)majorArea {
     self = [super init];
     if (self) {
         _currentPoint.x = 0;
@@ -32,6 +34,7 @@
         _speed = 7;
         _outOfRangeCount = 0;
         _mapView = mapView;
+        _majorArea = majorArea;
     }
     return self;   
 }
@@ -51,18 +54,16 @@
             _currentPoint.y = newPoint.y;
             _lastUpdateTime = now;
             _outOfRangeCount = 0;
-            NSLog(@"%@", @"====");
         } else {
             double dist = sqrt(pow(newPoint.x - _currentPoint.x, 2) + pow(newPoint.y - _currentPoint.y, 2));
-            double adjustedDist = [YTCanonicalCoordinate canonicalToWorldDistance:dist mapView:_mapView];
+            double adjustedDist = [YTCanonicalCoordinate canonicalToWorldDistance:dist
+                                                                          mapView:_mapView
+                                                                        majorArea:_majorArea];
             
             double range = (now - _lastUpdateTime) * _speed;
             
-            NSLog(@"%f", range);
-            
             if (adjustedDist >= range) {
                 _outOfRangeCount++;
-                NSLog(@"%@", @"!!!");
             } else {
                 _currentPoint.x = newPoint.x;
                 _currentPoint.y = newPoint.y;

@@ -10,9 +10,12 @@
 
 #import <RMMapView.h>
 
+#import "YTMajorArea.h"
+
 @interface YTDistanceBoundingBox : NSObject
 
-- (id)initWithMapView:(RMMapView *)mapView;
+- (id)initWithMapView:(RMMapView *)mapView
+            majorArea:(id<YTMajorArea>)majorArea;
 
 - (CGPoint)updateAndGetCurrentPoint:(CGPoint)newPoint;
 

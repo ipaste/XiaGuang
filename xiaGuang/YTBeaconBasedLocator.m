@@ -54,7 +54,8 @@
         
         _positionBot = [[YTPositionBot alloc] init];
         
-        _boundingBox = [[YTDistanceBoundingBox alloc] initWithMapView:_mapView];
+        _boundingBox = [[YTDistanceBoundingBox alloc] initWithMapView:_mapView
+                                                            majorArea:_majorArea];
     }
     return self;   
 }
