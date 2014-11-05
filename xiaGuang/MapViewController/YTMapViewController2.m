@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _curDisplayedMajorArea = _majorArea;
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
-
+    
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
     background.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
     [self.view addSubview:background];
