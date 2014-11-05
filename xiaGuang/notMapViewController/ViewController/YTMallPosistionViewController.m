@@ -17,6 +17,10 @@
         [self.view addSubview:mapImageView];
         
         self.navigationItem.title = @"商圈位置";
+        
+        UILabel *phoneNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.frame) - 50, CGRectGetWidth(self.view.frame), 50)];
+        [self.view addSubview:phoneNumberLabel];
+        
     }
     return self;
 }
