@@ -144,6 +144,7 @@
 		D95B15491A0390C1002077AD /* YTUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15481A0390C1002077AD /* YTUserDefaults.m */; };
 		D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15521A072E57002077AD /* YTLocalParkingMarked.m */; };
 		D95B15571A078403002077AD /* YTMallPositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15561A078403002077AD /* YTMallPositionView.m */; };
+		D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -346,8 +347,8 @@
 		D94C27DE1A0263C6009FF2F3 /* YTCategoryViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTCategoryViewCell.m; sourceTree = "<group>"; };
 		D94C27DF1A0263C6009FF2F3 /* YTMallCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallCell.h; sourceTree = "<group>"; };
 		D94C27E01A0263C6009FF2F3 /* YTMallCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallCell.m; sourceTree = "<group>"; };
-		D94C27E11A0263C6009FF2F3 /* YTMallInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallInfoViewController.h; sourceTree = "<group>"; };
-		D94C27E21A0263C6009FF2F3 /* YTMallInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallInfoViewController.m; sourceTree = "<group>"; };
+		D94C27E11A0263C6009FF2F3 /* YTMallInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTMallInfoViewController.h; path = ../Views/YTMallInfoViewController.h; sourceTree = "<group>"; };
+		D94C27E21A0263C6009FF2F3 /* YTMallInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTMallInfoViewController.m; path = ../Views/YTMallInfoViewController.m; sourceTree = "<group>"; };
 		D94C27E31A0263C6009FF2F3 /* YTMerchantViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMerchantViewCell.h; sourceTree = "<group>"; };
 		D94C27E41A0263C6009FF2F3 /* YTMerchantViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMerchantViewCell.m; sourceTree = "<group>"; };
 		D94C27E51A0263C6009FF2F3 /* YTMoreCategoryViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMoreCategoryViewCell.h; sourceTree = "<group>"; };
@@ -420,6 +421,8 @@
 		D95B15521A072E57002077AD /* YTLocalParkingMarked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalParkingMarked.m; sourceTree = "<group>"; };
 		D95B15551A078403002077AD /* YTMallPositionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPositionView.h; sourceTree = "<group>"; };
 		D95B15561A078403002077AD /* YTMallPositionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPositionView.m; sourceTree = "<group>"; };
+		D9AE50711A0A1F280080CF21 /* YTMallPosistionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPosistionViewController.h; sourceTree = "<group>"; };
+		D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPosistionViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -799,6 +802,10 @@
 				D94C27D51A0263C6009FF2F3 /* YTResultsViewController.m */,
 				D94C27D61A0263C6009FF2F3 /* YTSearchViewController.h */,
 				D94C27D71A0263C6009FF2F3 /* YTSearchViewController.m */,
+				D94C27E11A0263C6009FF2F3 /* YTMallInfoViewController.h */,
+				D94C27E21A0263C6009FF2F3 /* YTMallInfoViewController.m */,
+				D9AE50711A0A1F280080CF21 /* YTMallPosistionViewController.h */,
+				D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -814,8 +821,6 @@
 				D94C27DE1A0263C6009FF2F3 /* YTCategoryViewCell.m */,
 				D94C27DF1A0263C6009FF2F3 /* YTMallCell.h */,
 				D94C27E01A0263C6009FF2F3 /* YTMallCell.m */,
-				D94C27E11A0263C6009FF2F3 /* YTMallInfoViewController.h */,
-				D94C27E21A0263C6009FF2F3 /* YTMallInfoViewController.m */,
 				D94C27E31A0263C6009FF2F3 /* YTMerchantViewCell.h */,
 				D94C27E41A0263C6009FF2F3 /* YTMerchantViewCell.m */,
 				D94C27E51A0263C6009FF2F3 /* YTMoreCategoryViewCell.h */,
@@ -1150,6 +1155,7 @@
 				D95B153F1A0379CE002077AD /* YTParkingMarkPoi.m in Sources */,
 				D94C283B1A0263CF009FF2F3 /* UIScrollView+MJRefresh.m in Sources */,
 				AE24A89B1A02432000A0CE91 /* YTCloudElevator.m in Sources */,
+				D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */,
 				AE24A8991A02432000A0CE91 /* YTCloudBeacon.m in Sources */,
 				D94C27FF1A0263C6009FF2F3 /* YTInvitationViewController.m in Sources */,
 				D94C27C41A02639F009FF2F3 /* YTSwitchFloorView.m in Sources */,
