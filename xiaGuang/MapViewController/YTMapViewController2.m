@@ -177,8 +177,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
-            _switchFloorView.hidden = YES;
-            _switchBlockView.hidden = YES;
+            //_switchFloorView.hidden = YES;
+            //_switchBlockView.hidden = YES;
             if(_menu == nil){
                 [self createBlurMenu];
             }
@@ -984,7 +984,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if(_blurMenuShown){
                     [_menu hide];
                     _noBeaconCover.hidden = YES;
-                    [self createBlockAndFloorSwitch];
+                    [self redrawBlockAndFloorSwitch];
                 }
             }
             
