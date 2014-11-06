@@ -388,6 +388,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)createDetailsView{
     _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60)];
     _detailsView.delegate = self;
+    _detailsView.hidden = YES;
     [self.view addSubview:_detailsView];
 }
 
@@ -497,6 +498,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)showCallOut{
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
+    _detailsView.hidden = NO;
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -554,6 +556,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     } completion:^(BOOL finished) {
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
+        _detailsView.hidden = YES;
         if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
             [_mapView highlightPoi:_selectedPoi animated:NO];
         }
