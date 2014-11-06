@@ -130,6 +130,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [_mapView displayMapNamed:@"haianchengparking1"];
     [_mapView setZoom:1.0 animated:YES];
     [self.view addSubview:_mapView];
+    [_mapView removeAnnotations];
 }
 
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
@@ -231,6 +232,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [_navigationView startNavigationAndSetDestination:_tmpMarker];
     _navigationModePlan = [[YTNavigationModePlan alloc]initWithTargetPoiSource:_tmpMarker];
     _navigationView.plan = _navigationModePlan;
+    [self updateNavManagerIfNeeded];
     
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _navigationView.frame;
@@ -320,7 +322,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)jumToUserFloor{
-    
+    _navigationView.isShowSwitchButton = NO;
+    [self displayMapWithMajorArea:[_userMinorArea majorArea]];
 }
 
 #pragma mark currentParking
@@ -376,7 +379,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 -(void)normalStateWithTime:(CGFloat)time{
     if (!_isReceivedMessage) {
-        if (!_marked) {
+        if (![_tmpMarker whetherMark]) {
             [_parkingView setEnabled:YES];
             _moveCurrentLocationButton.hidden = YES;
             _cancelMarkedButton.alpha = 0;
@@ -563,6 +566,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }else{
         [self parkingMarkedShowInMap:NO];
     }
+    
+    if (_navigationView.isNavigating) {
+        if ([[_currenDisplayMajorArea identifier]isEqualToString:[[_tmpMarker majorArea] identifier]]) {
+            _navigationView.isShowSwitchButton = NO;
+        }
+    }
 }
 
 -(void)changeLabel:(YTParkingState)state{
@@ -621,7 +630,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)dealloc{
-    NSLog(@"parking Dealloc");
     [_beaconManager stopRanging];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
