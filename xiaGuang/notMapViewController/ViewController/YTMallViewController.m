@@ -69,8 +69,9 @@
         _mallObjects = [NSMutableArray array];
         _bundleObjects = [NSMutableArray array];
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        //query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-        //query.maxCacheAge = 1800;
+        [query whereKeyExists:@"localDBId"];
+        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+        query.maxCacheAge = 2*3600;
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 for (AVObject *mallObject in objects) {

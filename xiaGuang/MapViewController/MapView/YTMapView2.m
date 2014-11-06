@@ -194,7 +194,7 @@
     }
     else{
         if([_internalMapView.annotations containsObject:_userAnnotation]){
-            [_userAnnotation setCooerdinate:coordinate];
+            [_userAnnotation setCoordinate:coordinate];
         }
         else{
             

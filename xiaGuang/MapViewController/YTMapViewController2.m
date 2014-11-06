@@ -103,6 +103,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
+            _targetMall = [[[_majorArea floor] block]mall];
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -114,6 +115,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (self) {
         if ( floor != nil) {
             _majorArea = [[floor majorAreas] objectAtIndex:0];
+            _targetMall = [[[_majorArea floor] block]mall];
         }
         _type = YTMapViewControllerTypeFloor;
     }
@@ -211,18 +213,27 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 else{
                     [_menu show];
                 }
+                if([_mapView currentState] != YTMapViewDetailStateNormal){
+                    [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
+                    [self hideCallOut];
+                }
             }
             
-            if([_mapView currentState] != YTMapViewDetailStateNormal){
-                [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
-                [self hideCallOut];
-            }
+            
             
         }
     }
     else{
         _noBeaconCover.hidden = YES;
         [_menu hide];
+    }
+    
+    if(_type != YTMapViewControllerTypeNavigation){
+        
+        [_menu hide];
+        _noBeaconCover.hidden = YES;
+        [self redrawBlockAndFloorSwitch];
+        
     }
 }
 
@@ -611,6 +622,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
+    
+    
+    if(_type != YTMapViewControllerTypeNavigation){
+        NSString *iden =[[[[[minorArea majorArea] floor] block] mall] identifier];
+        if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
+            return;
+        }
+    }
+    
     
     if(_blurMenuShown){
         [_menu hide];
