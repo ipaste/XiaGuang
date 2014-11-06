@@ -88,7 +88,8 @@
 }
 
 -(YTPoi *)producePoi{
-    if ([self whetherMark]) {
+
+    if ([self whetherMark] && _tmpParkingPOi == nil) {
         _tmpParkingPOi = [[YTParkingMarkPoi alloc]initWithParkingMarkCoordinat:[self coordinate]];
     }
     return _tmpParkingPOi;

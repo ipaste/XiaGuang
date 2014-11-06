@@ -46,7 +46,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
     self = [super init];
     if (self) {
-        
         _isReceivedMessage = NO;
         _userMinorArea = minorArea;
         _currenDisplayMajorArea = [minorArea majorArea];
@@ -415,7 +414,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _starNavigationButton.alpha = 1;
         _cancelMarkedButton.alpha = 1;
     } completion:^(BOOL finished) {
-        [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
+        if (![_tmpMarker whetherMark]){
+            [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
+        }
         [self parkingMarkedShowInMap:YES];
         [self parkingCurrentPoiShowInMap:YES animation:YES];
         _shadeView.hidden = YES;
@@ -442,17 +443,20 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _moveCurrentLocationButton.hidden = YES;
         [self parkingCurrentPoiShowInMap:YES animation:YES];
         [self parkingMarkedShowInMap:NO];
-        [_tmpMarker clearParkingInfo];
+        if ([_tmpMarker whetherMark]) {
+            [_tmpMarker clearParkingInfo];
+        }
     }];
 }
 
 -(void)parkingMarkedShowInMap:(BOOL)show{
+    YTPoi *tmpPoi = [_tmpMarker producePoi];
     if (show){
-        [_mapView addPoi:[_tmpMarker producePoi]];
-        [_mapView highlightPoi:[_tmpMarker producePoi] animated:NO];
+        [_mapView addPoi:tmpPoi];
+        [_mapView highlightPoi:tmpPoi animated:NO];
     }else{
-        if([_tmpMarker producePoi] == nil) return;
-        [_mapView removeAnnotationForPoi:[_tmpMarker producePoi]];
+        if(tmpPoi == nil) return;
+        [_mapView removeAnnotationForPoi:tmpPoi];
     }
 }
 
