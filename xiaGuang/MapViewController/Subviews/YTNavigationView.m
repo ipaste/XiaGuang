@@ -88,16 +88,11 @@
 }
 
 -(void)startNavigationAndSetDestination:(id <YTPoiSource>)source{
+    
     _poiSource = source;
     _isNavigating = YES;
     [self setNeedsLayout];
 }
-
-
-
-
-
-
 
 -(void)clickStopNavigationButton:(UIButton *)sender{
     [_messageBox show];

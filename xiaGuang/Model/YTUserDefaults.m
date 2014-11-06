@@ -73,7 +73,6 @@
     if (key == nil) {
         return [_userDefaults boolForKey:@"mark"];
     }
-  
-    return [_userDefaults objectForKey:key] == nil ? NO : YES;
+   return [_userDefaults objectForKey:key] == nil ? NO : YES;
 }
 @end

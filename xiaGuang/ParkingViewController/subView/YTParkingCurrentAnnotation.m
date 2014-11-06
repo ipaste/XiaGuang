@@ -29,7 +29,11 @@
 }
 -(void)hideAnimated:(BOOL)animated{
     [super hideAnimated:animated];
-    [_resultLayer disappear];
+    if (animated){
+        [_resultLayer disappear];
+    }else{
+        _resultLayer.opacity = 0;
+    }
 }
 -(void)superHighlight:(BOOL)animated{
     [super superHighlight:animated];
