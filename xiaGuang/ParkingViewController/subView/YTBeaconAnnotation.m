@@ -1,14 +1,14 @@
 //
-//  YTParkingAnnotation.m
+//  YTBeaconAnnotation.m
 //  xiaGuang
 //
-//  Created by YunTop on 14/10/31.
+//  Created by YunTop on 14/11/6.
 //  Copyright (c) 2014年 YunTop. All rights reserved.
 //
 
-#import "YTParkingCurrentAnnotation.h"
+#import "YTBeaconAnnotation.h"
 
-@implementation YTParkingCurrentAnnotation{
+@implementation YTBeaconAnnotation{
     RMMarker *_resultLayer;
 }
 -(id)initWithMapView:(RMMapView *)aMapView coordinate:(CLLocationCoordinate2D)aCoordinate andTitle:(NSString *)aTitle{
@@ -19,26 +19,22 @@
     return self;
 }
 -(RMMapLayer *)produceLayer{
-   _resultLayer = [[RMMarker alloc]initWithParkingLayer];
-
+    _resultLayer = [[RMMarker alloc]initWithBeaconForMajorAreaID:[[self.minorArea majorArea] identifier] minorID:[self.minorArea identifier]];
+    
     return _resultLayer;
 }
 -(void)highlightAnimated:(BOOL)animated{
     [super highlightAnimated:animated];
-    [_resultLayer didAppear];
+    
 }
 -(void)hideAnimated:(BOOL)animated{
     [super hideAnimated:animated];
-    if (animated){
-        [_resultLayer disappear];
-    }else{
-        _resultLayer.opacity = 0;
-    }
+    
 }
 -(void)superHighlight:(BOOL)animated{
     [super superHighlight:animated];
 }
 -(NSString *)annotationKey{
-    return @"parking";
+    return @"beacon";
 }
 @end

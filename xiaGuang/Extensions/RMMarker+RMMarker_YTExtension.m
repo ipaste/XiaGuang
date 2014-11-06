@@ -285,7 +285,7 @@ static YTCompletion Completion = nil;
     return self;
 }
 
-- (id)initWithBeacon{
+- (id)initWithBeaconForMajorAreaID:(NSString *)majorID minorID:(NSString *)minorID{
     self = [super init];
     if (self) {
         self.bounds = CGRectMake(0, 0, 5, 5);
@@ -301,18 +301,22 @@ static YTCompletion Completion = nil;
         CGContextSetFillColorWithColor(context, [[UIColor redColor] CGColor]);
         CGContextFillEllipseInRect(context, CGRectMake((rect.size.width - whiteWidth) / 2.0, (rect.size.height - whiteWidth) / 2.0, whiteWidth, whiteWidth));
         
-    //UIImage *whiteBackground = UIGraphicsGetImageFromCurrentImageContext();
+        UIImage *whiteBackground = UIGraphicsGetImageFromCurrentImageContext();
         
         UIGraphicsEndImageContext();
-        //self.contents = (id)[whiteBackground CGImage];
+        self.contents = (id)[whiteBackground CGImage];
+    
         
-        CALayer *layer = [CALayer layer];
-        layer.frame = CGRectMake(-45,-45, 100, 100);
-        layer.backgroundColor = [[UIColor redColor] CGColor];
-        layer.opacity = 0;
-        layer.name = @"halo";
-        layer.cornerRadius = 50.0;
-        [self addSublayer:layer];
+        NSString *string = [NSString stringWithFormat:@"major:%@  minor:%@",majorID,minorID];
+        CGSize textSize = [string boundingRectWithSize:CGSizeMake(100, 30) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+        
+        
+        CATextLayer *textLayer = [CATextLayer layer];
+        textLayer.frame = CGRectMake(CGRectGetMaxX(self.bounds), CGRectGetMinY(self.frame), textSize.width, textSize.height);
+        textLayer.foregroundColor = [UIColor redColor].CGColor;
+        textLayer.fontSize = 12;
+        textLayer.string = string;
+        [self addSublayer:textLayer];
     }
     return self;
     

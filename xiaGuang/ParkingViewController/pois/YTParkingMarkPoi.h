@@ -10,4 +10,5 @@
 #import "YTParkingMarkAnnotation.h"
 @interface YTParkingMarkPoi : YTPoi
 -(instancetype)initWithParkingMarkCoordinat:(CLLocationCoordinate2D)coord;
+-(void)removePoiLayer;
 @end
