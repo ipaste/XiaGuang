@@ -33,9 +33,13 @@
 
 -(void)removeAnnotationForPoi:(YTPoi *)poi{
     NSString *tmp = [(YTAnnotation *)[_internalDict objectForKey:poi.poiKey] annotationKey];
-    [_internalDict removeObjectForKey:poi.poiKey];
-    [_poiDict removeObjectForKey:tmp];
+    if (!tmp) {
+        [_internalDict removeObjectForKey:poi.poiKey];
+        [_poiDict removeObjectForKey:tmp];
+    }
+
 }
+    
 
 -(void)removeAllAnnotations{
     _internalDict = [[NSMutableDictionary alloc] init];

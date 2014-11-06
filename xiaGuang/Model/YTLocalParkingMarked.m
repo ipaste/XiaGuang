@@ -58,7 +58,7 @@
     NSString *majorAreaIdentifier = [[_userDefaults dictionaryWithKey:PARKING_CLASS_KEY] valueForKey:PARKING_MAJOR_KEY];
     id<YTMajorArea> tmpMajorArea = nil;
     if ([_dateBase open]) {
-        FMResultSet *result = [_dateBase executeQuery:@"select * from MinorArea where minorAreaId = ?",majorAreaIdentifier];
+        FMResultSet *result = [_dateBase executeQuery:@"select * from MajorArea where majorAreaId = ?",majorAreaIdentifier];
         [result next];
         
         tmpMajorArea = [[YTLocalMajorArea alloc] initWithDBResultSet:result];
@@ -67,10 +67,10 @@
 }
 
 -(NSTimeInterval)parkingDuration{
-    
     NSDate *parkingDate = [[_userDefaults dictionaryWithKey:PARKING_CLASS_KEY] valueForKey:PARKING_TIME_KEY];
     NSTimeInterval systemTime = [[NSTimeZone systemTimeZone] secondsFromGMT];
     NSTimeInterval parkingTime = [parkingDate timeIntervalSinceNow];
+    if (parkingDate == nil) return 0;
     return systemTime - parkingTime;
 }
 -(void)saveParkingInfoWithMinorArea:(id<YTMinorArea>)minorArea{
@@ -82,9 +82,9 @@
     
 }
 -(void)clearParkingInfo{
-    _tmpParkingPOi = nil;
     [_userDefaults removeCoord];
     [_userDefaults removeDictionaryForKey:PARKING_CLASS_KEY];
+    _tmpParkingPOi = nil;
 }
 
 -(YTPoi *)producePoi{
