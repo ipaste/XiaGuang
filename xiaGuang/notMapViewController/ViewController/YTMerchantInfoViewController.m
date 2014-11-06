@@ -9,6 +9,8 @@
 #import "YTMerchantInfoViewController.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "YTCloudMerchant.h"
+#import "YTLocalMerchantInstance.h"
+#import "YTMapViewController2.h"
 @interface YTMerchantInfoViewController (){
     id<YTMerchant> _merchant;
     UIImageView *_merchantLogo;
@@ -94,15 +96,15 @@
 
 -(void)jumpToMap:(id)button{
     
-//    YTLocalMerchantInstance *targetMerchantInstance = [(YTCloudMerchant *)_merchant getLocalMerchantInstance];
-//    if(targetMerchantInstance == nil){
-//        [[[UIAlertView alloc]initWithTitle:@"骚瑞" message:@"当前商铺没有进入数据库" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil] show];
-//        return;
-//    }
-//    YTMapViewController2 *mapVC = [[YTMapViewController2 alloc] initWithMerchant:targetMerchantInstance];
-//    //mapVC.fromMerchant = YES;
-//    mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//    [self presentViewController:mapVC animated:YES completion:nil];
+    YTLocalMerchantInstance *targetMerchantInstance = [(YTCloudMerchant *)_merchant getLocalMerchantInstance];
+    if(targetMerchantInstance == nil){
+        [[[UIAlertView alloc]initWithTitle:@"骚瑞" message:@"当前商铺没有进入数据库" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil] show];
+        return;
+    }
+    YTMapViewController2 *mapVC = [[YTMapViewController2 alloc] initWithMerchant:targetMerchantInstance];
+    //mapVC.fromMerchant = YES;
+    mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentViewController:mapVC animated:YES completion:nil];
 }
 
 -(void)viewDidLayoutSubviews{

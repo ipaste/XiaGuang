@@ -7,12 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AVQuery.h>
-#import <AVObject.h>
 #import "YTMall.h"
 #import "YTMerchant.h"
 #import "YTFloor.h"
-//#import "YTLocalMerchantInstance.h"
+#import "YTLocalMerchantInstance.h"
 
 #define MERCHANT_CLASS_NAME @"Merchant"
 #define MERCHANT_CLASS_MALL_KEY @"mall"
@@ -27,6 +25,6 @@
 @interface YTCloudMerchant : NSObject<YTMerchant>
 
 -(id)initWithAVObject:(AVObject *)object;
-//-(YTLocalMerchantInstance *)getLocalMerchantInstance;
+-(YTLocalMerchantInstance *)getLocalMerchantInstance;
 
 @end
