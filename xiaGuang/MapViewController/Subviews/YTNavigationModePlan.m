@@ -49,7 +49,7 @@
     {
         instrunction = [[YTNavigationInstruction alloc] init];
         instrunction.type = YTNavigationInstructionApproachingDestination;
-        instrunction.mainInstruction = @"你已经到达目的地！！！";
+        instrunction.mainInstruction = @"你已经到达终点";
         instrunction.rightInstruction = @"您与终点在同一楼层";
     }
     
