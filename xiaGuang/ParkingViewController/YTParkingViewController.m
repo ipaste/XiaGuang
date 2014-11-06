@@ -32,8 +32,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTCurrentParkingButton *_currentParkingButton;
     YTMoveCurrentLocationButton *_moveCurrentLocationButton;
     BOOL _bluetoothOn;
-    BOOL _marked;
-    BOOL _isReceivedMessage;
+    BOOL _initializationComplete;
     CLLocationCoordinate2D _carCoordinate;
     id<YTParkingMarked> _tmpMarker;
     YTParkingState _state;
@@ -42,16 +41,20 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTNavigationModePlan *_navigationModePlan;
     
     NSMutableArray *_beacons;
+    
+    UIImage *_parkingImageUnable;
+    UIImage *_parkingImageUn;
+    UIImage *_parkingImagePr;
 }
 
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
     self = [super init];
     if (self) {
-        _isReceivedMessage = NO;
+        _initializationComplete = NO;
         _userMinorArea = minorArea;
         _currenDisplayMajorArea = [minorArea majorArea];
         _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blueStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
         _beaconManager = [YTBeaconManager sharedBeaconManager];
         _beaconManager.delegate = self;
         [_beaconManager startRangingBeacons];
@@ -78,15 +81,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _tmpMarker = [YTLocalParkingMarked standardParking];
     YTParkingState state;
     if (![_tmpMarker whetherMark]) {
-        _marked = NO;
         state = YTParkingStateNotMark;
     }else{
-        _marked = YES;
         _carCoordinate = [_tmpMarker coordinate];
         state = YTParkingStateMarked;
     }
-    
-    // [self userMoveToMinorArea:_userMinorArea];
+
     if (_userMinorArea == nil || _bluetoothOn == NO || ![[_userMinorArea majorArea] isParking]) {
         _userMinorArea = nil;
         state = YTParkingStateNormal;
@@ -94,14 +94,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [self userMoveToMinorArea:_userMinorArea];
     }
     [self setParkingState:state animation:NO];
-    
-    
-    _beacons = [NSMutableArray array];
-}
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    _isReceivedMessage = YES;
+    _beacons = [NSMutableArray array];
+    _initializationComplete = YES;
 }
 
 -(void)createNavigationBar{
@@ -226,7 +221,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [messageBox show];
     [messageBox callBack:^(NSInteger tag) {
         if (tag == 1) {
-            _marked = NO;
             [self setParkingState:YTParkingStateNotMark animation:YES];
         }
     }];
@@ -257,12 +251,11 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 #pragma mark parkingButton
 -(void)createParkingButton{
-    UIImage *parkingImage = [UIImage imageNamed:@"parking_img_mark_unable"];
-    _parkingView = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, parkingImage.size.width, parkingImage.size.height)];
-    [_parkingView setEnabled:NO];
-    [_parkingView setBackgroundImage:parkingImage forState:UIControlStateDisabled];
-    [_parkingView setBackgroundImage:[UIImage imageNamed:@"parking_img_mark_un"] forState:UIControlStateNormal];
-    [_parkingView setBackgroundImage:[UIImage imageNamed:@"parking_img_mark_pr"] forState:UIControlStateHighlighted];
+    _parkingImageUnable = [UIImage imageNamed:@"parking_img_mark_unable"];
+    _parkingImagePr = [UIImage imageNamed:@"parking_img_mark_pr"];
+    _parkingImageUn = [UIImage imageNamed:@"parking_img_mark_un"];
+    
+    _parkingView = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, _parkingImageUn.size.width, _parkingImageUn.size.height)];
     [_parkingView setTitle:@"标记车位" forState:UIControlStateNormal];
     [_parkingView.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [_parkingView addTarget:self action:@selector(markedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -283,19 +276,18 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)markedButtonClicked:(UIButton *)sender{
     _carCoordinate = [_userMinorArea coordinate];
-    _marked = YES;
     [self setParkingState:YTParkingStateMarked animation:YES];
 }
 
 #pragma mark bluetoothState
--(void)blueStateChange:(NSNotification *)notification{
+-(void)bluetoothStateChange:(NSNotification *)notification{
     NSDictionary *userInfo = notification.userInfo;
     _bluetoothOn = [userInfo[@"isOpen"] boolValue];
-    if(_isReceivedMessage){
+    if(_initializationComplete){
         if ((!_bluetoothOn && _userMinorArea != nil) || ![[_userMinorArea majorArea] isParking]) {
             [self setParkingState:YTParkingStateNormal animation:YES];
         }else{
-            if (_marked) {
+            if ([_tmpMarker whetherMark]) {
                 [self setParkingState:YTParkingStateMarked animation:YES];
             }else{
                 [self setParkingState:YTParkingStateNotMark animation:YES];
@@ -366,96 +358,132 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)setParkingState:(YTParkingState)state animation:(BOOL)animation{
-    CGFloat time = animation == YES ? 0.5:0;
     switch (state) {
         case YTParkingStateNormal:
-            [self normalStateWithTime:time];
+            [self normalStateWithAnimation:animation];
             break;
         case YTParkingStateMarked:
-            [self markedStateWithTime:time];
+            [self markedStateWithAnimation:animation];
             break;
         case YTParkingStateNotMark:
-            [self notMarkStateWithTime:time];
+            [self notMarkStateWithAnimation:animation];
             break;
     }
     
     _state = state;
     
 }
--(void)normalStateWithTime:(CGFloat)time{
-    if (!_isReceivedMessage) {
-        if (![_tmpMarker whetherMark]) {
-            [_parkingView setEnabled:YES];
-            _moveCurrentLocationButton.hidden = YES;
-            _cancelMarkedButton.alpha = 0;
-            _starNavigationButton.alpha = 0;
-            
-            CGRect frame = _currentParkingButton.frame;
-            frame.origin.x = CGRectGetMinX(_moveCurrentLocationButton.frame);
-            _currentParkingButton.frame = frame;
-        }
+-(void)normalStateWithAnimation:(BOOL)animation{
+    if (![_tmpMarker whetherMark]) {
+        [self notMarkStateWithAnimation:NO];
+    }else{
+        [self markedStateWithAnimation:NO];
     }
-    _shadeView.hidden = NO;
-    _promptLable.hidden = NO;
-    _parkingView.hidden = NO;
-    [UIView animateWithDuration:time animations:^{
+    
+    if (animation) {
+        [UIView animateWithDuration:0.5 animations:^{
+            _shadeView.alpha = 1;
+            _promptLable.alpha = 1;
+            _parkingView.alpha = 1;
+            [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateNormal];
+            [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateHighlighted];
+        } completion:^(BOOL finished) {
+            [self parkingCurrentPoiShowInMap:NO animation:NO];
+        }];
+    }else{
         _shadeView.alpha = 1;
         _promptLable.alpha = 1;
         _parkingView.alpha = 1;
-    } completion:^(BOOL finished) {
-        [_parkingView setEnabled:NO];
+        [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateNormal];
+        [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateHighlighted];
         [self parkingCurrentPoiShowInMap:NO animation:NO];
-    }];
+    }
 }
--(void)markedStateWithTime:(CGFloat)time{
-    _moveCurrentLocationButton.hidden = NO;
-    if (_state != YTParkingStateNormal) _moveCurrentLocationButton.alpha = 0;
+-(void)markedStateWithAnimation:(BOOL)animation{
     [self changeLabel:YTParkingStateMarked];
-    [UIView animateWithDuration:time animations:^{
+    if (animation) {
+        [UIView animateWithDuration:0.5 animations:^{
+            CGRect frame = _currentParkingButton.frame;
+            frame.origin.x = CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10;
+            _currentParkingButton.frame = frame;
+            
+            _parkingView.alpha = 0;
+            _shadeView.alpha = 0;
+            _promptLable.alpha = 0;
+            _starNavigationButton.alpha = 1;
+            _cancelMarkedButton.alpha = 1;
+        } completion:^(BOOL finished) {
+            if (![_tmpMarker whetherMark]) {
+                [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
+            }
+            [self parkingMarkedShowInMap:YES];
+            [self parkingCurrentPoiShowInMap:YES animation:YES];
+            
+        }];
+    }else{
         CGRect frame = _currentParkingButton.frame;
         frame.origin.x = CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10;
         _currentParkingButton.frame = frame;
-        _moveCurrentLocationButton.alpha = 1;
+        
         _parkingView.alpha = 0;
         _shadeView.alpha = 0;
         _promptLable.alpha = 0;
         _starNavigationButton.alpha = 1;
         _cancelMarkedButton.alpha = 1;
-    } completion:^(BOOL finished) {
-        if (![_tmpMarker whetherMark]){
+        if (![_tmpMarker whetherMark]) {
             [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
         }
         [self parkingMarkedShowInMap:YES];
         [self parkingCurrentPoiShowInMap:YES animation:YES];
-        _shadeView.hidden = YES;
-        _promptLable.hidden = YES;
-    }];
+    }
+
 }
--(void)notMarkStateWithTime:(CGFloat)time{
+-(void)notMarkStateWithAnimation:(BOOL)animation{
     [self changeLabel:YTParkingStateNotMark];
-    [UIView animateWithDuration:time animations:^{
+    [_parkingView setBackgroundImage:_parkingImageUn forState:UIControlStateNormal];
+    [_parkingView setBackgroundImage:_parkingImagePr forState:UIControlStateHighlighted];
+    
+    if (animation) {
+        [UIView animateWithDuration:0.5 animations:^{
+            _shadeView.alpha = 0;
+            _promptLable.alpha = 0;
+            _parkingView.alpha = 1;
+            _starNavigationButton.alpha = 0;
+            _cancelMarkedButton.alpha = 0;
+            _moveCurrentLocationButton.alpha = 0;
+            
+            CGRect frame = _currentParkingButton.frame;
+            frame.origin.x = CGRectGetMinX(_moveCurrentLocationButton.frame);
+            _currentParkingButton.frame = frame;
+            
+        } completion:^(BOOL finished) {
+            [self parkingCurrentPoiShowInMap:YES animation:YES];
+            if ([_tmpMarker whetherMark]) {
+                [self parkingMarkedShowInMap:NO];
+                [_tmpMarker clearParkingInfo];
+            }
+        }];
+    }else{
         _shadeView.alpha = 0;
         _promptLable.alpha = 0;
         _parkingView.alpha = 1;
         _starNavigationButton.alpha = 0;
         _cancelMarkedButton.alpha = 0;
+        _moveCurrentLocationButton.alpha = 0;
         
         CGRect frame = _currentParkingButton.frame;
         frame.origin.x = CGRectGetMinX(_moveCurrentLocationButton.frame);
         _currentParkingButton.frame = frame;
         
-    } completion:^(BOOL finished) {
-        _shadeView.hidden = YES;
-        _promptLable.hidden = YES;
-        [_parkingView setEnabled:YES];
-        _moveCurrentLocationButton.hidden = YES;
         [self parkingCurrentPoiShowInMap:YES animation:YES];
-        [self parkingMarkedShowInMap:NO];
         if ([_tmpMarker whetherMark]) {
+            [self parkingMarkedShowInMap:NO];
             [_tmpMarker clearParkingInfo];
         }
-    }];
+    }
+
 }
+
 
 -(void)parkingMarkedShowInMap:(BOOL)show{
     YTPoi *tmpPoi = [_tmpMarker producePoi];
@@ -482,9 +510,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 #pragma mark BeaconManager
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
-    if (_isReceivedMessage){
-        id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
-        
+    id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
+    if (_initializationComplete){
         if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
             return;
         }
@@ -492,7 +519,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         if (![[tmpMinorArea identifier]isEqualToString:[_userMinorArea identifier]] || _userMinorArea == nil) {
             _userMinorArea = tmpMinorArea;
             if (_state == YTParkingStateNormal) {
-                if (_marked) {
+                if ([_tmpMarker whetherMark]) {
                     [self setParkingState:YTParkingStateMarked animation:YES];
                 }else{
                     [self setParkingState:YTParkingStateNotMark animation:YES];
