@@ -599,7 +599,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             for(id<YTBeacon> tempBeacon in beacons){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
-                    
+
                     [self userMoveToMinorArea:minorArea];
                     _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
                     

@@ -84,6 +84,7 @@
 -(void)clearParkingInfo{
     [_userDefaults removeCoord];
     [_userDefaults removeDictionaryForKey:PARKING_CLASS_KEY];
+    [_tmpParkingPOi removePoiLayer];
     _tmpParkingPOi = nil;
 }
 
