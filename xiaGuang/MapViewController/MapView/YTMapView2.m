@@ -228,6 +228,10 @@
 }
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
+    
+    if([annotation isMemberOfClass:[YTUserAnnotation class]]){
+        NSLog(@"nigga");
+    }
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;
 }
