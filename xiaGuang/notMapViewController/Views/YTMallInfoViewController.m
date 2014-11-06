@@ -16,8 +16,9 @@
 #import "YTMerchantViewCell.h"
 #import "YTMerchantInfoViewController.h"
 #import "YTResultsViewController.h"
+#import "YTCloudMall.h"
+#import "YTMapViewController2.h"
 @interface YTMallInfoViewController ()<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
-    YTMallPositionView *_positionView;
     YTSearchView *_searchView;
     UIImageView *_searchBackgroundView;
     UIScrollView *_scrollView;
@@ -27,6 +28,7 @@
     UIActivityIndicatorView *_loading;
     UILabel *_loadingLabel;
     UIImage *_infoBackgroundImage;
+    YTMallPosistionViewController *_posistionVC;
 }
 @end
 
@@ -40,12 +42,14 @@
     _searchView.delegate = self;
     [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
+    
     [self.view addSubview:_scrollView];
     [self setNavigation];
     [self mainView];
     
-    
+    self.navigationItem.title = [_mall mallName];
 }
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
@@ -174,8 +178,11 @@
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
     }];
     
-//    _positionView = [[YTMallPositionView alloc]initWithImage:nil phoneNumber:1200 address:nil];
-//    [self.view addSubview:_positionView];
+    [_mall getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
+        _posistionVC = [[YTMallPosistionViewController alloc]initWithImage:mapImage address:address phoneNumber:phoneNumber];
+//        _positionView = [[YTMallPositionView alloc]initWithImage:mapImage phoneNumber:[phoneNumber integerValue] address:address];
+//        [self.view addSubview:_positionView];
+    }];
 
 }
 
@@ -235,18 +242,18 @@
     }
 }
 -(void)jumpToFloorMap:(UIButton *)sender{
-//    id <YTFloor> floor = nil;
-//    YTLocalMall *mall = [(YTCloudMall *)self.mall getLocalCopy];
-//    
-//    NSArray * temp = [[[mall blocks] objectAtIndex:0] floors];
-//    floor = [temp objectAtIndex:0];
-//    if (floor != nil) {
-//        YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
-//        mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//        [self presentViewController:mapVC animated:YES completion:nil];
-//    }
+    id <YTFloor> floor = nil;
+    YTLocalMall *localmall = [(YTCloudMall *)self.mall getLocalCopy];
     
+    NSArray * temp = [[[localmall blocks] objectAtIndex:0] floors];
+    floor = [temp objectAtIndex:0];
+    if (floor != nil) {
+        YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
+        mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:mapVC animated:YES completion:nil];
+    }
 }
+
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
@@ -268,7 +275,9 @@
 }
 
 -(void)showMallPosition:(UIButton *)sender{
-    
+    if (_posistionVC){
+        [self.navigationController pushViewController:_posistionVC animated:YES];
+    }
 }
 
 -(void)dealloc{

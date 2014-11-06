@@ -63,7 +63,7 @@
         _backImageView.image = defaultBackImage;
         _backImageView.backgroundColor = [UIColor clearColor];
         UIButton *label = [[UIButton alloc] initWithFrame:CGRectMake(15+defaultBackImage.size.width, 30, 50, defaultBackImage.size.height)];
-        [label setTitle:@"主页" forState:UIControlStateNormal];
+        [label setTitle:@"首页" forState:UIControlStateNormal];
         [label setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [label addTarget:self action:@selector(backClicked) forControlEvents:UIControlEventTouchDown];
         

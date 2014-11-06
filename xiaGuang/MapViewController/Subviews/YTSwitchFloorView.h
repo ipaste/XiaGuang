@@ -20,4 +20,6 @@
 -(id)initWithPosition:(CGPoint)position AndCurrentMajorArea:(id <YTMajorArea>)majorArea;
 -(void)promptFloorChange:(id<YTFloor>)floor;
 -(void)toggleFloor;
+-(void)redrawWithMajorArea:(id<YTMajorArea>)majorArea;
+
 @end

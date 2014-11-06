@@ -30,6 +30,7 @@
         _internalMapView.layer.anchorPoint = CGPointMake(0, 0);
         _annotationSource = [[YTAnnotationSource alloc] init];
         [self addSubview:_internalMapView];
+        _map = _internalMapView;
     }
     return self;
 }
