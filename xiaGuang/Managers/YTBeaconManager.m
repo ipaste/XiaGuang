@@ -37,6 +37,8 @@
     int _shiftCount;
     
     NSMutableArray *_whitelist;
+    
+    NSHashTable *_listeners;
 }
 
 @end
@@ -69,6 +71,7 @@
             [_whitelist addObject: tmpPair];
         }
         
+        _listeners = [NSHashTable weakObjectsHashTable];
     }
     
     return self;
@@ -104,6 +107,11 @@
         //ESTBeacon *topBeacon = [self topWhitelistedBeaconFromList:beacons];//[beacons objectAtIndex:0];
         /*NSLog(@"top beacon major:%ld, minor:%ld",(long)[topBeacon.major integerValue], (long)[topBeacon.minor
                                                                                 integerValue]);*/
+    }
+    
+    // notify all listeners
+    for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
+        [listener YTBeaconManager:self rangedBeacons:beacons];
     }
     
     if(_lostCount == LOST_THRESHOLD){
@@ -228,6 +236,14 @@
 
 -(ESTBeacon *)currentClosest{
     return _currentClosest;
+}
+
+- (void)addListener:(id<YTBeaconManagerUpdateListener>)listener {
+    [_listeners addObject:listener];
+}
+
+- (void)removeListener:(id<YTBeaconManagerUpdateListener>)listener {
+    [_listeners removeObject:listener];
 }
 
 -(void)dealloc{

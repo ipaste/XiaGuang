@@ -38,8 +38,9 @@
 #import "YTMerchantPoi.h"
 #import "BlurMenu.h"
 #import "BlurMenuItemCell.h"
+#import "YTBeaconBasedLocator.h"
 
-@interface YTMapViewController2 : UIViewController<YTBeaconManagerDelegate,YTMapViewDelegate,YTNavigationBarDelegate,YTSearchViewDelegate,YTSwitchBlockDelegate,YTSwitchFloorDelegate,YTZoomStepperDelegate,YTMoveCurrentLocationDelegate,YTMoveTargetLocationDelegate,YTDetailsDelegate,YTNavigationDelegate,YTPoiDelegate,YTPoiViewDelegate,YTSelectedPoiDelegate,BlurMenuDelegate>
+@interface YTMapViewController2 : UIViewController<YTBeaconManagerDelegate,YTMapViewDelegate,YTNavigationBarDelegate,YTSearchViewDelegate,YTSwitchBlockDelegate,YTSwitchFloorDelegate,YTZoomStepperDelegate,YTMoveCurrentLocationDelegate,YTMoveTargetLocationDelegate,YTDetailsDelegate,YTNavigationDelegate,YTPoiDelegate,YTPoiViewDelegate,YTSelectedPoiDelegate,BlurMenuDelegate,YTBeaconBasedLocatorDelegate>
 
 -(id)initWithMinorArea:(id <YTMinorArea>)minorArea;
 -(id)initWithMerchant:(id<YTMerchantLocation>)merchantLocation;

@@ -19,6 +19,7 @@
 #define MAJORAREA_CLASS_MINORAREAS_KEY @"minorAreas"
 #define MAJORAREA_CLASS_MAPNAME_KEY @"mapName"
 #define MAJORAREA_CLASS_FLOOR_KEY @"floor"
+#define MAJORAREA_CLASS_WORLDTOMAPRATIO_KEY @"worldToMapRatio"
 
 @interface YTCloudMajorArea : NSObject<YTMajorArea>
 
