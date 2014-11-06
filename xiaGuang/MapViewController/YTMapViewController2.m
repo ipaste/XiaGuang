@@ -57,6 +57,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSArray *_activePois;
     id<YTMajorArea> _activePoiMajorArea;
     BOOL _blurMenuShown;
+    id<YTMall> _targetMall;
+    
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -167,6 +169,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }*/
 
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    _currentViewDisplay = YES;
+    [_bluetoothManager refreshBluetoothState];
+    if (_type == YTMapViewControllerTypeMerchant) {
+        [_mapView setCenterCoordinate:[_merchantLocation coordinate] animated:NO];
+        _selectedPoi = [_merchantLocation producePoi];
+        [_mapView highlightPoi:_selectedPoi animated:YES];
+        [_detailsView setCommonPoi:_merchantLocation];
+        
+        [self showCallOut];
+    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    _currentViewDisplay = NO;
+}
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -178,14 +197,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
-            //_switchFloorView.hidden = YES;
-            //_switchBlockView.hidden = YES;
-            if(_menu == nil){
-                [self createBlurMenu];
-                [_menu show];
-            }
-            else{
-                [_menu show];
+            
+            if(_type == YTMapViewControllerTypeNavigation){
+                
+            
+                if(_menu == nil){
+                    [self createBlurMenu];
+                    [_menu show];
+                }
+                else{
+                    [_menu show];
+                }
             }
             
             if([_mapView currentState] != YTMapViewDetailStateNormal){
@@ -251,23 +273,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    _currentViewDisplay = YES;
-    [_bluetoothManager refreshBluetoothState];
-    if (_type == YTMapViewControllerTypeMerchant) {
-        [_mapView setCenterCoordinate:[_merchantLocation coordinate] animated:NO];
-        _selectedPoi = [_merchantLocation producePoi];
-        [_mapView highlightPoi:_selectedPoi animated:YES];
-        [_detailsView setCommonPoi:_merchantLocation];
-        
-        [self showCallOut];
-    }
-}
 
--(void)viewWillDisappear:(BOOL)animated{
-    _currentViewDisplay = NO;
-}
 
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 10)];
