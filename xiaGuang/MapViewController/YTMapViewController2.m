@@ -133,7 +133,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
     background.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
     [self.view addSubview:background];
-    
+    _beaconManager = [YTBeaconManager sharedBeaconManager];
+    _beaconManager.delegate = self;
     
     [self createNavigationBar];
     [self createMapView];
@@ -148,8 +149,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNoBeaconCover];
     [self createBlurMenu];
     
-    _beaconManager = [YTBeaconManager sharedBeaconManager];
-    _beaconManager.delegate = self;
+
 
     
     /*

@@ -193,9 +193,15 @@
         [_internalMapView addAnnotation:_userAnnotation];
     }
     else{
-        
-        [_internalMapView addAnnotation:_userAnnotation];
-        _userAnnotation.coordinate = coordinate;
+        if([_internalMapView.annotations containsObject:_userAnnotation]){
+            [_userAnnotation setCoordinate:coordinate];
+        }
+        else{
+            
+            _userAnnotation = [[YTUserAnnotation alloc] initWithMapView:_internalMapView andCoordinate:coordinate];
+            [_internalMapView addAnnotation:_userAnnotation];
+            
+        }
     }
 }
 
