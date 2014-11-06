@@ -41,6 +41,8 @@ typedef enum : NSUInteger {
 @interface YTMapView2 : UIView<RMMapViewDelegate>
 
 @property (nonatomic,weak) id<YTMapViewDelegate> delegate;
+@property (nonatomic,readonly) RMMapView *map;
+
 
 #pragma mark Map Annimations
 -(void)setZoom:(double)zoom animated:(BOOL)animated;

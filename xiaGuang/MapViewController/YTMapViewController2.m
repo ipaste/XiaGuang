@@ -71,6 +71,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _targetCord;
     
     NSMutableArray *_malls;
+    YTBeaconBasedLocator *_locator;
+    
+    CLLocationCoordinate2D _userCoordintate;
     
     
 }
@@ -282,6 +285,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_mapView];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
+    [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
+    
     [_mapView setZoom:1 animated:NO];
     [self injectPoisForMajorArea:_majorArea];
 }
@@ -293,7 +298,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     if([[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
-        [_mapView showUserLocationAtCoordinate:[_userMinorArea coordinate]];
+        [_mapView showUserLocationAtCoordinate:_userCoordintate];
     }
     
     NSArray *merchants = [majorArea merchantLocations];
@@ -613,6 +618,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
+        [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
         _curDisplayedMajorArea = [minorArea majorArea];
         [self redrawBlockAndFloorSwitch];
         [self handlePoiForMajorArea:_curDisplayedMajorArea];
@@ -632,7 +638,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
     }else{
         
-        [_mapView showUserLocationAtCoordinate:[minorArea coordinate]];
+        [_mapView showUserLocationAtCoordinate:_userCoordintate];
         
         _switchingFloor = NO;
     }
@@ -663,6 +669,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
         
         [_mapView displayMapNamed:[majorArea mapName]];
+        [self refreshLocatorWithMapView:_mapView.map majorArea:majorArea];
         _curDisplayedMajorArea = majorArea;
     }
     
@@ -675,6 +682,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (![[floor floorName] isEqualToString:[[_curDisplayedMajorArea floor]floorName]]) {
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
+        [self refreshLocatorWithMapView:_mapView.map majorArea:majorArea];
         _curDisplayedMajorArea = majorArea;
     }
     [self handlePoiForMajorArea:majorArea];
@@ -720,7 +728,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //different floor
     else{
         [self switchFloor:[[_userMinorArea majorArea] floor]];
-        [_mapView showUserLocationAtCoordinate:[_userMinorArea coordinate]];
+        [_mapView showUserLocationAtCoordinate:_userCoordintate];
         [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:NO];
         [_switchFloorView promptFloorChange:[[_userMinorArea majorArea] floor]];
     }
@@ -756,6 +764,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if (![[[_userMinorArea majorArea] identifier]isEqualToString:[_curDisplayedMajorArea identifier]]) {
         [_mapView displayMapNamed:[[_userMinorArea majorArea] mapName]];
+        [self refreshLocatorWithMapView:_mapView.map majorArea:[_userMinorArea majorArea]];
         [_switchFloorView promptFloorChange:[[_userMinorArea majorArea] floor]];
         _curDisplayedMajorArea = [_userMinorArea majorArea];
         [self handlePoiForMajorArea:[_userMinorArea majorArea]];
@@ -1056,6 +1065,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
     [_mapView displayMapNamed:[_majorArea mapName]];
+    [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
     [self redrawBlockAndFloorSwitch];
@@ -1082,5 +1092,24 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     YTLocalMinorArea * minorArea = [localBeacon minorArea];
     return minorArea;
+}
+
+#pragma mark YTBeaconBasedLocatorDelegate method
+- (void)YTBeaconBasedLocator:(YTBeaconBasedLocator *)locator
+           coordinateUpdated:(CLLocationCoordinate2D)coordinate{
+    NSLog(@"cordinate!!! lat: %f, long:%f",coordinate.latitude,coordinate.longitude);
+    
+    _userCoordintate = coordinate;
+    if([[_curDisplayedMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
+        [_mapView showUserLocationAtCoordinate:coordinate];
+    }
+}
+
+-(void)refreshLocatorWithMapView:(RMMapView *)aMapView
+                       majorArea:(id<YTMajorArea>)aMajorArea{
+    _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
+    [_locator start];
+    _locator.delegate = self;
+    _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
 }
 @end
