@@ -442,6 +442,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60)];
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
+    _navigationView.hidden = YES;
     [self.view addSubview:_navigationView];
     [_navigationView.layer pop_animationForKey:@"shake"];
 }
@@ -526,6 +527,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
     _detailsView.hidden = NO;
+    _navigationView.hidden = NO;
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -584,6 +586,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
         _detailsView.hidden = YES;
+        _navigationView.hidden = YES;
         if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
             [_mapView highlightPoi:_selectedPoi animated:NO];
         }
