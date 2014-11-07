@@ -59,7 +59,7 @@
 -(NSArray *)elevators{
     if(_tmpElevators == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Elevator where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpElevators = [[NSMutableArray alloc] init];
@@ -77,7 +77,7 @@
 -(NSArray *)bathrooms{
     if(_tmpBathrooms == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Bathroom where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpBathrooms = [[NSMutableArray alloc] init];
@@ -95,7 +95,7 @@
 -(NSArray *)exits{
     if(_tmpExits == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Exit where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpExits = [[NSMutableArray alloc] init];
@@ -115,7 +115,7 @@
     
     if(_tmpMerchantAreas == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpMerchantAreas = [[NSMutableArray alloc] init];
@@ -133,7 +133,7 @@
 -(NSArray *)minorAreas{
     if(_tmpMinorAreas == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from MinorArea where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpMinorAreas = [[NSMutableArray alloc] init];
@@ -155,7 +155,7 @@
 -(id<YTFloor>)floor{
     if(_tmpFloor == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Floor where floorId = ?",_tmpFloorId];

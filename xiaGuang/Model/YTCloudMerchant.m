@@ -81,7 +81,7 @@
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceId = ?",_object[@"localDBId"]];

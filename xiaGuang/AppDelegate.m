@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "YTNavigationController.h"
 #import <AVOSCloud/AVOSCloud.h>
+#import "YTDBManager.h"
+
 @interface AppDelegate ()
 
 @end
@@ -25,6 +27,9 @@
     [[YTBeaconManager sharedBeaconManager] startRangingBeacons];
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
+    
+    [[YTDBManager sharedManager] startBackgroundDownload];
+    
     return YES;
 }
 

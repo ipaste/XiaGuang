@@ -8,8 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
+
 @interface YTDBManager : NSObject
 
-+(FMDatabase *)sharedManager;
+@property (nonatomic, readonly) FMDatabase *db;
+
++(YTDBManager *)sharedManager;
+
+- (void)startBackgroundDownload;
+- (void)stopBackgroundDownload;
+
+- (void)checkAndSwitchToNewDB;
 
 @end

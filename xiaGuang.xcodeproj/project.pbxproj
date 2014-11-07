@@ -18,6 +18,7 @@
 		78ADBEBD1A09EBB5000688E3 /* YTDistanceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEB91A09EBB5000688E3 /* YTDistanceData.m */; };
 		78ADBEBE1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */; };
 		78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */; };
+		78DB4AE01A0C83E4003A6025 /* db.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78DB4ADF1A0C83E4003A6025 /* db.plist */; };
 		AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */; };
 		AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */; };
 		AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */; };
@@ -190,6 +191,7 @@
 		78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTKalmanFilteredPositionBot.m; sourceTree = "<group>"; };
 		78ADBEC01A09EE45000688E3 /* YTBeaconBasedLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeaconBasedLocator.h; sourceTree = "<group>"; };
 		78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconBasedLocator.m; sourceTree = "<group>"; };
+		78DB4ADF1A0C83E4003A6025 /* db.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = db.plist; sourceTree = "<group>"; };
 		AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
 		AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
 		AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
@@ -574,6 +576,7 @@
 			isa = PBXGroup;
 			children = (
 				AE24A8091A0242F200A0CE91 /* highGuangDB */,
+				78DB4ADF1A0C83E4003A6025 /* db.plist */,
 			);
 			path = DB;
 			sourceTree = "<group>";
@@ -1115,6 +1118,7 @@
 				AE24A8D31A08A6D400A0CE91 /* kkmallL2.mbtiles in Resources */,
 				AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */,
 				AE24A8D01A08A6D400A0CE91 /* cocoparkL3.mbtiles in Resources */,
+				78DB4AE01A0C83E4003A6025 /* db.plist in Resources */,
 				AE24A8D11A08A6D400A0CE91 /* kkmallB1.mbtiles in Resources */,
 				AE24A8CE1A08A6D400A0CE91 /* cocoparkL1.mbtiles in Resources */,
 				AE24A8D41A08A6D400A0CE91 /* kkmallL3.mbtiles in Resources */,
