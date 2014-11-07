@@ -367,17 +367,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSString *title = nil;
     switch (_type) {
         case YTMapViewControllerTypeFloor:
-            title = [[[[_majorArea floor] block] mall] mallName];
+            title = @"返回";
             break;
         case YTMapViewControllerTypeMerchant:
             title = @"店铺详情";
             break;
         case YTMapViewControllerTypeNavigation:
-            title = @"导航";
+            title = @"首页";
             break;
     }
     _navigationBar.backTitle = title;
-    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+    _navigationBar.titleName = [_targetMall mallName];
     [self.view addSubview:_navigationBar];
 }
 -(void)createSearchView{
@@ -627,7 +627,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 {
 
                     [self userMoveToMinorArea:minorArea];
-                    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                    if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
+                        _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                    }
                     
                 }
             }

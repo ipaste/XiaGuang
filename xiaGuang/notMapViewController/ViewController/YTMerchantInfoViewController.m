@@ -127,7 +127,11 @@
     _merchantLogo.layer.borderWidth = 0.5;
     _merchantLogo.layer.borderColor = [UIColor colorWithString:@"c8c8c8"].CGColor;
     _merchantLogo.layer.masksToBounds = YES;
-    _merchantLogo.image = [_merchant icon];
+    [_merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+        if (result) {
+            _merchantLogo.image = result;
+        }
+    }];
     
     _merchantName.center = CGPointMake(self.view.center.x, _merchantName.center.y);
     _merchantName.textColor = [UIColor colorWithString:@"404040"];
