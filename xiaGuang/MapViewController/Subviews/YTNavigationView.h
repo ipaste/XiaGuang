@@ -18,7 +18,7 @@
 @property (assign,nonatomic) BOOL isCancelling;
 @property (assign,nonatomic) BOOL isShowSwitchButton;
 @property (weak,nonatomic) id<YTNavigationDelegate> delegate;
-@property (strong,nonatomic) YTNavigationModePlan *plan;
+@property (weak,nonatomic) YTNavigationModePlan *plan;
 
 -(void)startNavigationAndSetDestination:(id<YTPoiSource>)poiSource;
 -(void)updateInstruction;

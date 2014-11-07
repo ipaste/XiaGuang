@@ -10,5 +10,5 @@
 #import "RMMarker+RMMarker_YTExtension.h"
 #import "YTMinorArea.h"
 @interface YTBeaconAnnotation : YTAnnotation
-@property (strong,nonatomic) id<YTMinorArea> minorArea;
+@property (weak,nonatomic) id<YTMinorArea> minorArea;
 @end

@@ -65,5 +65,10 @@
     frame.origin.y = CGRectGetHeight(self.view.frame) - CGRectGetHeight(frame) - topHeight;
     _detailsView.frame = frame;
     
+    
+}
+
+-(void)dealloc{
+    NSLog(@"dealloc MALLPOSITIONVIEW");
 }
 @end

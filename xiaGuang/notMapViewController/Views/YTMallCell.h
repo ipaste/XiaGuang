@@ -11,5 +11,5 @@
 #import "YTMerchant.h"
 #import "YTMallMerchantBundle.h"
 @interface YTMallCell : UITableViewCell<UIScrollViewDelegate>
-@property (nonatomic,strong) YTMallMerchantBundle *mallMerchantBundle;
+@property (nonatomic,weak) YTMallMerchantBundle *mallMerchantBundle;
 @end
