@@ -188,12 +188,14 @@ static YTCompletion Completion = nil;
     self = [super init];
     if (self) {
         CATextLayer *textLayer = [[CATextLayer alloc] init];
-        textLayer.frame = CGRectMake(-width * 13 / 2,0, (width + 0.5) * 13,(height + 0.5)* 13);
+        CGFloat layerHeight = (height + 0.5)* 13;
+        CGFloat layerWidth = (width + 0.5) * 13;
+        textLayer.frame = CGRectMake(-(layerWidth / 2), -(layerHeight / 2),layerWidth,layerHeight);
         textLayer.string = @"";
         textLayer.name = @"textLayer";
         textLayer.fontSize = 10;
         textLayer.foregroundColor =[[UIColor colorWithString:@"404040"] CGColor];
-        //textLayer.backgroundColor = [[UIColor blackColor] CGColor];
+        textLayer.backgroundColor = [[UIColor blackColor] CGColor];
         self.masksToBounds = NO;
         
         CALayer *imageLayer = [CALayer layer];

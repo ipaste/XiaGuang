@@ -12,12 +12,14 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTParkingStateNotMark,
     YTParkingStateMarked
 };
+
 @implementation YTParkingViewController{
     id<YTMinorArea> _userMinorArea;
     id<YTMajorArea> _currenDisplayMajorArea;
     YTMapView2 *_mapView;
     YTNavigationBar *_navigationBar;
     YTZoomStepper *_zoomStepper;
+    
     UIView *_shadeView;
     UIView *_beforeMarkView;
     UILabel *_firstLabel;
@@ -28,12 +30,16 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     UIButton *_starNavigationButton;
     UIButton *_parkingView;
     UILabel *_promptLable;
+    
     YTBluetoothManager *_bluetoothManager;
     YTCurrentParkingButton *_currentParkingButton;
     YTMoveCurrentLocationButton *_moveCurrentLocationButton;
+    
     BOOL _bluetoothOn;
     BOOL _initializationComplete;
+    
     CLLocationCoordinate2D _carCoordinate;
+    
     id<YTParkingMarked> _tmpMarker;
     YTParkingState _state;
     YTBeaconManager *_beaconManager;
