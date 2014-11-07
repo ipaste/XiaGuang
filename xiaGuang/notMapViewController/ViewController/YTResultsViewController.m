@@ -178,16 +178,26 @@
     if (_floorName != nil) {
         AVQuery *floorQuery = [AVQuery queryWithClassName:@"Floor"];
         [floorQuery whereKey:@"floorName" equalTo:_floorName];
-        [query whereKey:@"floor" equalTo:[floorQuery getFirstObject]];
+        //AVObject *obj = [floorQuery getFirstObject];
+        [query whereKey:@"floor" matchesQuery:floorQuery];
+        //[query whereKey:@"floor" equalTo:[floorQuery getFirstObject]];
     }
     
     if (_mallName != nil) {
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
-        [mallObject whereKey:@"name" equalTo:_mallName];
-        [query whereKey:@"mall" equalTo:[mallObject getFirstObject]];
+        [mallObject whereKey:@"name" containsString:_mallName];
+        [query whereKey:@"mall" matchesQuery:mallObject];
+
+        //[query whereKey:@"mall" equalTo:[mallObject getFirstObject]];
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if(error){
+            block(nil);
+            return;
+        }
+        
         for (AVObject *merchantObject in objects) {
             YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
             [merchants addObject:merchant];

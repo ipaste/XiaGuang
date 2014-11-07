@@ -75,7 +75,7 @@
 
 -(YTLocalMerchantInstance *)getLocalMerchantInstance{
     
-    if(_object[@"localDBId"] == nil){
+    if(_object[@"localDBId"] == nil || [_object[@"localDBId"] isEqualToString:@""]){
         return nil;
     }
     

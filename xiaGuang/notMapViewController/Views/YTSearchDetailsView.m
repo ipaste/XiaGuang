@@ -125,7 +125,7 @@
     if (_mall) {
         AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
         [mallQuery whereKey:@"name" equalTo:[_mall mallName]];
-        [query whereKey:@"mall" equalTo:[mallQuery getFirstObject]];
+        [query whereKey:@"mall" matchesQuery:mallQuery];
     }
 
     [query whereKey:@"name" matchesRegex:keyWord modifiers:@"i"];
