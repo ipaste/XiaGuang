@@ -1087,11 +1087,11 @@
 				TargetAttributes = {
 					D93CE4B319FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 5T834T6KAH;
+						DevelopmentTeam = 8MJ58NP699;
 					};
 					D93CE4CC19FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 5T834T6KAH;
+						DevelopmentTeam = 8MJ58NP699;
 						TestTargetID = D93CE4B319FA5825004128FD;
 					};
 				};
