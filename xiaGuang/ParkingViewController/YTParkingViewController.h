@@ -19,6 +19,8 @@
 #import "YTCurrentParkingButton.h"
 #import "YTBeaconManager.h"
 #import "YTNavigationModePlan.h"
+#import "YTChargeStandard.h"
+#import "YTLocalCharge.h"
 #import "YTLocalParkingMarked.h"
 #import <POP.h>
 #import "YTMoveCurrentLocationButton.h"

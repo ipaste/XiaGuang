@@ -59,7 +59,7 @@
     CGFloat topHeight = [self.topLayoutGuide length];
     CGRect frame = _tableView.frame;
     frame.origin.y = topHeight;
-    frame.size.height = CGRectGetHeight(self.view.bounds) - topHeight;
+    frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 10;
     _tableView.frame = frame;
 }
 
