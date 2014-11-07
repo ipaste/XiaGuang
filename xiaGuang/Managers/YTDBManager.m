@@ -84,7 +84,7 @@
 
 - (void)startBackgroundDownload {
     if (_timer == nil) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:5
+        _timer = [NSTimer scheduledTimerWithTimeInterval:3600
                                                   target:self
                                                 selector:@selector(checkAndDownload:)
                                                 userInfo:nil
@@ -132,18 +132,13 @@
             [dict removeObjectForKey:LOCALDB_VERION_KEY];
             
             [dict writeToFile:_plistPath atomically:YES];
-            
-            NSLog(@"???? %d %d", [dict[LOCALDB_VERION_KEY] intValue],
-                  [dict[BACKUPDB_VERSION_KEY] intValue]);
         }
     }
     
-    NSLog(@"======== %f", [[NSDate date] timeIntervalSinceReferenceDate] - now);
 }
 
 - (void)checkAndDownload:(NSTimer *)timer {
     
-    NSLog(@"!@@@@ check");
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:_plistPath];
     
     int localVersion = [dict[LOCALDB_VERION_KEY] intValue];

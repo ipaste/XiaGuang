@@ -31,6 +31,8 @@
 
 - (NSArray *)prepareDistances:(NSArray *)beacons;
 
+- (void)cleanDistDict;
+
 @end
 
 @implementation YTBeaconBasedLocator
@@ -136,6 +138,7 @@
                     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                     dict[@"data"] = distData;
                     dict[@"count"] = [NSNumber numberWithInt:0];
+                    dict[@"time"] = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceReferenceDate]];
                     
                     [_distDict setObject:dict
                                   forKey:key];
@@ -175,7 +178,31 @@
         }
     }
     
+    [self cleanDistDict];
+    
     return distances;
+}
+
+- (void)cleanDistDict {
+    
+    double now = [[NSDate date] timeIntervalSinceReferenceDate];
+    
+    NSMutableArray *keys = [[NSMutableArray alloc] init];
+    
+    for (NSString *key in [_distDict allKeys]) {
+        NSDictionary *dict = _distDict[key];
+        
+        double time = [dict[@"time"] doubleValue];
+        
+        // allow 5 minutes of beacon cache
+        if (now - time >= 300) {
+            [keys addObject:key];
+        }
+    }
+    
+    for (NSString *key in keys) {
+        [_distDict removeObjectForKey:key];
+    }
 }
 
 @end
