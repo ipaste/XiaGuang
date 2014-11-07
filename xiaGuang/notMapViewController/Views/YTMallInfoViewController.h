@@ -11,5 +11,5 @@
 #import "YTMallPositionView.h"
 #import "YTMallPosistionViewController.h"
 @interface YTMallInfoViewController : UIViewController
-@property (strong,nonatomic) id<YTMall> mall;
+@property (weak,nonatomic) id<YTMall> mall;
 @end

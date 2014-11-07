@@ -195,6 +195,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewWillDisappear:(BOOL)animated{
     _currentViewDisplay = NO;
+    
+
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -1203,10 +1205,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)refreshLocatorWithMapView:(RMMapView *)aMapView
                        majorArea:(id<YTMajorArea>)aMajorArea{
+    /*
     _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
     [_locator start];
     _locator.delegate = self;
     _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
+     */
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{

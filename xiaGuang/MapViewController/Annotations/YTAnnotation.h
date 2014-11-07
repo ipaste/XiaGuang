@@ -19,7 +19,7 @@ typedef enum {
 
 @property (nonatomic,readonly) NSNumber * displayLevel;
 @property (nonatomic,readonly) YTAnnotationState state;
-@property (nonatomic,retain) NSString *annotationKey;
+@property (nonatomic,weak) NSString *annotationKey;
 
 
 

@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "YTCategory.h"
 @interface YTSelectCategoryViewCell : UITableViewCell
-@property (strong,nonatomic)YTCategory *category;
+@property (weak,nonatomic)YTCategory *category;
 @property (nonatomic)BOOL isSelect;
 @end

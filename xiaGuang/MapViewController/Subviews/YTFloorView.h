@@ -14,7 +14,7 @@
 @end
 
 @interface YTFloorView : UITableView
-@property(strong,nonatomic) id <YTFloor> curFloor;
+@property(weak,nonatomic) id <YTFloor> curFloor;
 @property(weak,nonatomic)id<YTFloorViewDelegate> floorDelegate;
 -(id)initWithFrame:(CGRect)frame andItem:(NSArray *)item;
 @end

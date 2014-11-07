@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @interface YTCommonlyUsed : NSObject
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) UIImage *icon;
+@property (weak, nonatomic) NSString *name;
+@property (weak, nonatomic) UIImage *icon;
 +(NSArray *)commonlyUsed;
 @end

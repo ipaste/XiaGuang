@@ -292,6 +292,7 @@
 
 -(void)dealloc{
     NSLog(@"mallInfoDealloc");
+    //[self dismissViewControllerAnimated:NO completion:nil];
 }
 
 @end
