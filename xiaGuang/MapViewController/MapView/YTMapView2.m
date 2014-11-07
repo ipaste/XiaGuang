@@ -193,16 +193,9 @@
         [_internalMapView addAnnotation:_userAnnotation];
     }
     else{
-        if([_internalMapView.annotations containsObject:_userAnnotation]){
-            [_userAnnotation setCoordinate:coordinate];
-        }
-        else{
-            
-            _userAnnotation = [[YTUserAnnotation alloc] initWithMapView:_internalMapView andCoordinate:coordinate];
-            
-            [_internalMapView addAnnotation:_userAnnotation];
-            
-        }
+        
+        [_userAnnotation setCoordinate:coordinate];
+        
     }
 }
 
@@ -230,9 +223,7 @@
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
     
-    if([annotation isMemberOfClass:[YTUserAnnotation class]]){
-        NSLog(@"nigga");
-    }
+    
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;
 }

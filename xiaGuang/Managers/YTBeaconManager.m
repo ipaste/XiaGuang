@@ -59,7 +59,7 @@
                                                           identifier:@"EstimoteSampleRegion"];*/
         
         _whitelist = [[NSMutableArray alloc] init];
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         [db open];
         FMResultSet *beacons = [db executeQuery:@"select * from Beacon"];
         while([beacons next]){
@@ -102,12 +102,8 @@
 }
 
 -(void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region{
-    if(beacons.count > 0){
-        
-        //ESTBeacon *topBeacon = [self topWhitelistedBeaconFromList:beacons];//[beacons objectAtIndex:0];
-        /*NSLog(@"top beacon major:%ld, minor:%ld",(long)[topBeacon.major integerValue], (long)[topBeacon.minor
-                                                                                integerValue]);*/
-    }
+   
+    beacons = [self filterWhiteListedBeacon:beacons];
     
     // notify all listeners
     for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
@@ -133,17 +129,12 @@
     }
     
     
-    
-    
-    ESTBeacon * closestBeacon = [self topWhitelistedBeaconFromList:beacons];//[beacons objectAtIndex:0];
-    
-    //NSLog(@"closeMinor:%@ , distance:%f",closestBeacon.minor,[closestBeacon.distance floatValue]);
+    ESTBeacon * closestBeacon = beacons[0]; // assumption here is closest is at index 0 returned from lower-level sdk
     
     if([closestBeacon.distance floatValue] == -1.0){
         _lostCount ++;
         return;
     }
-    
     
     if(_shiftPotential == NULL){
         if(![closestBeacon equalTo:_currentClosest]){
@@ -220,18 +211,19 @@
     
 }
 
--(ESTBeacon *)topWhitelistedBeaconFromList:(NSArray *)list{
+- (NSArray *)filterWhiteListedBeacon:(NSArray *)list {
+    NSMutableArray *result = [[NSMutableArray alloc] init];
     
     for(ESTBeacon *beacon in list){
         
         for(YTMajorMinorPair *pair in _whitelist){
             if([beacon.minor isEqual:pair.minor] && [beacon.major isEqual:pair.major]){
-                return beacon;
+                [result addObject:beacon];
             }
         }
-        
     }
-    return nil;
+    
+    return result;
 }
 
 -(ESTBeacon *)currentClosest{

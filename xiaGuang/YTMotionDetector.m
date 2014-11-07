@@ -21,7 +21,7 @@
     double _threshold;
     int _inMotion;
     
-    NSOperationQueue *_transitionToAtRestQueue;
+    NSOperationQueue *_transitionQueue;
 }
 
 - (void)detectMotion;
@@ -49,8 +49,10 @@
         _threshold = 1.0;
         _inMotion = NO;
         
+        _transitionToMotinoDelay = 0.0;
         _transitionToAtRestDelay = 0.0;
-        _transitionToAtRestQueue = [[NSOperationQueue alloc] init];
+        
+        _transitionQueue = [[NSOperationQueue alloc] init];
     }
     return self;
 }

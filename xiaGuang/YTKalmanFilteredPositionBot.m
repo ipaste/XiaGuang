@@ -41,6 +41,8 @@
     int _ignoreTimeUpdate;
     
     YTMotionDetector *_motionD;
+    
+    NSTimer *_timer;
 }
 
 - (void)timeBasedUpdate;
@@ -86,14 +88,27 @@
     return self;
 }
 
+- (void)dealloc {
+    free(_X);
+    free(_P);
+    free(_H);
+    free(_H_trans);
+    free(_A);
+    free(_A_trans);
+    free(_Q);
+    free(_R);
+    free(_I66);
+    [_timer invalidate];
+}
+
 - (void)start {
     [_motionD start];
     
-    [NSTimer scheduledTimerWithTimeInterval:_updateInterval
-                                     target:self
-                                   selector:@selector(timeBasedUpdate)
-                                   userInfo:nil
-                                    repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:_updateInterval
+                                              target:self
+                                            selector:@selector(timeBasedUpdate)
+                                            userInfo:nil
+                                             repeats:YES];
 }
 
 - (void)timeBasedUpdate {
@@ -202,6 +217,7 @@
                 free(HX);
                 free(Y_HX);
                 free(K_Y_HX);
+                free(K);
                 return;
             }
             
@@ -278,7 +294,7 @@
         int y = i % 6;
         
         if (x == y) {
-            _Q[i] = 0.1;
+            _Q[i] = 1;
         } else {
             _Q[i] = 0;
         }
@@ -335,7 +351,8 @@
 }
 
 - (void)atRestWithYTMotionDetector:(YTMotionDetector *)detector {
-    _ignoreTimeUpdate = YES;
+    //TODO change back to NO
+    _ignoreTimeUpdate = NO;
 }
 
 - (void)inMotionWithYTMotionDetector:(YTMotionDetector *)detector {

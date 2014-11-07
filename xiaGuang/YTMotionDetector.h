@@ -23,6 +23,7 @@
 
 @property (nonatomic, weak) id<YTMotionDetectorDelegate> delegate;
 
+@property (nonatomic) double transitionToMotinoDelay;
 @property (nonatomic) double transitionToAtRestDelay;
 
 - (void)start;

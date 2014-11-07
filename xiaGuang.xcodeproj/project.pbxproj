@@ -18,6 +18,7 @@
 		78ADBEBD1A09EBB5000688E3 /* YTDistanceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEB91A09EBB5000688E3 /* YTDistanceData.m */; };
 		78ADBEBE1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */; };
 		78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */; };
+		78DB4AE01A0C83E4003A6025 /* db.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78DB4ADF1A0C83E4003A6025 /* db.plist */; };
 		AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */; };
 		AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */; };
 		AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */; };
@@ -71,6 +72,8 @@
 		AE24A8D81A08A6D400A0CE91 /* YITIANL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */; };
 		AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */; };
 		AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */; };
+		AED846381A0C9C1B0055FD14 /* YTElevatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */; };
+		AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
 		D93CE4BD19FA5825004128FD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BC19FA5825004128FD /* AppDelegate.m */; };
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
@@ -192,6 +195,7 @@
 		78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTKalmanFilteredPositionBot.m; sourceTree = "<group>"; };
 		78ADBEC01A09EE45000688E3 /* YTBeaconBasedLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeaconBasedLocator.h; sourceTree = "<group>"; };
 		78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconBasedLocator.m; sourceTree = "<group>"; };
+		78DB4ADF1A0C83E4003A6025 /* db.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = db.plist; sourceTree = "<group>"; };
 		AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
 		AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
 		AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
@@ -284,6 +288,10 @@
 		AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL1.mbtiles; sourceTree = "<group>"; };
 		AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL2.mbtiles; sourceTree = "<group>"; };
 		AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL3.mbtiles; sourceTree = "<group>"; };
+		AED846361A0C9C1B0055FD14 /* YTElevatorPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorPoi.h; sourceTree = "<group>"; };
+		AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorPoi.m; sourceTree = "<group>"; };
+		AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorAnnotation.h; sourceTree = "<group>"; };
+		AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorAnnotation.m; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D93CE4B419FA5825004128FD /* xiaGuang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xiaGuang.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -580,6 +588,7 @@
 			isa = PBXGroup;
 			children = (
 				AE24A8091A0242F200A0CE91 /* highGuangDB */,
+				78DB4ADF1A0C83E4003A6025 /* db.plist */,
 			);
 			path = DB;
 			sourceTree = "<group>";
@@ -800,6 +809,8 @@
 				D94C27711A02639F009FF2F3 /* YTMerchantAnnotation.m */,
 				D94C27721A02639F009FF2F3 /* YTUserAnnotation.h */,
 				D94C27731A02639F009FF2F3 /* YTUserAnnotation.m */,
+				AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */,
+				AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";
@@ -825,6 +836,8 @@
 				D94C277E1A02639F009FF2F3 /* YTPoi.h */,
 				D94C277F1A02639F009FF2F3 /* YTPoi.m */,
 				D94C27801A02639F009FF2F3 /* YTPoiSource.h */,
+				AED846361A0C9C1B0055FD14 /* YTElevatorPoi.h */,
+				AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */,
 			);
 			path = Pois;
 			sourceTree = "<group>";
@@ -1074,11 +1087,11 @@
 				TargetAttributes = {
 					D93CE4B319FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 8MJ58NP699;
+						DevelopmentTeam = 5T834T6KAH;
 					};
 					D93CE4CC19FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 8MJ58NP699;
+						DevelopmentTeam = 5T834T6KAH;
 						TestTargetID = D93CE4B319FA5825004128FD;
 					};
 				};
@@ -1125,6 +1138,7 @@
 				AE24A8D31A08A6D400A0CE91 /* kkmallL2.mbtiles in Resources */,
 				AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */,
 				AE24A8D01A08A6D400A0CE91 /* cocoparkL3.mbtiles in Resources */,
+				78DB4AE01A0C83E4003A6025 /* db.plist in Resources */,
 				AE24A8D11A08A6D400A0CE91 /* kkmallB1.mbtiles in Resources */,
 				AE24A8CE1A08A6D400A0CE91 /* cocoparkL1.mbtiles in Resources */,
 				AE24A8D41A08A6D400A0CE91 /* kkmallL3.mbtiles in Resources */,
@@ -1259,6 +1273,7 @@
 				D94C27B51A02639F009FF2F3 /* YTDirectionIndicator.m in Sources */,
 				D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */,
 				78ADBEA41A09EA89000688E3 /* YTMatrixToolBox.m in Sources */,
+				AED846381A0C9C1B0055FD14 /* YTElevatorPoi.m in Sources */,
 				D94C27BA1A02639F009FF2F3 /* YTMoveTargetLocationButton.m in Sources */,
 				78ADBEAE1A09EAD2000688E3 /* YTDecayingCounter.m in Sources */,
 				D93CE4BA19FA5825004128FD /* main.m in Sources */,
@@ -1291,6 +1306,7 @@
 				D94C28101A0263C6009FF2F3 /* YTSearchView.m in Sources */,
 				AE24A8A91A02432100A0CE91 /* YTLocalMerchantInstance.m in Sources */,
 				D94C28071A0263C6009FF2F3 /* YTCategoryResultsView.m in Sources */,
+				AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */,
 				AE24A8391A02430300A0CE91 /* YTBeaconManager.m in Sources */,
 				D94C28121A0263C6009FF2F3 /* YTParkingViewController.m in Sources */,
 				D95B15461A037AE4002077AD /* YTParkingMarkAnnotation.m in Sources */,

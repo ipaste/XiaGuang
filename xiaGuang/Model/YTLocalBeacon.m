@@ -51,7 +51,7 @@
     
     if(_tmpMinorArea == nil){
     
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
         
             FMResultSet *result = [db executeQuery:@"select * from MinorArea where minorAreaId = ?",_tmpMinorAreaId];

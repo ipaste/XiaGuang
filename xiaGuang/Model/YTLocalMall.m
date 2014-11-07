@@ -44,7 +44,7 @@
     
     if(_tmpBlocks == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Block where mallId = ?",_tmpMallId];
         
         _tmpBlocks = [[NSMutableArray alloc] init];
@@ -63,7 +63,7 @@
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where mallId = ?",_tmpMallId];
         
         _tmpMerchantInstance = [[NSMutableArray alloc] init];

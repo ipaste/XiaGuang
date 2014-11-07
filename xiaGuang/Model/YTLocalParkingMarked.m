@@ -26,7 +26,7 @@
     self = [super init];
     if (self) {
         _userDefaults = [YTUserDefaults standardUserDefaults];
-        _dateBase = [YTDBManager sharedManager];
+        _dateBase = [YTDBManager sharedManager].db;
     }
     return self;
 }

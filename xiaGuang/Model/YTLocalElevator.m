@@ -44,7 +44,7 @@
 -(id<YTMajorArea>)majorArea{
     if(_tmpMajorArea == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpMajorAreaId];
@@ -60,7 +60,7 @@
     
     if(_tmpMinorArea == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MinorArea where minorAreaId = ?",_tmpMinorAreaId];
@@ -80,5 +80,19 @@
 -(NSString *)identifier{
     return _tmpElevatorId;
 }
+
+-(YTPoi *)producePoi{
+    YTElevatorPoi *result = [[YTElevatorPoi alloc]  initWithElevator:self];
+    return result;
+}
+
+-(NSString *)name{
+    return @"电梯";
+}
+
+-(NSString *)iconName{
+    return @"nav_ico_11";
+}
+
 
 @end

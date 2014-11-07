@@ -79,13 +79,13 @@
 
 -(YTLocalMerchantInstance *)getLocalMerchantInstance{
     
-    if(_object[@"localDBId"] == nil){
+    if(_object[@"localDBId"] == nil || [_object[@"localDBId"] isEqualToString:@""]){
         return nil;
     }
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceId = ?",_object[@"localDBId"]];

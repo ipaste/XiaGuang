@@ -79,6 +79,16 @@
        
         long error = [YTMatrixToolBox matrixInvertWithDimension:2 matrix:matrix_a];
         if (error != 0) {
+            
+            NSLog(@"error within positionbot");
+            int count = 0;
+            for(YTDistanceData *data in distances){
+                NSLog(@"count:%d  x:%f, y:%f, dist:%f",count,data.x,data.y,data.distance);
+                count++;
+            }
+            NSLog(@"======================");
+            
+            
             free(matrix_a);
             return nil;
         }
@@ -93,8 +103,11 @@
         a21 = matrix_a[2];
         a22 = matrix_a[3];
         
+        free(matrix_a);
+        
         // Calculating J^T * W * f
         double b11, b21;
+        
         b11 = b21 = 0.0;
         
         for (int i = 0; i < count; i++) {
