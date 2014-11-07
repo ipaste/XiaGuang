@@ -689,7 +689,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager];
+    FMDatabase *db = [YTDBManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -1140,7 +1140,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager];
+    FMDatabase *db = [YTDBManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

@@ -59,7 +59,7 @@
                                                           identifier:@"EstimoteSampleRegion"];*/
         
         _whitelist = [[NSMutableArray alloc] init];
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         [db open];
         FMResultSet *beacons = [db executeQuery:@"select * from Beacon"];
         while([beacons next]){

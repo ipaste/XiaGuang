@@ -61,7 +61,7 @@
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager];
+    FMDatabase *db = [YTDBManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -74,6 +74,8 @@
     [super viewWillAppear:animated];
     [_panel startAnimationWithBackgroundAndCircle];
     self.navigationItem.title = @"虾逛";
+    
+    [[YTDBManager sharedManager] checkAndSwitchToNewDB];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

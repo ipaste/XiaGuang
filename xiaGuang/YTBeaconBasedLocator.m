@@ -105,7 +105,7 @@
                                                           majorArea:_majorArea];
         }
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         
         int major = [beacon.major intValue];
         int minor = [beacon.minor intValue];

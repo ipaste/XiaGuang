@@ -54,7 +54,7 @@
 -(NSArray *)beacons{
     if(_tmpBeacons == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Beacon where minorAreaId = ?",_tmpMinorAreaId];
         
         _tmpBeacons = [[NSMutableArray alloc] init];
@@ -72,7 +72,7 @@
 -(id<YTMajorArea>)majorArea{
     if(_tmpMajorArea == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager];
+        FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpMajorAreaId];
