@@ -48,7 +48,6 @@
     }
     _beaconManager.delegate = self;
     
-    
 }
 
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
@@ -74,8 +73,6 @@
     [super viewWillAppear:animated];
     [_panel startAnimationWithBackgroundAndCircle];
     self.navigationItem.title = @"虾逛";
-    
-    [[YTDBManager sharedManager] checkAndSwitchToNewDB];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

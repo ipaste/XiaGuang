@@ -471,6 +471,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
 }
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
+    
     id<YTPoiSource> sourceModel = [poi sourceModel];
     
     //if there's activePoi
@@ -749,6 +750,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
         
+        [_mapView setZoom:1 animated:NO];
+        
         if([[[_userMinorArea majorArea] identifier] isEqualToString:[majorArea identifier]]){
             [self refreshLocatorWithMapView:_mapView.map majorArea:majorArea];
         }
@@ -1015,6 +1018,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([groupName isEqualToString:@"电梯"]){
         models = [_curDisplayedMajorArea elevators];
     }
+    if([groupName isEqualToString:@"扶梯"]){
+        models = [_curDisplayedMajorArea escalators];
+    }
+    if([groupName isEqualToString:@"服务台"]){
+        models = [_curDisplayedMajorArea serviceStations];
+    }
+    
     if([models count] <= 0){
         
         return nil;
@@ -1158,6 +1168,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)dealloc{
+    
+    NSLog(@"destroy mapviewController");
+    
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
 
@@ -1182,6 +1195,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if([[_curDisplayedMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
         [_mapView showUserLocationAtCoordinate:coordinate];
+    }
+    else{
+        NSLog(@"shouldn't even be here");
     }
 }
 

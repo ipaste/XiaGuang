@@ -217,6 +217,9 @@
 }
 
 -(void)tapOnAnnotation:(RMAnnotation *)annotation onMap:(RMMapView *)map{
+    if([annotation.annotationType isEqualToString:@"user"]){
+        return;
+    }
     YTPoi *resultPoi = [_annotationSource poiForAnnotation:(YTAnnotation *)annotation];
     [self.delegate mapView:self tapOnPoi:resultPoi];
 }

@@ -20,6 +20,8 @@
     NSMutableArray *_tmpElevators;
     NSMutableArray *_tmpBathrooms;
     NSMutableArray *_tmpExits;
+    NSMutableArray *_tmpEscalators;
+    NSMutableArray *_tmpServiceStations;
     
     id<YTFloor> _tmpFloor;
     
@@ -33,6 +35,8 @@
 @synthesize identifier;
 @synthesize floor;
 @synthesize bathrooms;
+@synthesize escalators;
+@synthesize serviceStations;
 @synthesize exits;
 @synthesize isParking;
 
@@ -147,6 +151,42 @@
     
     return _tmpMinorAreas;
 }
+
+-(NSArray *)escalators{
+    if(_tmpEscalators == nil){
+        
+        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMResultSet *resultSet = [db executeQuery:@"select * from Escalator where majorAreaId = ?",_tmpMajorAreaId];
+        
+        _tmpEscalators = [[NSMutableArray alloc] init];
+        
+        while ([resultSet next]) {
+            YTLocalEscalator *tmp = [[YTLocalEscalator alloc] initWithDBResultSet:resultSet];
+            [_tmpEscalators addObject:tmp];
+        }
+        
+    }
+    
+    return _tmpEscalators;
+}
+
+-(NSArray *)serviceStations{
+    if(_tmpServiceStations == nil){
+        
+        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMResultSet *resultSet = [db executeQuery:@"select * from ServiceStation where majorAreaId = ?",_tmpMajorAreaId];
+        
+        _tmpServiceStations = [[NSMutableArray alloc] init];
+        
+        while ([resultSet next]) {
+            YTLocalServiceStation *tmp = [[YTLocalServiceStation alloc] initWithDBResultSet:resultSet];
+            [_tmpServiceStations addObject:tmp];
+        }
+        
+    }
+    return _tmpServiceStations;
+}
+
 
 -(NSString *)identifier{
     return _tmpMajorAreaId;
