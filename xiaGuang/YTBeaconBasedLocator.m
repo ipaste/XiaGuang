@@ -69,22 +69,26 @@
     
     NSArray *distances = [self prepareDistances:beacons];
     
-    NSValue *pos = [_positionBot locateMeWithDistances:distances accuracy:0.00001];
-    
-    if (pos == nil) {
-        return;
-    }
-    
-    CGPoint position = [pos CGPointValue];
-    
-    position = [_kalmanFilterBot reportSample:position];
-    
-    position = [_boundingBox updateAndGetCurrentPoint:position];
-    
-    CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
-                                                                         mapView:_mapView];
-    
-    [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        
+        NSValue *pos = [_positionBot locateMeWithDistances:distances accuracy:0.00001];
+        
+        if (pos == nil) {
+            return;
+        }
+        
+        CGPoint position = [pos CGPointValue];
+        
+        position = [_kalmanFilterBot reportSample:position];
+        
+        position = [_boundingBox updateAndGetCurrentPoint:position];
+        
+        CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
+                                                                             mapView:_mapView];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
+        });
+    });
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons {
@@ -124,13 +128,35 @@
                 
                 if (dist != -1.0) {
                     YTDistanceData *distData = [[YTDistanceData alloc] initWithLocationX:p.x y:p.y distance:dist];
-                    [distances addObject:distData];
+                    
+                    NSString *key = [NSString stringWithFormat:@"%d-%d", major, minor];
+                    
+                    NSDictionary *oldDict = [_distDict objectForKey:key];
                     
                     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                     dict[@"data"] = distData;
                     dict[@"count"] = [NSNumber numberWithInt:0];
+                    
                     [_distDict setObject:dict
-                                  forKey:[NSString stringWithFormat:@"%d-%d", major, minor]];
+                                  forKey:key];
+                    
+                    
+                    YTDistanceData *adjustedDist = distData;
+                    
+                    if (oldDict != nil) {
+                        YTDistanceData *oldDist = oldDict[@"data"];
+                        
+                        double distDiff = distData.distance - oldDist.distance;
+                        
+                        double ratio = 4; // adjust this value
+                        
+                        adjustedDist = [[YTDistanceData alloc] initWithLocationX:oldDist.x
+                                                                               y:oldDist.y
+                                                                        distance:oldDist.distance + ratio * distDiff];
+                    }
+                    
+                    [distances addObject:adjustedDist];
+                    
                 } else {
                     NSMutableDictionary *dict = [_distDict objectForKey:[NSString stringWithFormat:@"%d-%d", major, minor]];
                     if (dict != nil) {
