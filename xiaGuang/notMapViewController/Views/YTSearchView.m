@@ -83,7 +83,12 @@
     
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];
-    _searchClearButton.frame = CGRectMake(220 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+    if (_isIndent){
+        _searchClearButton.frame = CGRectMake(210 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+    }else{
+        _searchClearButton.frame = CGRectMake(249 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+    }
+    
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
     [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:15]];

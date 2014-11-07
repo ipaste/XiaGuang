@@ -178,9 +178,8 @@
     if (_floorName != nil) {
         AVQuery *floorQuery = [AVQuery queryWithClassName:@"Floor"];
         [floorQuery whereKey:@"floorName" equalTo:_floorName];
-        //AVObject *obj = [floorQuery getFirstObject];
         [query whereKey:@"floor" matchesQuery:floorQuery];
-        //[query whereKey:@"floor" equalTo:[floorQuery getFirstObject]];
+
     }
     
     if (_mallName != nil) {

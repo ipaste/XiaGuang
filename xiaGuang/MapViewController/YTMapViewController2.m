@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _targetCord;
     
     NSMutableArray *_malls;
+    
     YTBeaconBasedLocator *_locator;
     
     CLLocationCoordinate2D _userCoordintate;
@@ -145,7 +146,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [self createNavigationBar];
     [self createMapView];
-    [self createSearchView];
     [self createBlockAndFloorSwitch];
     [self createCurLocationButton];
     [self createCommonPoiButton];
@@ -155,7 +155,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
-    
+    [self createSearchView];
 
 
     
@@ -338,6 +338,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         YTPoi *tmpPoi = [tmpMerchant producePoi];
         if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
             highlightPoi = tmpPoi;
+            
         }
         [pois addObject:tmpPoi];
     }
@@ -369,17 +370,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSString *title = nil;
     switch (_type) {
         case YTMapViewControllerTypeFloor:
-            title = [[[[_majorArea floor] block] mall] mallName];
+            title = @"返回";
             break;
         case YTMapViewControllerTypeMerchant:
             title = @"店铺详情";
             break;
         case YTMapViewControllerTypeNavigation:
-            title = @"导航";
+            title = @"首页";
             break;
     }
     _navigationBar.backTitle = title;
-    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+    _navigationBar.titleName = [_targetMall mallName];
     [self.view addSubview:_navigationBar];
 }
 -(void)createSearchView{
@@ -443,6 +444,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60)];
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
+    _navigationView.hidden = YES;
     [self.view addSubview:_navigationView];
     [_navigationView.layer pop_animationForKey:@"shake"];
 }
@@ -528,6 +530,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
     _detailsView.hidden = NO;
+    _navigationView.hidden = NO;
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -586,6 +589,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
         _detailsView.hidden = YES;
+        _navigationView.hidden = YES;
         if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
             [_mapView highlightPoi:_selectedPoi animated:NO];
         }
@@ -610,7 +614,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)selectedMerchantName:(NSString *)name{
-    
+    FMDatabase *db = [YTDBManager sharedManager].db;
+    if([db open]){
+        
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ?",name];
+        [result next];
+        YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+        id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
+        _selectedPoi = [tmpMerchantInstance producePoi];
+        [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
+        
+        if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
+            [self switchFloor:[tmpMajorArea floor]];
+        }else{
+            [_mapView highlightPoi:_selectedPoi animated:YES];
+        }
+        [self showCallOut];
+    }
 }
 
 
@@ -630,7 +650,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 {
 
                     [self userMoveToMinorArea:minorArea];
-                    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                    if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
+                        _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                    }
                     
                 }
             }
@@ -752,6 +774,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)handlePoiForMajorArea:(id<YTMajorArea>)majorArea{
     [_mapView removeAnnotations];
     [_mapView removeUserLocation];
+    
     [self injectPoisForMajorArea:majorArea];
 }
 
