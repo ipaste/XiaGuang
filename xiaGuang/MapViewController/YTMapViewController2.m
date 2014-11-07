@@ -469,6 +469,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
 }
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
+    
     id<YTPoiSource> sourceModel = [poi sourceModel];
     
     //if there's activePoi
