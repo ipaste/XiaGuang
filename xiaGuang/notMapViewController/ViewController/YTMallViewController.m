@@ -33,7 +33,6 @@
     self = [super init];
     if (self) {
         self.navigationItem.title = @"商圈";
-        self.automaticallyAdjustsScrollViewInsets = NO;
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
@@ -59,7 +58,7 @@
     CGFloat topHeight = [self.topLayoutGuide length];
     CGRect frame = _tableView.frame;
     frame.origin.y = topHeight;
-    frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 10;
+    frame.size.height = CGRectGetHeight(self.view.frame) - topHeight;
     _tableView.frame = frame;
 }
 

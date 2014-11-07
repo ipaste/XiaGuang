@@ -30,7 +30,7 @@
 -(void)viewWillLayoutSubviews{
     NSString *userAgreementPath = [[NSBundle mainBundle]pathForResource:@"userAgreement" ofType:@"txt"];
     NSString *text = [NSString stringWithContentsOfFile:userAgreementPath encoding:NSUTF8StringEncoding error:nil];
-    CGSize textSize = [text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame) - 30, 2000) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],NSForegroundColorAttributeName : [UIColor colorWithString:@"202020"]} context:nil].size;
+    CGSize textSize = [text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame) - 30, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],NSForegroundColorAttributeName : [UIColor colorWithString:@"202020"]} context:nil].size;
     _scrollerView.contentSize = CGSizeMake(CGRectGetWidth(_scrollerView.frame), textSize.height + 100);
     
     
