@@ -69,8 +69,9 @@
         _mallObjects = [NSMutableArray array];
         _bundleObjects = [NSMutableArray array];
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        //query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-        //query.maxCacheAge = 1800;
+        [query whereKeyExists:@"localDBId"];
+        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+        query.maxCacheAge = 2*3600;
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 for (AVObject *mallObject in objects) {
@@ -90,10 +91,17 @@
             }else{
                 //获取失败
                 NSLog(@"无网络");
+                [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
             }
             
         }];
 }
+
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 -(void)selectMerchant:(id<YTMerchant>)merchant{
     YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];

@@ -49,6 +49,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTSelectedPoiButton *_selectedPoiButton;
     UIImageView *_noBeaconCover;
     BlurMenu *_menu;
+    UIAlertView *_alert;
+    
+    
     
     //states
     id<YTMajorArea> _curDisplayedMajorArea;
@@ -103,6 +106,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
+            _targetMall = [[[_majorArea floor] block]mall];
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -114,6 +118,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (self) {
         if ( floor != nil) {
             _majorArea = [[floor majorAreas] objectAtIndex:0];
+            _targetMall = [[[_majorArea floor] block]mall];
         }
         _type = YTMapViewControllerTypeFloor;
     }
@@ -147,7 +152,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNavigationView];
     [self createPoiView];
     [self createNoBeaconCover];
-    [self createBlurMenu];
+    [self createBlurMenuWithCallBack:nil];
     
 
 
@@ -205,18 +210,21 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 
             
                 if(_menu == nil){
-                    [self createBlurMenu];
-                    [_menu show];
+                    [self createBlurMenuWithCallBack:^{
+                        [_menu show];
+                    }];
+                    //[_menu show];
                 }
                 else{
                     [_menu show];
                 }
+                if([_mapView currentState] != YTMapViewDetailStateNormal){
+                    [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
+                    [self hideCallOut];
+                }
             }
             
-            if([_mapView currentState] != YTMapViewDetailStateNormal){
-                [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
-                [self hideCallOut];
-            }
+            
             
         }
     }
@@ -224,13 +232,21 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _noBeaconCover.hidden = YES;
         [_menu hide];
     }
+    
+    if(_type != YTMapViewControllerTypeNavigation){
+        
+        [_menu hide];
+        _noBeaconCover.hidden = YES;
+        [self redrawBlockAndFloorSwitch];
+        
+    }
 }
 
--(void)createBlurMenu{
+-(void)createBlurMenuWithCallBack:(void (^)())callback{
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     [query whereKeyExists:@"localDBId" ];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 3600;
+    query.maxCacheAge = 2 * 3600;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             for (AVObject *mallObject in objects) {
@@ -239,9 +255,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 
             }
             [self instantiateMenu];
+            if(callback!= nil){
+                callback();
+            }
             
         }else{
             //获取失败
+            if(_alert == nil){
+                _alert = [[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil];
+                [_alert show];
+                
+            }
         }
         
     }];
@@ -612,6 +636,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     
+    
+    if(_type != YTMapViewControllerTypeNavigation){
+        NSString *iden =[[[[[minorArea majorArea] floor] block] mall] identifier];
+        if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
+            return;
+        }
+    }
+    
+    
     if(_blurMenuShown){
         [_menu hide];
         _noBeaconCover.hidden = YES;
@@ -924,7 +957,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
         }
         else{
-            [[[UIAlertView alloc]initWithTitle:@"骚瑞" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+            [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
         }
         
     }
@@ -1079,6 +1112,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)backClicked{
     [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 -(void)dealloc{
@@ -1114,5 +1148,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_locator start];
     _locator.delegate = self;
     _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    _alert = nil;
 }
 @end
