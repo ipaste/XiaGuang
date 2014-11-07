@@ -240,7 +240,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)clickStarNavigationButton:(UIButton *)sender{
     if (_userMinorArea == nil || ![[_userMinorArea majorArea] isParking]) {
-        NSString *message = [NSString stringWithFormat:@"您当前不处于%@的停车场",[[[[[_tmpMarker majorArea]floor] block] mall] mallName]];
+        NSString *message = [NSString stringWithFormat:@"您当前不处于%@的停车场,或者您的蓝牙未开启",[[[[[_tmpMarker majorArea]floor] block] mall] mallName]];
         [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
         return;
     }
@@ -293,6 +293,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)markedButtonClicked:(UIButton *)sender{
+    if (_userMinorArea == nil){
+    
+        return;
+    }
     _carCoordinate = [_userMinorArea coordinate];
     [self setParkingState:YTParkingStateMarked animation:YES];
 }
@@ -301,8 +305,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)bluetoothStateChange:(NSNotification *)notification{
     NSDictionary *userInfo = notification.userInfo;
     _bluetoothOn = [userInfo[@"isOpen"] boolValue];
-    if(_initializationComplete){
-        if ((!_bluetoothOn && _userMinorArea != nil) || ![[_userMinorArea majorArea] isParking] || ![_tmpMarker whetherMark]) {
+    _userMinorArea = nil;
+    if(_initializationComplete && _state != YTParkingStateMarked){
+        if (!_bluetoothOn || ![[_userMinorArea majorArea] isParking] || ![_tmpMarker whetherMark]) {
             [self setParkingState:YTParkingStateNormal animation:NO];
         }else{
             if ([_tmpMarker whetherMark]) {
@@ -354,7 +359,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)moveToUserLocationButtonClicked{
     if (_userMinorArea == nil || ![[_userMinorArea majorArea] isParking]) {
-        NSString *message = [NSString stringWithFormat:@"您当前不处于%@的停车场",[[[[[_tmpMarker majorArea]floor] block] mall] mallName]];
+        NSString *message = [NSString stringWithFormat:@"您当前不处于%@的停车场,或者您的蓝牙未开启",[[[[[_tmpMarker majorArea]floor] block] mall] mallName]];
         [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
         return;
     }
@@ -513,7 +518,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [_mapView highlightPoi:tmpPoi animated:YES];
     }else{
         if(tmpPoi == nil) return;
-        [_mapView removeAnnotationForPoi:tmpPoi];
+        if ([_tmpMarker whetherMark]) {
+            [_mapView removeAnnotationForPoi:tmpPoi];
+        }
     }
 }
 

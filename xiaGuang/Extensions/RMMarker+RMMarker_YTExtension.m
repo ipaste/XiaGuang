@@ -211,6 +211,7 @@ static YTCompletion Completion = nil;
         
         CALayer *iconLayer = [CALayer layer];
         iconLayer.name = @"icon";
+        iconLayer.contents = (id)[UIImage imageNamed:@"nav_ico_default"].CGImage;
         iconLayer.frame = CGRectMake(4, 4, 30, 30);
         iconLayer.masksToBounds = YES;
         iconLayer.cornerRadius = CGRectGetWidth(iconLayer.frame) / 2;
@@ -227,7 +228,6 @@ static YTCompletion Completion = nil;
     for (CALayer *curLayer in self.sublayers) {
         if ([curLayer.name isEqualToString:BUBBLE_LAYER_NAME]) {
             //[curLayer removeAllAnimations];
-            
             
             curLayer.opacity = 1;
             UIImage *image = [UIImage imageNamed:@"nav_img_end"];
@@ -254,6 +254,9 @@ static YTCompletion Completion = nil;
 }
 
 -(void)setMerchantIcon:(UIImage *)image{
+    if (image == nil) {
+        return;
+    }
     for (CALayer *layer in self.sublayers) {
         if ([layer.name isEqualToString:BUBBLE_LAYER_NAME]) {
             for (CALayer *subLayer in layer.sublayers) {
@@ -318,7 +321,7 @@ static YTCompletion Completion = nil;
         textLayer.foregroundColor = [UIColor redColor].CGColor;
         textLayer.fontSize = 12;
         textLayer.string = string;
-        [self addSublayer:textLayer];
+       // [self addSublayer:textLayer];
     }
     return self;
     

@@ -638,7 +638,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     if(_type != YTMapViewControllerTypeNavigation){
-        NSString *iden =[[[[[minorArea majorArea] floor] block] mall] identifier];
         if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
             return;
         }

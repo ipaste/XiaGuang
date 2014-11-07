@@ -52,7 +52,7 @@
     switch (section) {
         case 0:
             
-            return 1;
+            return 0;
         case 1:
             
             return 2;
@@ -146,7 +146,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 19   ;
+    return 10;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
