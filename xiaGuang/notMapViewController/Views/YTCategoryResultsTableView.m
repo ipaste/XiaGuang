@@ -143,7 +143,7 @@
             [_mallObjects addObject:[mall mallName]];
         }
         [_mallObjects insertObject:@"全部商圈" atIndex:0];
-        height = 44 * _floorObjects.count > 274 ? 274:44 * _floorObjects.count;
+        height = 44 * _mallObjects.count > 274 ? 274:44 * _mallObjects.count;
         _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 44 * _mallObjects.count);
         [_mallView reloadData];
     }
