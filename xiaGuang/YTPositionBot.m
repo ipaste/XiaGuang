@@ -93,6 +93,8 @@
         a21 = matrix_a[2];
         a22 = matrix_a[3];
         
+        free(matrix_a);
+        
         // Calculating J^T * W * f
         double b11, b21;
         b11 = b21 = 0.0;

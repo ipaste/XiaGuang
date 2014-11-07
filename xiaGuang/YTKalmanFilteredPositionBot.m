@@ -217,6 +217,7 @@
                 free(HX);
                 free(Y_HX);
                 free(K_Y_HX);
+                free(K);
                 return;
             }
             
