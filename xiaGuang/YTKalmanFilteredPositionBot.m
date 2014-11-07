@@ -278,7 +278,7 @@
         int y = i % 6;
         
         if (x == y) {
-            _Q[i] = 0.1;
+            _Q[i] = 1;
         } else {
             _Q[i] = 0;
         }
@@ -335,7 +335,8 @@
 }
 
 - (void)atRestWithYTMotionDetector:(YTMotionDetector *)detector {
-    _ignoreTimeUpdate = YES;
+    //TODO change back to NO
+    _ignoreTimeUpdate = NO;
 }
 
 - (void)inMotionWithYTMotionDetector:(YTMotionDetector *)detector {
