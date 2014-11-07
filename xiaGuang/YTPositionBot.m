@@ -79,16 +79,6 @@
        
         long error = [YTMatrixToolBox matrixInvertWithDimension:2 matrix:matrix_a];
         if (error != 0) {
-            /*
-            NSLog(@"error within positionbot");
-            int count = 0;
-            for(YTDistanceData *data in distances){
-                NSLog(@"count:%d  x:%f, y:%f, dist:%f",count,data.x,data.y,data.distance);
-                count++;
-            }
-            NSLog(@"======================");
-            
-            */
             free(matrix_a);
             return nil;
         }

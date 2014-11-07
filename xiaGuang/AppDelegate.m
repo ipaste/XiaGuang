@@ -11,7 +11,9 @@
 #import <AVOSCloud/AVOSCloud.h>
 #import "YTDBManager.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () {
+    double _timeInToBackground;
+}
 
 @end
 
@@ -29,6 +31,9 @@
     [self.window makeKeyAndVisible];
     
     [[YTDBManager sharedManager] startBackgroundDownload];
+    [[YTDBManager sharedManager] checkAndSwitchToNewDB];
+    
+    _timeInToBackground = 0;
     
     return YES;
 }
@@ -41,10 +46,17 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    _timeInToBackground = [[NSDate date] timeIntervalSinceReferenceDate];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    double now = [[NSDate date] timeIntervalSinceReferenceDate];
+    
+    if (now - _timeInToBackground >= 1200) { // 20 minutes wait
+        self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
+        [[YTDBManager sharedManager] checkAndSwitchToNewDB];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

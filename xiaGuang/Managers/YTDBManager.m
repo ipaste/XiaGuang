@@ -64,15 +64,27 @@
         
         // copy resources from Bundle to Document directory
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *path = [[NSBundle mainBundle] pathForResource:LOCALDB_FILE ofType:@""];
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"db" ofType:@"plist"];
         
         NSError *error;
-        [fileManager copyItemAtPath:path toPath:_localDBPath error:&error];
-        [fileManager copyItemAtPath:plistPath toPath:_plistPath error:&error];
+        
+        [fileManager createDirectoryAtPath:_dir
+               withIntermediateDirectories:YES
+                                attributes:nil
+                                     error:&error];
+        
+        if (![fileManager fileExistsAtPath:_localDBPath]) {
+            [fileManager copyItemAtPath:[[NSBundle mainBundle] pathForResource:LOCALDB_FILE ofType:@""]
+                                 toPath:_localDBPath
+                                  error:&error];
+        }
+        
+        if (![fileManager fileExistsAtPath:_plistPath]) {
+            [fileManager copyItemAtPath:[[NSBundle mainBundle] pathForResource:@"db" ofType:@"plist"]
+                                 toPath:_plistPath
+                                  error:&error];
+        }
         
         _db = [[FMDatabase alloc] initWithPath:_localDBPath];
-        
         _timer = nil;
         _hasNewDB = NO;
         _lock = [[NSObject alloc] init];
@@ -84,6 +96,7 @@
 
 - (void)startBackgroundDownload {
     if (_timer == nil) {
+        // check every hour
         _timer = [NSTimer scheduledTimerWithTimeInterval:3600
                                                   target:self
                                                 selector:@selector(checkAndDownload:)
@@ -100,12 +113,11 @@
 }
 
 - (void)checkAndSwitchToNewDB {
-    double now = [[NSDate date] timeIntervalSinceReferenceDate];
-    
     @synchronized(_lock) {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:_plistPath];
         
         int backupVersion = [dict[BACKUPDB_VERSION_KEY] intValue];
+        
         if (backupVersion != 0) {
             // there's a new version. do the swap
             
@@ -129,7 +141,7 @@
             
             // update plist
             dict[LOCALDB_VERION_KEY] = [NSNumber numberWithInt:backupVersion];
-            [dict removeObjectForKey:LOCALDB_VERION_KEY];
+            [dict removeObjectForKey:BACKUPDB_VERSION_KEY];
             
             [dict writeToFile:_plistPath atomically:YES];
         }
@@ -170,16 +182,17 @@
                         @synchronized(_lock) {
                             [data writeToFile:_backupDBPath atomically:YES];
                             [dict writeToFile:_plistPath atomically:YES];
-                            
-                           NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:_plistPath];
-                            
-                            int backupVersion = [dict[BACKUPDB_VERSION_KEY] intValue];
                         }
                     }
                 }];
             }
         }
     }];   
+}
+
+- (NSURL *)applicationDocumentsDirectory
+{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 @end

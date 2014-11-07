@@ -1147,6 +1147,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)dealloc{
+    
+    NSLog(@"destroy mapviewController");
+    
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
 
