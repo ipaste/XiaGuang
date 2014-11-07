@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _targetCord;
     
     NSMutableArray *_malls;
+    
     YTBeaconBasedLocator *_locator;
     
     CLLocationCoordinate2D _userCoordintate;
@@ -335,6 +336,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         YTPoi *tmpPoi = [tmpMerchant producePoi];
         if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
             highlightPoi = tmpPoi;
+            
         }
         [pois addObject:tmpPoi];
     }
@@ -606,7 +608,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)selectedMerchantName:(NSString *)name{
-    
+    FMDatabase *db = [YTDBManager sharedManager].db;
+    if([db open]){
+        
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ?",name];
+        [result next];
+        YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+        id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
+        _selectedPoi = [tmpMerchantInstance producePoi];
+        [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
+        
+        if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
+            [self switchFloor:[tmpMajorArea floor]];
+        }else{
+            [_mapView highlightPoi:_selectedPoi animated:YES];
+        }
+        [self showCallOut];
+    }
 }
 
 
@@ -748,6 +766,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)handlePoiForMajorArea:(id<YTMajorArea>)majorArea{
     [_mapView removeAnnotations];
     [_mapView removeUserLocation];
+    
     [self injectPoisForMajorArea:majorArea];
 }
 
