@@ -764,7 +764,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //different floor
     else{
         [self switchFloor:[[_userMinorArea majorArea] floor]];
-        [_mapView showUserLocationAtCoordinate:_userCoordintate];
+        //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:NO];
         [_switchFloorView promptFloorChange:[[_userMinorArea majorArea] floor]];
     }

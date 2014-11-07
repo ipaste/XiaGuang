@@ -187,6 +187,7 @@
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
         [mallObject whereKey:@"name" containsString:_mallName];
         [query whereKey:@"mall" matchesQuery:mallObject];
+
         //[query whereKey:@"mall" equalTo:[mallObject getFirstObject]];
     }
     
