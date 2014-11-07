@@ -178,4 +178,9 @@
     return distances;
 }
 
+-(void)dealloc{
+    NSLog(@"locator dealloc");
+    
+}
+
 @end
