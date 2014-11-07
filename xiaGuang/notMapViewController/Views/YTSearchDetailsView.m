@@ -37,7 +37,7 @@
 
         _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         _scrollView.delegate = self;
-        _scrollView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.9];
+        _scrollView.backgroundColor = [UIColor whiteColor];
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)+ 10);
         _scrollView.showsVerticalScrollIndicator = NO;
         [self addSubview:_scrollView];
@@ -47,6 +47,12 @@
         [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索"]];
         
         AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+        
+        if (mall) {
+            AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+            [mallQuery whereKey:@"name" equalTo:[mall mallName]];
+            [query whereKey:@"mall" matchesQuery:mallQuery];
+        }
         
         query.limit = 6;
         

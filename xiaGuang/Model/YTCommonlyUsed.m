@@ -25,14 +25,14 @@
     YTCommonlyUsed *elevator = [[YTCommonlyUsed alloc]init];
     elevator.name = @"电梯";
     elevator.icon = [UIImage imageNamed:@"nav_ico_11"];
-    
+/*
     YTCommonlyUsed *stopCar = [[YTCommonlyUsed alloc]init];
     stopCar.name = @"停车场";
     stopCar.icon = [UIImage imageNamed:@"nav_ico_12"];
-    
+*/
     YTCommonlyUsed *frontDesk = [[YTCommonlyUsed alloc]init];
     frontDesk.name = @"服务台";
     frontDesk.icon = [UIImage imageNamed:@"nav_ico_13"];
-    return @[entrance,wc,escalator,elevator,stopCar,frontDesk];
+    return @[entrance,wc,escalator,elevator,frontDesk];
 }
 @end

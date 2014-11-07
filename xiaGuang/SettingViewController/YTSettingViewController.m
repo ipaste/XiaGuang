@@ -155,14 +155,19 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     UIViewController *controller = nil;
     if (indexPath.section == 0) {
         controller = [[YTInvitationViewController alloc]init];
     }else if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 0:
-                cell.textLabel.text = @"给虾逛评分";
-                break;
+            {
+                NSString *url = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d",922405498];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+                 return;
+            }
+               
             case 1:
             {
                controller = [[YTFeedBackViewController alloc]init];
@@ -196,7 +201,7 @@
                 break;
         }
     }
-     cell.selected = NO;
+    
      [self.navigationController pushViewController:controller animated:YES];
     
 }

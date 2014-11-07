@@ -145,7 +145,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [self createNavigationBar];
     [self createMapView];
-    [self createSearchView];
     [self createBlockAndFloorSwitch];
     [self createCurLocationButton];
     [self createCommonPoiButton];
@@ -155,7 +154,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
-    
+    [self createSearchView];
 
 
     
