@@ -97,11 +97,12 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     _isEnterBackground = NO;
     if (_curBlueState != curState) {
         [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
-        [timer invalidate];
     }
+    [timer invalidate];
 }
 
 -(void)dealloc{
+    NSLog(@"blueManager dealloc");
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
