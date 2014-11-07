@@ -728,6 +728,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
         
+        [_mapView setZoom:1 animated:NO];
+        
         if([[[_userMinorArea majorArea] identifier] isEqualToString:[majorArea identifier]]){
             [self refreshLocatorWithMapView:_mapView.map majorArea:majorArea];
         }
@@ -1167,6 +1169,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if([[_curDisplayedMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
         [_mapView showUserLocationAtCoordinate:coordinate];
+    }
+    else{
+        NSLog(@"shouldn't even be here");
     }
 }
 
