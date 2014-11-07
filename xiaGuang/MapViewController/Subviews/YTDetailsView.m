@@ -24,7 +24,7 @@
         _label = [[UILabel alloc]initWithFrame:CGRectMake(70, 5, 200, 30)];
         _startNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - CGRectGetHeight(frame) - 15, 4, frame.size.height + 10, frame.size.height - 8)];
         _merchantLogo = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, frame.size.height - 10, frame.size.height - 10)];
-
+        _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
         
         [self addSubview:_merchantLogo];
         [self addSubview:_startNavigationButton];
@@ -55,9 +55,13 @@
 
 -(void)setMerchantInfo:(id<YTMerchantLocation>)merchantLocation{
     _label.text = [merchantLocation merchantLocationName];
-    _merchantLogo.image = nil;
     [merchantLocation getCloudThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-         _merchantLogo.image = result;
+        if (error) {
+            _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+        }else{
+            _merchantLogo.image = result;
+            
+        }
     }];
     [merchantLocation getCloudMerchantTypeWithCallBack:^(NSArray *result, NSError *error) {
         [self setType:result];

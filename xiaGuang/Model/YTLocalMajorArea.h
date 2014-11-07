@@ -16,6 +16,8 @@
 #import "YTLocalMerchantInstance.h"
 #import "YTLocalBathroom.h"
 #import "YTLocalExit.h"
+#import "YTLocalEscalator.h"
+#import "YTLocalServiceStation.h"
 
 @interface YTLocalMajorArea : NSObject<YTMajorArea>
 

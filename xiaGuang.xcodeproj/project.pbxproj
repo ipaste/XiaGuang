@@ -72,6 +72,12 @@
 		AE24A8D81A08A6D400A0CE91 /* YITIANL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */; };
 		AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */; };
 		AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */; };
+		AE859E171A0CB9A10044074F /* YTLocalEscalator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E161A0CB9A10044074F /* YTLocalEscalator.m */; };
+		AE859E1A1A0CBA880044074F /* YTEscalatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E191A0CBA880044074F /* YTEscalatorPoi.m */; };
+		AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */; };
+		AE859E211A0CC07E0044074F /* YTLocalServiceStation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E201A0CC07E0044074F /* YTLocalServiceStation.m */; };
+		AE859E241A0CC1DB0044074F /* YTServiceStationPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E231A0CC1DB0044074F /* YTServiceStationPoi.m */; };
+		AE859E271A0CC2D00044074F /* YTServiceStationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E261A0CC2D00044074F /* YTServiceStationAnnotation.m */; };
 		AED846381A0C9C1B0055FD14 /* YTElevatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */; };
 		AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
@@ -288,6 +294,20 @@
 		AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL1.mbtiles; sourceTree = "<group>"; };
 		AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL2.mbtiles; sourceTree = "<group>"; };
 		AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL3.mbtiles; sourceTree = "<group>"; };
+		AE859E141A0CB9560044074F /* YTEscalator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTEscalator.h; sourceTree = "<group>"; };
+		AE859E151A0CB9A10044074F /* YTLocalEscalator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalEscalator.h; sourceTree = "<group>"; };
+		AE859E161A0CB9A10044074F /* YTLocalEscalator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalEscalator.m; sourceTree = "<group>"; };
+		AE859E181A0CBA880044074F /* YTEscalatorPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTEscalatorPoi.h; sourceTree = "<group>"; };
+		AE859E191A0CBA880044074F /* YTEscalatorPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTEscalatorPoi.m; sourceTree = "<group>"; };
+		AE859E1B1A0CBC9D0044074F /* YTEscalatorAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTEscalatorAnnotation.h; sourceTree = "<group>"; };
+		AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTEscalatorAnnotation.m; sourceTree = "<group>"; };
+		AE859E1E1A0CC0510044074F /* YTServiceStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTServiceStation.h; sourceTree = "<group>"; };
+		AE859E1F1A0CC07E0044074F /* YTLocalServiceStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalServiceStation.h; sourceTree = "<group>"; };
+		AE859E201A0CC07E0044074F /* YTLocalServiceStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalServiceStation.m; sourceTree = "<group>"; };
+		AE859E221A0CC1DB0044074F /* YTServiceStationPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTServiceStationPoi.h; sourceTree = "<group>"; };
+		AE859E231A0CC1DB0044074F /* YTServiceStationPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTServiceStationPoi.m; sourceTree = "<group>"; };
+		AE859E251A0CC2D00044074F /* YTServiceStationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTServiceStationAnnotation.h; sourceTree = "<group>"; };
+		AE859E261A0CC2D00044074F /* YTServiceStationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTServiceStationAnnotation.m; sourceTree = "<group>"; };
 		AED846361A0C9C1B0055FD14 /* YTElevatorPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorPoi.h; sourceTree = "<group>"; };
 		AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorPoi.m; sourceTree = "<group>"; };
 		AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorAnnotation.h; sourceTree = "<group>"; };
@@ -700,6 +720,12 @@
 				D95B15481A0390C1002077AD /* YTUserDefaults.m */,
 				D941EFE31A0C70DC008F1218 /* YTChargeStandard.h */,
 				D941EFE41A0C70DC008F1218 /* YTChargeStandard.m */,
+				AE859E141A0CB9560044074F /* YTEscalator.h */,
+				AE859E151A0CB9A10044074F /* YTLocalEscalator.h */,
+				AE859E161A0CB9A10044074F /* YTLocalEscalator.m */,
+				AE859E1E1A0CC0510044074F /* YTServiceStation.h */,
+				AE859E1F1A0CC07E0044074F /* YTLocalServiceStation.h */,
+				AE859E201A0CC07E0044074F /* YTLocalServiceStation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -811,6 +837,10 @@
 				D94C27731A02639F009FF2F3 /* YTUserAnnotation.m */,
 				AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */,
 				AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */,
+				AE859E1B1A0CBC9D0044074F /* YTEscalatorAnnotation.h */,
+				AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */,
+				AE859E251A0CC2D00044074F /* YTServiceStationAnnotation.h */,
+				AE859E261A0CC2D00044074F /* YTServiceStationAnnotation.m */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";
@@ -838,6 +868,10 @@
 				D94C27801A02639F009FF2F3 /* YTPoiSource.h */,
 				AED846361A0C9C1B0055FD14 /* YTElevatorPoi.h */,
 				AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */,
+				AE859E181A0CBA880044074F /* YTEscalatorPoi.h */,
+				AE859E191A0CBA880044074F /* YTEscalatorPoi.m */,
+				AE859E221A0CC1DB0044074F /* YTServiceStationPoi.h */,
+				AE859E231A0CC1DB0044074F /* YTServiceStationPoi.m */,
 			);
 			path = Pois;
 			sourceTree = "<group>";
@@ -1087,11 +1121,11 @@
 				TargetAttributes = {
 					D93CE4B319FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 5T834T6KAH;
+						DevelopmentTeam = 8MJ58NP699;
 					};
 					D93CE4CC19FA5825004128FD = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 5T834T6KAH;
+						DevelopmentTeam = 8MJ58NP699;
 						TestTargetID = D93CE4B319FA5825004128FD;
 					};
 				};
@@ -1206,6 +1240,7 @@
 				D94C283C1A0263CF009FF2F3 /* UIView+MJExtension.m in Sources */,
 				D94C27B11A02639F009FF2F3 /* YTMerchantPoi.m in Sources */,
 				D94C280C1A0263C6009FF2F3 /* YTMoreCategoryViewCell.m in Sources */,
+				AE859E241A0CC1DB0044074F /* YTServiceStationPoi.m in Sources */,
 				D94C280D1A0263C6009FF2F3 /* YTPageControl.m in Sources */,
 				AE24A8A01A02432000A0CE91 /* YTCloudMerchantLocation.m in Sources */,
 				AE24A83A1A02430300A0CE91 /* YTBluetoothManager.m in Sources */,
@@ -1221,6 +1256,7 @@
 				AE24A83C1A02430300A0CE91 /* YTFileManager.m in Sources */,
 				D94C28091A0263C6009FF2F3 /* YTMallCell.m in Sources */,
 				AE24A8AA1A02432100A0CE91 /* YTLocalMinorArea.m in Sources */,
+				AE859E271A0CC2D00044074F /* YTServiceStationAnnotation.m in Sources */,
 				AE24A8A61A02432100A0CE91 /* YTLocalFloor.m in Sources */,
 				78ADBEAB1A09EAC3000688E3 /* YTNaiveStepDetector.m in Sources */,
 				D94C27AA1A02639F009FF2F3 /* YTBathroomAnnotation.m in Sources */,
@@ -1244,6 +1280,7 @@
 				D94C28331A0263CF009FF2F3 /* MJRefreshBaseView.m in Sources */,
 				AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */,
 				D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */,
+				AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */,
 				D94C27C51A02639F009FF2F3 /* YTZoomStepper.m in Sources */,
 				D94C28391A0263CF009FF2F3 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */,
 				AE24A83B1A02430300A0CE91 /* YTDBManager.m in Sources */,
@@ -1255,6 +1292,7 @@
 				D94C28351A0263CF009FF2F3 /* MJRefreshFooterView.m in Sources */,
 				78ADBEBC1A09EBB5000688E3 /* YTPositionBot.m in Sources */,
 				AE24A8BA1A03855500A0CE91 /* BlurMenu.m in Sources */,
+				AE859E171A0CB9A10044074F /* YTLocalEscalator.m in Sources */,
 				D94C27BD1A02639F009FF2F3 /* YTNavigationModePlan.m in Sources */,
 				D94C27B31A02639F009FF2F3 /* JWBlurView.m in Sources */,
 				D94C28031A0263C6009FF2F3 /* YTNavigationController.m in Sources */,
@@ -1268,6 +1306,7 @@
 				D94C283A1A0263CF009FF2F3 /* UIScrollView+MJExtension.m in Sources */,
 				D94C28371A0263CF009FF2F3 /* RMMapView+RMMapViewTileSourceHelpers.m in Sources */,
 				78ADBEBD1A09EBB5000688E3 /* YTDistanceData.m in Sources */,
+				AE859E211A0CC07E0044074F /* YTLocalServiceStation.m in Sources */,
 				AE24A8A51A02432100A0CE91 /* YTLocalElevator.m in Sources */,
 				D94C28431A0263EE009FF2F3 /* YTCategory.m in Sources */,
 				D94C27B51A02639F009FF2F3 /* YTDirectionIndicator.m in Sources */,
@@ -1313,6 +1352,7 @@
 				D95B15571A078403002077AD /* YTMallPositionView.m in Sources */,
 				D94C280F1A0263C6009FF2F3 /* YTSearchDetailsView.m in Sources */,
 				D94C28001A0263C6009FF2F3 /* YTMallViewController.m in Sources */,
+				AE859E1A1A0CBA880044074F /* YTEscalatorPoi.m in Sources */,
 				D94C27B41A02639F009FF2F3 /* YTDetailsView.m in Sources */,
 				78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */,
 				D94C28451A0263EE009FF2F3 /* YTMallMerchantBundle.m in Sources */,
