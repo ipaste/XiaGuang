@@ -18,6 +18,8 @@
 @property (nonatomic,weak) NSArray *elevators;
 @property (nonatomic,weak) NSArray *bathrooms;
 @property (nonatomic,weak) NSArray *exits;
+@property (nonatomic,weak) NSArray *escalators;
+@property (nonatomic,weak) NSArray *serviceStations;
 @property (nonatomic) BOOL isParking;
 @property (nonatomic) double worldToMapRatio;
 

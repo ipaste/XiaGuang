@@ -992,6 +992,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([groupName isEqualToString:@"电梯"]){
         models = [_curDisplayedMajorArea elevators];
     }
+    if([groupName isEqualToString:@"扶梯"]){
+        models = [_curDisplayedMajorArea escalators];
+    }
+    if([groupName isEqualToString:@"服务台"]){
+        models = [_curDisplayedMajorArea serviceStations];
+    }
+    
     if([models count] <= 0){
         
         return nil;
