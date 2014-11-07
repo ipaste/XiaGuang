@@ -11,6 +11,7 @@
 #import "YTLocalMajorArea.h"
 #import "FMDatabase.h"
 #import "YTDBManager.h"
+#import "YTElevatorPoi.h"
 
 @interface YTLocalElevator : NSObject<YTElevator>
 

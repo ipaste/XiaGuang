@@ -81,4 +81,18 @@
     return _tmpElevatorId;
 }
 
+-(YTPoi *)producePoi{
+    YTElevatorPoi *result = [[YTElevatorPoi alloc]  initWithElevator:self];
+    return result;
+}
+
+-(NSString *)name{
+    return @"电梯";
+}
+
+-(NSString *)iconName{
+    return @"nav_ico_11";
+}
+
+
 @end

@@ -184,7 +184,6 @@
 }
 
 - (void)cleanDistDict {
-    
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
     
     NSMutableArray *keys = [[NSMutableArray alloc] init];
@@ -204,5 +203,6 @@
         [_distDict removeObjectForKey:key];
     }
 }
+
 
 @end
