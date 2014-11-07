@@ -17,7 +17,7 @@ typedef void (^YTCompletion)(void);
 - (id)initWithMerchantImage:(UIImage *)image;
 - (id)initWithElevator;
 
-- (id)initWithBeacon;
+- (id)initWithBeaconForMajorAreaID:(NSString *)majorID minorID:(NSString *)minorID;
 - (void)showMerchantAnimation:(BOOL)animation;
 - (void)hideMerchantAnimation:(BOOL)animation;
 

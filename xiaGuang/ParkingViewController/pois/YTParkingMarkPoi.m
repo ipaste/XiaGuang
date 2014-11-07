@@ -11,6 +11,7 @@
 @implementation YTParkingMarkPoi{
     CLLocationCoordinate2D _coord;
     NSString *_key;
+    YTParkingMarkAnnotation *_resultAnnotation;
 }
 
 -(instancetype)initWithParkingMarkCoordinat:(CLLocationCoordinate2D)coord{
@@ -20,12 +21,17 @@
     }
     return self;
 }
+-(void)removePoiLayer{
+    if (_resultAnnotation != nil) {
+        [[_resultAnnotation produceLayer] removeFromSuperlayer];
+    }
+}
 -(NSString *)poiKey{
     return _key;
 }
 
 -(YTAnnotation *)produceAnnotationWithMapView:(RMMapView *)mapView{
-    YTParkingMarkAnnotation *resultAnnotation = [[YTParkingMarkAnnotation alloc]initWithMapView:mapView coordinate:_coord andTitle:_key];
-    return resultAnnotation;
+    _resultAnnotation = [[YTParkingMarkAnnotation alloc]initWithMapView:mapView coordinate:_coord andTitle:_key];
+    return _resultAnnotation;
 }
 @end

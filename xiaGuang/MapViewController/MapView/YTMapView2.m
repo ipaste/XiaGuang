@@ -199,6 +199,7 @@
         else{
             
             _userAnnotation = [[YTUserAnnotation alloc] initWithMapView:_internalMapView andCoordinate:coordinate];
+            
             [_internalMapView addAnnotation:_userAnnotation];
             
         }
@@ -228,6 +229,10 @@
 }
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
+    
+    if([annotation isMemberOfClass:[YTUserAnnotation class]]){
+        NSLog(@"nigga");
+    }
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;
 }

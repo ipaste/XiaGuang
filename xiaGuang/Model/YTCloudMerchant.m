@@ -13,7 +13,7 @@
 @interface YTCloudMerchant(){
     AVObject *_object;
     
-   // YTLocalMerchantInstance *_tmpMerchantInstance;
+    YTLocalMerchantInstance *_tmpMerchantInstance;
 }
 @end
 @implementation YTCloudMerchant
@@ -73,25 +73,25 @@
 
 }
 
-//-(YTLocalMerchantInstance *)getLocalMerchantInstance{
-//    
-//    if(_object[@"localDBId"] == nil){
-//        return nil;
-//    }
-//    
-//    if(_tmpMerchantInstance == nil){
-//        
-//        FMDatabase *db = [YTDBManager sharedManager];
-//        if([db open]){
-//            
-//            FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceId = ?",_object[@"localDBId"]];
-//            [result next];
-//            
-//            _tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
-//        }
-//    }
-//    return _tmpMerchantInstance;
-//    
-//}
+-(YTLocalMerchantInstance *)getLocalMerchantInstance{
+    
+    if(_object[@"localDBId"] == nil){
+        return nil;
+    }
+    
+    if(_tmpMerchantInstance == nil){
+        
+        FMDatabase *db = [YTDBManager sharedManager];
+        if([db open]){
+            
+            FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceId = ?",_object[@"localDBId"]];
+            [result next];
+            
+            _tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+        }
+    }
+    return _tmpMerchantInstance;
+    
+}
 
 @end

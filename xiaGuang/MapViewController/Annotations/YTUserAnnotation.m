@@ -23,6 +23,7 @@
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.headingFilter = kCLHeadingFilterNone;
         [_locationManager startUpdatingHeading];
+        self.annotationType = @"user";
     }
     return self;
 }
