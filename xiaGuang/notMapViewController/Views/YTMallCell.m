@@ -28,7 +28,7 @@
         
         _merchantsButton = [NSMutableArray array];
         
-        _mallBackground = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 300, 90)];
+        _mallBackground = [[UIImageView alloc]initWithFrame:CGRectMake(10, 0, 300, 85)];
         
         [self addSubview:_mallBackground];
         [_mallBackground addSubview:_mallLogo];
@@ -61,6 +61,7 @@
     _mallBackground.layer.cornerRadius = 10;
     _mallBackground.layer.masksToBounds = YES;
     _mallBackground.image = nil;
+    
     //mallbackground image;
     if(self.mallMerchantBundle.mallBackgroundImageReady){
         _mallBackground.image = self.mallMerchantBundle.mallBackgroundImage;

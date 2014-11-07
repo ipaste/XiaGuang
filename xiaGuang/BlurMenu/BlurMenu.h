@@ -25,13 +25,13 @@
 @end
 
 @interface BlurMenu : UIView <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout> {
-    id<BlurMenuDelegate> delegate;
+    
     UIView *parent;
     NSArray *menuItems;
     UICollectionView *_collectionView;
 }
 
-@property(nonatomic, retain) id <BlurMenuDelegate> delegate;
+@property(nonatomic, weak) id <BlurMenuDelegate> delegate;
 @property(nonatomic, retain) UIView *parent;
 @property(nonatomic, retain) NSArray *menuItems;
 @property(nonatomic, retain) UICollectionView *_collectionView;

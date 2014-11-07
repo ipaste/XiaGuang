@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "YTMerchant.h"
 @interface YTMerchantViewCell : UITableViewCell
-@property (strong,nonatomic) id<YTMerchant> merchant;
+@property (weak,nonatomic) id<YTMerchant> merchant;
 @end

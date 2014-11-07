@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "YTCategory.h"
 @interface YTCategoryViewCell : UITableViewCell
-@property (strong,nonatomic)YTCategory *category;
+@property (weak,nonatomic)YTCategory *category;
 @end

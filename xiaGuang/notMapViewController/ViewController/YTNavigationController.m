@@ -69,4 +69,8 @@
     }
     return [super popViewControllerAnimated:animated];
 }
+
+-(void)dealloc{
+    NSLog(@"ytNavigationController destroyed");
+}
 @end
