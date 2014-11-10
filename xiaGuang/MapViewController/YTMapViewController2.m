@@ -253,8 +253,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     query.maxCacheAge = 2 * 3600;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            
+            
+            _malls = [NSMutableArray array];
+            
             for (AVObject *mallObject in objects) {
                 YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
+                
                 [_malls addObject:mall];
                 
             }
@@ -267,7 +272,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             //获取失败
             if(_alert == nil){
                 _alert = [[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil];
-                [_alert show];
+                
+                if(_userMinorArea == nil){
+                    [_alert show];
+                }
                 
             }
         }
