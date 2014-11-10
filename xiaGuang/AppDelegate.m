@@ -53,7 +53,7 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
     
-    if (now - _timeInToBackground >= 1) { // 20 minutes wait
+    if (now - _timeInToBackground >= 600) { // 10 minutes wait
         self.window = [[UIWindow alloc]init];
         self.window.frame = [UIScreen mainScreen].bounds;
         self.window.backgroundColor = [UIColor blackColor];
