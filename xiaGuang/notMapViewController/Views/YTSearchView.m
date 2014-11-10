@@ -156,12 +156,6 @@
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
      self.hidden = NO;
-    if (_isAddInNavigationBar) {
-       
-    }
-    if(animation){
-        
-    }
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
     }
@@ -169,11 +163,7 @@
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
      self.hidden = YES;
-    [self cancelAnimation:YES completion:nil];
-    if(animation){
-        
-    }
-   
+    if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
 }
 
 #pragma mark searchBar的协议
@@ -182,9 +172,11 @@
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     _detailsView.hidden = NO;
+    if (_searchTextFieldWidth == 0) {
+        _searchTextFieldWidth = CGRectGetWidth(_searchTextField.frame);
+    }
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _searchTextField.frame;
-         _searchTextFieldWidth = CGRectGetWidth(frame);
         frame.size.width = frame.size.width - 43;
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
