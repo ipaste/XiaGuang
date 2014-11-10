@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YTFloor.h"
 #import <AVOSCloud.h>
+#import "YTCloudBlock.h"
 #import "YTCloudMajorArea.h"
 #import "YTCloudMall.h"
 

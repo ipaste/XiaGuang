@@ -213,13 +213,13 @@
             cell.backgroundColor = [UIColor clearColor];
             
             cell.selectedBackgroundView = selectedBackgroundView;
-            label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, 150, 44)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, 100, 44)];
             label.textColor = [UIColor colorWithString:@"606060"];
             label.font = [UIFont systemFontOfSize:14];
             label.tag = 0;
             [cell addSubview:label];
             
-            subLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(label.frame) + 10, CGRectGetMinY(label.frame), CGRectGetWidth(self.frame) - CGRectGetWidth(label.frame), 44)];
+            subLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(label.frame), CGRectGetMinY(label.frame), CGRectGetWidth(self.frame) - CGRectGetWidth(label.frame), 44)];
             subLabel.textColor = [UIColor colorWithString:@"dcdcdc"];
             subLabel.font = [UIFont systemFontOfSize:12];
             subLabel.textAlignment = 2;
@@ -240,8 +240,22 @@
         }
         
         id<YTMerchant> merchant = _results[indexPath.row];
-        label.text = [merchant merchantName];
-        subLabel.text = [NSString stringWithFormat:@"%@ %@ %@",[[merchant floor] floorName],[[[merchant floor] block] blockName],[[merchant mall] mallName]];
+        NSString *merchantName = [merchant merchantName];
+        NSString *remarks = [NSString stringWithFormat:@"%@ %@ %@",[[merchant floor] floorName],[[[merchant floor] block] blockName],[[merchant mall] mallName]];
+        
+        CGFloat merchantNameWidth = [merchantName boundingRectWithSize:CGSizeMake(200, 44) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
+
+        CGRect frame = label.frame;
+        frame.size.width = merchantNameWidth;
+        label.frame = frame;
+        
+        frame = subLabel.frame;
+        frame.origin.x = CGRectGetMaxX(label.frame) + 5;
+        frame.size.width = CGRectGetWidth(self.frame) - CGRectGetWidth(label.frame) - 35;
+        subLabel.frame = frame;
+        
+        label.text = merchantName;
+        subLabel.text = remarks;
         return cell;
     }
     return nil;

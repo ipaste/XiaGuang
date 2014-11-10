@@ -11,8 +11,8 @@
 
 @protocol YTBlock <NSObject>
 
-@property(weak,nonatomic)NSString *blockName;
-@property(weak,nonatomic)NSArray *floors;
-@property(weak,nonatomic)id <YTMall> mall;
+@property(strong,nonatomic)NSString *blockName;
+@property(strong,nonatomic)NSArray *floors;
+@property(strong,nonatomic)id <YTMall> mall;
 
 @end
