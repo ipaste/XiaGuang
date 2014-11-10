@@ -685,18 +685,53 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             for(id<YTBeacon> tempBeacon in beacons){
                 if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
                 {
-
-                    [self userMoveToMinorArea:minorArea];
-                    if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
-                        _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
-                    }
+                    if([self shouldSwitchToMinorArea:minorArea]){
                     
+                        [self userMoveToMinorArea:minorArea];
+                        if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
+                            _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+                        }
+                    
+                    }
                 }
             }
         }
     }
 }
 
+-(BOOL)shouldSwitchToMinorArea:(id<YTMinorArea>)minorArea{
+    
+    //if equal to current recorded _userminorArea
+    if(_userMinorArea == nil || [[[_userMinorArea majorArea] identifier] isEqualToString: [[minorArea majorArea] identifier]]){
+        return true;
+    }
+    else{
+        
+        if(_beaconManager.readbeacons.count <= 5){
+            return true;
+        }
+        else{
+            int sameFloorVotes = [self numberOfSameFloorInFirstServeralClosestBeacons];
+            if(sameFloorVotes<3){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+-(int)numberOfSameFloorInFirstServeralClosestBeacons{
+    int count = 0;
+    for(int i = 0; i<=5 ; i++){
+        ESTBeacon *beacon = _beaconManager.readbeacons[i];
+        id<YTBeacon> localBeacon = [self getYTBeacon:beacon];
+        if([[[[localBeacon minorArea] majorArea] identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
+            count++;
+        }
+    }
+    return count;
+}
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     
@@ -759,6 +794,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     YTLocalMajorArea * majorArea = [[localBeacon minorArea] majorArea];
     return majorArea;
+}
+-(id<YTBeacon>)getYTBeacon:(ESTBeacon *)beacon{
+    
+    FMDatabase *db = [YTDBManager sharedManager].db;
+    [db open];
+    FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
+    [result next];
+    YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
+    
+    
+    return localBeacon;
 }
 
 
