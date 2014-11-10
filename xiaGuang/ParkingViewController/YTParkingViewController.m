@@ -145,13 +145,24 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(self.view.bounds) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 70)];
     _mapView.delegate = self;
-    [_mapView displayMapNamed:@"haianchengparking1"];
+    //[_mapView displayMapNamed:@"haianchengparking1"];
     
-    //self displayMapWithMajorArea:<#(id<YTMajorArea>)#>
+    [self displayMapWithMajorArea:[self getDefaultMajorArea]];
     [_mapView setZoom:1.0 animated:YES];
     [self.view addSubview:_mapView];
     [_mapView removeAnnotations];
 }
+
+-(id<YTMajorArea>)getDefaultMajorArea{
+    FMDatabase *db = [YTDBManager sharedManager].db;
+    [db open];
+    FMResultSet *result = [db executeQuery:@"select * from MajorArea where isParking = 1"];
+    [result next];
+    YTLocalMajorArea *majorArea = [[YTLocalMajorArea alloc] initWithDBResultSet:result];
+    
+    return majorArea;
+}
+
 
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
     
