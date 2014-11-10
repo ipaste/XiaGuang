@@ -37,7 +37,7 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    _tableView.tableHeaderView = [self tableHeadView];
+    //_tableView.tableHeaderView = [self tableHeadView];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.showsVerticalScrollIndicator = NO;
@@ -159,7 +159,6 @@
 
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-
     
     if (scrollView.tag == 2) {
 

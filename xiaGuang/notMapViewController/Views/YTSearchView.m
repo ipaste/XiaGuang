@@ -22,6 +22,7 @@
     BOOL _isIndent;
     YTSearchDetailsView *_detailsView;
     CGFloat _searchBarWidth;
+    CGFloat _searchTextFieldWidth;
 }
 @end
 @implementation YTSearchView
@@ -46,7 +47,7 @@
         
         _searchTextField = [self getTextFieldFromSearchBar:_searchBar];
         _searchTextField.leftViewMode = UITextFieldViewModeAlways;
-
+        
         UIImage *leftImage = [UIImage imageNamed:@"nav_ico_search_un"];
         _searchLeftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, leftImage.size.width,  leftImage.size.height)];
          _searchLeftImageView.image = leftImage;
@@ -72,7 +73,6 @@
     //searchaBar
     _searchTextField.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.2];
     _searchTextField.layer.cornerRadius = CGRectGetHeight(_searchBar.frame) / 2;
-    
     _searchTextField.layer.masksToBounds = YES;
     _searchTextField.clearButtonMode = UITextFieldViewModeNever;
     _searchTextField.font = [UIFont systemFontOfSize:14];
@@ -156,12 +156,6 @@
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
      self.hidden = NO;
-    if (_isAddInNavigationBar) {
-       
-    }
-    if(animation){
-        
-    }
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
     }
@@ -169,11 +163,7 @@
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
      self.hidden = YES;
-    [self cancelAnimation:YES completion:nil];
-    if(animation){
-        
-    }
-   
+    if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
 }
 
 #pragma mark searchBar的协议
@@ -182,6 +172,9 @@
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     _detailsView.hidden = NO;
+    if (_searchTextFieldWidth == 0) {
+        _searchTextFieldWidth = CGRectGetWidth(_searchTextField.frame);
+    }
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _searchTextField.frame;
         frame.size.width = frame.size.width - 43;
@@ -239,7 +232,7 @@
     }
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = _searchTextField.frame;
-        frame.size.width = frame.size.width + 43;
+        frame.size.width = _searchTextFieldWidth;
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         if (completion != nil) {
