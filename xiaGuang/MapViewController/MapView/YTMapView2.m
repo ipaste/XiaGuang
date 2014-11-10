@@ -214,6 +214,7 @@
 -(void)doubleTapOnMap:(RMMapView *)map at:(CGPoint)point{
     CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
     NSLog(@"lat:%f, long:%f",coord.latitude,coord.longitude);
+    [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
 
 -(void)tapOnAnnotation:(RMAnnotation *)annotation onMap:(RMMapView *)map{
@@ -234,6 +235,8 @@
 -(void)singleTapOnMap:(RMMapView *)map at:(CGPoint)point{
     [self.delegate mapView:self singleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
+
+
 
 -(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction{
 

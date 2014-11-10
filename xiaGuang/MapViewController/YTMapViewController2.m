@@ -472,6 +472,27 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_switchFloorView toggleFloor];
     }
 }
+
+-(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate{
+    if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
+        
+        //hide callout and POI for
+        if([_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
+            [mapView hidePoi:_selectedPoi animated:NO];
+            [self hideCallOut];
+        }
+        else{
+            [self hideCallOut];
+        }
+    }
+    if (_switchBlockView.toggle) {
+        [_switchBlockView toggleBlockView];
+    }
+    if (_switchFloorView.toggle) {
+        [_switchFloorView toggleFloor];
+    }
+}
+
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
     
     id<YTPoiSource> sourceModel = [poi sourceModel];
@@ -619,6 +640,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ?",name];
         [result next];
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+        
+        if([tmpMerchantInstance identifier] == nil){
+            return;
+        }
+        
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
         _selectedPoi = [tmpMerchantInstance producePoi];
         [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
