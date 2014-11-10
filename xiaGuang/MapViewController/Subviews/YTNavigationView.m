@@ -139,7 +139,10 @@
     animation.fromValue = [NSNumber numberWithFloat:1];
     animation.duration = 1;
     animation.repeatCount = 2;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
     [_switchButton.layer addAnimation:animation forKey:@"animation"];
+    
 }
 
 

@@ -32,6 +32,9 @@ typedef enum : NSUInteger {
 
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate;
 
+-(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate;
+
+
 -(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction;
 
 @end
