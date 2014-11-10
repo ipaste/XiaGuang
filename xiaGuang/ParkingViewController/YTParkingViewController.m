@@ -55,6 +55,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     
     CLLocationCoordinate2D _userCoordintate;
+    
+    BOOL _shownUser;
 }
 
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
@@ -68,7 +70,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _beaconManager = [YTBeaconManager sharedBeaconManager];
         _beaconManager.delegate = self;
         [_beaconManager startRangingBeacons];
-        
+        _shownUser = NO;
         
     }
     return self;
@@ -143,7 +145,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(self.view.bounds) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 70)];
     _mapView.delegate = self;
-    [_mapView displayMapNamed:@"haianchengparking2"];
+    [_mapView displayMapNamed:@"haianchengparking1"];
+    
+    //self displayMapWithMajorArea:<#(id<YTMajorArea>)#>
     [_mapView setZoom:1.0 animated:YES];
     [self.view addSubview:_mapView];
     [_mapView removeAnnotations];
@@ -301,7 +305,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
         return;
     }
-    _carCoordinate = [_userMinorArea coordinate];
+    _carCoordinate = _userCoordintate;
     [self setParkingState:YTParkingStateMarked animation:YES];
 }
 
@@ -402,7 +406,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             break;
         case YTParkingStateMarked:
             if (![_tmpMarker whetherMark]) {
-                [_tmpMarker saveParkingInfoWithMinorArea:_userMinorArea];
+                [_tmpMarker saveParkingInfoWithCoordinate:_carCoordinate inMinorArea:_userMinorArea];
             }
             if (![[_currenDisplayMajorArea identifier] isEqualToString:[[_tmpMarker majorArea] identifier]]) {
                 [self displayMapWithMajorArea:[_tmpMarker majorArea]];
@@ -412,7 +416,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             [self markedStateWithAnimation:animation];
             break;
         case YTParkingStateNotMark:
-            
             [self parkingCurrentPoiShowInMap:YES animation:animation];
             if ([_tmpMarker whetherMark]) {
                 [self parkingMarkedShowInMap:NO];
@@ -533,16 +536,29 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         if (![[_currenDisplayMajorArea identifier]isEqualToString:[[_userMinorArea majorArea] identifier]] && _initializationComplete ) {
             [self displayMapWithMajorArea:[_userMinorArea majorArea]];
         }
-        [_mapView showUserLocationAtCoordinate:[_userMinorArea coordinate]];
+        [self showUserAtCoordinate:_userCoordintate];
         
     }else{
         [_mapView removeUserLocation];
+        _shownUser = NO;
+    }
+}
+
+
+-(void)showUserAtCoordinate:(CLLocationCoordinate2D)coordinate{
+    if(_shownUser){
+        [_mapView setUserCoordinate:_userCoordintate];
+    }
+    else{
+        [_mapView showUserLocationAtCoordinate:_userCoordintate];
+        _shownUser = YES;
     }
 }
 
 #pragma mark BeaconManager
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
     id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
+    
     
     if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
         _userMinorArea = nil;
@@ -572,6 +588,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     _navigationBar.titleName = [[[[[minorArea majorArea] floor] block] mall] mallName];
+    
+    if(_currenDisplayMajorArea == nil || ![[_currenDisplayMajorArea identifier] isEqualToString:[[minorArea majorArea]identifier]]){
+        [self displayMapWithMajorArea:[minorArea majorArea]];
+    }
+    
+    
     BOOL showCurrenPoi = NO;
     if ([[_currenDisplayMajorArea identifier]isEqualToString:[[minorArea majorArea] identifier]]) {
         showCurrenPoi = YES;
@@ -610,6 +632,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     if([[[_userMinorArea majorArea] identifier] isEqualToString:[_currenDisplayMajorArea identifier]]){
         
         [self refreshLocatorWithMapView:_mapView.map majorArea:_currenDisplayMajorArea];
+    }
+    else{
+        
+        _shownUser = NO;
+        [_mapView removeUserLocation];
+        
     }
     if (_beacons.count > 0) {
         [_mapView removePois:_beacons];
@@ -715,7 +743,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _userCoordintate = coordinate;
     
     if([[_currenDisplayMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
-        [_mapView showUserLocationAtCoordinate:coordinate];
+        [self showUserAtCoordinate:_userCoordintate];
     }
     else{
         NSLog(@"shouldn't even be here");

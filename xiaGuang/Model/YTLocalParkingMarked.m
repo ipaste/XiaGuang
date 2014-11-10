@@ -74,7 +74,14 @@
     return systemTime - parkingTime;
 }
 
+-(void)saveParkingInfoWithCoordinate:(CLLocationCoordinate2D)coord inMinorArea:(id<YTMinorArea>)minorArea{
+    NSTimeInterval timeZoneOffset = [[NSTimeZone systemTimeZone] secondsFromGMT];
+    NSDate *nowDate = [NSDate dateWithTimeIntervalSinceNow:timeZoneOffset];
+    [_userDefaults setCoord:coord];
+    NSDictionary *tmpDict = @{PARKING_MINOR_KEY:[minorArea identifier],PARKING_MAJOR_KEY:[[minorArea majorArea] identifier],PARKING_NAME_KEY:@"停车场",PARKING_TIME_KEY:nowDate};
+    [_userDefaults setDictionary:tmpDict forKey:PARKING_CLASS_KEY];
 
+}
 -(void)saveParkingInfoWithMinorArea:(id<YTMinorArea>)minorArea{
     NSTimeInterval timeZoneOffset = [[NSTimeZone systemTimeZone] secondsFromGMT];
     NSDate *nowDate = [NSDate dateWithTimeIntervalSinceNow:timeZoneOffset];
