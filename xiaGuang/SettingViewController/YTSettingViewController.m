@@ -69,7 +69,6 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     UIView *selectView = [[UIView alloc]initWithFrame:CGRectZero];
-    //selectView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_2_pr"]];
     [selectView setBackgroundColor:[UIColor colorWithString:@"e95e37"]];
     cell.selectedBackgroundView = selectView;
     cell.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.2];
@@ -85,8 +84,6 @@
         //showAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         [cell.layer pop_addAnimation:showAnimation forKey:@"show"];
     }
-    
-    //cell.textLabel.textColor = [UIColor colorWithString:@"202020"];
     if (indexPath.section == 0) {
         cell.textLabel.text = @"邀请好友使用虾逛";
         cell.imageView.image = [UIImage imageNamed:@"set_ico_1"];
@@ -113,7 +110,6 @@
                     [latestBtn setTitle:@"新版本" forState:UIControlStateNormal];
                     [latestBtn.titleLabel setFont:[UIFont systemFontOfSize:11]];
                     [latestBtn setTitleColor:[UIColor colorWithString:@"ffffff"] forState:UIControlStateNormal];
-                    //[latestBtn setBackgroundColor:[UIColor colorWithString:@"e95e37"]];
                     [latestBtn setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]];
                     latestBtn.layer.cornerRadius = CGRectGetHeight(latestBtn.frame) / 2;
                     [cell addSubview:latestBtn];

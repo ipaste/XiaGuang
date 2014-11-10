@@ -654,13 +654,13 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [_mapView removePois:_beacons];
         [_beacons removeAllObjects];
     }
-    
+   /*
     for (id<YTMinorArea> tmpMinorArea in [majorArea minorAreas]) {
         YTBeaconPosistionPoi *poi = [[YTBeaconPosistionPoi alloc]initWithParkingMarkCoordinat:[tmpMinorArea coordinate] minor:tmpMinorArea];
         [_beacons addObject:poi];
         [_mapView addPoi:poi];
     }
-    
+    */
     
     if ([[majorArea identifier]isEqualToString:[[_userMinorArea majorArea] identifier]]) {
         [self parkingCurrentPoiShowInMap:YES animation:NO];

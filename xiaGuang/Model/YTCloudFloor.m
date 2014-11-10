@@ -30,7 +30,8 @@
 }
 
 -(id<YTBlock>)block{
-    return nil;
+    YTCloudBlock *tmpBlock = [[YTCloudBlock alloc]initWithAVObject:_internalObject[FLOOR_CLASS_BLOCK_KEY]];
+    return tmpBlock;
 }
 
 -(NSString *)floorName{
