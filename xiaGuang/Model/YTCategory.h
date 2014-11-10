@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @interface YTCategory : NSObject
-@property(weak,nonatomic)UIImage *image;
-@property(weak,nonatomic)UIImage *smallImage;
-@property(weak,nonatomic)NSString *text;
-@property(weak,nonatomic)NSArray *subText;
-@property(weak,nonatomic)UIColor *tintColor;
-@property(weak,nonatomic)UIColor *titleColor;
+@property(strong,nonatomic)UIImage *image;
+@property(strong,nonatomic)UIImage *smallImage;
+@property(strong,nonatomic)NSString *text;
+@property(strong,nonatomic)NSArray *subText;
+@property(strong,nonatomic)UIColor *tintColor;
+@property(strong,nonatomic)UIColor *titleColor;
 +(NSArray *)commonlyCategorysWithAddMore:(BOOL)isMore;
 +(NSArray *)allCategorys;
 +(YTCategory *)moreCategory;

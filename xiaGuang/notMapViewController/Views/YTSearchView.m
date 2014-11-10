@@ -239,7 +239,7 @@
     }
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = _searchTextField.frame;
-        frame.size.width = _searchBarWidth - 20;
+        frame.size.width = frame.size.width + 43;
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         if (completion != nil) {

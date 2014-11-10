@@ -561,6 +561,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }];
 }
 -(void)hideCallOut{
+    if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
+        [_mapView highlightPoi:_selectedPoi animated:NO];
+    }
+    _selectedPoi = nil;
     
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
@@ -590,11 +594,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _moveTargetButton.hidden = YES;
         _detailsView.hidden = YES;
         _navigationView.hidden = YES;
-        if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
-            [_mapView highlightPoi:_selectedPoi animated:NO];
-        }
-        _selectedPoi = nil;
-        
     }];
 }
 
@@ -1078,8 +1077,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     if([_mapView currentState] != YTMapViewDetailStateNormal){
-        
-        
         if([_mapView currentState] == YTMapViewDetailStateNavigating){
             [_navigationView stopNavigationMode];
         }
@@ -1092,7 +1089,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         NSDictionary *userInfo = notification.userInfo;
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
         if (_bluetoothOn) {
-            
             [_beaconManager startRangingBeacons];
             if(_userMinorArea != nil){
                 if(_blurMenuShown){
