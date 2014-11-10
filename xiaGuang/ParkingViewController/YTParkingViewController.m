@@ -45,12 +45,16 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTBeaconManager *_beaconManager;
     YTNavigationView *_navigationView;
     YTNavigationModePlan *_navigationModePlan;
+    YTBeaconBasedLocator *_locator;
     
     NSMutableArray *_beacons;
     
     UIImage *_parkingImageUnable;
     UIImage *_parkingImageUn;
     UIImage *_parkingImagePr;
+    
+    
+    CLLocationCoordinate2D _userCoordintate;
 }
 
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
@@ -603,6 +607,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)displayMapWithMajorArea:(id<YTMajorArea>)majorArea{
     _currenDisplayMajorArea = majorArea;
     [_mapView displayMapNamed:[majorArea mapName]];
+    if([[[_userMinorArea majorArea] identifier] isEqualToString:[_currenDisplayMajorArea identifier]]){
+        
+        [self refreshLocatorWithMapView:_mapView.map majorArea:_currenDisplayMajorArea];
+    }
     if (_beacons.count > 0) {
         [_mapView removePois:_beacons];
         [_beacons removeAllObjects];
@@ -697,4 +705,31 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [_beaconManager stopRanging];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
+
+
+#pragma mark locator
+- (void)YTBeaconBasedLocator:(YTBeaconBasedLocator *)locator
+           coordinateUpdated:(CLLocationCoordinate2D)coordinate{
+    NSLog(@"cordinate!!! lat: %f, long:%f",coordinate.latitude,coordinate.longitude);
+    
+    _userCoordintate = coordinate;
+    
+    if([[_currenDisplayMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
+        [_mapView showUserLocationAtCoordinate:coordinate];
+    }
+    else{
+        NSLog(@"shouldn't even be here");
+    }
+}
+
+-(void)refreshLocatorWithMapView:(RMMapView *)aMapView
+                       majorArea:(id<YTMajorArea>)aMajorArea{
+    
+    _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
+    [_locator start];
+    _locator.delegate = self;
+    _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
+    
+}
+
 @end

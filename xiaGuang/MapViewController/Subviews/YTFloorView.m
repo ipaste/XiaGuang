@@ -43,7 +43,7 @@
         if (_items.count > 3) {
             frame.size.height = (_width_height * 3) + _width_height / 2;
         }else{
-            frame.size.height = _width_height * _items.count ;
+            frame.size.height = _width_height * _items.count;
         }
     }
     frame.size.height -= 10;

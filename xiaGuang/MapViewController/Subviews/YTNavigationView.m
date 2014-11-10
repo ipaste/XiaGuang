@@ -17,7 +17,7 @@
 @interface YTNavigationView ()<YTMessageBoxDelegate>{
     UILabel *_label;
     UILabel *_subLabel;
-    UIButton *_startNavigation;
+    UIButton *_stopNavigation;
     UIButton *_switchButton;
     UIImageView *_icon;
     YTMessageBox *_messageBox;
@@ -37,14 +37,14 @@
         _icon = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_label.frame), CGRectGetMaxY(_label.frame), 20, 20)];
         
         
-        _startNavigation = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - 85, 4, 75, 57)];
+        _stopNavigation = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - 85, 4, 75, 57)];
         
-        _switchButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_startNavigation.frame) - CGRectGetWidth(_startNavigation.frame) - 5, CGRectGetMinY(_startNavigation.frame), CGRectGetWidth(_startNavigation.frame), CGRectGetHeight(_startNavigation.frame))];
+        _switchButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_stopNavigation.frame) - CGRectGetWidth(_stopNavigation.frame) - 5, CGRectGetMinY(_stopNavigation.frame), CGRectGetWidth(_stopNavigation.frame), CGRectGetHeight(_stopNavigation.frame))];
         _messageBox = [[YTMessageBox alloc]initWithTitle:@"导航进行中..." Message:@"确定退出导航"];
         _messageBox.delegate = self;
         [self addSubview:_icon];
         [self addSubview:_switchButton];
-        [self addSubview:_startNavigation];
+        [self addSubview:_stopNavigation];
         [self addSubview:_label];
         [self addSubview:_subLabel];
         _isCancelling = NO;
@@ -63,16 +63,16 @@
     _subLabel.textColor = [UIColor whiteColor];
     
     
-    [_startNavigation setTitle:@"结束" forState:UIControlStateNormal];
-    [_startNavigation setBackgroundColor:[UIColor colorWithString:@"464646"]];
-    _startNavigation.layer.cornerRadius = CGRectGetHeight(_startNavigation.frame) / 2;
-    _startNavigation.layer.borderWidth = 5;
-    [_startNavigation addTarget:self action:@selector(clickStopNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
+    [_stopNavigation setTitle:@"结束" forState:UIControlStateNormal];
+    [_stopNavigation setBackgroundColor:[UIColor colorWithString:@"464646"]];
+    _stopNavigation.layer.cornerRadius = CGRectGetHeight(_stopNavigation.frame) / 2;
+    _stopNavigation.layer.borderWidth = 5;
+    [_stopNavigation addTarget:self action:@selector(clickStopNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
     
     
     [_switchButton setTitle:@"切换" forState:UIControlStateNormal];
     [_switchButton setBackgroundColor:[UIColor colorWithString:@"0084ff"]];
-    _switchButton.layer.borderWidth = _startNavigation.layer.borderWidth;
+    _switchButton.layer.borderWidth = _stopNavigation.layer.borderWidth;
     _switchButton.layer.cornerRadius = (CGRectGetHeight(self.frame) - 8) / 2;
     [_switchButton addTarget:self action:@selector(jumToBeacon:) forControlEvents:UIControlEventTouchUpInside];
     

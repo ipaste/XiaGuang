@@ -25,7 +25,6 @@
     UITableView *_historyTableView;
     NSMutableArray *_results;
     NSArray *_historicalRecord;
-    
     NSArray *_popularMerchants;
 }
 @end
@@ -90,7 +89,7 @@
         [_scrollView addSubview:_historyTableView];
         
         _searchResultstableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)) style:UITableViewStylePlain];
-        _searchResultstableView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.9];
+        _searchResultstableView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0];
         _searchResultstableView.delegate = self;
         _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _searchResultstableView.dataSource = self;
@@ -115,8 +114,7 @@
         _scrollView.hidden = NO;
         return;
     }
-    
-    
+
     //关键字处理
     _scrollView.hidden = YES;
     _searchResultstableView.hidden = NO;
