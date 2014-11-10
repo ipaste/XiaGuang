@@ -25,20 +25,21 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     _titleLabel = [[UILabel alloc]init];
     [_scrollerView addSubview:_titleLabel];
-}
-
--(void)viewWillLayoutSubviews{
+    
     NSString *userAgreementPath = [[NSBundle mainBundle]pathForResource:@"userAgreement" ofType:@"txt"];
     NSString *text = [NSString stringWithContentsOfFile:userAgreementPath encoding:NSUTF8StringEncoding error:nil];
     CGSize textSize = [text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame) - 30, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],NSForegroundColorAttributeName : [UIColor colorWithString:@"202020"]} context:nil].size;
     _scrollerView.contentSize = CGSizeMake(CGRectGetWidth(_scrollerView.frame), textSize.height + 100);
     
-    
-    _titleLabel.frame = CGRectMake(15, 25, 290, textSize.height);
+    _titleLabel.frame = CGRectMake(15, 25, textSize.width, textSize.height);
+    _titleLabel.text = text;
+}
+
+-(void)viewWillLayoutSubviews{
+
     _titleLabel.font = [UIFont systemFontOfSize:14];
     _titleLabel.numberOfLines = 0;
     _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _titleLabel.text = text;
     _titleLabel.textColor = [UIColor colorWithString:@"202020"];
 }
 
