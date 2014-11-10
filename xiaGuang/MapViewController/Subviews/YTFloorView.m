@@ -41,7 +41,7 @@
 -(void)setFrame:(CGRect)frame{
     if (frame.size.height != 0) {
         if (_items.count > 3) {
-            frame.size.height = (_width_height * 3) + _width_height;
+            frame.size.height = (_width_height * 3) + _width_height / 2;
         }else{
             frame.size.height = _width_height * _items.count;
         }
