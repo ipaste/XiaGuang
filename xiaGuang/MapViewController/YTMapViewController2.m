@@ -654,15 +654,19 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
-        _selectedPoi = [tmpMerchantInstance producePoi];
-        [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
-        
-        if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
-            [self switchFloor:[tmpMajorArea floor]];
+        if(tmpMajorArea != nil){
+            _selectedPoi = [tmpMerchantInstance producePoi];
+            [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
+            
+            if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
+                [self switchFloor:[tmpMajorArea floor]];
+            }else{
+                [_mapView highlightPoi:_selectedPoi animated:YES];
+            }
+            [self showCallOut];
         }else{
-            [_mapView highlightPoi:_selectedPoi animated:YES];
+            
         }
-        [self showCallOut];
     }
 }
 
