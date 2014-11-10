@@ -204,5 +204,8 @@
     }
 }
 
+-(void)dealloc{
+    NSLog(@"locator destroyed");
+}
 
 @end

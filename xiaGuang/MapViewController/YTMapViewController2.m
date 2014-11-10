@@ -61,7 +61,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTMajorArea> _activePoiMajorArea;
     BOOL _blurMenuShown;
     id<YTMall> _targetMall;
-    
+    BOOL _shownUser;
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -131,6 +131,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    _shownUser = NO;
+    
     _malls = [NSMutableArray array];
     _isFirstBluetoothPrompt = YES;
     _isFirstEnter = YES;
@@ -250,7 +252,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     [query whereKeyExists:@"localDBId" ];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 2 * 3600;
+    query.maxCacheAge = 3 * 24 * 3600;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             
@@ -334,7 +336,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     if([[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
-        [_mapView showUserLocationAtCoordinate:_userCoordintate];
+        //[_mapView showUserLocationAtCoordinate:_userCoordintate];
+        [self showUserAtCoordinate:_userCoordintate];
     }
     
     NSArray *merchants = [majorArea merchantLocations];
@@ -678,6 +681,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
     _majorArea = [self getMajorArea:beacon];
+    NSLog(@"primary beacon shifted to %@, %@",beacon.major,beacon.minor);
     if (_majorArea != nil) {
         NSArray *minorAreas = [_majorArea minorAreas];
         for(id<YTMinorArea> minorArea in minorAreas){
@@ -699,34 +703,61 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
 }
 
+
+-(void)showUserAtCoordinate:(CLLocationCoordinate2D)coordinate{
+    if(_shownUser){
+        if(coordinate.latitude == -888){
+            [_mapView setUserCoordinate:[_userMinorArea coordinate]];
+        }
+        else
+        {
+            [_mapView setUserCoordinate:_userCoordintate];
+        }
+    }
+    else{
+        if(coordinate.latitude == -888){
+            [_mapView showUserLocationAtCoordinate:[_userMinorArea coordinate]];
+        }
+        else
+        {
+            [_mapView showUserLocationAtCoordinate:_userCoordintate];
+        }
+        _shownUser = YES;
+    }
+}
+
 -(BOOL)shouldSwitchToMinorArea:(id<YTMinorArea>)minorArea{
     
     //if equal to current recorded _userminorArea
     if(_userMinorArea == nil || [[[_userMinorArea majorArea] identifier] isEqualToString: [[minorArea majorArea] identifier]]){
+        NSLog(@"should remain on the same floor because same floor");
         return true;
     }
     else{
         
-        if(_beaconManager.readbeacons.count <= 5){
+        if(_beaconManager.readbeacons.count <= 3){
+            NSLog(@"should switch because readbeacons less than 3");
             return true;
         }
         else{
-            int sameFloorVotes = [self numberOfSameFloorInFirstServeralClosestBeacons];
-            if(sameFloorVotes<3){
+            int sameFloorVotes = [self numberOfSameFloorInFirstServeralClosestBeacons:minorArea];
+            if(sameFloorVotes<2){
+                NSLog(@"should remain on the same floor because no overrule");
                 return false;
             }
         }
     }
+    NSLog(@"overruled by another major area should not remain on the same floor");
     return true;
 }
 
 
--(int)numberOfSameFloorInFirstServeralClosestBeacons{
+-(int)numberOfSameFloorInFirstServeralClosestBeacons:(id<YTMinorArea>)minorArea{
     int count = 0;
-    for(int i = 0; i<=5 ; i++){
+    for(int i = 0; i<3 ; i++){
         ESTBeacon *beacon = _beaconManager.readbeacons[i];
         id<YTBeacon> localBeacon = [self getYTBeacon:beacon];
-        if([[[[localBeacon minorArea] majorArea] identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
+        if([[[[localBeacon minorArea] majorArea] identifier] isEqualToString:[[minorArea majorArea] identifier]]){
             count++;
         }
     }
@@ -769,11 +800,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         
         [_mapView removeUserLocation];
+        _shownUser = NO;
         
     }else{
         
-        [_mapView showUserLocationAtCoordinate:_userCoordintate];
-        
+        //[_mapView showUserLocationAtCoordinate:_userCoordintate];
+        [self showUserAtCoordinate:_userCoordintate];
         _switchingFloor = NO;
     }
     
@@ -857,7 +889,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)handlePoiForMajorArea:(id<YTMajorArea>)majorArea{
     [_mapView removeAnnotations];
     [_mapView removeUserLocation];
-    
+    _shownUser = NO;
     [self injectPoisForMajorArea:majorArea];
 }
 
@@ -1011,6 +1043,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
         default:
             [_mapView removeUserLocation];
+            _shownUser = NO;
             break;
     }
     [_mapView hidePoi:_selectedPoi animated:YES];
@@ -1189,6 +1222,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
             _userMinorArea = nil;
             [_mapView removeUserLocation];
+            _shownUser = NO;
             [_beaconManager stopRanging];
             if (!_isFirstBluetoothPrompt) {
                 
@@ -1271,15 +1305,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark YTBeaconBasedLocatorDelegate method
 - (void)YTBeaconBasedLocator:(YTBeaconBasedLocator *)locator
            coordinateUpdated:(CLLocationCoordinate2D)coordinate{
-    NSLog(@"cordinate!!! lat: %f, long:%f",coordinate.latitude,coordinate.longitude);
+    //NSLog(@"cordinate!!! lat: %f, long:%f",coordinate.latitude,coordinate.longitude);
     
     _userCoordintate = coordinate;
     
     if([[_curDisplayedMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
-        [_mapView showUserLocationAtCoordinate:coordinate];
+        //[_mapView showUserLocationAtCoordinate:coordinate];
+        [self showUserAtCoordinate:coordinate];
     }
     else{
-        NSLog(@"shouldn't even be here");
+        //NSLog(@"shouldn't even be here");
     }
 }
 
