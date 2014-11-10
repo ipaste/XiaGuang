@@ -18,6 +18,6 @@
 @property (nonatomic,weak) id<YTMinorArea> inMinorArea;
 
 -(BOOL)whetherMark;
--(void)saveParkingInfoWithMinorArea:(id<YTMinorArea>)minorArea;
+-(void)saveParkingInfoWithCoordinate:(CLLocationCoordinate2D)coord inMinorArea:(id<YTMinorArea>)minorArea;
 -(void)clearParkingInfo;
 @end

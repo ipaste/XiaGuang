@@ -57,6 +57,7 @@ typedef enum : NSUInteger {
 #pragma mark Map data manipulation
 
 -(void)showUserLocationAtCoordinate:(CLLocationCoordinate2D)coordinate;
+-(void)setUserCoordinate:(CLLocationCoordinate2D)coordinate;
 -(void)removeUserLocation;
 -(void)displayMapNamed:(NSString *)mapName;
 -(void)addPois:(NSArray *)pois;

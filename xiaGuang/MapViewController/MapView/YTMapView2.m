@@ -199,6 +199,10 @@
     }
 }
 
+-(void)setUserCoordinate:(CLLocationCoordinate2D)coordinate{
+    [_userAnnotation setCoordinate:coordinate];
+}
+
 -(void)removeUserLocation{
     
     if(_userAnnotation != nil){
@@ -227,6 +231,10 @@
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
     
+    if([annotation.annotationType isEqualToString:@"user"]){
+        NSLog(@"user annotation layer");
+        NSLog(@"coordinate:%f, %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+    }
     
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;

@@ -57,7 +57,9 @@
         if([marker.name isEqualToString:@"arrow"]){
             
             marker.transform = CATransform3DIdentity;
-            CATransform3D transform3d = CATransform3DMakeRotation(-1 * M_PI *  newHeading.magneticHeading / 180, 0.0, 0.0, 1.0);
+            
+            
+            CATransform3D transform3d = CATransform3DMakeRotation(M_PI *  newHeading.magneticHeading / 180, 0.0, 0.0, 1.0);
             
             marker.transform = transform3d;
             break;
