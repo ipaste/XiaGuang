@@ -205,9 +205,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [super viewDidAppear:animated];
     
     
-    
     NSLog(@"didAppear");
-    if(_userMinorArea == nil){
+    if(_userMinorArea == nil || _beaconManager.currentClosest == nil){
         
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
@@ -249,7 +248,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
-    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    /*AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     [query whereKeyExists:@"localDBId" ];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 3 * 24 * 3600;
@@ -282,7 +281,26 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
         }
         
-    }];
+    }];*/
+    _malls = [NSMutableArray array];
+    FMDatabase *db = [YTDBManager sharedManager].db;
+    if([db open]){
+        
+        FMResultSet *result = [db executeQuery:@"select * from Mall"];
+        [result next];
+        while([result hasAnotherRow]){
+            
+            YTLocalMall *tmpMall = [[YTLocalMall alloc] initWithDBResultSet:result];
+            [_malls addObject:tmpMall];
+            [result next];
+        }
+        [self instantiateMenu];
+        if(callback!= nil){
+            callback();
+            
+        }
+    }
+    
 }
 
 -(void)createNoBeaconCover{
@@ -1262,9 +1280,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 -(void)selectedItemAtIndex:(NSInteger)index{
     _noBeaconCover.hidden = YES;
-    
-    YTCloudMall *selected = [_malls objectAtIndex:index];
-    YTLocalMall *local = [selected getLocalCopy];
+    id<YTMall> selected = [_malls objectAtIndex:index];
+    YTLocalMall *local;
+    if([selected isMemberOfClass:[YTLocalMall class]]){
+        local = selected;
+    }
+    else{
+        local = [(YTCloudMall *)selected getLocalCopy];
+    }
     id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
