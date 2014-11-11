@@ -49,7 +49,7 @@
         for (int i = 0 ; i < _blocks.count; i++) {
             id<YTBlock> block = _blocks[i];
             CGFloat width = [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width;
-            UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * width , 0,width , HEIGHT)];
+            UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * (width + 10), 0,width , HEIGHT)];
             [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
             blockButton.tag = i;
             [_blockButtons addObject:blockButton];
@@ -90,8 +90,8 @@
 
     for (int i = 0 ; i < _blocks.count; i++) {
         id<YTBlock> block = _blocks[i];
-        CGFloat width = [block blockName].length * 14;
-        UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * width , 0,width , HEIGHT)];
+        CGFloat width = [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width;
+        UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * (width + 10), 0,width , HEIGHT)];
         [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
         blockButton.tag = i;
         [_blockButtons addObject:blockButton];
@@ -110,8 +110,8 @@
     [_blockButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     
     CGFloat width = 0;
-    UIColor *color = [UIColor colorWithString:@"202020"];
     for (int i = 0 ; i < _blocks.count; i++) {
+        UIColor *color = [UIColor colorWithString:@"202020"];
         id<YTBlock> block = _blocks[i];
         UIButton *blockButton = _blockButtons[i];
         [blockButton setTitle:[block blockName] forState:UIControlStateNormal];
@@ -123,7 +123,7 @@
         [blockButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
         
         if (i <= 3) {
-           width += [block blockName].length * 14 + 10;
+           width += [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width + 10;
         }
     }
     _scrollViewWidth = width;
@@ -175,6 +175,7 @@
 }
 -(void)clickBlockButton:(UIButton *)sender{
     id<YTBlock> block = _blocks[sender.tag];
+    [_blockButton setTitle:sender.titleLabel.text forState:UIControlStateNormal];
     [self switchBlock:_blockButton];
     if ([self.delegate respondsToSelector:@selector(switchBlock:)]) {
         [self.delegate switchBlock:block];
