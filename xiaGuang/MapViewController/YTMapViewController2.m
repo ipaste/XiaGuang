@@ -561,8 +561,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)showCallOut{
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
-    _detailsView.hidden = NO;
-    _navigationView.hidden = NO;
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -589,7 +587,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         
     } completion:^(BOOL finished) {
-        
+        _detailsView.hidden = NO;
+        _navigationView.hidden = NO;
     }];
 }
 -(void)hideCallOut{

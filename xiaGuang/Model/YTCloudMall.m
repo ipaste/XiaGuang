@@ -286,7 +286,6 @@
             [result next];
             
             _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
-            [db close];
         }
        
     }
