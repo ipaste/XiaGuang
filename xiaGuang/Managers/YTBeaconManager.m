@@ -126,7 +126,7 @@
     if([beacons count] == 0){
         
         NSLog(@"lost");
-        
+        _currentClosest = nil;
         if(_lostCount <= LOST_THRESHOLD){
             _lostCount++;
         }
@@ -233,7 +233,9 @@
 }
 
 -(ESTBeacon *)currentClosest{
+    
     return _currentClosest;
+    
 }
 
 - (void)addListener:(id<YTBeaconManagerUpdateListener>)listener {
