@@ -103,6 +103,7 @@
     }
     YTMapViewController2 *mapVC = [[YTMapViewController2 alloc] initWithMerchant:targetMerchantInstance];
     //mapVC.fromMerchant = YES;
+    mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:mapVC animated:YES completion:nil];
 }
 
