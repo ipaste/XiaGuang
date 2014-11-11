@@ -64,8 +64,8 @@
 }
 
 -(UIViewController *)popViewControllerAnimated:(BOOL)animated{
-    if ([_displayController isMemberOfClass:[YTSettingViewController class]]) {
-        animated = NO;
+    if ([_displayController isEqual:_homeVC] || [_displayController isMemberOfClass:[YTSettingViewController class]] || [_displayController isMemberOfClass:[YTMallViewController class]]) {
+        [_backgroundView removeFromSuperview];
     }else if ([_displayController isMemberOfClass:[YTMallInfoViewController class]]){
         _isReGet = YES;
     }
