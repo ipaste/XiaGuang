@@ -40,6 +40,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     YTSearchView *_searchView;
     YTMoveCurrentLocationButton *_moveCurrentButton;
+    UIImageView *_changeFloorIndicator;
+    
     YTMoveTargetLocationButton *_moveTargetButton;
     YTPoiButton *_poiButton;
     YTZoomStepper *_zoomStepper;
@@ -422,6 +424,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _moveCurrentButton.delegate = self;
     [self.view addSubview:_moveCurrentButton];
     
+    
+    _changeFloorIndicator = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(_moveCurrentButton.frame) ,CGRectGetMinY(_moveCurrentButton.frame) - 80 , CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
+    _changeFloorIndicator.image = [UIImage imageNamed:@"nav_ico_default"];
+    _changeFloorIndicator.hidden = YES;
+    [self.view addSubview:_changeFloorIndicator];
+    
     _moveTargetButton = [[YTMoveTargetLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 10,CGRectGetMinY(_moveCurrentButton.frame), CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
     _moveTargetButton.hidden = YES;
     _moveTargetButton.delegate = self;
@@ -588,6 +596,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y -= HOISTING_HEIGHT;
         _moveCurrentButton.frame = frame;
         
+        frame = _changeFloorIndicator.frame;
+        frame.origin.y -= HOISTING_HEIGHT;
+        _changeFloorIndicator.frame = frame;
+        
+        
         frame = _moveTargetButton.frame;
         frame.origin.y -= HOISTING_HEIGHT;
         _moveTargetButton.frame = frame;
@@ -622,6 +635,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         CGRect frame = _moveCurrentButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
         _moveCurrentButton.frame = frame;
+        
+        frame = _changeFloorIndicator.frame;
+        frame.origin.y += HOISTING_HEIGHT;
+        _changeFloorIndicator.frame = frame;
+        
         
         frame = _moveTargetButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
@@ -813,6 +831,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         if(!_navigationView.isNavigating){
             [_moveCurrentButton promptFloorChange:[[[_userMinorArea majorArea] floor] floorName]];
+            [_changeFloorIndicator.layer removeAllAnimations];
+            
+            _changeFloorIndicator.hidden = NO;
+            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+            animation.toValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y+30];
+            animation.fromValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y];
+            animation.duration = 0.5;
+            animation.delegate = self;
+            animation.repeatCount = 5;
+            [_changeFloorIndicator.layer addAnimation:animation forKey:@"animation"];
+            
         }
         
         [_mapView removeUserLocation];
@@ -830,7 +859,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self updateNavManagerIfNeeded];
     
 }
-
+-(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+    NSLog(@"finish anim");
+    _changeFloorIndicator.hidden = YES;
+}
 
 -(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon{
     
@@ -1082,6 +1114,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame = _moveCurrentButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
         _moveCurrentButton.frame = frame;
+        
+        frame = _changeFloorIndicator.frame;
+        frame.origin.y += HOISTING_HEIGHT;
+        _changeFloorIndicator.frame = frame;
         
         frame = _switchBlockView.frame;
         frame.origin.y += 44;
