@@ -48,7 +48,7 @@
         _blockButtons = [NSMutableArray array];
         for (int i = 0 ; i < _blocks.count; i++) {
             id<YTBlock> block = _blocks[i];
-            CGFloat width = [block blockName].length * 14;
+            CGFloat width = [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width;
             UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * width , 0,width , HEIGHT)];
             [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
             blockButton.tag = i;
