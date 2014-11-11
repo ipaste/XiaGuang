@@ -129,6 +129,8 @@
     _oldMerchant = _merchant;
     
 }
-
+-(void)dealloc{
+    NSLog(@"cell dealloc");
+}
 
 @end

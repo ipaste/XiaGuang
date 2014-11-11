@@ -345,4 +345,9 @@
     NSString *merchantName = tmp[@"name"];
     [self.delegate selectSearchResultsWithMerchantnName:merchantName];
 }
+-(void)dealloc{
+    [_results removeAllObjects];
+    NSLog(@"searchDetails dealloc");
+}
+
 @end
