@@ -92,9 +92,9 @@
             NSArray *floorItem = [[[_majorArea floor] block]floors];
             CGRect frame = self.frame;
             if (floorItem.count < 3) {
-                frame.size.height = (floorItem.count + 1 )* WIDTH_AND_HEIGHT + 24;
+                frame.size.height = (floorItem.count + 1 ) * WIDTH_AND_HEIGHT + 24;
             }else{
-                frame.size.height = 4 * WIDTH_AND_HEIGHT + 12;
+                frame.size.height = 4.2 * WIDTH_AND_HEIGHT + 12;
             }
             self.frame = frame;
         }];

@@ -41,7 +41,7 @@
 -(void)setFrame:(CGRect)frame{
     if (frame.size.height != 0) {
         if (_items.count > 3) {
-            frame.size.height = (_width_height * 3) + _width_height / 2;
+            frame.size.height = _width_height * 3.5;
         }else{
             frame.size.height = _width_height * _items.count;
         }
@@ -50,6 +50,11 @@
     [super setFrame:frame];
     
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return _width_height - 3;
+}
+
 -(void)setCurFloor:(id<YTFloor>)curFloor{
     if (_buttons.count > 0) {
         for (UIButton *button in _buttons) {
