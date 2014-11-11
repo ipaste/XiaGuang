@@ -107,6 +107,9 @@
     
     beacons = [self filterWhiteListedBeacon:beacons];
     _readbeacons = beacons;
+    
+    
+    
     // notify all listeners
     for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
         [listener YTBeaconManager:self rangedBeacons:beacons];
@@ -219,6 +222,7 @@
     for(ESTBeacon *beacon in list){
         
         for(YTMajorMinorPair *pair in _whitelist){
+            
             if([beacon.minor isEqual:pair.minor] && [beacon.major isEqual:pair.major]){
                 [result addObject:beacon];
             }

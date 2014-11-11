@@ -104,8 +104,10 @@
 
 -(void)removeAnnotationForPoi:(YTPoi *)poi{
     YTAnnotation *tmp = [_annotationSource annotationForPoi:poi];
-    [_annotationSource removeAnnotationForPoi:poi];
-    [_internalMapView removeAnnotation:tmp];
+    if(tmp != nil){
+        [_annotationSource removeAnnotationForPoi:poi];
+        [_internalMapView removeAnnotation:tmp];
+    }
 }
 
 

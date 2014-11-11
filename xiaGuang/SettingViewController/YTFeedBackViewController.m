@@ -39,7 +39,7 @@
     range.location = 0;
     range.length = 0;
     _textView.selectedRange = range;
-     [_textView becomeFirstResponder];
+    //[_textView becomeFirstResponder];
 
 }
 
