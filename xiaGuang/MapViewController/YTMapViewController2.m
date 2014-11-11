@@ -85,7 +85,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
 }
-
 @end
 
 @implementation YTMapViewController2{

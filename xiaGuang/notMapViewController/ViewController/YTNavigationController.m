@@ -19,7 +19,6 @@
     self = [super initWithRootViewController:_homeVC];
     if (self) {
         self.delegate = self;
-        _backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
         _isReGet = YES;
     }
     return self;
@@ -29,17 +28,18 @@
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
     _displayController = viewController;
     if ([viewController isEqual:_homeVC] || [viewController isMemberOfClass:[YTSettingViewController class]] || [viewController isMemberOfClass:[YTMallViewController class]]) {
-        navigationController.navigationBar.tintColor = [UIColor whiteColor];
-        [navigationController.navigationBar setBackgroundImage:[[UIImage alloc]init] forBarMetrics:UIBarMetricsDefault];
-        navigationController.navigationBar.clipsToBounds = YES;
-        navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        
+         _backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
         if (BIGGER_THEN_IPHONE5) {
             _backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
         }else{
             _backgroundView.image = [UIImage imageNamed:@"home_bg960@2x.jpg"];
         }
         [viewController.view insertSubview:_backgroundView atIndex:0];
+        navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        [navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+        navigationController.navigationBar.clipsToBounds = YES;
+        navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+        
     }else if([viewController isMemberOfClass:[YTMallInfoViewController class]]){
         navigationController.navigationBar.clipsToBounds = NO;
         [[(YTMallInfoViewController *)viewController mall] getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
