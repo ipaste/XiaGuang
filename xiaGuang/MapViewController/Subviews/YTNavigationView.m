@@ -160,12 +160,4 @@
     _isCancelling = NO;
     _isNavigating = NO;
 }
-
-
--(void)shakeView{
-    POPSpringAnimation *positionAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-    positionAnimation.velocity = @1000;
-    positionAnimation.springBounciness = 20;
-    [self.layer pop_addAnimation:positionAnimation forKey:@"positionAnimation"];
-}
 @end

@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     
     CLLocationCoordinate2D _userCoordintate;
-    
+    NSTimer *_timer;
     BOOL _shownUser;
 }
 
@@ -115,6 +115,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     _beacons = [NSMutableArray array];
     _initializationComplete = YES;
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [_timer invalidate];
+    _timer = nil;
 }
 
 -(void)createNavigationBar{
@@ -408,12 +414,15 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)setParkingState:(YTParkingState)state animation:(BOOL)animation{
     switch (state) {
         case YTParkingStateNormal:
+            [_timer invalidate];
+            _timer = nil;
             if (![_tmpMarker whetherMark]) {
                 [self notMarkStateWithAnimation:animation];
             }else{
                 [self markedStateWithAnimation:animation];
             }
             [self normalStateWithAnimation:animation];
+            
             break;
         case YTParkingStateMarked:
             if (![_tmpMarker whetherMark]) {
@@ -424,9 +433,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             }else{
                 [self displayMapWithMajorArea:_currenDisplayMajorArea];
             }
+            _timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(updateParkingChargeLabel:) userInfo:nil repeats:YES];
             [self markedStateWithAnimation:animation];
             break;
         case YTParkingStateNotMark:
+            [_timer invalidate];
+            _timer = nil;
             [self parkingCurrentPoiShowInMap:YES animation:animation];
             if ([_tmpMarker whetherMark]) {
                 [self parkingMarkedShowInMap:NO];
@@ -650,11 +662,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [_mapView removeUserLocation];
         
     }
+     /*
     if (_beacons.count > 0) {
         [_mapView removePois:_beacons];
         [_beacons removeAllObjects];
     }
-   /*
+  
     for (id<YTMinorArea> tmpMinorArea in [majorArea minorAreas]) {
         YTBeaconPosistionPoi *poi = [[YTBeaconPosistionPoi alloc]initWithParkingMarkCoordinat:[tmpMinorArea coordinate] minor:tmpMinorArea];
         [_beacons addObject:poi];
@@ -701,6 +714,15 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _secondSubLabel.text = @"";
     }
 }
+
+-(void)updateParkingChargeLabel:(NSTimer *)timer{
+    if ([_tmpMarker whetherMark]) {
+        _firstSubLable.text = [self stringWithTime:[_tmpMarker parkingDuration]];
+        _secondSubLabel.text = [self chargeWithTime:[_tmpMarker parkingDuration]];
+    }
+    
+}
+
 -(NSString *)stringWithTime:(NSTimeInterval)time{
     int hours = 0;
     int minute = 0;
