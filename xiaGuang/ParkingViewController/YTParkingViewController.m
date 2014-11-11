@@ -730,6 +730,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)dealloc{
+    [_mapView removeFromSuperview];
+    [_starNavigationButton removeFromSuperview];
+    [_navigationBar removeFromSuperview];
     [_beaconManager stopRanging];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }

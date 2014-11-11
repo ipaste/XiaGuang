@@ -50,7 +50,7 @@
         
         UIImage *leftImage = [UIImage imageNamed:@"nav_ico_search_un"];
         _searchLeftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, leftImage.size.width,  leftImage.size.height)];
-         _searchLeftImageView.image = leftImage;
+        _searchLeftImageView.image = leftImage;
         [self addSubview:_searchBar];
         
         
@@ -155,15 +155,16 @@
 }
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
-     self.hidden = NO;
+    self.hidden = NO;
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
     }
 }
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
-     self.hidden = YES;
+    self.hidden = YES;
     if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
+    
 }
 
 #pragma mark searchBar的协议
@@ -254,5 +255,10 @@
     UIView *contentView = [searchBar.subviews firstObject];
     [[[contentView subviews] firstObject] removeFromSuperview];
     return [[contentView subviews] firstObject];
+}
+
+-(void)dealloc{
+    [_detailsView removeFromSuperview];
+    [_searchBar removeFromSuperview];
 }
 @end

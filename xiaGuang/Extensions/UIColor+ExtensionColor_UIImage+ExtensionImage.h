@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Accelerate/Accelerate.h>
 @interface UIColor (YTColor)
 + (UIColor *)colorWithString:(NSString *)string;
 @end

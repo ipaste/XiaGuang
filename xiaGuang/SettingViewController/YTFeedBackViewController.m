@@ -64,11 +64,14 @@
         textView.text = @"";
         _textView.textColor = [UIColor colorWithString:@"202020"];
     }
-//    if(textView.text.length <= 0 && text.length <= 0 ){
-//        textView.text = @"写写您使用感受和建议...";
-//        _textView.textColor = [UIColor colorWithString:@"909090"];
-//    }
-    
     return YES;
+}
+
+-(void)dealloc{
+    _textView.delegate = nil;
+    [_textView resignFirstResponder];
+    [_textView removeFromSuperview];
+    
+    NSLog(@"feedBack dealloc");
 }
 @end
