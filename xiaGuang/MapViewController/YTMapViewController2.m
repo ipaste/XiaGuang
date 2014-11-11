@@ -870,7 +870,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         _curDisplayedMajorArea = majorArea;
     }
-    
+    [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
     
     [self handlePoiForMajorArea:majorArea];
     
