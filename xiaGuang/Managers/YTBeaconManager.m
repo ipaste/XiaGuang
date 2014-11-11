@@ -36,7 +36,7 @@
     //number of times we see another beacon is closer before we shift primary beacon
     int _shiftCount;
     
-    NSMutableArray *_whitelist;
+    NSMutableDictionary *_whitelist;
     
     NSHashTable *_listeners;
 }
@@ -58,7 +58,7 @@
         _region = [[ESTBeaconRegion alloc] initWithProximityUUID:ESTIMOTE_PROXIMITY_UUID
                                                           identifier:@"EstimoteSampleRegion"];*/
         
-        _whitelist = [[NSMutableArray alloc] init];
+        _whitelist = [[NSMutableDictionary alloc] init];
         FMDatabase *db = [YTDBManager sharedManager].db;
         [db open];
         FMResultSet *beacons = [db executeQuery:@"select * from Beacon"];
@@ -68,7 +68,7 @@
             int minor = [beacons intForColumn:@"minor"];
             tmpPair.major = [NSNumber numberWithInt:major];
             tmpPair.minor = [NSNumber numberWithInt:minor];
-            [_whitelist addObject: tmpPair];
+            [_whitelist setObject:tmpPair forKey:[NSString  stringWithFormat:@"%@-%@",tmpPair.major,tmpPair.minor]];
         }
         
         _listeners = [NSHashTable weakObjectsHashTable];
@@ -221,12 +221,16 @@
     
     for(ESTBeacon *beacon in list){
         
+        if([_whitelist objectForKey:[NSString  stringWithFormat:@"%@-%@",beacon.major,beacon.minor]] != nil){
+            [result addObject:beacon];
+        }
+        /*
         for(YTMajorMinorPair *pair in _whitelist){
             
             if([beacon.minor isEqual:pair.minor] && [beacon.major isEqual:pair.major]){
                 [result addObject:beacon];
             }
-        }
+        }*/
     }
     
     return result;

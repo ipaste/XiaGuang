@@ -425,7 +425,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     _changeFloorIndicator = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(_moveCurrentButton.frame) ,CGRectGetMinY(_moveCurrentButton.frame) - 80 , CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
-    _changeFloorIndicator.image = [UIImage imageNamed:@"nav_ico_default"];
+    _changeFloorIndicator.image = [UIImage imageWithImageName:@"nav_ico_ finger" andTintColor:[UIColor colorWithString:@"e95e37"]];
     _changeFloorIndicator.hidden = YES;
     [self.view addSubview:_changeFloorIndicator];
     
