@@ -11,6 +11,7 @@
 @implementation YTNavigationController{
     YTHomeViewController *_homeVC;
     UIViewController *_displayController;
+    UIImageView *_backgroundView;
     BOOL _isReGet;
 }
 -(instancetype)initWithCreateHomeViewController{
@@ -18,6 +19,7 @@
     self = [super initWithRootViewController:_homeVC];
     if (self) {
         self.delegate = self;
+        _backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
         _isReGet = YES;
     }
     return self;
@@ -31,13 +33,13 @@
         [navigationController.navigationBar setBackgroundImage:[[UIImage alloc]init] forBarMetrics:UIBarMetricsDefault];
         navigationController.navigationBar.clipsToBounds = YES;
         navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+        
         if (BIGGER_THEN_IPHONE5) {
-            backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
+            _backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
         }else{
-            backgroundView.image = [UIImage imageNamed:@"home_bg960@2x.jpg"];
+            _backgroundView.image = [UIImage imageNamed:@"home_bg960@2x.jpg"];
         }
-        [viewController.view insertSubview:backgroundView atIndex:0];
+        [viewController.view insertSubview:_backgroundView atIndex:0];
     }else if([viewController isMemberOfClass:[YTMallInfoViewController class]]){
         navigationController.navigationBar.clipsToBounds = NO;
         [[(YTMallInfoViewController *)viewController mall] getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {

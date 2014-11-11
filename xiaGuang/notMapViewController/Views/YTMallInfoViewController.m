@@ -29,6 +29,7 @@
     UILabel *_loadingLabel;
     UIImage *_infoBackgroundImage;
     YTMallPosistionViewController *_posistionVC;
+    BOOL _isShowSearchView;
 }
 @end
 
@@ -58,7 +59,10 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    [_searchView hideSearchViewWithAnimation:NO];
+    if (_isShowSearchView) {
+        [_searchView hideSearchViewWithAnimation:NO];
+    }
+
 }
 #pragma mark Navigation
 -(void)setNavigation{
@@ -78,12 +82,14 @@
 -(void)jumpToSearch:(UIButton *)sender{
     self.navigationItem.hidesBackButton = YES;
     self.navigationItem.titleView.hidden = YES;
+    _isShowSearchView = YES;
     [_searchView showSearchViewWithAnimation:YES];
 }
 
 -(void)searchCancelButtonClicked{
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
+    _isShowSearchView = NO;
     [_searchView hideSearchViewWithAnimation:NO];
 }
 
@@ -180,8 +186,6 @@
     
     [_mall getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
         _posistionVC = [[YTMallPosistionViewController alloc]initWithImage:mapImage address:address phoneNumber:phoneNumber];
-//        _positionView = [[YTMallPositionView alloc]initWithImage:mapImage phoneNumber:[phoneNumber integerValue] address:address];
-//        [self.view addSubview:_positionView];
     }];
 
 }
@@ -268,7 +272,8 @@
                 YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:object];
                 [merchants addObject:merchant];
             }
-            black(merchants);
+            black([merchants copy]);
+            [merchants removeAllObjects];
         }
         else{
             [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
@@ -291,8 +296,11 @@
 }
 
 -(void)dealloc{
-    NSLog(@"mallInfoDealloc");
-    //[self dismissViewControllerAnimated:NO completion:nil];
-}
+    [_searchView removeFromSuperview];
+    if (_posistionVC) {
+        [_posistionVC removeFromParentViewController];
+        _posistionVC = nil;
+    }
+    NSLog(@"mallInfoDealloc");}
 
 @end

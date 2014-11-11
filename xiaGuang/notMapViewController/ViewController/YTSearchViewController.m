@@ -206,8 +206,12 @@
     [_searchView hideSearchViewWithAnimation:NO];
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
+}
+-(void)dealloc{
+    [_searchView removeFromSuperview];
 }
 
 @end
