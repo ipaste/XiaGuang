@@ -35,6 +35,7 @@
 @interface YTBeaconManager : NSObject<ESTBeaconManagerDelegate>
 
 @property (nonatomic, weak) id<YTBeaconManagerDelegate> delegate;
+@property (nonatomic,readonly,weak) NSArray *readbeacons;
 
 -(void)startRangingBeacons;
 

@@ -94,6 +94,7 @@
     _region = [[ESTBeaconRegion alloc] initWithProximityUUID:aprilBrotherId identifier:@"us"];
     
     [_estimoteBeaconManager startRangingBeaconsInRegion:_region];
+    _readbeacons = nil;
 }
 
 
@@ -103,8 +104,9 @@
 
 -(void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region{
    
-    beacons = [self filterWhiteListedBeacon:beacons];
     
+    beacons = [self filterWhiteListedBeacon:beacons];
+    _readbeacons = beacons;
     // notify all listeners
     for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
         [listener YTBeaconManager:self rangedBeacons:beacons];
