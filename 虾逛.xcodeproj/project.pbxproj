@@ -163,6 +163,12 @@
 		D95B15491A0390C1002077AD /* YTUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15481A0390C1002077AD /* YTUserDefaults.m */; };
 		D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15521A072E57002077AD /* YTLocalParkingMarked.m */; };
 		D95B15571A078403002077AD /* YTMallPositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15561A078403002077AD /* YTMallPositionView.m */; };
+		D9825F391A1317160053F8D2 /* JingJiBaiNaB1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F331A1317160053F8D2 /* JingJiBaiNaB1.mbtiles */; };
+		D9825F3A1A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F341A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles */; };
+		D9825F3B1A1317160053F8D2 /* JingJiBainaB1park.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F351A1317160053F8D2 /* JingJiBainaB1park.mbtiles */; };
+		D9825F3C1A1317160053F8D2 /* JingJiBaiNaL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F361A1317160053F8D2 /* JingJiBaiNaL1.mbtiles */; };
+		D9825F3D1A1317160053F8D2 /* JingJiBaiNaL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F371A1317160053F8D2 /* JingJiBaiNaL2.mbtiles */; };
+		D9825F3E1A1317160053F8D2 /* JingJiBaiNaL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F381A1317160053F8D2 /* JingJiBaiNaL3.mbtiles */; };
 		D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */; };
 		D9AE507B1A0B4F160080CF21 /* YTBeaconPosistionPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */; };
 		D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */; };
@@ -481,6 +487,12 @@
 		D95B15521A072E57002077AD /* YTLocalParkingMarked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalParkingMarked.m; sourceTree = "<group>"; };
 		D95B15551A078403002077AD /* YTMallPositionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPositionView.h; sourceTree = "<group>"; };
 		D95B15561A078403002077AD /* YTMallPositionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPositionView.m; sourceTree = "<group>"; };
+		D9825F331A1317160053F8D2 /* JingJiBaiNaB1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaB1.mbtiles; sourceTree = "<group>"; };
+		D9825F341A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBainaB1halfpark.mbtiles; sourceTree = "<group>"; };
+		D9825F351A1317160053F8D2 /* JingJiBainaB1park.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBainaB1park.mbtiles; sourceTree = "<group>"; };
+		D9825F361A1317160053F8D2 /* JingJiBaiNaL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaL1.mbtiles; sourceTree = "<group>"; };
+		D9825F371A1317160053F8D2 /* JingJiBaiNaL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaL2.mbtiles; sourceTree = "<group>"; };
+		D9825F381A1317160053F8D2 /* JingJiBaiNaL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaL3.mbtiles; sourceTree = "<group>"; };
 		D9AE50711A0A1F280080CF21 /* YTMallPosistionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPosistionViewController.h; sourceTree = "<group>"; };
 		D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPosistionViewController.m; sourceTree = "<group>"; };
 		D9AE50791A0B4F160080CF21 /* YTBeaconPosistionPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTBeaconPosistionPoi.h; path = pois/YTBeaconPosistionPoi.h; sourceTree = "<group>"; };
@@ -579,6 +591,12 @@
 		AE24A7F91A022E1B00A0CE91 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				D9825F331A1317160053F8D2 /* JingJiBaiNaB1.mbtiles */,
+				D9825F341A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles */,
+				D9825F351A1317160053F8D2 /* JingJiBainaB1park.mbtiles */,
+				D9825F361A1317160053F8D2 /* JingJiBaiNaL1.mbtiles */,
+				D9825F371A1317160053F8D2 /* JingJiBaiNaL2.mbtiles */,
+				D9825F381A1317160053F8D2 /* JingJiBaiNaL3.mbtiles */,
 				AE24A8BF1A08A6D400A0CE91 /* cocoparkB1.mbtiles */,
 				AE24A8C01A08A6D400A0CE91 /* cocoparkL1.mbtiles */,
 				AE24A8C11A08A6D400A0CE91 /* cocoparkL2.mbtiles */,
@@ -1158,6 +1176,7 @@
 				AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */,
 				AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */,
 				AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */,
+				D9825F3E1A1317160053F8D2 /* JingJiBaiNaL3.mbtiles in Resources */,
 				AE24A8D61A08A6D400A0CE91 /* YITIANB1.mbtiles in Resources */,
 				AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */,
 				AE24A8CD1A08A6D400A0CE91 /* cocoparkB1.mbtiles in Resources */,
@@ -1166,15 +1185,20 @@
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
 				AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */,
 				AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */,
+				D9825F3C1A1317160053F8D2 /* JingJiBaiNaL1.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
+				D9825F3A1A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles in Resources */,
 				AE24A8CF1A08A6D400A0CE91 /* cocoparkL2.mbtiles in Resources */,
+				D9825F391A1317160053F8D2 /* JingJiBaiNaB1.mbtiles in Resources */,
 				AE24A8661A02431700A0CE91 /* home_bg960@2x.jpg in Resources */,
 				AE24A8D31A08A6D400A0CE91 /* kkmallL2.mbtiles in Resources */,
 				AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */,
 				AE24A8D01A08A6D400A0CE91 /* cocoparkL3.mbtiles in Resources */,
 				78DB4AE01A0C83E4003A6025 /* db.plist in Resources */,
+				D9825F3D1A1317160053F8D2 /* JingJiBaiNaL2.mbtiles in Resources */,
 				AE24A8D11A08A6D400A0CE91 /* kkmallB1.mbtiles in Resources */,
 				AE24A8CE1A08A6D400A0CE91 /* cocoparkL1.mbtiles in Resources */,
+				D9825F3B1A1317160053F8D2 /* JingJiBainaB1park.mbtiles in Resources */,
 				AE24A8D41A08A6D400A0CE91 /* kkmallL3.mbtiles in Resources */,
 				AE24A8681A02431700A0CE91 /* shop_load_down@2x.png in Resources */,
 				AE24A8D51A08A6D400A0CE91 /* KKmallL4.mbtiles in Resources */,
