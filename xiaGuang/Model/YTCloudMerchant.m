@@ -21,6 +21,7 @@
     self = [super init];
     if (self) {
         _object = object;
+       
     }
     return self;
 }
@@ -57,8 +58,7 @@
 
 -(id<YTMall>)mall{
     AVObject *mallObject = _object[MERCHANT_CLASS_MALL_KEY];
-    YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
-    return mall;
+    return [[YTCloudMall alloc]initWithAVObject:mallObject];
 }
 
 -(id<YTFloor>)floor{
@@ -78,7 +78,6 @@
 }
 
 -(YTLocalMerchantInstance *)getLocalMerchantInstance{
-    
     if(_object[@"localDBId"] == nil || [_object[@"localDBId"] isEqualToString:@""]){
         return nil;
     }
