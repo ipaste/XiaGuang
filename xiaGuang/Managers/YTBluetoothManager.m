@@ -9,6 +9,7 @@
 #import "YTBluetoothManager.h"
 NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasChanged";
 @interface YTBluetoothManager (){
+    CLLocationManager *_locationManager;
     CBCentralManager *_centralManager;
     NSTimer *_timer;
     BOOL _isEnterBackground;
@@ -46,9 +47,9 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         _isReceivedMessage = YES;
         if ([[[UIDevice currentDevice]systemVersion] hasPrefix:@"8"]){
-            self.locationManager = [[CLLocationManager alloc]init];
-            [self.locationManager requestAlwaysAuthorization];
-            [self.locationManager requestWhenInUseAuthorization];
+            _locationManager = [[CLLocationManager alloc]init];
+            [_locationManager requestAlwaysAuthorization];
+            [_locationManager requestWhenInUseAuthorization];
         }
     }
     return self;

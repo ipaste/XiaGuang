@@ -162,6 +162,7 @@
     
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query orderByAscending:@"name"];
+    [query includeKey:@"mall,floor"];
     query.limit = number;
     query.skip = skip;
     if (_isCategory) {

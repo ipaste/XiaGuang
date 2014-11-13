@@ -274,15 +274,23 @@
     }];
 
 }
-
+-(NSString *)localDB{
+    if (_internalObject[@"localDBId"]) {
+        return nil;
+    }
+    return @"";
+}
 -(YTLocalMall *)getLocalCopy{
     
     if(_tmpLocalMall == nil){
-        
+        NSString *localDBId = _internalObject[@"localDBId"];
+        if (localDBId == nil || localDBId.length <= 0) {
+            return nil;
+        }
         FMDatabase *db = [YTDBManager sharedManager].db;
         if([db open]){
             
-            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",_internalObject[@"localDBId"]];
+            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",localDBId];
             [result next];
             
             _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
