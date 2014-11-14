@@ -489,6 +489,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark MapViewDelegate
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
+
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         
         //hide callout and POI for 

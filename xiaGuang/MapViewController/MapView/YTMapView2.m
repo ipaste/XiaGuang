@@ -247,11 +247,15 @@
 }
 
 -(void)singleTapOnMap:(RMMapView *)map at:(CGPoint)point{
-    //[self.delegate mapView:self singleTapOnMap:[_internalMapView pixelToCoordinate:point]];
-    
-    
     YTAnnotation *anno = [_annotationSource closestAnnotationForCoordinate:[_internalMapView pixelToCoordinate:point] mapView:_internalMapView];
-    [anno highlightAnimated:YES];
+    
+    if (anno == nil) {
+        [self.delegate mapView:self singleTapOnMap:[_internalMapView pixelToCoordinate:point]];
+    }else{
+        YTPoi *resultPoi = [_annotationSource poiForAnnotation:anno];
+        [self.delegate mapView:self tapOnPoi:resultPoi];
+    }
+   
 }
 
 
