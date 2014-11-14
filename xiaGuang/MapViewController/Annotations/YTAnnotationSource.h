@@ -11,6 +11,8 @@
 #import "YTPoi.h"
 @interface YTAnnotationSource : NSObject
 
+-(YTAnnotation *)closestAnnotationForCoordinate:(CLLocationCoordinate2D)tapCoordinate
+                                        mapView:(RMMapView *)mapView;
 -(id)init;
 -(void)setAnnotation:(YTAnnotation *)annotation forPoi:(YTPoi *)poi;
 -(YTAnnotation *)annotationForPoi:(YTPoi *)poi;

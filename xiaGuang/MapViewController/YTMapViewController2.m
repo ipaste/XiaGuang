@@ -489,6 +489,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark MapViewDelegate
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
+
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         
         //hide callout and POI for 
@@ -1170,6 +1171,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         else{
             [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+            [_poiView deleteSelectedPoi];
         }
         
     }

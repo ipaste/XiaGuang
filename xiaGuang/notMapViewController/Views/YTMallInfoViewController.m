@@ -248,7 +248,10 @@
 -(void)jumpToFloorMap:(UIButton *)sender{
     id <YTFloor> floor = nil;
     YTLocalMall *localmall = [(YTCloudMall *)self.mall getLocalCopy];
-    
+    if (localmall == nil){
+        [[[UIAlertView alloc]initWithTitle:@"虾逛" message:@"地图正在建设中." delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+        return;
+    }
     NSArray * temp = [[[localmall blocks] objectAtIndex:0] floors];
     floor = [temp objectAtIndex:0];
     if (floor != nil) {
@@ -264,6 +267,7 @@
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 3600;
     [query whereKey:@"mall" equalTo:mall];
+    [query includeKey:@"mall,floor"];
     query.limit = 10;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

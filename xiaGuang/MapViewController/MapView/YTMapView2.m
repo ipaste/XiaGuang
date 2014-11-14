@@ -13,6 +13,9 @@
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
+    
+    
+    
 }
 
 #pragma mark init
@@ -224,11 +227,12 @@
 }
 
 -(void)tapOnAnnotation:(RMAnnotation *)annotation onMap:(RMMapView *)map{
+    
     if([annotation.annotationType isEqualToString:@"user"]){
         return;
-    }
+    }/*
     YTPoi *resultPoi = [_annotationSource poiForAnnotation:(YTAnnotation *)annotation];
-    [self.delegate mapView:self tapOnPoi:resultPoi];
+    [self.delegate mapView:self tapOnPoi:resultPoi];*/
 }
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
@@ -243,7 +247,15 @@
 }
 
 -(void)singleTapOnMap:(RMMapView *)map at:(CGPoint)point{
-    [self.delegate mapView:self singleTapOnMap:[_internalMapView pixelToCoordinate:point]];
+    YTAnnotation *anno = [_annotationSource closestAnnotationForCoordinate:[_internalMapView pixelToCoordinate:point] mapView:_internalMapView];
+    
+    if (anno == nil) {
+        [self.delegate mapView:self singleTapOnMap:[_internalMapView pixelToCoordinate:point]];
+    }else{
+        YTPoi *resultPoi = [_annotationSource poiForAnnotation:anno];
+        [self.delegate mapView:self tapOnPoi:resultPoi];
+    }
+   
 }
 
 
@@ -252,7 +264,7 @@
 
     
     NSLog(@"zoom %f",map.zoom);
-    [self refilterAnnotations];
+    //[self refilterAnnotations];
     
 }
 

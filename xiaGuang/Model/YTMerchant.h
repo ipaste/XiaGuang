@@ -18,7 +18,7 @@
 @property (weak,nonatomic) NSArray *type;
 @property (weak,nonatomic) UIImage *icon;
 @property (weak,nonatomic) id<YTFloor> floor;
-@property (weak,nonatomic) id<YTMall> mall;
+@property (strong,nonatomic) id<YTMall> mall;
 
 -(void)getThumbNailWithCallBack:(void (^)(UIImage *result,NSError *error))callback;
 
