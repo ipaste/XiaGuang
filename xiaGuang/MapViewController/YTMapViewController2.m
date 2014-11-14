@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTSwitchBlockView *_switchBlockView;
     YTDetailsView *_detailsView;
     YTSelectedPoiButton *_selectedPoiButton;
+    YTSwitchMallView *_switchMallView;
     UIImageView *_noBeaconCover;
     BlurMenu *_menu;
     UIAlertView *_alert;
@@ -97,7 +98,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (minorArea != nil) {
             _minorArea = minorArea;
             _majorArea = [minorArea majorArea];
+        }else{
+            _minorArea = [self getDefaultMinorArea];
+            _majorArea = [_minorArea majorArea];
         }
+        _targetMall = [[[_majorArea floor] block] mall];
         _type = YTMapViewControllerTypeNavigation;
     }
     return self;
@@ -156,8 +161,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
-    [self createNoBeaconCover];
-    [self createBlurMenuWithCallBack:nil];
+    [self createSwitchMall];
+//    [self createNoBeaconCover];
+//    [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
 
 
@@ -203,15 +209,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             if(_type == YTMapViewControllerTypeNavigation){
                 
             
-                if(_menu == nil){
-                    [self createBlurMenuWithCallBack:^{
-                        [_menu show];
-                    }];
-                    //[_menu show];
-                }
-                else{
-                    [_menu show];
-                }
+//                if(_menu == nil){
+//                    [self createBlurMenuWithCallBack:^{
+//                        [_menu show];
+//                    }];
+//                    //[_menu show];
+//                }
+//                else{
+//                    [_menu show];
+//                }
                 if([_mapView currentState] != YTMapViewDetailStateNormal){
                     [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
                     [self hideCallOut];
@@ -312,8 +318,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     _noBeaconCover = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _noBeaconCover.image = fake;
-    //_noBeaconCover.backgroundColor = [UIColor blackColor];
-    //_noBeaconCover.alpha = 0.5;
     _noBeaconCover.hidden = NO;
     
     [self.view addSubview:_noBeaconCover];
@@ -487,6 +491,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _poiView = [[YTPoiView alloc]initWithShow:NO];
     _poiView.delegate = self;
 }
+
+-(void)createSwitchMall{
+    _switchMallView = [[YTSwitchMallView alloc]init];
+    [self.view addSubview:_switchMallView];
+}
+
 #pragma mark MapViewDelegate
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
 
@@ -1360,6 +1370,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     return minorArea;
 }
 
+-(id<YTMinorArea>)getDefaultMinorArea{
+    id<YTMinorArea> tmpMinorArea = nil;
+    FMDatabase *db = [YTDBManager sharedManager].db;
+    if ([db open]) {
+        FMResultSet *result = [db executeQuery:@"select * from MinorArea where majorAreaId = ?",@6];
+        [result next];
+        tmpMinorArea = [[YTLocalMinorArea alloc]initWithDBResultSet:result];
+       
+    }
+    return tmpMinorArea;
+}
 #pragma mark YTBeaconBasedLocatorDelegate method
 - (void)YTBeaconBasedLocator:(YTBeaconBasedLocator *)locator
            coordinateUpdated:(CLLocationCoordinate2D)coordinate{

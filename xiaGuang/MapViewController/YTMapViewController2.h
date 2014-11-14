@@ -31,6 +31,7 @@
 #import "YTNavigationView.h"
 #import "YTPoiView.h"
 #import "YTSelectedPoiButton.h"
+#import "YTSwitchMallView.h"
 #import "YTBluetoothManager.h"
 #import "YTMessageBox.h"
 #import <POP.h>
