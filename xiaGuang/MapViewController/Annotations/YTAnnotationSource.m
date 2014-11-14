@@ -96,9 +96,13 @@
             curMinDistance = tmpDist;
             result = tmp;
         }
-        
     }
     
+    double nomarlizedMaxDistance = (mapView.zoom-5.0) * -2.5;
+    NSLog(@"%lf",nomarlizedMaxDistance);
+    if (curMinDistance > nomarlizedMaxDistance) {
+        return nil;
+    }
     return result;
 }
 
