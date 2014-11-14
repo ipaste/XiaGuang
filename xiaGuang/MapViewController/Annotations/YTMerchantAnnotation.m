@@ -32,7 +32,9 @@
 
 -(RMMapLayer *)produceLayer{
     
-    RMMarker *resultLayer = [[RMMarker alloc] initWithBubbleHeight:[_merchantLocation lableHeight] width:[_merchantLocation lableWidth]];
+    //RMMarker *resultLayer = [[RMMarker alloc] initWithBubbleHeight:[_merchantLocation lableHeight] width:[_merchantLocation lableWidth]];
+    
+    RMMarker *resultLayer = [[RMMarker alloc] initWithBubbleHeight:1 width:1];
     
     if(self.state == YTAnnotationStateHighlighted){
         
