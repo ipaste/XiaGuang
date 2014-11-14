@@ -14,6 +14,7 @@
 @protocol YTMall <NSObject>
 
 @property(weak,nonatomic)NSString *identifier;
+@property(weak,nonatomic)NSString *localDB;
 @property(weak,nonatomic)UIImage *background;
 @property(weak,nonatomic)UIImage *logo;
 @property(weak,nonatomic)UIImage *infoBackground;

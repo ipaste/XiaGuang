@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "YTMall.h"
+#import "YTCloudMall.h"
 #import "YTMerchant.h"
 #import "YTFloor.h"
 #import "YTLocalMerchantInstance.h"

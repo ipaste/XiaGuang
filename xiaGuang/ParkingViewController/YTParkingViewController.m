@@ -320,7 +320,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _promptLable.numberOfLines = 2;
     _promptLable.textColor = [UIColor colorWithString:@"c8c8c8"];
     _promptLable.font = [UIFont systemFontOfSize:13];
-    _promptLable.text = @"检测到您为开蓝牙或不在商城内实时定位请到达商城后打开蓝牙";
+    _promptLable.text = @"检测到您未开蓝牙或不在商城内,实时定位请到达商城后打开蓝牙";
     [self.view addSubview:_promptLable];
 }
 
