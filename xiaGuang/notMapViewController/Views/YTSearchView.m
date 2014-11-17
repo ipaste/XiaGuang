@@ -178,7 +178,7 @@
     }
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _searchTextField.frame;
-        frame.size.width = frame.size.width - 43;
+        frame.size.width =_searchTextFieldWidth - 43;
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         _cancelButton.hidden = NO;
@@ -199,6 +199,7 @@
 #pragma mark detailsView协议
 -(void)cancelSearchInput{
     [_searchBar resignFirstResponder];
+
 }
 
 -(void)selectSearchResultsWithMerchantnName:(NSString *)merchantName{

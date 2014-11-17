@@ -98,6 +98,7 @@
     [leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [leftButton setTitleColor:[UIColor colorWithString:@"#fac890"] forState:UIControlStateHighlighted];
     [leftButton setTitleEdgeInsets:UIEdgeInsetsMake(0 , -10, 0, 0)];
+    [leftButton addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
     [leftButton setImage:[UIImage imageNamed:@"home1_ico_location_un"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"home1_ico_location_pr"] forState:UIControlStateHighlighted];
     [leftButton setImageEdgeInsets:UIEdgeInsetsMake(0, -15, 0, 0)];
@@ -112,7 +113,9 @@
     [rightButton setImage:[UIImage imageNamed:@"nav_ico_search_pr"] forState:UIControlStateHighlighted];
     return rightButton;
 }
+-(void)test{
 
+}
 
 -(void)clickedPanelAtIndex:(NSInteger)index{
     UIViewController *controller = nil;
