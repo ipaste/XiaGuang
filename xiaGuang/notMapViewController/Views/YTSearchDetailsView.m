@@ -33,7 +33,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         _mall = mall;
-
         _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         _scrollView.delegate = self;
         _scrollView.backgroundColor = [UIColor whiteColor];
@@ -43,7 +42,7 @@
         
         
         _hotSearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(self.frame), 128)];
-        [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索"]];
+        [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索" indent:25]];
         
         AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
         
@@ -80,7 +79,7 @@
         
         _fileManager = [YTFileManager defaultManager];
         
-        _historyTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_hotSearchView.frame), CGRectGetWidth(_scrollView.frame) , _historicalRecord.count * HISTORYTABLECELL_HEIGHT + 35) style:UITableViewStylePlain];
+        _historyTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_hotSearchView.frame), CGRectGetWidth(_scrollView.frame) , _historicalRecord.count * HISTORYTABLECELL_HEIGHT + 35) style:UITableViewStylePlain];
         _historyTableView.backgroundColor = [UIColor clearColor];
         _historyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _historyTableView.delegate = self;
@@ -120,6 +119,7 @@
     _searchResultstableView.hidden = NO;
     if (_results != nil) {
         [_results removeAllObjects];
+        [_searchResultstableView reloadData];
     }
     _results = [NSMutableArray array];
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
@@ -182,70 +182,49 @@
     
     if ([tableView isEqual:_historyTableView]) {
         UITableViewCell *historycell = [tableView dequeueReusableCellWithIdentifier:@"historyCell"];
-        UILabel *label = nil;
         if (!historycell) {
             historycell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"historyCell"];
-            label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, CGRectGetWidth(self.frame) - 25, HISTORYTABLECELL_HEIGHT)];
             historycell.backgroundColor = [UIColor clearColor];
-            label.textColor = [UIColor colorWithString:@"606060"];
-            label.font = [UIFont systemFontOfSize:14];
+            historycell.textLabel.textColor = [UIColor colorWithString:@"606060"];
+            historycell.textLabel.font = [UIFont systemFontOfSize:14];
+            historycell.textLabel.frame = CGRectMake(25, 0, CGRectGetWidth(historycell.frame) - 25, HISTORYTABLECELL_HEIGHT);
             historycell.selectedBackgroundView = selectedBackgroundView;
-            [historycell addSubview:label];
-        }else{
-            UIView * view = [historycell.subviews firstObject];
-            for (UILabel *textlabel in view.subviews) {
-                label = textlabel;
-            }
+
         }
         if (_historicalRecord.count <= 0) {
-            label.text = @"暂无历史";
+            historycell.textLabel.text = @"暂无历史";
             historycell.selectionStyle = UITableViewCellSelectionStyleNone;
         }else{
-            label.text = _historicalRecord[indexPath.row];
+            historycell.textLabel.text = _historicalRecord[indexPath.row];
         }
         return historycell;
     }else{
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-        UILabel *label = nil;
-        UILabel *subLabel = nil;
         if (!cell) {
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"Cell"];
             cell.backgroundColor = [UIColor clearColor];
             
             cell.selectedBackgroundView = selectedBackgroundView;
-            label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, 100, 44)];
-            label.textColor = [UIColor colorWithString:@"606060"];
-            label.font = [UIFont systemFontOfSize:14];
-            label.tag = 0;
-            [cell addSubview:label];
+    
+            cell.textLabel.textColor = [UIColor colorWithString:@"606060"];
+            cell.textLabel.font = [UIFont systemFontOfSize:14];
+            cell.textLabel.tag = 0;
+
+            cell.detailTextLabel.textColor = [UIColor colorWithString:@"dcdcdc"];
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+            cell.detailTextLabel.textAlignment = 2;
+            cell.detailTextLabel.tag = 1;
+
             
-            subLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(label.frame), CGRectGetMinY(label.frame), CGRectGetWidth(self.frame) - CGRectGetWidth(label.frame), 44)];
-            subLabel.textColor = [UIColor colorWithString:@"dcdcdc"];
-            subLabel.font = [UIFont systemFontOfSize:12];
-            subLabel.textAlignment = 2;
-            subLabel.tag = 1;
-            [cell addSubview:subLabel];
-            
-        }else{
-            UIView * view = [cell.subviews firstObject];
-            for (UIView *tempview in view.subviews) {
-                if ([tempview isMemberOfClass:[UILabel class]]) {
-                    if (tempview.tag == 0) {
-                        label = (UILabel *)tempview;
-                    }else if (tempview.tag == 1){
-                        subLabel = (UILabel *)tempview;
-                    }
-                }
-            }
         }
         
         id<YTMerchant> merchant = _results[indexPath.row];
         NSString *merchantName = [merchant merchantName];
         NSString *remarks = [NSString stringWithFormat:@"%@ %@ %@",[[merchant floor] floorName],[[[merchant floor] block] blockName],[[merchant mall] mallName]];
-        
+/*
         CGFloat merchantNameWidth = [merchantName boundingRectWithSize:CGSizeMake(200, 44) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
 
-        CGRect frame = label.frame;
+        CGRect frame = cell.te.frame;
         frame.size.width = merchantNameWidth;
         label.frame = frame;
         
@@ -253,26 +232,20 @@
         frame.origin.x = CGRectGetMaxX(label.frame) + 5;
         frame.size.width = CGRectGetWidth(self.frame) - CGRectGetWidth(label.frame) - 35;
         subLabel.frame = frame;
-        
-        label.text = merchantName;
-        subLabel.text = remarks;
+     */
+        cell.textLabel.text = merchantName;
+        cell.detailTextLabel.text = remarks;
         return cell;
     }
     return nil;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if ([tableView isEqual:_historyTableView]) {
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UILabel *label = nil;
-        UIView * view = [cell.subviews firstObject];
-        for (UILabel *textlabel in view.subviews) {
-            label = textlabel;
-        }
-        if ([label.text isEqualToString:@"暂无历史"]) {
+        if (_historicalRecord.count <= 0){
             return;
         }
-        cell.selected = NO;
-        [self.delegate selectSearchResultsWithMerchantnName:label.text];
+        [self.delegate selectSearchResultsWithMerchantnName:_historicalRecord[indexPath.row]];
         
     }else if([tableView isEqual:_searchResultstableView]){
         NSMutableArray *history = [NSMutableArray arrayWithArray:[_fileManager readDataWithFileName:@"history"]];
@@ -312,13 +285,13 @@
     if ([tableView isEqual:_historyTableView]) {
         UIView *background = [[UIView alloc]init];
         background.backgroundColor = [UIColor clearColor];
-        [background addSubview:[self headLabelWithText:@"搜索历史"]];
+        [background addSubview:[self headLabelWithText:@"搜索历史" indent:10]];
         return background;
     }
     return nil;
 }
--(UIView *)headLabelWithText:(NSString *)text{
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, CGRectGetWidth(_scrollView.frame) - 25, 33)];
+-(UIView *)headLabelWithText:(NSString *)text indent:(CGFloat)indentX{
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(indentX, 0, CGRectGetWidth(_scrollView.frame) - 25, 33)];
     label.backgroundColor = [UIColor clearColor];
     
     label.text = text;

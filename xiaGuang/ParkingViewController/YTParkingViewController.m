@@ -326,7 +326,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)markedButtonClicked:(UIButton *)sender{
     if (_userMinorArea == nil){
-    
+        
         return;
     }
     if(_userCoordintate.latitude != -888){
@@ -553,12 +553,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         CGRect frame = _currentParkingButton.frame;
         frame.origin.x = CGRectGetMinX(_moveCurrentLocationButton.frame);
         _currentParkingButton.frame = frame;
-        
-        
     }
     
 }
-
 
 -(void)parkingMarkedShowInMap:(BOOL)show{
     YTPoi *tmpPoi = [_tmpMarker producePoi];

@@ -37,7 +37,7 @@ typedef void(^YTMessageBoxCallBack)(NSInteger tag);
 }
 -(void)initUiWith:(NSString *)title Message:(NSString *)message cancelButtonTitle:(NSString *)buttonTitle{
     
-    _window = [UIApplication sharedApplication].windows[0];
+    _window = [[UIApplication sharedApplication].delegate window];
     _backgroundView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 240, 170)];
     _backgroundView.userInteractionEnabled = YES;
     _backgroundView.center = self.center;
@@ -98,7 +98,11 @@ typedef void(^YTMessageBoxCallBack)(NSInteger tag);
     if (tmpCallBack != nil) {
          tmpCallBack(sender.tag);
     }
-    [self removeFromSuperview];
+    if (_window != nil) {
+        [self removeFromSuperview];
+    }
+    
     
 }
+
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+
 @class YTMessageBox;
 @protocol YTMessageBoxDelegate <NSObject>
 @optional
