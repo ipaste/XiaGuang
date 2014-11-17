@@ -83,12 +83,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     CLLocationCoordinate2D _lastRecordedCoordinate;
     
-    
 }
 @end
 
 @implementation YTMapViewController2{
     YTMapView2 *_mapView;
+    
 }
 
 -(id)initWithMinorArea:(id <YTMinorArea>)minorArea{
@@ -97,6 +97,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (minorArea != nil) {
             _minorArea = minorArea;
             _majorArea = [minorArea majorArea];
+            
         }
         _type = YTMapViewControllerTypeNavigation;
     }
@@ -110,7 +111,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
-            _targetMall = [[[_majorArea floor] block]mall];
+
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -122,7 +123,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (self) {
         if ( floor != nil) {
             _majorArea = [[floor majorAreas] objectAtIndex:0];
-            _targetMall = [[[_majorArea floor] block]mall];
+
         }
         _type = YTMapViewControllerTypeFloor;
     }
@@ -147,40 +148,20 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     
+    
+    [self setTargetMall:[[[_majorArea floor] block]mall]];
+    
     [self createNavigationBar];
     [self createMapView];
-    [self createBlockAndFloorSwitch];
     [self createCurLocationButton];
     [self createCommonPoiButton];
     [self createZoomStepper];
+    [self createBlockAndFloorSwitch];
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
-    [self createSearchView];
-
-
-    
-    /*
-    
-    if(_minorArea == nil){
-        
-        NSLog(@"didload");
-        [self createBlurMenu];
-        
-    }
-    else{
-        _noBeaconCover.hidden = YES;
-    }
-    
-    if (_type == YTMapViewControllerTypeNavigation) {
-        
-        [self userMoveToMinorArea:_minorArea];
-        [_beaconManager startRangingBeacons];
-        return;
-    }*/
-
 }
 
 
@@ -410,7 +391,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_navigationBar];
 }
 -(void)createSearchView{
-    _searchView = [[YTSearchView alloc]initWithMall:[[[_majorArea floor]block]mall] placeholder:@"商城/品牌" indent:NO];
+    if (_searchView != nil) {
+        [_searchView removeFromSuperview];
+        _searchView.delegate = nil;
+        _searchView = nil;
+    }
+    _searchView = [[YTSearchView alloc]initWithMall:_targetMall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView addInView:self.view show:NO];
     [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"]];
@@ -669,6 +655,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)backButtonClicked{
+    if (_switchFloorView.toggle) {
+        [_switchFloorView toggleFloor];
+    }
+    if (_switchBlockView.toggle){
+        [_switchBlockView toggleBlockView];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -701,7 +693,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
             [self showCallOut];
         }else{
-            
+            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该商城数据没有进入地图数据" cancelButtonTitle:@"知道了"]show];
         }
     }
 }
@@ -1328,9 +1320,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
     [self redrawBlockAndFloorSwitch];
-    _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+    if (_targetMall != nil) {
+        _targetMall = [[[_majorArea floor] block] mall];
+        _navigationBar.titleName = [_targetMall mallName];
+        [self createSearchView];
+        
+    }
     [_menu hide];
-    
 }
 
 -(void)backClicked{
@@ -1382,7 +1378,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
     
 }
-
+-(void)setTargetMall:(id<YTMall>)aMall{
+    if ([[_targetMall identifier]isEqualToString:[aMall identifier]]) {
+        return;
+    }
+    
+    [self createSearchView];
+    
+    _targetMall = aMall;
+}
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){
         [self dismissViewControllerAnimated:YES completion:nil];

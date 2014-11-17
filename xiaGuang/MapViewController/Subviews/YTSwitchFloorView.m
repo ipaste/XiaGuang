@@ -46,26 +46,19 @@
     
     _floor = [majorArea floor];
     
-    [_floorButton removeFromSuperview];
+    //[_floorButton removeFromSuperview];
     [_floorView removeFromSuperview];
     
-    _floorButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
+    //_floorButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
     
     _floorView = [[YTFloorView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_floorButton.frame), CGRectGetMaxY(_floorButton.frame), WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[_majorArea floor]block]floors]];
     [_floorButton setTitle:[[_majorArea floor]floorName] forState:UIControlStateNormal];
     _floorView.floorDelegate = self;
     _floorView.curFloor = [_majorArea floor];
     [self addSubview:_floorView];
-    [self addSubview:_floorButton];
-    UIImageView *floorImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"nav_ico_floor"]];
-    floorImage.frame = CGRectMake(BUTTON_PADDING, BUTTON_PADDING, WIDTH_AND_HEIGHT - BUTTON_PADDING*2, WIDTH_AND_HEIGHT - BUTTON_PADDING * 2);
-    [_floorButton addSubview:floorImage];
-    
 }
 
 -(void)layoutSubviews{
-   
-    
     [_floorButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [_floorButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [_floorButton addTarget:self action:@selector(toggleFloorControl:) forControlEvents:UIControlEventTouchUpInside];
@@ -74,10 +67,12 @@
     self.layer.cornerRadius = WIDTH_AND_HEIGHT / 2;
     self.layer.masksToBounds = YES;
 }
+
 -(void)toggleFloor{
     
     [self toggleFloorControl:_floorButton];
 }
+
 -(void)toggleFloorControl:(UIButton *)sender{
     if (self.toggle) {
         self.toggle = NO;
@@ -92,7 +87,7 @@
             NSArray *floorItem = [[[_majorArea floor] block]floors];
             CGRect frame = self.frame;
             if (floorItem.count < 3) {
-                frame.size.height = (floorItem.count + 1 ) * WIDTH_AND_HEIGHT + 24;
+                frame.size.height = (floorItem.count + 1 ) * WIDTH_AND_HEIGHT;
             }else{
                 frame.size.height = 4.2 * WIDTH_AND_HEIGHT + 12;
             }
@@ -110,4 +105,5 @@
     [self promptFloorChange:floor];
     [self.delegate switchFloor:floor];
 }
+
 @end

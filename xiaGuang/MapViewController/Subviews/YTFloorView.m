@@ -113,4 +113,8 @@
     [sender setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     _currentButton = sender;
 }
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+
+
+}
 @end
