@@ -217,9 +217,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                     [self hideCallOut];
                 }
             }
-            
-            
-            
         }
     }
     else{
