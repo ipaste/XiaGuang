@@ -10,6 +10,9 @@
 #import "YTNavigationController.h"
 #import <AVOSCloud/AVOSCloud.h>
 #import "YTDBManager.h"
+#import <FCFileManager.h>
+
+
 
 @interface AppDelegate () {
     double _timeInToBackground;
@@ -32,6 +35,27 @@
     
     [[YTDBManager sharedManager] startBackgroundDownload];
     [[YTDBManager sharedManager] checkAndSwitchToNewDB];
+    
+    
+    /*
+    NSString *mainbundle = [FCFileManager pathForMainBundleDirectory];
+    NSString *document = [FCFileManager pathForDocumentsDirectory];
+    NSArray *files = [FCFileManager listFilesInDirectoryAtPath:mainbundle withExtension:@"mbtiles"];
+    NSError *err = nil;
+    for(NSString *file in files){
+        NSLog(@"%@",file);
+        NSString *mapName = [file lastPathComponent];
+        NSString *destPath = [NSString stringWithFormat:@"%@/%@",document,mapName];
+        [FCFileManager copyItemAtPath:file toPath:destPath error:&err];
+        if(err != nil){
+            NSLog(@"shit");
+        }
+    }
+    
+    NSArray *files2 = [FCFileManager listFilesInDirectoryAtPath:document withExtension:@"mbtiles"];
+    for(NSString *file2 in files2){
+        NSLog(@"%@",file2);
+    }*/
     
     _timeInToBackground = 0;
     
