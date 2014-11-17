@@ -120,7 +120,7 @@
     if(_tmpMerchantAreas == nil){
         
         FMDatabase *db = [YTDBManager sharedManager].db;
-        FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where majorAreaId = ?",_tmpMajorAreaId];
+        FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where latitude is not null and  majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpMerchantAreas = [[NSMutableArray alloc] init];
         
