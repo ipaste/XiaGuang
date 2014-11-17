@@ -47,8 +47,14 @@
     if(findResultSet != nil){
         self = [super init];
         if(self){
+            
+            
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMerchantInstanceId = [findResultSet stringForColumn:@"merchantInstanceId"];
+            
+            if(_tmpMerchantInstanceId == nil || [_tmpMerchantInstanceId isEqualToString:@""]){
+                return nil;
+            }
             _tmpMerchantInstanceName = [findResultSet stringForColumn:@"merchantInstanceName"];
             _tmpLatitude = [findResultSet doubleForColumn:@"latitude"];
             _tmpLongtitude = [findResultSet doubleForColumn:@"longtitude"];
