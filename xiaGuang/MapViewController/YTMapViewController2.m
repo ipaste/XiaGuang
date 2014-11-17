@@ -1320,12 +1320,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
     [self redrawBlockAndFloorSwitch];
-    if (_targetMall != nil) {
-        _targetMall = [[[_majorArea floor] block] mall];
-        _navigationBar.titleName = [_targetMall mallName];
-        [self createSearchView];
-        
-    }
+    _navigationBar.titleName = [_targetMall mallName];
+  
+    [self setTargetMall:[[[_majorArea floor] block] mall]];
+ 
     [_menu hide];
 }
 
