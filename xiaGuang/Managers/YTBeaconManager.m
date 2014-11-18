@@ -108,8 +108,6 @@
     beacons = [self filterWhiteListedBeacon:beacons];
     _readbeacons = beacons;
     
-    
-    
     // notify all listeners
     for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
         [listener YTBeaconManager:self rangedBeacons:beacons];

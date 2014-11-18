@@ -47,7 +47,6 @@
         
         _searchTextField = [self getTextFieldFromSearchBar:_searchBar];
         _searchTextField.leftViewMode = UITextFieldViewModeAlways;
-        
         UIImage *leftImage = [UIImage imageNamed:@"nav_ico_search_un"];
         _searchLeftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, leftImage.size.width,  leftImage.size.height)];
         _searchLeftImageView.image = leftImage;
@@ -80,6 +79,7 @@
     _searchTextField.attributedPlaceholder = [[NSAttributedString alloc]initWithString:_placeholder attributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],NSFontAttributeName : [UIFont systemFontOfSize:14]}];
     _searchTextField.leftView = _searchLeftImageView;
     _searchTextField.tintColor = [UIColor whiteColor];
+    
     
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];

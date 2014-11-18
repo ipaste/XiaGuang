@@ -651,6 +651,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark YTNavigationBarManager
 
 -(void)searchButtonClicked{
+    if (_selectedPoi != nil) {
+        [self hideCallOut];
+    }
     [_searchView showSearchViewWithAnimation:YES];
 }
 
@@ -673,16 +676,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     FMDatabase *db = [YTDBManager sharedManager].db;
     if([db open]){
         
-        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ?",name];
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ?",name];
         [result next];
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
         
         if([tmpMerchantInstance identifier] == nil){
+            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该地图中找不到" cancelButtonTitle:@"知道了"]show];
             return;
         }
         
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
-        if(tmpMajorArea != nil){
+        if([[[[[tmpMajorArea floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
             _selectedPoi = [tmpMerchantInstance producePoi];
             [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
             
@@ -693,7 +697,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
             [self showCallOut];
         }else{
-            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该商城数据没有进入地图数据" cancelButtonTitle:@"知道了"]show];
+            
+            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"该店铺不在%@内",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
         }
     }
 }
@@ -719,7 +724,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                     if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
                         _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
                     }
-                    
+                    [self setTargetMall:[[[_majorArea floor] block] mall]];
                 }
             }
         }
@@ -1320,10 +1325,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
     [self redrawBlockAndFloorSwitch];
-    _navigationBar.titleName = [_targetMall mallName];
-  
     [self setTargetMall:[[[_majorArea floor] block] mall]];
- 
+    _navigationBar.titleName = [_targetMall mallName];
     [_menu hide];
 }
 
@@ -1380,10 +1383,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if ([[_targetMall identifier]isEqualToString:[aMall identifier]]) {
         return;
     }
-    
-    [self createSearchView];
-    
     _targetMall = aMall;
+    [self createSearchView];
 }
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){

@@ -97,6 +97,7 @@
 }
 -(void)promptFloorChange:(id<YTFloor>)floor{
     _majorArea = [floor majorAreas][0];
+
     [_floorButton  setTitle:[floor floorName] forState:UIControlStateNormal];
     _floorView.curFloor = floor;
 }
