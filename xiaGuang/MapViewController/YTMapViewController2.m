@@ -695,6 +695,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }else{
                 [_mapView highlightPoi:_selectedPoi animated:YES];
             }
+            
             [self showCallOut];
         }else{
             

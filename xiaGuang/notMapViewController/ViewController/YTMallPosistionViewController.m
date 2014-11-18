@@ -18,7 +18,7 @@
 -(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber{
     self = [super init];
     if (self) {
-        _mapImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, image.size.width / 2, image.size.height / 2)];
+        _mapImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
         _mapImageView.image = image;
         
         _mapImageView.contentMode =UIViewContentModeScaleAspectFill;
