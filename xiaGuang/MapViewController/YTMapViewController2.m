@@ -695,7 +695,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }else{
                 [_mapView highlightPoi:_selectedPoi animated:YES];
             }
-            
+            [_mapView setCenterCoordinate:[tmpMerchantInstance coordinate] animated:YES];
             [self showCallOut];
         }else{
             
