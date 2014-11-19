@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
-
+            
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -122,7 +122,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (self) {
         if ( floor != nil) {
             _majorArea = [[floor majorAreas] objectAtIndex:0];
-
+            
         }
         _type = YTMapViewControllerTypeFloor;
     }
@@ -167,7 +167,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)viewWillDisappear:(BOOL)animated{
     _currentViewDisplay = NO;
     
-
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -182,7 +182,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
             if(_type == YTMapViewControllerTypeNavigation){
                 
-            
+                
                 if(_menu == nil){
                     [self createBlurMenuWithCallBack:^{
                         [_menu show];
@@ -226,39 +226,39 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
     /*AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-    [query whereKeyExists:@"localDBId" ];
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 3 * 24 * 3600;
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            
-            
-            _malls = [NSMutableArray array];
-            
-            for (AVObject *mallObject in objects) {
-                YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
-                
-                [_malls addObject:mall];
-                
-            }
-            [self instantiateMenu];
-            if(callback!= nil){
-                callback();
-            }
-            
-        }else{
-            //获取失败
-            if(_alert == nil){
-                _alert = [[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil];
-                
-                if(_userMinorArea == nil){
-                    [_alert show];
-                }
-                
-            }
-        }
-        
-    }];*/
+     [query whereKeyExists:@"localDBId" ];
+     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+     query.maxCacheAge = 3 * 24 * 3600;
+     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+     if (!error) {
+     
+     
+     _malls = [NSMutableArray array];
+     
+     for (AVObject *mallObject in objects) {
+     YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
+     
+     [_malls addObject:mall];
+     
+     }
+     [self instantiateMenu];
+     if(callback!= nil){
+     callback();
+     }
+     
+     }else{
+     //获取失败
+     if(_alert == nil){
+     _alert = [[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil];
+     
+     if(_userMinorArea == nil){
+     [_alert show];
+     }
+     
+     }
+     }
+     
+     }];*/
     _malls = [NSMutableArray array];
     FMDatabase *db = [YTDBManager sharedManager].db;
     if([db open]){
@@ -323,7 +323,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_mapView setZoom:1 animated:NO];
     [self injectPoisForMajorArea:_majorArea];
 }
-    
+
 
 
 -(void)injectPoisForMajorArea:(id<YTMajorArea>)majorArea{
@@ -367,9 +367,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
-    
-    
-    
+
+
+
 -(void)createNavigationBar{
     _navigationBar = [[YTNavigationBar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 64)];
     _navigationBar.delegate = self;
@@ -439,12 +439,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlockAndFloorSwitch{
-    if ([[[[_majorArea floor] block]mall]blocks].count > 1) {
-        [_switchBlockView removeFromSuperview];
-        _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
-        _switchBlockView.delegate = self;
-        [self.view addSubview:_switchBlockView];
-    }
+    
+    [_switchBlockView removeFromSuperview];
+    _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
+    _switchBlockView.delegate = self;
+    [self.view addSubview:_switchBlockView];
+    
     
     [_switchFloorView removeFromSuperview];
     _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
@@ -454,7 +454,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)redrawBlockAndFloorSwitch{
     if ([[[[_curDisplayedMajorArea floor] block]mall]blocks].count > 1) {
+        _switchBlockView.hidden = NO;
         [_switchBlockView redrawWithMajorArea:_curDisplayedMajorArea];
+    }else{
+        _switchBlockView.hidden = YES;
     }
     
     [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
@@ -477,10 +480,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark MapViewDelegate
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
-
+    
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         
-        //hide callout and POI for 
+        //hide callout and POI for
         if([_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
             [mapView hidePoi:_selectedPoi animated:NO];
             [self hideCallOut];
@@ -904,7 +907,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 -(void)switchFloor:(id<YTFloor>)floor{
-
+    
     id<YTMajorArea> majorArea = [[floor majorAreas] firstObject];
     if (![[floor floorName] isEqualToString:[[_curDisplayedMajorArea floor]floorName]]) {
         
@@ -1150,7 +1153,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if ([poiObject isMemberOfClass:[YTCategory class]]){
         YTCategory *category = poiObject;
         [_selectedPoiButton setPoiImage:category.image];
-    
+        
     }else{
         if (_activePois.count > 0) {
             [_mapView hidePois:_activePois animated:YES];
