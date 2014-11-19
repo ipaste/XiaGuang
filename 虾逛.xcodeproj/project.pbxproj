@@ -81,6 +81,7 @@
 		AE859E5F1A19AD780044074F /* YTMapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E5E1A19AD780044074F /* YTMapManager.m */; };
 		AED846381A0C9C1B0055FD14 /* YTElevatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */; };
 		AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */; };
+		AEE032B61A1C9AF7002AFB9C /* YTMajorAreaVoter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032B51A1C9AF7002AFB9C /* YTMajorAreaVoter.m */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
 		D93CE4BD19FA5825004128FD /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BC19FA5825004128FD /* AppDelegate.mm */; };
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
@@ -321,6 +322,8 @@
 		AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorPoi.m; sourceTree = "<group>"; };
 		AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorAnnotation.h; sourceTree = "<group>"; };
 		AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorAnnotation.m; sourceTree = "<group>"; };
+		AEE032B41A1C9AF7002AFB9C /* YTMajorAreaVoter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMajorAreaVoter.h; sourceTree = "<group>"; };
+		AEE032B51A1C9AF7002AFB9C /* YTMajorAreaVoter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMajorAreaVoter.m; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D93CE4B419FA5825004128FD /* 虾逛.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾逛.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -647,6 +650,8 @@
 				AE24A8361A02430300A0CE91 /* YTDBManager.m */,
 				AE24A8371A02430300A0CE91 /* YTFileManager.h */,
 				AE24A8381A02430300A0CE91 /* YTFileManager.m */,
+				AEE032B41A1C9AF7002AFB9C /* YTMajorAreaVoter.h */,
+				AEE032B51A1C9AF7002AFB9C /* YTMajorAreaVoter.m */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -1270,6 +1275,7 @@
 				D94C27B11A02639F009FF2F3 /* YTMerchantPoi.m in Sources */,
 				D94C280C1A0263C6009FF2F3 /* YTMoreCategoryViewCell.m in Sources */,
 				AE859E241A0CC1DB0044074F /* YTServiceStationPoi.m in Sources */,
+				AEE032B61A1C9AF7002AFB9C /* YTMajorAreaVoter.m in Sources */,
 				D94C280D1A0263C6009FF2F3 /* YTPageControl.m in Sources */,
 				AE24A8A01A02432000A0CE91 /* YTCloudMerchantLocation.m in Sources */,
 				AE24A83A1A02430300A0CE91 /* YTBluetoothManager.m in Sources */,
