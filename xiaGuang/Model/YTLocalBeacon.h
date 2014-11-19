@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YTBeacon.h"
 #import "FMResultSet.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTLocalMinorArea.h"
 
 @interface YTLocalBeacon : NSObject<YTBeacon>

@@ -18,7 +18,7 @@
 -(id)initWithMallID:(NSString *)mallID{
     self = [super init];
     if(self){
-            FMDatabase *db = [YTDBManager sharedManager].db;
+            FMDatabase *db = [YTStaticResourceManager sharedManager].db;
             [db open];
         
             FMResultSet *result = [db executeQuery:@"select * from ChargeEngine where mallId = ?",mallID];

@@ -287,7 +287,7 @@
         if (localDBId == nil || localDBId.length <= 0) {
             return nil;
         }
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",localDBId];

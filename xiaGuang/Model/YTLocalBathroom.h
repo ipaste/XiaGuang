@@ -10,7 +10,7 @@
 #import "YTBathroom.h"
 #import "YTLocalMajorArea.h"
 #import "FMDatabase.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTBathroomPoi.h"
 
 @interface YTLocalBathroom : NSObject<YTBathroom>

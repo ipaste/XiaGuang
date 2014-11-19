@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YTBlock.h"
 #import "FMResultSet.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTLocalMall.h"
 
 @interface YTLocalBlock : NSObject<YTBlock>
