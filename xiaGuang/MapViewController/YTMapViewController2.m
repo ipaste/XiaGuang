@@ -23,7 +23,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 };
 
 @interface YTMapViewController2 (){
-    id<YTMinorArea> _minorArea;
     id<YTMajorArea> _majorArea;
     YTBeaconManager *_beaconManager;
     YTBluetoothManager *_bluetoothManager;
@@ -95,7 +94,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     self  = [super init];
     if (self) {
         if (minorArea != nil) {
-            _minorArea = minorArea;
+            _userMinorArea = minorArea;
             _majorArea = [minorArea majorArea];
             
         }
@@ -440,10 +439,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlockAndFloorSwitch{
-    [_switchBlockView removeFromSuperview];
-    _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
-    _switchBlockView.delegate = self;
-    [self.view addSubview:_switchBlockView];
+    if ([[[[_majorArea floor] block]mall]blocks].count > 1) {
+        [_switchBlockView removeFromSuperview];
+        _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
+        _switchBlockView.delegate = self;
+        [self.view addSubview:_switchBlockView];
+    }
     
     [_switchFloorView removeFromSuperview];
     _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
@@ -452,7 +453,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)redrawBlockAndFloorSwitch{
-    [_switchBlockView redrawWithMajorArea:_curDisplayedMajorArea];
+    if ([[[[_curDisplayedMajorArea floor] block]mall]blocks].count > 1) {
+        [_switchBlockView redrawWithMajorArea:_curDisplayedMajorArea];
+    }
+    
     [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
 }
 
@@ -470,6 +474,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _poiView = [[YTPoiView alloc]initWithShow:NO];
     _poiView.delegate = self;
 }
+
 #pragma mark MapViewDelegate
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
 
@@ -795,20 +800,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     
-    
     if(_type != YTMapViewControllerTypeNavigation){
         if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
             return;
         }
     }
     
-    
     if(_blurMenuShown){
         [_menu hide];
         _noBeaconCover.hidden = YES;
         [self redrawBlockAndFloorSwitch];
     }
-    
     
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
@@ -817,6 +819,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self redrawBlockAndFloorSwitch];
         [self handlePoiForMajorArea:_curDisplayedMajorArea];
     }
+    
     //if this minorArea is in a different major area or _userMinorArea is not created yet
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
@@ -843,8 +846,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _shownUser = NO;
         
     }else{
-        
-        //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [self showUserAtCoordinate:_userCoordintate];
         _switchingFloor = NO;
     }
@@ -961,7 +962,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     //if same floor
     if([[[_curDisplayedMajorArea floor] identifier] isEqualToString:[[[_userMinorArea majorArea] floor] identifier]]){
-        [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:YES];
+        [_mapView setCenterCoordinate:_userCoordintate animated:YES];
         
     }
     //different floor
@@ -1147,12 +1148,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)highlightTargetGroupOfPoi:(id)poiObject{
     
     if ([poiObject isMemberOfClass:[YTCategory class]]){
-        
         YTCategory *category = poiObject;
         [_selectedPoiButton setPoiImage:category.image];
-        
-        
+    
     }else{
+        if (_activePois.count > 0) {
+            [_mapView hidePois:_activePois animated:YES];
+            [_mapView removePois:_activePois];
+        }
         YTCommonlyUsed *commonlyUsed = poiObject;
         _activePois = [self getPoisForGroupName:[poiObject name]];
         _activePoiMajorArea = _curDisplayedMajorArea;
@@ -1167,6 +1170,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         else{
             [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
             [_poiView deleteSelectedPoi];
+            [self cancelCommonPoiState];
         }
         
     }
@@ -1215,6 +1219,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _activePois = nil;
     _activePoiMajorArea = nil;
     [_poiView deleteSelectedPoi];
+    [_mapView hidePois:_activePois animated:YES];
     [_mapView removePois:_activePois];
     _selectedPoiButton.hidden = YES;
     [self handlePoiForMajorArea:_curDisplayedMajorArea];
@@ -1238,9 +1243,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([_beaconManager currentClosest] != nil){
         [self userMoveToMinorArea:[self getMinorArea:[_beaconManager currentClosest]]];
     }
-    
-    
-    
     if([_mapView currentState] != YTMapViewDetailStateNormal){
         if([_mapView currentState] == YTMapViewDetailStateNavigating){
             [_navigationView stopNavigationMode];
@@ -1336,13 +1338,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 
--(void)dealloc{
-    
-    NSLog(@"destroy mapviewController");
-    
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
-}
-
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
     FMDatabase *db = [YTDBManager sharedManager].db;
@@ -1392,5 +1387,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self dismissViewControllerAnimated:YES completion:nil];
         _alert = nil;
     }
+}
+
+-(void)dealloc{
+    NSLog(@"destroy mapviewController");
+    [_searchView removeFromSuperview];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
 @end

@@ -260,6 +260,7 @@
 
 -(void)dealloc{
     [_detailsView removeFromSuperview];
+    _detailsView = nil;
     [_searchBar removeFromSuperview];
 }
 @end
