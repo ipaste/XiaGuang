@@ -9,12 +9,11 @@
 #import "YTMapView2.h"
 
 @implementation YTMapView2{
+    
     RMMapView *_internalMapView;
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
-    
-    
     
 }
 

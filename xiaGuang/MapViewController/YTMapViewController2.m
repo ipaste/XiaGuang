@@ -83,7 +83,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     CLLocationCoordinate2D _lastRecordedCoordinate;
     
-    
+    UILabel *_majorAreaLabel;
 }
 @end
 
@@ -160,8 +160,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
 
+    _majorAreaLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 100, 25, 25)];
+    _majorAreaLabel.backgroundColor = [UIColor blackColor];
+    _majorAreaLabel.alpha = 0.5;
 
-    
+    [self.view addSubview:_majorAreaLabel];
     /*
     
     if(_minorArea == nil){
@@ -324,7 +327,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     _menu = [[BlurMenu alloc] initWithItems:mallNames parentView:self.view delegate:self];
     
-    //[_menu show];
 }
 
 
@@ -713,26 +715,24 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
-    _majorArea = [self getMajorArea:beacon];
+    _majorArea = [YTMajorAreaVoter getMajorArea:beacon];
     NSLog(@"primary beacon shifted to %@, %@",beacon.major,beacon.minor);
-    if (_majorArea != nil) {
-        NSArray *minorAreas = [_majorArea minorAreas];
-        for(id<YTMinorArea> minorArea in minorAreas){
-            NSArray *beacons = [minorArea beacons];
-            for(id<YTBeacon> tempBeacon in beacons){
-                if([[tempBeacon major] integerValue] == [[beacon major] integerValue] && [[tempBeacon minor] integerValue] == [[beacon minor] integerValue])
-                {
-                    
-                    [self userMoveToMinorArea:minorArea];
-                    if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
-                        _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
-                    }
-                    
-                }
-            }
+    id<YTMinorArea> minorArea = [self getMinorArea:beacon];
+    if (_majorArea != nil && minorArea != nil) {
+        
+        if(![[[minorArea majorArea] identifier] isEqualToString:[YTMajorAreaVoter shouldSwitchToMajorAreaId:_beaconManager.readbeacons]]){
+            NSLog(@"current closest minorArea is not on the same majorArea as what top 10 beacons agree");
+            return;
         }
+        
+        [self userMoveToMinorArea:minorArea];
+        if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
+            _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
+        }
+        
     }
 }
+
 
 
 -(void)showUserAtCoordinate:(CLLocationCoordinate2D)coordinate{
@@ -755,44 +755,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         _shownUser = YES;
     }
-}
-
--(BOOL)shouldSwitchToMinorArea:(id<YTMinorArea>)minorArea{
-    
-    //if equal to current recorded _userminorArea
-    if(_userMinorArea == nil || [[[_userMinorArea majorArea] identifier] isEqualToString: [[minorArea majorArea] identifier]]){
-        NSLog(@"should remain on the same floor because same floor");
-        return true;
-    }
-    else{
-        
-        if(_beaconManager.readbeacons.count <= 3){
-            NSLog(@"should switch because readbeacons less than 3");
-            return true;
-        }
-        else{
-            int sameFloorVotes = [self numberOfSameFloorInFirstServeralClosestBeacons:minorArea];
-            if(sameFloorVotes<2){
-                NSLog(@"should remain on the same floor because no overrule");
-                return false;
-            }
-        }
-    }
-    NSLog(@"overruled by another major area should not remain on the same floor");
-    return true;
-}
-
-
--(int)numberOfSameFloorInFirstServeralClosestBeacons:(id<YTMinorArea>)minorArea{
-    int count = 0;
-    for(int i = 0; i<3 ; i++){
-        ESTBeacon *beacon = _beaconManager.readbeacons[i];
-        id<YTBeacon> localBeacon = [self getYTBeacon:beacon];
-        if([[[[localBeacon minorArea] majorArea] identifier] isEqualToString:[[minorArea majorArea] identifier]]){
-            count++;
-        }
-    }
-    return count;
 }
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
@@ -861,17 +823,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _changeFloorIndicator.hidden = YES;
 }
 
--(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon{
-    
-    FMDatabase *db = [YTDBManager sharedManager].db;
-    [db open];
-    FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
-    [result next];
-    YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
-    
-    YTLocalMajorArea * majorArea = [[localBeacon minorArea] majorArea];
-    return majorArea;
-}
+
 -(id<YTBeacon>)getYTBeacon:(ESTBeacon *)beacon{
     
     FMDatabase *db = [YTDBManager sharedManager].db;
