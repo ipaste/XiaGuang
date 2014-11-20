@@ -127,6 +127,7 @@
             break;
         case 1:
         {
+            
             controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             if (controller == nil) return;

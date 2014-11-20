@@ -27,7 +27,7 @@
         
         _selectedButtonIndex = -1;
         
-        _window = [UIApplication sharedApplication].windows[0];
+        _window = [[UIApplication sharedApplication].delegate window];
 
         _commons = [NSMutableArray arrayWithArray:[YTCommonlyUsed commonlyUsed]];
         

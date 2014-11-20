@@ -130,6 +130,11 @@
     
     
     _subLabel.text = instruction.mainInstruction;
+    if (instruction.type == YTNavigationInstructionApproachingDestination) {
+         YTMessageBox *tmpMessage = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"您已经到达了终点,是否结束导航"];
+        tmpMessage.delegate = self;
+        [tmpMessage show];
+    }
 }
 
 -(void)showSwitchAnimation{

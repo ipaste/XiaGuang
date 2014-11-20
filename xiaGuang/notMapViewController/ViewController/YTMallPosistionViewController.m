@@ -14,12 +14,14 @@
     UILabel *_phoneNumberLabel;
     UILabel *_addressLabel;
 }
+
 -(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber{
     self = [super init];
     if (self) {
-        _mapImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, -30, image.size.width, image.size.height)];
+        _mapImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
         _mapImageView.image = image;
         
+        _mapImageView.contentMode =UIViewContentModeScaleAspectFill;
         [self.view addSubview:_mapImageView];
         
         self.navigationItem.title = @"商圈位置";

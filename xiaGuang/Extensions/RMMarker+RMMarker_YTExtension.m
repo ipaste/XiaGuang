@@ -197,12 +197,14 @@ static YTCompletion Completion = nil;
         textLayer.foregroundColor =[[UIColor colorWithString:@"404040"] CGColor];
         textLayer.backgroundColor = [[UIColor blackColor] CGColor];
         self.masksToBounds = NO;
+        self.bounds = CGRectMake(0, 0,5,5);
+        self.backgroundColor = [UIColor redColor].CGColor;
         
         CALayer *imageLayer = [CALayer layer];
         UIImage *image = [UIImage imageNamed:@"nav_img_end_un"];
         int imgWidth = image.size.width;
         int imgHeight = image.size.height;
-        imageLayer.frame = CGRectMake(-imgWidth / 2 - 5,-imgHeight / 2, 38, 49);
+        imageLayer.frame = CGRectMake(-imgWidth / 2,-imgHeight / 2, 38, 49);
         imageLayer.anchorPoint = CGPointMake(0.5, 1);
         imageLayer.contents = (id)[image CGImage];
         imageLayer.contentsScale = image.scale;
