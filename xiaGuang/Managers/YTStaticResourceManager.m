@@ -52,15 +52,9 @@
 @interface YTStaticResourceManager() {
     NSTimer *_timer;
     
-    BOOL _hasNewDB;
     
     NSObject *_lock;
     
-    NSString *_dir;
-    
-    NSString *_plistPath;
-    NSString *_localDBPath;
-    NSString *_backupDBPath;
     
     NSObject *_downloadProgress;
     
@@ -160,43 +154,6 @@
     }
 }
 
-- (void)checkAndSwitchToNewDB {
-    @synchronized(_lock) {
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:_plistPath];
-        
-        int backupVersion = [dict[BACKUPDB_VERSION_KEY] intValue];
-        
-        if (backupVersion != 0) {
-            // there's a new version. do the swap
-            
-            // First switch to new db
-            _db = [[FMDatabase alloc] initWithPath:_backupDBPath];
-            
-            // Then delete the original file
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            
-            [fileManager removeItemAtPath:_localDBPath error:&error];
-            
-            // Then copy new file to be the new local file
-            [fileManager copyItemAtPath:_backupDBPath toPath:_localDBPath error:&error];
-            
-            // switch to new db
-            _db = [[FMDatabase alloc] initWithPath:_localDBPath];
-            
-            // remove new db file
-            [fileManager removeItemAtPath:_backupDBPath error:&error];
-            
-            // update plist
-            dict[LOCALDB_VERION_KEY] = [NSNumber numberWithInt:backupVersion];
-            [dict removeObjectForKey:BACKUPDB_VERSION_KEY];
-            
-            [dict writeToFile:_plistPath atomically:YES];
-        }
-    }
-    
-}
-
 
 
 - (void)checkAndSwitchToNewStaticData {
@@ -238,35 +195,6 @@
         }
         
         [self theGreatMigrate];
-        /*
-        if(![FCFileManager isDirectoryItemAtPath:STAGEING_DIR] || ![FCFileManager existsItemAtPath:STAGEING_DIR]){
-            //if staging is present then return
-            return;
-        }
-        
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
-        
-        int backupVersion = [dict[BACKUP_STATIC_DATA_VERSION_KEY] intValue];
-        
-        if (backupVersion != 0) {
-            // there's a new version. do the swap
-            
-            [self extractFiles];
-            [self updateAndRemoveMaps];
-            [self releaseNewDB];
-            
-            // update plist
-            dict[LOCAL_STATIC_DATA_VERSION_KEY] = [NSNumber numberWithInt:backupVersion];
-            [dict removeObjectForKey:BACKUP_STATIC_DATA_VERSION_KEY];
-            
-            [dict writeToFile:PLIST_PATH atomically:YES];
-        }
-        
-        
-        NSArray *stagingdata = [FCFileManager listFilesInDirectoryAtPath:STAGEING_DIR];
-        
-        [FCFileManager listFilesInDirectoryAtPath:DATA_DIR];
-         */
     }
     
 }
@@ -277,7 +205,8 @@
     [FCFileManager copyItemAtPath:STAGING_DIR toPath:CURRENT_DIR];
     _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
     [FCFileManager removeItemAtPath:STAGING_DIR];
-    
+    [FCFileManager removeItemAtPath:[NSString stringWithFormat:@"%@/delete.plist",CURRENT_DIR]];
+    [FCFileManager removeItemAtPath:[NSString stringWithFormat:@"%@/update.plist",CURRENT_DIR]];
 }
 
 - (NSURL *)applicationDocumentsDirectory
@@ -468,51 +397,6 @@
     return result;
 }
 
-/*
--(BOOL)extractFiles{
-    
-    URKArchive *archiver = [URKArchive rarArchiveAtPath:RAR_PATH];
-    [FCFileManager removeItemsInDirectoryAtPath:STAGEING_DIR];
-    
-    NSError *err;
-    BOOL extractResult = [archiver extractFilesTo:STAGEING_DIR overWrite:YES error:&err];
-    if(!extractResult || err != nil){
-        NSLog(@"shit");
-        return false;
-    }
-    
-    return true;
-    
-}
-
--(void)updateAndRemoveMaps{
-    NSMutableDictionary *instructionDict = [[NSMutableDictionary alloc] initWithContentsOfFile:INSTRUCTION_PLIST];
-    NSArray *update = [instructionDict objectForKey:@"update"];
-    NSArray *remove = [instructionDict objectForKey:@"remove"];
-    
-    for(NSString *filename in update){
-        NSString *fromPath = [NSString stringWithFormat:@"%@%@",STAGEING_DIR,filename];
-        NSString *toPath = [NSString stringWithFormat:@"%@%@",DATA_DIR,filename];
-        [FCFileManager copyItemAtPath:fromPath toPath:toPath];
-    }
-    
-    
-    for(NSString *toRemove in remove){
-        NSString *toRemovePath = [NSString stringWithFormat:@"%@%@",DATA_DIR,toRemove];
-        [FCFileManager removeItemAtPath:toRemove];
-    }
-}
-
--(void)releaseNewDB{
-    NSString *stagingDBPath = [NSString stringWithFormat:@"%@%@",STAGEING_DIR,@"highGuangDB"];
-    if([FCFileManager existsItemAtPath:stagingDBPath]){
-        _db = [[FMDatabase alloc] initWithPath:stagingDBPath];
-        [FCFileManager removeItemAtPath:_localDBPath];
-        [FCFileManager copyItemAtPath:stagingDBPath toPath:_localDBPath];
-        _db = [[FMDatabase alloc] initWithPath:_localDBPath];
-    }
-    
-}*/
 
 
 

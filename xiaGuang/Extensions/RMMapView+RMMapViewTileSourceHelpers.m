@@ -7,7 +7,7 @@
 //
 
 #import "RMMapView+RMMapViewTileSourceHelpers.h"
-
+#import "RMMBTilesSource+YTExtension.h"
 @implementation RMMapView (RMMapViewTileSourceHelpers)
 
 
@@ -33,9 +33,15 @@
     
     
     if(!found){
-        
-        RMMBTilesSource *source = [[RMMBTilesSource alloc]initWithTileSetResource:sourceName];
+        RMMBTilesSource *source;
+        if(sourceName == nil){
+            source = [[RMMBTilesSource alloc]initWithTileSetResource:sourceName];
+        }
+        else{
+            source = [[RMMBTilesSource alloc] initWithTileSetResourceInDocument:sourceName ofType:@"mbtiles"];
+        }
         source.cacheable = NO;
+
         [self addTileSource:source];
         
         [self showTileSourceAtIndex:self.tileSources.count-1];
