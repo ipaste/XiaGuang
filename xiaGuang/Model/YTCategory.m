@@ -46,7 +46,7 @@
     YTCategory *goods = [[YTCategory alloc]init];
     goods.text = @"精品";
     goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜",@"其他"];
-    goods.image = [UIImage imageNamed:@"nav_ico_5"];
+    goods.image = [UIImage imageNamed:@"nav_ico_6"];
     goods.smallImage = [UIImage imageNamed:@"nav_ico_6small"];
     goods.tintColor = [UIColor colorWithString:@"51afff"];
     goods.titleColor = [UIColor colorWithString:@"40aaf7"];
@@ -54,7 +54,7 @@
     YTCategory *beauty = [[YTCategory alloc]init];
     beauty.text = @"丽人";
     beauty.subText =  @[@"全部",@"彩妆",@"美体",@"美容",@"美甲",@"美发"];
-    beauty.image = [UIImage imageNamed:@"nav_ico_6"];
+    beauty.image = [UIImage imageNamed:@"nav_ico_5"];
     beauty.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
     beauty.tintColor = [UIColor colorWithString:@"f24682"];
     beauty.titleColor = [UIColor colorWithString:@"f9568f"];

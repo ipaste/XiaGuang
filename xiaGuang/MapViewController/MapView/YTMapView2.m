@@ -9,12 +9,11 @@
 #import "YTMapView2.h"
 
 @implementation YTMapView2{
+    
     RMMapView *_internalMapView;
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
-    
-    
     
 }
 
@@ -230,9 +229,9 @@
     
     if([annotation.annotationType isEqualToString:@"user"]){
         return;
-    }/*
+    }
     YTPoi *resultPoi = [_annotationSource poiForAnnotation:(YTAnnotation *)annotation];
-    [self.delegate mapView:self tapOnPoi:resultPoi];*/
+    [self.delegate mapView:self tapOnPoi:resultPoi];
 }
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{

@@ -63,8 +63,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
     self = [super init];
     if (self) {
+        if ([[minorArea majorArea]isParking]) {
+            _userMinorArea = minorArea;
+        }
         _initializationComplete = NO;
-        _userMinorArea = minorArea;
         _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
         _beaconManager = [YTBeaconManager sharedBeaconManager];
@@ -609,9 +611,15 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
     
     id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
-    
-    
     if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
+        if ([[[[[[_userMinorArea majorArea]floor]block]mall]identifier] isEqualToString:[[[[[tmpMinorArea majorArea] floor] block] mall] identifier]]) {
+            
+            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您已经走出了停车场"] cancelButtonTitle:@"知道了"]show];
+        }
+        if (_shownUser == YES) {
+            [_mapView removeUserLocation];
+            _shownUser = NO;
+        }
         _userMinorArea = nil;
         return;
     }
@@ -801,7 +809,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                             majorArea] floor] block] mall] identifier];
     YTLocalCharge *tmpCharge = [[YTLocalCharge alloc]initWithMallID:mallID];
     
-    charge = [YTChargeStandard chargeStandardForTime:hours p:tmpCharge.P  k:tmpCharge.K  a:tmpCharge.A  maxMoney:tmpCharge.Max];
+    charge = [YTChargeStandard chargeStandardForTime:hours p:(int)tmpCharge.P  k:(int)tmpCharge.K  a:(int)tmpCharge.A  maxMoney:(int)tmpCharge.Max];
     return [NSString stringWithFormat:@"%d 元",charge];
 }
 

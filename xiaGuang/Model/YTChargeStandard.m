@@ -14,6 +14,7 @@
 
 +(int)chargeStandardForTime:(int)time p:(int)p k:(int)k a:(int)a maxMoney:(int)maxMoney{
     int charge = a + (time - k) * p;
+    charge = charge < 0 ? p:charge;
     return charge > maxMoney ? maxMoney:charge;
 }
 @end

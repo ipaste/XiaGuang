@@ -10,6 +10,9 @@
 #import "YTNavigationController.h"
 #import <AVOSCloud/AVOSCloud.h>
 #import "YTDBManager.h"
+#import <FCFileManager.h>
+
+
 
 @interface AppDelegate () {
     double _timeInToBackground;
@@ -33,6 +36,27 @@
     [[YTDBManager sharedManager] startBackgroundDownload];
     [[YTDBManager sharedManager] checkAndSwitchToNewDB];
     
+    
+    /*
+    NSString *mainbundle = [FCFileManager pathForMainBundleDirectory];
+    NSString *document = [FCFileManager pathForDocumentsDirectory];
+    NSArray *files = [FCFileManager listFilesInDirectoryAtPath:mainbundle withExtension:@"mbtiles"];
+    NSError *err = nil;
+    for(NSString *file in files){
+        NSLog(@"%@",file);
+        NSString *mapName = [file lastPathComponent];
+        NSString *destPath = [NSString stringWithFormat:@"%@/%@",document,mapName];
+        [FCFileManager copyItemAtPath:file toPath:destPath error:&err];
+        if(err != nil){
+            NSLog(@"shit");
+        }
+    }
+    
+    NSArray *files2 = [FCFileManager listFilesInDirectoryAtPath:document withExtension:@"mbtiles"];
+    for(NSString *file2 in files2){
+        NSLog(@"%@",file2);
+    }*/
+    
     _timeInToBackground = 0;
     
     return YES;
@@ -53,7 +77,7 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
     
-    if (now - _timeInToBackground >= 600) { // 10 minutes wait
+    if (now - _timeInToBackground >= 1800) { // 30 minutes wait
         self.window = [[UIWindow alloc]init];
         self.window.frame = [UIScreen mainScreen].bounds;
         self.window.backgroundColor = [UIColor blackColor];
@@ -62,6 +86,7 @@
         [[YTDBManager sharedManager] checkAndSwitchToNewDB];
     }
 }
+
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
