@@ -72,25 +72,16 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELLIDENTIFIER];
-    UIButton *button = nil;
-    if (cell == nil ) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CELLIDENTIFIER];
-        cell.backgroundColor = [UIColor clearColor];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, _width_height, _width_height)];
-        [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
-        [button addTarget:self action:@selector(floorButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:button];
-        [_buttons addObject:button];
-    }else{
-        UIView *view = [cell.subviews firstObject];
-        for (UIView *buttonView in view.subviews) {
-            if ([buttonView isMemberOfClass:[UIButton class]]) {
-                button = (UIButton *)buttonView;
-            }
-        }
-    }
+    UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CELLIDENTIFIER];
+    cell.backgroundColor = [UIColor clearColor];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, _width_height, _width_height)];
+    [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [button addTarget:self action:@selector(floorButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [cell addSubview:button];
+    [_buttons addObject:button];
+    
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     id <YTFloor> floor = _items[indexPath.row] ;
     [button setTitle:[floor floorName] forState:UIControlStateNormal];
@@ -114,7 +105,7 @@
     _currentButton = sender;
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-
-
+    
+    
 }
 @end

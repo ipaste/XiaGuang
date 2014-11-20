@@ -29,7 +29,6 @@
 -(NSString *)poiKey{
     if(_key==nil){
         _key = [NSString stringWithFormat:@"serviceStation-%@",[_serviceStation identifier]];
-        
     }
     return _key;
 }

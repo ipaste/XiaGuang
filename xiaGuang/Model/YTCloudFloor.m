@@ -44,12 +44,11 @@
 
 -(NSArray *)majorAreas{
     if(_majorAreas == nil){
-        
         _majorAreas = [[NSMutableArray alloc] init];
         AVQuery *query = [[AVQuery alloc] initWithClassName:MAJORAREA_CLASS_NAME];
         [query includeKey:@"floor.mall"];
         query.maxCacheAge = 24 * 3600;
-        query.cachePolicy = kAVCachePolicyCacheElseNetwork;\
+        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         [query whereKey:MAJORAREA_CLASS_FLOOR_KEY equalTo:_internalObject];
         NSArray *result = [query findObjects];
         
