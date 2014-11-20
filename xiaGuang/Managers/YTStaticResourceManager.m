@@ -100,19 +100,8 @@
         [self pullInBundleDataInManifestIfNeeded];
         _lock = [[NSObject alloc] init];
         _downloadProgress = [[NSObject alloc] init];
-        /*
-        if (![fileManager fileExistsAtPath:PLIST_PATH]) {
-            [fileManager copyItemAtPath:[[NSBundle mainBundle] pathForResource:@"static" ofType:@"plist"]
-                                 toPath:PLIST_PATH
-                                  error:&error];
-        }
-        
-        
-        _db = [[FMDatabase alloc] initWithPath:_localDBPath];
         _timer = nil;
-        _hasNewDB = NO;
-        _lock = [[NSObject alloc] init];
-        */
+        _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
         
     }
     return self;
@@ -248,7 +237,8 @@
             [FCFileManager copyItemAtPath:filename toPath:[NSString stringWithFormat:@"%@/%@.mbtiles",STAGING_DATA_DIR,mapName]];
         }
         
-        _db =
+        _db = [[FMDatabase alloc] initWithPath:STAGING_DATA_DB_PATH];
+        [self theGreatMigrate];
         /*
         if(![FCFileManager isDirectoryItemAtPath:STAGEING_DIR] || ![FCFileManager existsItemAtPath:STAGEING_DIR]){
             //if staging is present then return
@@ -280,6 +270,10 @@
          */
     }
     
+}
+
+-(void)theGreatMigrate{
+    [FCFileManager removeItemAtPath:CURRENT_DIR];
 }
 
 - (NSURL *)applicationDocumentsDirectory
