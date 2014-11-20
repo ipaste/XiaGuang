@@ -10,7 +10,7 @@
 
 #import <AVOSCloud/AVOSCloud.h>
 #import <FCFileManager.h>
-#import <UnrarKit/URKArchive.h>t
+#import <UnrarKit/URKArchive.h>
 #define LOCALDB_VERION_KEY  @"YTLocalDBVersion"
 #define BACKUPDB_VERSION_KEY    @"YTBackupDBVersion"
 
@@ -31,10 +31,7 @@
 
 #define RAR_PATH [FCFileManager pathForDocumentsDirectoryWithPath:@"data.rar"]
 #define PLIST_PATH [FCFileManager pathForDocumentsDirectoryWithPath:@"static.plist"]
-#define INSTRUCTION_PLIST [FCFileManager pathForDocumentsDirectoryWithPath:@"/static-staging/instruction.plist"]
 
-#define STAGEING_DIR [FCFileManager pathForDocumentsDirectoryWithPath:@"/static-staging/"]
-#define DATA_DIR [FCFileManager pathForDocumentsDirectoryWithPath:@"/static-data/"]
 
 #define CURRENT_DIR [FCFileManager pathForDocumentsDirectoryWithPath:@"/current/"]
 #define CURRENT_DATA_DIR [FCFileManager pathForDocumentsDirectoryWithPath:@"/current/data/"]
@@ -49,6 +46,9 @@
 #define STAGING_DATA_DB_PATH [FCFileManager pathForDocumentsDirectoryWithPath:@"/staging/data/highGuangDB"]
 #define STAGING_MANIFEST_PATH [FCFileManager pathForDocumentsDirectoryWithPath:@"/staging/manifest.plist"]
 
+
+#define STAGING_UPDATE_TABLE [FCFileManager pathForDocumentsDirectoryWithPath:@"/staging/update.plist"]
+#define STAGING_DELETE_TABLE [FCFileManager pathForDocumentsDirectoryWithPath:@"/staging/delete.plist"]
 @interface YTStaticResourceManager() {
     NSTimer *_timer;
     
@@ -61,6 +61,8 @@
     NSString *_plistPath;
     NSString *_localDBPath;
     NSString *_backupDBPath;
+    
+    NSObject *_downloadProgress;
     
 }
 
@@ -96,6 +98,8 @@
         }
         
         [self pullInBundleDataInManifestIfNeeded];
+        _lock = [[NSObject alloc] init];
+        _downloadProgress = [[NSObject alloc] init];
         /*
         if (![fileManager fileExistsAtPath:PLIST_PATH]) {
             [fileManager copyItemAtPath:[[NSBundle mainBundle] pathForResource:@"static" ofType:@"plist"]
@@ -152,7 +156,7 @@
 - (void)startBackgroundDownload {
     if (_timer == nil) {
         // check every hour
-        _timer = [NSTimer scheduledTimerWithTimeInterval:60
+        _timer = [NSTimer scheduledTimerWithTimeInterval:10
                                                   target:self
                                                 selector:@selector(checkAndDownloadData:)
                                                 userInfo:nil
@@ -207,8 +211,45 @@
 
 
 - (void)checkAndSwitchToNewStaticData {
-    @synchronized(_lock) {
+    @synchronized(_downloadProgress) {
         
+        if(![FCFileManager existsItemAtPath:STAGING_UPDATE_TABLE]){
+            return;
+        }
+        NSMutableDictionary *update = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_UPDATE_TABLE];
+        if(update.count > 0){
+            NSLog(@"download not done");
+            return;
+        }
+        
+        
+        NSMutableDictionary *curDict = [[NSMutableDictionary alloc] initWithContentsOfFile:CURRENT_MANIFEST_PATH];
+        NSMutableDictionary *stagingDict = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_MANIFEST_PATH];
+        
+        NSDictionary *updateTable = [self toUpdateToGetManifest1:stagingDict fromManifest2:curDict];
+        NSArray *deleteTable = [self toDeleteToGetManifest1:stagingDict fromManifest2:curDict];
+        
+        NSArray *currentfiles = [FCFileManager listFilesInDirectoryAtPath:CURRENT_DATA_DIR];
+        for(NSString *filename in currentfiles){
+            
+            if([filename containsString:@"highGuangDB"]){
+                if([updateTable objectForKey:@"db"] == nil){
+                    [FCFileManager copyItemAtPath:CURRENT_DATA_DB_PATH toPath:STAGING_DATA_DB_PATH];
+                }
+                continue;
+            }
+            NSString *mapPath = [filename substringToIndex:filename.length-@".mbtiles".length];
+            NSArray *paths = [mapPath pathComponents];
+            NSString *mapName = paths[paths.count-1];
+            if([updateTable objectForKey:mapName] != nil || [deleteTable containsObject:mapName]){
+                continue;
+            }
+            
+            [FCFileManager copyItemAtPath:filename toPath:[NSString stringWithFormat:@"%@/%@.mbtiles",STAGING_DATA_DIR,mapName]];
+        }
+        
+        _db =
+        /*
         if(![FCFileManager isDirectoryItemAtPath:STAGEING_DIR] || ![FCFileManager existsItemAtPath:STAGEING_DIR]){
             //if staging is present then return
             return;
@@ -236,6 +277,7 @@
         NSArray *stagingdata = [FCFileManager listFilesInDirectoryAtPath:STAGEING_DIR];
         
         [FCFileManager listFilesInDirectoryAtPath:DATA_DIR];
+         */
     }
     
 }
@@ -247,7 +289,7 @@
 
 -(void)checkAndDownloadData:(NSTimer *)timer{
     
-    if([FCFileManager isDirectoryItemAtPath:STAGEING_DIR]){
+    if([FCFileManager isDirectoryItemAtPath:STAGING_DIR]){
         //if staging is present then return
         return;
     }
@@ -281,8 +323,85 @@
                             [self createStagingArea];
                             
                             [data writeToFile:STAGING_MANIFEST_PATH atomically:YES];
+                            NSMutableDictionary *curDict = [[NSMutableDictionary alloc] initWithContentsOfFile:CURRENT_MANIFEST_PATH];
+                            NSMutableDictionary *stagingDict = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_MANIFEST_PATH];
                             
+                            NSDictionary *updateTable = [self toUpdateToGetManifest1:stagingDict fromManifest2:curDict];
+                            NSArray *deleteTable = [self toDeleteToGetManifest1:stagingDict fromManifest2:curDict];
                             
+                            [updateTable writeToFile:STAGING_UPDATE_TABLE atomically:YES];
+                            [deleteTable writeToFile:STAGING_DELETE_TABLE atomically:YES];
+                            
+                            if([updateTable objectForKey:@"db"] != nil){
+                                AVQuery *queryForDB = [AVQuery queryWithClassName:@"DB"];
+                                [queryForDB whereKey:@"version" equalTo:[updateTable objectForKey:@"db"]];
+                                [queryForDB getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error1) {
+                                    if(error1 != nil){
+                                        NSLog(@"couldn't get db object");
+                                        return;
+                                    }
+                                    AVFile *db = object[@"db"];
+                                    [db getDataInBackgroundWithBlock:^(NSData *data, NSError *error2) {
+                                        if(error2 != nil){
+                                            NSLog(@"couldn't get db file");
+                                            return;
+                                        }
+                                        @synchronized(_downloadProgress){
+                                            [data writeToFile:STAGING_DATA_DB_PATH atomically:YES];
+                                            NSMutableDictionary *update = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_UPDATE_TABLE];
+                                            if([update objectForKey:@"db"] == nil){
+                                                NSLog(@"some crazy thing happens");
+                                            }
+                                            [update removeObjectForKey:@"db"];
+                                            [update writeToFile:STAGING_UPDATE_TABLE atomically:YES];
+                                        }
+                                        
+                                    }];
+                                }];
+                            }
+                            
+                            NSMutableArray *queries = [NSMutableArray array];
+                            
+                            for(NSString *key in updateTable.allKeys){
+                                AVQuery *subquery = [[AVQuery alloc]initWithClassName:@"Map"];
+                                if([key isEqualToString:@"db"]){
+                                    continue;
+                                }
+                                
+                                [subquery whereKey:@"version" equalTo:[updateTable objectForKey:key]];
+                                [subquery whereKey:@"mapName" equalTo:key];
+                                [queries addObject:subquery];
+                            }
+                            if(queries.count == 0){
+                                //handle it here
+                            }
+                            AVQuery *or = [AVQuery orQueryWithSubqueries:queries];
+                            [or findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *err) {
+                                if(err != nil){
+                                    NSLog(@"or fails");
+                                    return;
+                                }
+                                for(AVObject *tmp in objects){
+                                    AVFile *map = tmp[@"map"];
+                                    [map getDataInBackgroundWithBlock:^(NSData *data, NSError *err2) {
+                                        if(err2 != nil){
+                                            NSLog(@"download map data fails");
+                                        }
+                                        
+                                        
+                                        
+                                        @synchronized(_downloadProgress){
+                                            [data writeToFile:[NSString stringWithFormat:@"%@/%@.mbtiles",STAGING_DATA_DIR,tmp[@"mapName"]] atomically:YES];
+                                            NSMutableDictionary *update = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_UPDATE_TABLE];
+                                            if([update objectForKey:tmp[@"mapName"]] == nil){
+                                                NSLog(@"some crazy thing happens");
+                                            }
+                                            [update removeObjectForKey:tmp[@"mapName"]];
+                                            [update writeToFile:STAGING_UPDATE_TABLE atomically:YES];
+                                        }
+                                    }];
+                                }
+                            }];
                         }
                     }
                 }];
@@ -291,20 +410,67 @@
     }];
 }
 
+
+
 -(void)createStagingArea{
     
     if([FCFileManager existsItemAtPath:STAGING_DIR]){
         [FCFileManager removeItemAtPath:STAGING_DIR];
     }
-    [FCFileManager createDirectoriesForPath:STAGEING_DIR];
+    [FCFileManager createDirectoriesForPath:STAGING_DIR];
     [FCFileManager createDirectoriesForPath:STAGING_DATA_DIR];
 }
 
 -(void)compareAndDownload{
     NSMutableDictionary *currentManifest = [[NSMutableDictionary alloc] initWithContentsOfFile:CURRENT_MANIFEST_PATH];
-    NSMutableDictionary *const = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_MANIFEST_PATH];
+    NSMutableDictionary *stagingManifest = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_MANIFEST_PATH];
 }
 
+-(NSDictionary *)toUpdateToGetManifest1:(NSMutableDictionary *)dict1
+                     fromManifest2:(NSMutableDictionary *)dict2{
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    for(NSString *key in dict1.allKeys){
+        if([key isEqualToString:@"version"]){
+            continue;
+        }
+        
+        if([key isEqualToString:@"db"]){
+            int toDBVersion = [[dict1 objectForKey:key] integerValue];
+            int fromDBVersion = [[dict2 objectForKey:key] integerValue];
+            if(toDBVersion != fromDBVersion){
+                [result setObject:[NSNumber numberWithInt:toDBVersion] forKey:@"db"];
+            }
+            continue;
+        }
+        int tmpVersion = [[dict1 objectForKey:key] integerValue];
+        
+        
+        if([dict2 objectForKey:key] == nil ){
+            [result setObject:[NSNumber numberWithInt:tmpVersion] forKey:key];
+            continue;
+        }
+        
+        int tmpVersion2 = [[dict2 objectForKey:key] integerValue];
+        if(tmpVersion != tmpVersion2){
+            [result setObject:[NSNumber numberWithInt:tmpVersion] forKey:key];
+        }
+    }
+    return result;
+    
+}
+
+-(NSArray *)toDeleteToGetManifest1:(NSMutableDictionary *)dict1
+                     fromManifest2:(NSMutableDictionary *)dict2{
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    for(NSString *key in dict2.allKeys){
+        if([dict1 objectForKey:key] == nil){
+            [result addObject:key];
+        }
+    }
+    return result;
+}
+
+/*
 -(BOOL)extractFiles{
     
     URKArchive *archiver = [URKArchive rarArchiveAtPath:RAR_PATH];
@@ -348,7 +514,7 @@
         _db = [[FMDatabase alloc] initWithPath:_localDBPath];
     }
     
-}
+}*/
 
 
 
