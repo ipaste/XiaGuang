@@ -174,6 +174,11 @@
 		D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */; };
 		D9AE507B1A0B4F160080CF21 /* YTBeaconPosistionPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */; };
 		D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */; };
+		D9C434311A1DE4FB005AF8B5 /* kkmallB1Jpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9C4342C1A1DE4FA005AF8B5 /* kkmallB1Jpark.mbtiles */; };
+		D9C434321A1DE4FB005AF8B5 /* kkmallL2Jpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9C4342D1A1DE4FA005AF8B5 /* kkmallL2Jpark.mbtiles */; };
+		D9C434331A1DE4FB005AF8B5 /* kkmallL3Jpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9C4342E1A1DE4FA005AF8B5 /* kkmallL3Jpark.mbtiles */; };
+		D9C434341A1DE4FB005AF8B5 /* kkmallpark-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9C4342F1A1DE4FB005AF8B5 /* kkmallpark-2.mbtiles */; };
+		D9C434351A1DE4FB005AF8B5 /* kkmallpark-3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9C434301A1DE4FB005AF8B5 /* kkmallpark-3.mbtiles */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -505,6 +510,11 @@
 		D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTBeaconPosistionPoi.m; path = pois/YTBeaconPosistionPoi.m; sourceTree = "<group>"; };
 		D9AE507C1A0B4FDA0080CF21 /* YTBeaconAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTBeaconAnnotation.h; path = subView/YTBeaconAnnotation.h; sourceTree = "<group>"; };
 		D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTBeaconAnnotation.m; path = subView/YTBeaconAnnotation.m; sourceTree = "<group>"; };
+		D9C4342C1A1DE4FA005AF8B5 /* kkmallB1Jpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallB1Jpark.mbtiles; sourceTree = "<group>"; };
+		D9C4342D1A1DE4FA005AF8B5 /* kkmallL2Jpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL2Jpark.mbtiles; sourceTree = "<group>"; };
+		D9C4342E1A1DE4FA005AF8B5 /* kkmallL3Jpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL3Jpark.mbtiles; sourceTree = "<group>"; };
+		D9C4342F1A1DE4FB005AF8B5 /* kkmallpark-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "kkmallpark-2.mbtiles"; sourceTree = "<group>"; };
+		D9C434301A1DE4FB005AF8B5 /* kkmallpark-3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "kkmallpark-3.mbtiles"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -597,6 +607,11 @@
 		AE24A7F91A022E1B00A0CE91 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				D9C4342C1A1DE4FA005AF8B5 /* kkmallB1Jpark.mbtiles */,
+				D9C4342D1A1DE4FA005AF8B5 /* kkmallL2Jpark.mbtiles */,
+				D9C4342E1A1DE4FA005AF8B5 /* kkmallL3Jpark.mbtiles */,
+				D9C4342F1A1DE4FB005AF8B5 /* kkmallpark-2.mbtiles */,
+				D9C434301A1DE4FB005AF8B5 /* kkmallpark-3.mbtiles */,
 				D9825F331A1317160053F8D2 /* JingJiBaiNaB1.mbtiles */,
 				D9825F341A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles */,
 				D9825F351A1317160053F8D2 /* JingJiBainaB1park.mbtiles */,
@@ -1188,16 +1203,21 @@
 				AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */,
 				D9825F3E1A1317160053F8D2 /* JingJiBaiNaL3.mbtiles in Resources */,
 				AE24A8D61A08A6D400A0CE91 /* YITIANB1.mbtiles in Resources */,
+				D9C434331A1DE4FB005AF8B5 /* kkmallL3Jpark.mbtiles in Resources */,
 				AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */,
 				AE24A8CD1A08A6D400A0CE91 /* cocoparkB1.mbtiles in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
 				AE24A8D71A08A6D400A0CE91 /* YITIANB2.mbtiles in Resources */,
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
 				AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */,
+				D9C434311A1DE4FB005AF8B5 /* kkmallB1Jpark.mbtiles in Resources */,
 				AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */,
 				D9825F3C1A1317160053F8D2 /* JingJiBaiNaL1.mbtiles in Resources */,
+				D9C434321A1DE4FB005AF8B5 /* kkmallL2Jpark.mbtiles in Resources */,
+				D9C434351A1DE4FB005AF8B5 /* kkmallpark-3.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
 				D9825F3A1A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles in Resources */,
+				D9C434341A1DE4FB005AF8B5 /* kkmallpark-2.mbtiles in Resources */,
 				AE24A8CF1A08A6D400A0CE91 /* cocoparkL2.mbtiles in Resources */,
 				D9825F391A1317160053F8D2 /* JingJiBaiNaB1.mbtiles in Resources */,
 				AE24A8661A02431700A0CE91 /* home_bg960@2x.jpg in Resources */,
