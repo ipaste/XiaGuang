@@ -7,22 +7,14 @@
 //
 
 #import "YTMallViewController.h"
-#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#import "YTMallCell.h"
-#import "YTCloudMall.h"
-#import "YTMerchantInfoViewController.h"
-#import "YTSettingViewController.h"
-#import <MMProgressHUD.h>
-#import "YTMallMerchantBundle.h"
-#import "YTMallInfoViewController.h"
-#import "MJRefresh.h"
-#import <AVQuery.h>
 #define DEVICE_VERSION [[[UIDevice currentDevice]systemVersion] floatValue]
 #define TABLEVIEWCELL_HEIGHT 90
+#define MALL_SORT @"mall_sort"
 @interface YTMallViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     NSMutableArray *_mallObjects;
     NSMutableArray *_bundleObjects;
+    YTUserDefaults *_userDefaults;
     float _num;
     BOOL _isLoadingDone;
 }
@@ -41,7 +33,8 @@
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.view addSubview:_tableView];
         
-        
+        _userDefaults = [YTUserDefaults standardUserDefaults];
+       
     }
     return self;
 }
@@ -64,7 +57,7 @@
 
 
 -(void)loadTableView{
-        __block BOOL isFetch = NO;
+    
         _mallObjects = [NSMutableArray array];
         _bundleObjects = [NSMutableArray array];
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
@@ -80,11 +73,8 @@
                     YTMallMerchantBundle *tmpBundle = [[YTMallMerchantBundle alloc] initWithMall:mall];
                     [_bundleObjects addObject:tmpBundle];
                 }
-                isFetch = YES;
-                
-                [_tableView headerEndRefreshing];
-                if (isFetch) {
-                    [_tableView removeHeader];
+                if ([_userDefaults existenceOfTheKey:MALL_SORT]) {
+                    
                 }
                 
                 [_tableView reloadData];
