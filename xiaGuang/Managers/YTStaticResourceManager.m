@@ -237,7 +237,6 @@
             [FCFileManager copyItemAtPath:filename toPath:[NSString stringWithFormat:@"%@/%@.mbtiles",STAGING_DATA_DIR,mapName]];
         }
         
-        _db = [[FMDatabase alloc] initWithPath:STAGING_DATA_DB_PATH];
         [self theGreatMigrate];
         /*
         if(![FCFileManager isDirectoryItemAtPath:STAGEING_DIR] || ![FCFileManager existsItemAtPath:STAGEING_DIR]){
@@ -273,7 +272,12 @@
 }
 
 -(void)theGreatMigrate{
+    _db = [[FMDatabase alloc] initWithPath:STAGING_DATA_DB_PATH];
     [FCFileManager removeItemAtPath:CURRENT_DIR];
+    [FCFileManager copyItemAtPath:STAGING_DIR toPath:CURRENT_DIR];
+    _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
+    [FCFileManager removeItemAtPath:STAGING_DIR];
+    
 }
 
 - (NSURL *)applicationDocumentsDirectory
