@@ -494,6 +494,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)createSwitchMall{
     _switchMallView = [[YTSwitchMallView alloc]init];
+    _switchMallView.mall = _targetMall;
     [self.view addSubview:_switchMallView];
 }
 

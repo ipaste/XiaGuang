@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTLocalMall.h"
+#import "YTDBManager.h"
 @interface YTSwitchMallView : UIView
-
+@property (strong,nonatomic) id<YTMall> mall;
 @end

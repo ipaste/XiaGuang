@@ -30,6 +30,27 @@
     
     return [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:1.0];
 }
+
++ (UIColor *)colorWithString:(NSString *)colorString alpha:(CGFloat)alpha{
+    if (colorString == nil || colorString.length < 6) {
+        return nil;
+    }
+    
+    if ([colorString rangeOfString:@"#"].length <= 0) {
+        colorString = [NSString stringWithFormat:@"#%@",colorString];
+    }
+    unsigned int red,green,blue;
+    NSRange range;
+    range.length = 2;
+    range.location = 1;
+    [[NSScanner scannerWithString:[colorString substringWithRange:range]] scanHexInt:&red];
+    range.location = 3;
+    [[NSScanner scannerWithString:[colorString substringWithRange:range]] scanHexInt:&green];
+    range.location = 5;
+    [[NSScanner scannerWithString:[colorString substringWithRange:range]] scanHexInt:&blue];
+    
+    return [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha];
+}
 @end
 
 @implementation UIImage (YTImage)
