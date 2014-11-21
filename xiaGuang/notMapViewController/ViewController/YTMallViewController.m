@@ -77,6 +77,7 @@
                         [tmpMutableDict setValue:@"0" forKey:[tmpMall mallName]];
                         YTMallMerchantBundle *merchantBundle = [[YTMallMerchantBundle alloc]initWithMall:tmpMall];
                         [_bundleObjects addObject:merchantBundle];
+                        [_mallObjects addObject:tmpMall];
                     }
                     [_userDefaults setDictionary:tmpMutableDict forKey:MALL_SORT];
                 }
