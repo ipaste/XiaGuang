@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>version</key>
+	<integer>0</integer>
+	<key>db</key>
+	<integer>5</integer>
+	<key>hac1</key>
+	<integer>0</integer>
+	<key>hac2</key>
+	<integer>0</integer>
+	<key>hac3</key>
+	<integer>0</integer>
+	<key>haianchengparking1</key>
+	<integer>0</integer>
+	<key>haianchengparking2</key>
+	<integer>0</integer>
+	<key>huanlehaian</key>
+	<integer>0</integer>
+	<key>huanlehaianpark</key>
+	<integer>0</integer>
+	<key>YITIANB1</key>
+	<integer>0</integer>
+	<key>YITIANB2</key>
+	<integer>0</integer>
+	<key>YITIANL1</key>
+	<integer>0</integer>
+	<key>YITIANL2</key>
+	<integer>0</integer>
+	<key>YITIANL3</key>
+	<integer>0</integer>
+	<key>kkmallB1</key>
+	<integer>0</integer>
+	<key>kkmallL1</key>
+	<integer>0</integer>
+	<key>kkmallL2</key>
+	<integer>0</integer>
+	<key>kkmallL3</key>
+	<integer>0</integer>
+	<key>KKmallL4</key>
+	<integer>0</integer>
+	<key>cocoparkB1</key>
+	<integer>0</integer>
+	<key>cocoparkL1</key>
+	<integer>0</integer>
+	<key>cocoparkL2</key>
+	<integer>0</integer>
+	<key>cocoparkL3</key>
+	<integer>0</integer>
+	<key>JingJiBaiNaB1</key>
+	<integer>0</integer>
+	<key>JingJiBainaB1halfpark</key>
+	<integer>0</integer>
+	<key>JingJiBainaB1park</key>
+	<integer>0</integer>
+	<key>JingJiBaiNaL1</key>
+	<integer>0</integer>
+	<key>JingJiBaiNaL2</key>
+	<integer>0</integer>
+	<key>JingJiBaiNaL3</key>
+	<integer>0</integer>
+</dict>
+</plist>

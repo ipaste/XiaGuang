@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YTParkingMarked.h"
 #import "YTUserDefaults.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTParkingMarkPoi.h"
 #import "YTLocalMajorArea.h"
 #import "YTLocalMinorArea.h"

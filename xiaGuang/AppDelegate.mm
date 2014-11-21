@@ -9,9 +9,9 @@
 #import "AppDelegate.h"
 #import "YTNavigationController.h"
 #import <AVOSCloud/AVOSCloud.h>
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import <FCFileManager.h>
-
+#import <UnrarKit/URKArchive.h>
 
 
 @interface AppDelegate () {
@@ -33,29 +33,8 @@
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
     
-    [[YTDBManager sharedManager] startBackgroundDownload];
-    [[YTDBManager sharedManager] checkAndSwitchToNewDB];
-    
-    
-    /*
-    NSString *mainbundle = [FCFileManager pathForMainBundleDirectory];
-    NSString *document = [FCFileManager pathForDocumentsDirectory];
-    NSArray *files = [FCFileManager listFilesInDirectoryAtPath:mainbundle withExtension:@"mbtiles"];
-    NSError *err = nil;
-    for(NSString *file in files){
-        NSLog(@"%@",file);
-        NSString *mapName = [file lastPathComponent];
-        NSString *destPath = [NSString stringWithFormat:@"%@/%@",document,mapName];
-        [FCFileManager copyItemAtPath:file toPath:destPath error:&err];
-        if(err != nil){
-            NSLog(@"shit");
-        }
-    }
-    
-    NSArray *files2 = [FCFileManager listFilesInDirectoryAtPath:document withExtension:@"mbtiles"];
-    for(NSString *file2 in files2){
-        NSLog(@"%@",file2);
-    }*/
+    [[YTStaticResourceManager sharedManager] startBackgroundDownload];
+    [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     
     _timeInToBackground = 0;
     
@@ -83,7 +62,7 @@
         self.window.backgroundColor = [UIColor blackColor];
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
         [self.window makeKeyAndVisible];
-        [[YTDBManager sharedManager] checkAndSwitchToNewDB];
+        [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     }
 }
 

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FMResultSet.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 
 @interface YTLocalCharge : NSObject
 @property (assign,nonatomic) NSInteger A;
