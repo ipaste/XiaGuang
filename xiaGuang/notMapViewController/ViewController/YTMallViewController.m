@@ -34,7 +34,8 @@
         [self.view addSubview:_tableView];
         
         _userDefaults = [YTUserDefaults standardUserDefaults];
-       
+        _bundleObjects = [NSMutableArray array];
+        _mallObjects = [NSMutableArray array];
     }
     return self;
 }
@@ -57,24 +58,27 @@
 
 
 -(void)loadTableView{
-    
-        _mallObjects = [NSMutableArray array];
-        _bundleObjects = [NSMutableArray array];
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-//        [query whereKeyExists:@"localDBId"];
-//        [query whereKey:@"localDBId" notEqualTo:@""];
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         query.maxCacheAge = 2*3600;
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                NSMutableArray *tmpMallObjects = [NSMutableArray array];
                 for (AVObject *mallObject in objects) {
                     YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
-                    [_mallObjects addObject:mall];
-                    YTMallMerchantBundle *tmpBundle = [[YTMallMerchantBundle alloc] initWithMall:mall];
-                    [_bundleObjects addObject:tmpBundle];
+                    [tmpMallObjects addObject:mall];
                 }
+                
                 if ([_userDefaults existenceOfTheKey:MALL_SORT]) {
-                    
+                    [_mallObjects addObjectsFromArray:[self mallCenterSortFromObjects:tmpMallObjects]];
+                }else{
+                    NSMutableDictionary *tmpMutableDict = [NSMutableDictionary dictionary];
+                    for (YTCloudMall *tmpMall in tmpMallObjects) {
+                        [tmpMutableDict setValue:@"0" forKey:[tmpMall mallName]];
+                        YTMallMerchantBundle *merchantBundle = [[YTMallMerchantBundle alloc]initWithMall:tmpMall];
+                        [_bundleObjects addObject:merchantBundle];
+                    }
+                    [_userDefaults setDictionary:tmpMutableDict forKey:MALL_SORT];
                 }
                 
                 [_tableView reloadData];
@@ -133,11 +137,40 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    id<YTMall> tmpMall = _mallObjects[indexPath.section];
+    
+    
+    NSMutableDictionary *tmpDict = [NSMutableDictionary dictionaryWithDictionary:[_userDefaults dictionaryWithKey:MALL_SORT]];
+
+    
+    [tmpDict setValue:[NSString stringWithFormat:@"%d",[[tmpDict valueForKey:[tmpMall mallName]]intValue] + 1] forKey:[tmpMall mallName]];
+    
+  
+    [_userDefaults setDictionary:tmpDict forKey:MALL_SORT];
+    
     YTMallInfoViewController * mallVC = [[YTMallInfoViewController alloc]init];
-    mallVC.mall = _mallObjects[indexPath.section];
+    mallVC.mall = tmpMall;
     [self.navigationController pushViewController:mallVC animated:YES];
 }
-
+-(NSArray *)mallCenterSortFromObjects:(NSArray *)objects{
+    NSMutableArray *malls = [NSMutableArray array];
+    NSDictionary *tmpDictionary = [_userDefaults dictionaryWithKey:MALL_SORT];
+    NSArray *result = [tmpDictionary keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [obj2 compare:obj1 options:NSNumericSearch];
+    }];
+    for (NSString *mallName in result) {
+        for (id<YTMall> tmpMall in objects) {
+            if ([[tmpMall mallName] isEqualToString:mallName]) {
+                [malls addObject:tmpMall];
+                YTMallMerchantBundle *tmpMerchantBundle = [[YTMallMerchantBundle alloc]initWithMall:tmpMall];
+                [_bundleObjects addObject:tmpMerchantBundle];
+                
+            }
+        }
+    }
+    return malls;
+}
 
 -(void)dealloc{
     NSLog(@"mallViewController Dealloc");
