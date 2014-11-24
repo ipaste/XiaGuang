@@ -82,9 +82,9 @@
 		AED846381A0C9C1B0055FD14 /* YTElevatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */; };
 		AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */; };
 		AEE032B11A1A2BCD002AFB9C /* static.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032B01A1A2BCD002AFB9C /* static.plist */; };
-		AEE032B31A1AF332002AFB9C /* manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032B21A1AF332002AFB9C /* manifest.plist */; };
 		AEE032B91A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */; };
 		AEE032BC1A1EEC47002AFB9C /* YTMajorAreaVoter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */; };
+		AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032BF1A22E1B3002AFB9C /* manifest.plist */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
 		D93CE4BD19FA5825004128FD /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BC19FA5825004128FD /* AppDelegate.mm */; };
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
@@ -326,11 +326,11 @@
 		AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorAnnotation.h; sourceTree = "<group>"; };
 		AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorAnnotation.m; sourceTree = "<group>"; };
 		AEE032B01A1A2BCD002AFB9C /* static.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = static.plist; sourceTree = "<group>"; };
-		AEE032B21A1AF332002AFB9C /* manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = manifest.plist; sourceTree = "<group>"; };
 		AEE032B71A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RMMBTilesSource+YTExtension.h"; sourceTree = "<group>"; };
 		AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RMMBTilesSource+YTExtension.m"; sourceTree = "<group>"; };
 		AEE032BA1A1EEC47002AFB9C /* YTMajorAreaVoter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMajorAreaVoter.h; sourceTree = "<group>"; };
 		AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMajorAreaVoter.m; sourceTree = "<group>"; };
+		AEE032BF1A22E1B3002AFB9C /* manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = manifest.plist; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D93CE4B419FA5825004128FD /* 虾逛.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾逛.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -640,10 +640,10 @@
 		AE24A8081A0242F200A0CE91 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				AEE032BF1A22E1B3002AFB9C /* manifest.plist */,
 				AE24A8091A0242F200A0CE91 /* highGuangDB */,
 				78DB4ADF1A0C83E4003A6025 /* db.plist */,
 				AEE032B01A1A2BCD002AFB9C /* static.plist */,
-				AEE032B21A1AF332002AFB9C /* manifest.plist */,
 			);
 			path = DB;
 			sourceTree = "<group>";
@@ -1197,7 +1197,6 @@
 				AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */,
 				AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */,
 				AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */,
-				AEE032B31A1AF332002AFB9C /* manifest.plist in Resources */,
 				D9825F3E1A1317160053F8D2 /* JingJiBaiNaL3.mbtiles in Resources */,
 				AE24A8D61A08A6D400A0CE91 /* YITIANB1.mbtiles in Resources */,
 				AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */,
@@ -1211,6 +1210,7 @@
 				D9825F3C1A1317160053F8D2 /* JingJiBaiNaL1.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
 				D9825F3A1A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles in Resources */,
+				AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */,
 				AE24A8CF1A08A6D400A0CE91 /* cocoparkL2.mbtiles in Resources */,
 				D9825F391A1317160053F8D2 /* JingJiBaiNaB1.mbtiles in Resources */,
 				AE24A8661A02431700A0CE91 /* home_bg960@2x.jpg in Resources */,
