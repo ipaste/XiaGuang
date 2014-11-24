@@ -360,15 +360,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     NSArray *merchants = [majorArea merchantLocations];
     
-    NSArray *minorAreas = [majorArea minorAreas];
-    NSMutableArray *minorpois = [NSMutableArray array];
-
-    for(YTLocalMinorArea *minorArea in minorAreas){
-        YTPoi *tmpminorPoi = [minorArea producePoi];
-        [minorpois addObject:tmpminorPoi];
-    }
-    [_mapView addPois:minorpois];
-    
     NSMutableArray *pois = [NSMutableArray array];
     
     YTPoi *highlightPoi = nil;
