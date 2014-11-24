@@ -341,7 +341,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_mapView];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
-    //[self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
+    [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
     [self injectPoisForMajorArea:_majorArea];
@@ -359,6 +359,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     NSArray *merchants = [majorArea merchantLocations];
+    
+    NSArray *minorAreas = [majorArea minorAreas];
+    NSMutableArray *minorpois = [NSMutableArray array];
+
+    for(YTLocalMinorArea *minorArea in minorAreas){
+        YTPoi *tmpminorPoi = [minorArea producePoi];
+        [minorpois addObject:tmpminorPoi];
+    }
+    [_mapView addPois:minorpois];
+    
     NSMutableArray *pois = [NSMutableArray array];
     
     YTPoi *highlightPoi = nil;

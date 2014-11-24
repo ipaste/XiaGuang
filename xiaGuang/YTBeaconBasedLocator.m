@@ -82,6 +82,12 @@
         double start = [[NSDate date] timeIntervalSinceReferenceDate];
         NSValue *pos = [_positionBot locateMeWithDistances:distances accuracy:0.00001];
         
+        
+        double end = 0.0;
+        
+        end = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"newton:%f",start-end);
+        
         if (pos == nil) {
             return;
         }
@@ -90,13 +96,20 @@
         
         position = [_kalmanFilterBot reportSample:position];
         
+        end = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"kalman:%f",start-end);
+        
         position = [_boundingBox updateAndGetCurrentPoint:position];
+        
+        end = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"update:%f",start-end);
         
         CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
                                                                              mapView:_mapView];
         
-        double end =[[NSDate date] timeIntervalSinceReferenceDate];
+        end =[[NSDate date] timeIntervalSinceReferenceDate];
         NSLog(@"elapsed:%f",start-end);
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
         });
@@ -177,7 +190,7 @@
                     if (dict != nil) {
                         NSNumber *count = dict[@"count"];
                         
-                        if ([count intValue] >= 3) {
+                        if ([count intValue] >= 6) {
                             [_distDict removeObjectForKey:[NSString stringWithFormat:@"%d-%d", major, minor]];
                         } else {
                             [distances addObject:dict[@"data"]];

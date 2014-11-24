@@ -7,7 +7,7 @@
 //
 
 #import "YTLocalMinorArea.h"
-
+#import "YTMinorAreaPoi.h"
 @implementation YTLocalMinorArea{
     NSString *_tmpMinorAreaName;
     NSString *_tmpMajorAreaId;
@@ -84,4 +84,8 @@
     return _tmpMajorArea;
 }
 
+-(YTPoi *)producePoi{
+    YTMinorAreaPoi *result = [[YTMinorAreaPoi alloc] initWithMinorArea:self];
+    return result;
+}
 @end
