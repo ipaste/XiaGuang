@@ -305,7 +305,7 @@ static YTCompletion Completion = nil;
         
         CGContextSetShadow(context, CGSizeMake(0, 0), whiteWidth / 4.0);
         
-        CGContextSetFillColorWithColor(context, [[UIColor redColor] CGColor]);
+        CGContextSetFillColorWithColor(context, [[UIColor blueColor] CGColor]);
         CGContextFillEllipseInRect(context, CGRectMake((rect.size.width - whiteWidth) / 2.0, (rect.size.height - whiteWidth) / 2.0, whiteWidth, whiteWidth));
         
         UIImage *whiteBackground = UIGraphicsGetImageFromCurrentImageContext();
@@ -314,16 +314,16 @@ static YTCompletion Completion = nil;
         self.contents = (id)[whiteBackground CGImage];
     
         
-        NSString *string = [NSString stringWithFormat:@"major:%@  minor:%@",majorID,minorID];
+        NSString *string = [NSString stringWithFormat:@"%@  %@",majorID,minorID];
         CGSize textSize = [string boundingRectWithSize:CGSizeMake(100, 30) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         
         
         CATextLayer *textLayer = [CATextLayer layer];
         textLayer.frame = CGRectMake(CGRectGetMaxX(self.bounds), CGRectGetMinY(self.frame), textSize.width, textSize.height);
-        textLayer.foregroundColor = [UIColor redColor].CGColor;
+        textLayer.foregroundColor = [UIColor blueColor].CGColor;
         textLayer.fontSize = 12;
         textLayer.string = string;
-       // [self addSublayer:textLayer];
+        [self addSublayer:textLayer];
     }
     return self;
     

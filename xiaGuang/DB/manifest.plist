@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>version</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>db</key>
-	<integer>5</integer>
+	<integer>6</integer>
 	<key>hac1</key>
 	<integer>0</integer>
 	<key>hac2</key>
@@ -31,15 +31,15 @@
 	<key>YITIANL3</key>
 	<integer>0</integer>
 	<key>kkmallB1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>kkmallL1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>kkmallL2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>kkmallL3</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>KKmallL4</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>cocoparkB1</key>
 	<integer>0</integer>
 	<key>cocoparkL1</key>
@@ -59,6 +59,26 @@
 	<key>JingJiBaiNaL2</key>
 	<integer>0</integer>
 	<key>JingJiBaiNaL3</key>
+	<integer>0</integer>
+	<key>kkmallB1Jpark</key>
+	<integer>0</integer>
+	<key>kkmallL2Jpark</key>
+	<integer>0</integer>
+	<key>kkmallL3Jpark</key>
+	<integer>0</integer>
+	<key>kkmallpark-2</key>
+	<integer>0</integer>
+	<key>kkmallpark-3</key>
+	<integer>0</integer>
+	<key>kkmallpark-4</key>
+	<integer>0</integer>
+	<key>haianchengeastL1</key>
+	<integer>0</integer>
+	<key>haianchengeastL2</key>
+	<integer>0</integer>
+	<key>haianchengeastL2</key>
+	<integer>0</integer>
+	<key>haianchengeastpark-2</key>
 	<integer>0</integer>
 </dict>
 </plist>

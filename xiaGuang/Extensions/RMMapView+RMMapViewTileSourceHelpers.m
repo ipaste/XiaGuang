@@ -40,6 +40,10 @@
         else{
             source = [[RMMBTilesSource alloc] initWithTileSetResourceInDocument:sourceName ofType:@"mbtiles"];
         }
+        
+        if(source == nil){
+            return;
+        }
         source.cacheable = NO;
 
         [self addTileSource:source];
@@ -75,6 +79,7 @@
         }
         
     }
+    [self reloadTileSourceAtIndex:index];
     
 }
 

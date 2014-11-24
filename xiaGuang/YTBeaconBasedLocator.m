@@ -27,6 +27,8 @@
     YTPositionBot *_positionBot;
     
     YTDistanceBoundingBox *_boundingBox;
+    
+    dispatch_queue_t _queue;
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons;
@@ -58,8 +60,11 @@
         
         _boundingBox = [[YTDistanceBoundingBox alloc] initWithMapView:_mapView
                                                             majorArea:_majorArea];
+        
+        _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
+
     }
-    return self;   
+    return self;
 }
 
 - (void)start {
@@ -71,9 +76,17 @@
     
     NSArray *distances = [self prepareDistances:beacons];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(_queue, ^{
         
+        
+        double start = [[NSDate date] timeIntervalSinceReferenceDate];
         NSValue *pos = [_positionBot locateMeWithDistances:distances accuracy:0.00001];
+        
+        
+        double end = 0.0;
+        
+        end = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"newton:%f",start-end);
         
         if (pos == nil) {
             return;
@@ -83,10 +96,20 @@
         
         position = [_kalmanFilterBot reportSample:position];
         
+        end = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"kalman:%f",start-end);
+        
         position = [_boundingBox updateAndGetCurrentPoint:position];
+        
+        end = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"update:%f",start-end);
         
         CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
                                                                              mapView:_mapView];
+        
+        end =[[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"elapsed:%f",start-end);
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
         });
@@ -167,7 +190,7 @@
                     if (dict != nil) {
                         NSNumber *count = dict[@"count"];
                         
-                        if ([count intValue] >= 3) {
+                        if ([count intValue] >= 6) {
                             [_distDict removeObjectForKey:[NSString stringWithFormat:@"%d-%d", major, minor]];
                         } else {
                             [distances addObject:dict[@"data"]];
@@ -208,6 +231,10 @@
 
 -(void)dealloc{
     NSLog(@"locator destroyed");
+    
+    //dispatch_suspend(_queue);
+    
+    //dispatch_cancel(_queue);
 }
 
 @end
