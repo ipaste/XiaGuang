@@ -284,7 +284,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
      
      }];*/
     _malls = [NSMutableArray array];
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
         
         FMResultSet *result = [db executeQuery:@"select * from Mall"];
@@ -704,7 +704,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)selectedMerchantName:(NSString *)name{
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
         
         FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ?",name];
@@ -851,7 +851,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTBeacon>)getYTBeacon:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -1318,7 +1318,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

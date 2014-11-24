@@ -10,7 +10,7 @@
 #import "YTElevator.h"
 #import "YTLocalMajorArea.h"
 #import "FMDatabase.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTElevatorPoi.h"
 
 @interface YTLocalElevator : NSObject<YTElevator>

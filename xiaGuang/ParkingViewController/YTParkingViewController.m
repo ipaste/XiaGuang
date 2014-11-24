@@ -169,7 +169,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(id<YTMajorArea>)getDefaultMajorArea{
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from MajorArea where isParking = 1"];
     [result next];
@@ -683,7 +683,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

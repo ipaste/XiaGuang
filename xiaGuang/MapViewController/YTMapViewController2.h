@@ -14,9 +14,8 @@
 #import <AVQuery.h>
 #import "YTMapView2.h"
 #import "YTCloudBeacon.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTLocalBeacon.h"
-#import "YTDBManager.h"
 #import "YTNavigationBar.h"
 #import "YTSearchView.h"
 #import "YTMoveCurrentLocationButton.h"

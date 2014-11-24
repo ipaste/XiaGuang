@@ -1,5 +1,5 @@
 //
-//  YTDBManager.h
+//  YTStaticResourceManager.h
 //  HighGuang
 //
 //  Created by Yuan Tao on 9/2/14.
@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
 
-@interface YTDBManager : NSObject
+@interface YTStaticResourceManager : NSObject
 
 @property (nonatomic, readonly) FMDatabase *db;
 
-+(YTDBManager *)sharedManager;
++(YTStaticResourceManager *)sharedManager;
 
 - (void)startBackgroundDownload;
 - (void)stopBackgroundDownload;
 
-- (void)checkAndSwitchToNewDB;
+- (void)checkAndSwitchToNewStaticData;
 
 @end

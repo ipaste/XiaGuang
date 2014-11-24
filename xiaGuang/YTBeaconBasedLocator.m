@@ -14,7 +14,7 @@
 #import "YTPositionBot.h"
 #import "YTDistanceBoundingBox.h"
 
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 
 @interface YTBeaconBasedLocator() {
     RMMapView *_mapView;
@@ -107,7 +107,7 @@
                                                           majorArea:_majorArea];
         }
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         
         int major = [beacon.major intValue];
         int minor = [beacon.minor intValue];
