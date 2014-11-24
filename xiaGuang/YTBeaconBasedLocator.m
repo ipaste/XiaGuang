@@ -151,11 +151,13 @@
                         
                         double distDiff = distData.distance - oldDist.distance;
                         
-                        double ratio = 4; // adjust this value
+                        double ratio = 3; // adjust this value
+                        
+                        double dist = MAX(oldDist.distance + ratio * distDiff, 0.01);
                         
                         adjustedDist = [[YTDistanceData alloc] initWithLocationX:oldDist.x
                                                                                y:oldDist.y
-                                                                        distance:oldDist.distance + ratio * distDiff];
+                                                                        distance:dist];
                     }
                     
                     [distances addObject:adjustedDist];
