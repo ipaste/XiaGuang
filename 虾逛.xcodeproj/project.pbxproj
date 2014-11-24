@@ -85,6 +85,16 @@
 		AEE032B91A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */; };
 		AEE032BC1A1EEC47002AFB9C /* YTMajorAreaVoter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */; };
 		AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032BF1A22E1B3002AFB9C /* manifest.plist */; };
+		AEE032CB1A22E3C5002AFB9C /* haianchengeastL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C11A22E3C5002AFB9C /* haianchengeastL1.mbtiles */; };
+		AEE032CC1A22E3C5002AFB9C /* haianchengeastL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C21A22E3C5002AFB9C /* haianchengeastL2.mbtiles */; };
+		AEE032CD1A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C31A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles */; };
+		AEE032CE1A22E3C5002AFB9C /* haianchengeastpark-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C41A22E3C5002AFB9C /* haianchengeastpark-2.mbtiles */; };
+		AEE032CF1A22E3C5002AFB9C /* kkmallB1Jpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C51A22E3C5002AFB9C /* kkmallB1Jpark.mbtiles */; };
+		AEE032D01A22E3C5002AFB9C /* kkmallL2Jpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C61A22E3C5002AFB9C /* kkmallL2Jpark.mbtiles */; };
+		AEE032D11A22E3C5002AFB9C /* kkmallL3Jpark.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C71A22E3C5002AFB9C /* kkmallL3Jpark.mbtiles */; };
+		AEE032D21A22E3C5002AFB9C /* kkmallpark-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C81A22E3C5002AFB9C /* kkmallpark-2.mbtiles */; };
+		AEE032D31A22E3C5002AFB9C /* kkmallpark-3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032C91A22E3C5002AFB9C /* kkmallpark-3.mbtiles */; };
+		AEE032D41A22E3C5002AFB9C /* kkmallpark-4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AEE032CA1A22E3C5002AFB9C /* kkmallpark-4.mbtiles */; };
 		D93CE4BA19FA5825004128FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4B919FA5825004128FD /* main.m */; };
 		D93CE4BD19FA5825004128FD /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4BC19FA5825004128FD /* AppDelegate.mm */; };
 		D93CE4C519FA5825004128FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93CE4C419FA5825004128FD /* Images.xcassets */; };
@@ -331,6 +341,16 @@
 		AEE032BA1A1EEC47002AFB9C /* YTMajorAreaVoter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMajorAreaVoter.h; sourceTree = "<group>"; };
 		AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMajorAreaVoter.m; sourceTree = "<group>"; };
 		AEE032BF1A22E1B3002AFB9C /* manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = manifest.plist; sourceTree = "<group>"; };
+		AEE032C11A22E3C5002AFB9C /* haianchengeastL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengeastL1.mbtiles; sourceTree = "<group>"; };
+		AEE032C21A22E3C5002AFB9C /* haianchengeastL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = haianchengeastL2.mbtiles; sourceTree = "<group>"; };
+		AEE032C31A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "haianchengeastpark-1.mbtiles"; sourceTree = "<group>"; };
+		AEE032C41A22E3C5002AFB9C /* haianchengeastpark-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "haianchengeastpark-2.mbtiles"; sourceTree = "<group>"; };
+		AEE032C51A22E3C5002AFB9C /* kkmallB1Jpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallB1Jpark.mbtiles; sourceTree = "<group>"; };
+		AEE032C61A22E3C5002AFB9C /* kkmallL2Jpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL2Jpark.mbtiles; sourceTree = "<group>"; };
+		AEE032C71A22E3C5002AFB9C /* kkmallL3Jpark.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL3Jpark.mbtiles; sourceTree = "<group>"; };
+		AEE032C81A22E3C5002AFB9C /* kkmallpark-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "kkmallpark-2.mbtiles"; sourceTree = "<group>"; };
+		AEE032C91A22E3C5002AFB9C /* kkmallpark-3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "kkmallpark-3.mbtiles"; sourceTree = "<group>"; };
+		AEE032CA1A22E3C5002AFB9C /* kkmallpark-4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "kkmallpark-4.mbtiles"; sourceTree = "<group>"; };
 		C04F1DD73A30D590CEF0385C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D93CE4B419FA5825004128FD /* 虾逛.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾逛.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -604,6 +624,16 @@
 		AE24A7F91A022E1B00A0CE91 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				AEE032C11A22E3C5002AFB9C /* haianchengeastL1.mbtiles */,
+				AEE032C21A22E3C5002AFB9C /* haianchengeastL2.mbtiles */,
+				AEE032C31A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles */,
+				AEE032C41A22E3C5002AFB9C /* haianchengeastpark-2.mbtiles */,
+				AEE032C51A22E3C5002AFB9C /* kkmallB1Jpark.mbtiles */,
+				AEE032C61A22E3C5002AFB9C /* kkmallL2Jpark.mbtiles */,
+				AEE032C71A22E3C5002AFB9C /* kkmallL3Jpark.mbtiles */,
+				AEE032C81A22E3C5002AFB9C /* kkmallpark-2.mbtiles */,
+				AEE032C91A22E3C5002AFB9C /* kkmallpark-3.mbtiles */,
+				AEE032CA1A22E3C5002AFB9C /* kkmallpark-4.mbtiles */,
 				D9825F331A1317160053F8D2 /* JingJiBaiNaB1.mbtiles */,
 				D9825F341A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles */,
 				D9825F351A1317160053F8D2 /* JingJiBainaB1park.mbtiles */,
@@ -1195,27 +1225,34 @@
 			files = (
 				AE24A8051A022E1B00A0CE91 /* haianchengparking2.mbtiles in Resources */,
 				AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */,
+				AEE032CE1A22E3C5002AFB9C /* haianchengeastpark-2.mbtiles in Resources */,
 				AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */,
 				AE24A8041A022E1B00A0CE91 /* haianchengparking1.mbtiles in Resources */,
 				D9825F3E1A1317160053F8D2 /* JingJiBaiNaL3.mbtiles in Resources */,
 				AE24A8D61A08A6D400A0CE91 /* YITIANB1.mbtiles in Resources */,
+				AEE032D21A22E3C5002AFB9C /* kkmallpark-2.mbtiles in Resources */,
 				AE24A8071A022E1B00A0CE91 /* huanlehaianpark.mbtiles in Resources */,
 				AE24A8CD1A08A6D400A0CE91 /* cocoparkB1.mbtiles in Resources */,
+				AEE032CB1A22E3C5002AFB9C /* haianchengeastL1.mbtiles in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
 				AE24A8D71A08A6D400A0CE91 /* YITIANB2.mbtiles in Resources */,
+				AEE032D11A22E3C5002AFB9C /* kkmallL3Jpark.mbtiles in Resources */,
 				AEE032B11A1A2BCD002AFB9C /* static.plist in Resources */,
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
 				AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */,
 				AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */,
 				D9825F3C1A1317160053F8D2 /* JingJiBaiNaL1.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
+				AEE032CF1A22E3C5002AFB9C /* kkmallB1Jpark.mbtiles in Resources */,
 				D9825F3A1A1317160053F8D2 /* JingJiBainaB1halfpark.mbtiles in Resources */,
 				AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */,
+				AEE032D01A22E3C5002AFB9C /* kkmallL2Jpark.mbtiles in Resources */,
 				AE24A8CF1A08A6D400A0CE91 /* cocoparkL2.mbtiles in Resources */,
 				D9825F391A1317160053F8D2 /* JingJiBaiNaB1.mbtiles in Resources */,
 				AE24A8661A02431700A0CE91 /* home_bg960@2x.jpg in Resources */,
 				AE24A8D31A08A6D400A0CE91 /* kkmallL2.mbtiles in Resources */,
 				AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */,
+				AEE032D41A22E3C5002AFB9C /* kkmallpark-4.mbtiles in Resources */,
 				AE24A8D01A08A6D400A0CE91 /* cocoparkL3.mbtiles in Resources */,
 				78DB4AE01A0C83E4003A6025 /* db.plist in Resources */,
 				D9825F3D1A1317160053F8D2 /* JingJiBaiNaL2.mbtiles in Resources */,
@@ -1223,12 +1260,15 @@
 				AE24A8CE1A08A6D400A0CE91 /* cocoparkL1.mbtiles in Resources */,
 				D9825F3B1A1317160053F8D2 /* JingJiBainaB1park.mbtiles in Resources */,
 				AE24A8D41A08A6D400A0CE91 /* kkmallL3.mbtiles in Resources */,
+				AEE032CC1A22E3C5002AFB9C /* haianchengeastL2.mbtiles in Resources */,
 				AE24A8681A02431700A0CE91 /* shop_load_down@2x.png in Resources */,
 				AE24A8D51A08A6D400A0CE91 /* KKmallL4.mbtiles in Resources */,
+				AEE032D31A22E3C5002AFB9C /* kkmallpark-3.mbtiles in Resources */,
 				AE24A8D81A08A6D400A0CE91 /* YITIANL1.mbtiles in Resources */,
 				AE24A8D21A08A6D400A0CE91 /* kkmallL1.mbtiles in Resources */,
 				AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */,
 				AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */,
+				AEE032CD1A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles in Resources */,
 				AE24A8061A022E1B00A0CE91 /* huanlehaian.mbtiles in Resources */,
 				AE24A8651A02431700A0CE91 /* home_bg1136@2x.jpg in Resources */,
 			);
