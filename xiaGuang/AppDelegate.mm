@@ -34,7 +34,7 @@
     [self.window makeKeyAndVisible];
     
     [[YTStaticResourceManager sharedManager] startBackgroundDownload];
-    [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
+   // [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     
     _timeInToBackground = 0;
     

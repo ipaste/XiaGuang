@@ -58,7 +58,6 @@
 -(void)displayMapNamed:(NSString *)mapName{
     
     [_internalMapView addAndDisplayTileSourceNamed:mapName];
-    
 }
 
 -(void)addPois:(NSArray *)pois{
@@ -71,7 +70,6 @@
         [annos addObject:tmpAnnotation];
         
     }
-    
     
     [_internalMapView addAnnotations:annos];
     
@@ -170,9 +168,9 @@
     
 }
 
--(void)superHighlightPoi:(YTPoi *)poi{
+-(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated{
     YTAnnotation *tmpAnnotation = [_annotationSource annotationForPoi:poi];
-    [tmpAnnotation superHighlight:YES];
+    [tmpAnnotation superHighlight:animated];
 }
 
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated{

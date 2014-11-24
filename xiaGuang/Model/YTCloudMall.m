@@ -300,7 +300,9 @@
     return _tmpLocalMall;
     
 }
-
+-(CGFloat)offset{
+    return [self getLocalCopy].offset;
+}
 -(AVObject *)getCloudObj{
     return _internalObject;
 }

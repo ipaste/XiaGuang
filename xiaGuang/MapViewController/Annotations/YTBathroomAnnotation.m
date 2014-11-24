@@ -10,6 +10,7 @@
 
 @implementation YTBathroomAnnotation{
     id<YTBathroom> _bathroom;
+    RMMarker *_resultLayer;
 }
 
 @synthesize displayLevel;
@@ -32,27 +33,18 @@
 }
 
 -(RMMapLayer *)produceLayer{
-    RMMarker *resultLayer = [[RMMarker alloc] initWithBubbleHeight:2 width:2];
-    if(self.state == YTAnnotationStateHighlighted){
-        resultLayer.opacity = 1;
-        
-        [resultLayer showBubble:YES];
-        [resultLayer setMerchantIcon:[UIImage imageNamed:@"nav_ico_9"]];
-    }
-    if(self.state == YTAnnotationStateHidden){
-        
-        resultLayer.opacity = 0;
-    }
-    
-    return resultLayer;
+    _resultLayer = [[RMMarker alloc] initWithBubbleHeight:2 width:2];
+
+    return _resultLayer;
 }
 
 -(void)highlightAnimated:(BOOL)animated{
     
     [super highlightAnimated:animated];
-    [(RMMarker *)self.layer showBubble:YES];
-    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_9"]];
     self.layer.opacity = 1;
+    [(RMMarker *)self.layer showBubble:animated];
+    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_9"]];
+    
 
 }
 
@@ -64,6 +56,11 @@
 
 -(void)superHighlight:(BOOL)animated{
     [super superHighlight:animated];
+    self.layer.opacity = 1;
+    RMMarker *curLayer = (RMMarker *)self.layer;
+    [curLayer superHightlightMerchantLayer];
+    [curLayer showMerchantAnimation:animated];
+    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_9"]];
 }
 
 -(id)getSourceModel{

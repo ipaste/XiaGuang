@@ -198,7 +198,7 @@ static YTCompletion Completion = nil;
         textLayer.backgroundColor = [[UIColor blackColor] CGColor];
         self.masksToBounds = NO;
         self.bounds = CGRectMake(0, 0,5,5);
-        self.backgroundColor = [UIColor redColor].CGColor;
+        //self.backgroundColor = [UIColor redColor].CGColor;
         
         CALayer *imageLayer = [CALayer layer];
         UIImage *image = [UIImage imageNamed:@"nav_img_end_un"];

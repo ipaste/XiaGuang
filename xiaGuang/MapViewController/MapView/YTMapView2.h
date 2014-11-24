@@ -70,7 +70,7 @@ typedef enum : NSUInteger {
 #pragma mark Annotation animations
 -(void)highlightPois:(NSArray *)pois animated:(BOOL)animated;
 -(void)highlightPoi:(YTPoi *)poi animated:(BOOL)animated;
--(void)superHighlightPoi:(YTPoi *)poi;
+-(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated;
 
