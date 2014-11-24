@@ -104,7 +104,7 @@
             YTDistanceData *dist_i = sortedDist[i];
             
             double d = sqrt(pow(x - dist_i.x, 2) + pow(y - dist_i.y, 2));
-            double dr_square = d * dist_i.distance * dist_i.distance;
+            double dr_square = d * dist_i.distance * dist_i.distance * dist_i.distance;
             double f = d - dist_i.distance;
             
             if (dr_square != 0) {

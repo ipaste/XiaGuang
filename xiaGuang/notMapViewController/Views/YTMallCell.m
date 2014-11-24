@@ -28,7 +28,7 @@
         
         _merchantsButton = [NSMutableArray array];
         
-        _mallBackground = [[UIImageView alloc]initWithFrame:CGRectMake(10, 0, 300, 85)];
+        _mallBackground = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 300, 85)];
         
         [self addSubview:_mallBackground];
         [_mallBackground addSubview:_mallLogo];
@@ -73,6 +73,9 @@
                 return;
             }
             _mallBackground.image = result;
+            CGRect frame = _mallBackground.frame;
+            frame.size.height = result.size.height / 2;
+            _mallBackground.frame = frame;
         }];
     }
     
