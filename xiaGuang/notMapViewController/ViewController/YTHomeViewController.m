@@ -60,7 +60,7 @@
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

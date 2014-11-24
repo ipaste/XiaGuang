@@ -17,5 +17,6 @@
 @property (nonatomic,weak) id<YTMajorArea> majorArea;
 @property (nonatomic,weak) NSString *minorAreaName;
 
+
 @end
 

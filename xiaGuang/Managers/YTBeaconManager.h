@@ -12,7 +12,7 @@
 #import "ESTBeaconRegion.h"
 #import "YTMall.h"
 #import "ESTBeacon+YTExtension.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 
 @class YTBeaconManager;
 

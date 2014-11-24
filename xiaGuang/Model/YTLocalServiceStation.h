@@ -10,7 +10,7 @@
 #import "YTServiceStation.h"
 #import "YTLocalMajorArea.h"
 #import "FMDatabase.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTServiceStationPoi.h"
 
 @interface YTLocalServiceStation : NSObject<YTEscalator>

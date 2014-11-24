@@ -59,7 +59,7 @@
                                                           identifier:@"EstimoteSampleRegion"];*/
         
         _whitelist = [[NSMutableDictionary alloc] init];
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         [db open];
         FMResultSet *beacons = [db executeQuery:@"select * from Beacon"];
         while([beacons next]){
@@ -109,7 +109,9 @@
     _readbeacons = beacons;
     
     // notify all listeners
+    NSLog(@"listeners:%lu",(unsigned long)_listeners.count);
     for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
+        
         [listener YTBeaconManager:self rangedBeacons:beacons];
     }
     
