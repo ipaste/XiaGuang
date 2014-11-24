@@ -341,7 +341,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_mapView];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
-    [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
+    //[self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
     [self injectPoisForMajorArea:_majorArea];
@@ -800,6 +800,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self redrawBlockAndFloorSwitch];
     }
     
+    //当检测到换了一个mall
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
         [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
@@ -831,6 +832,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         
         [_mapView removeUserLocation];
+        [_beaconManager removeListener:_locator];
+        _locator = nil;
         _shownUser = NO;
         
     }else{
@@ -997,8 +1000,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView zoomToShowPoint1:[merchantLocation coordinate]  point2:[_userMinorArea coordinate]];
         YTPoi *poi = [merchantLocation producePoi];
         [_mapView superHighlightPoi:poi];
-        //[_mapView setCenterCoordinate:CLLocationCoordinate2DMake(0, 0) animated:YES];
-        //[_mapView setZoom:0.7 animated:NO];
         _targetCord = [merchantLocation coordinate];
         
     }
