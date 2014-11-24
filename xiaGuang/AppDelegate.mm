@@ -12,7 +12,7 @@
 #import "YTStaticResourceManager.h"
 #import <FCFileManager.h>
 #import <UnrarKit/URKArchive.h>
-
+#import "YTBeaconManager.h"
 
 @interface AppDelegate () {
     double _timeInToBackground;
@@ -50,13 +50,15 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     _timeInToBackground = [[NSDate date] timeIntervalSinceReferenceDate];
+    [[YTBeaconManager sharedBeaconManager] stopRanging];
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
-    
-    if (now - _timeInToBackground >= 1800) { // 30 minutes wait
+    [[YTBeaconManager sharedBeaconManager] startRangingBeacons];
+    if (now - _timeInToBackground >= 30*60) { // 30 minutes wait
         self.window = [[UIWindow alloc]init];
         self.window.frame = [UIScreen mainScreen].bounds;
         self.window.backgroundColor = [UIColor blackColor];

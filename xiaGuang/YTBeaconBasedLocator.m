@@ -27,6 +27,8 @@
     YTPositionBot *_positionBot;
     
     YTDistanceBoundingBox *_boundingBox;
+    
+    dispatch_queue_t _queue;
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons;
@@ -58,8 +60,11 @@
         
         _boundingBox = [[YTDistanceBoundingBox alloc] initWithMapView:_mapView
                                                             majorArea:_majorArea];
+        
+        _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
+
     }
-    return self;   
+    return self;
 }
 
 - (void)start {
@@ -71,8 +76,10 @@
     
     NSArray *distances = [self prepareDistances:beacons];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(_queue, ^{
         
+        
+        double start = [[NSDate date] timeIntervalSinceReferenceDate];
         NSValue *pos = [_positionBot locateMeWithDistances:distances accuracy:0.00001];
         
         if (pos == nil) {
@@ -87,6 +94,9 @@
         
         CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
                                                                              mapView:_mapView];
+        
+        double end =[[NSDate date] timeIntervalSinceReferenceDate];
+        NSLog(@"elapsed:%f",start-end);
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
         });
@@ -206,6 +216,10 @@
 
 -(void)dealloc{
     NSLog(@"locator destroyed");
+    
+    //dispatch_suspend(_queue);
+    
+    //dispatch_cancel(_queue);
 }
 
 @end

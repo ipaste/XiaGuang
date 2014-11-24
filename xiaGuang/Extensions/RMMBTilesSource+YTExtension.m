@@ -15,6 +15,7 @@
 - (id)initWithTileSetResourceInDocument:(NSString *)name ofType:(NSString *)extension{
     if(![FCFileManager existsItemAtPath:[NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension]]){
         NSLog(@"%@",[NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension]);
+        return nil;
     }
     return [self initWithTileSetURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension]]];
 }

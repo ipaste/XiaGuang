@@ -178,7 +178,7 @@
         NSArray *currentfiles = [FCFileManager listFilesInDirectoryAtPath:CURRENT_DATA_DIR];
         for(NSString *filename in currentfiles){
             
-            if([filename containsString:@"highGuangDB"]){
+            if([filename rangeOfString:@"highGuangDB"].length>0){
                 if([updateTable objectForKey:@"db"] == nil){
                     [FCFileManager copyItemAtPath:CURRENT_DATA_DB_PATH toPath:STAGING_DATA_DB_PATH];
                 }

@@ -109,7 +109,9 @@
     _readbeacons = beacons;
     
     // notify all listeners
+    NSLog(@"listeners:%lu",(unsigned long)_listeners.count);
     for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
+        
         [listener YTBeaconManager:self rangedBeacons:beacons];
     }
     
