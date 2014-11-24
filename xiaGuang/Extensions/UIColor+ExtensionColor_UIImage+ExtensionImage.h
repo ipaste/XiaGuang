@@ -16,6 +16,7 @@
 @interface UIImage (YTImage)
 + (UIImage *)imageWithImageName:(NSString *)name andTintColor:(UIColor *)tintColor;
 + (UIImage *)imageRotateOneHundredAndEightyDegreesWithImageName:(NSString *)name;
++ (UIImage *)imageWithImageName:(NSString *)name rotate:(CGFloat)rotate;
 + (UIImage *)originImage:(UIImage *)image scaleToSize:(CGSize)size;
 + (UIImage *)imageFromImage:(UIImage *)image rect:(CGRect)rect;
 

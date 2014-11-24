@@ -42,6 +42,7 @@
         [self addSubview:_backgroundView];
         
         _downPullButton = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, CGRectGetWidth(self.frame) - 20, 50)];
+        [_downPullButton addTarget:self action:@selector(downpullButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_downPullButton];
         
     }
@@ -57,9 +58,14 @@
     _downPullButton.layer.cornerRadius = 5;
     [_downPullButton setTitleColor:[UIColor colorWithString:@"ffffff"] forState:UIControlStateNormal];
     _downPullButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    [_downPullButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    
+    [_downPullButton setImage:[UIImage originImage:[UIImage imageNamed:@"type_img_arrow1"] scaleToSize:CGSizeMake(14, 8)] forState:UIControlStateNormal];
+    [_downPullButton setImage:[UIImage originImage:[UIImage imageWithImageName:@"type_img_arrow1" rotate:M_PI] scaleToSize:CGSizeMake(14, 8)] forState:UIControlStateSelected];
+    [_downPullButton setImageEdgeInsets:UIEdgeInsetsMake(0, CGRectGetWidth(_downPullButton.frame) - 24, 0, 0)];
     self.center = CGPointMake(CGRectGetWidth(_screenFrame) / 2, CGRectGetHeight(_screenFrame) / 2 - 25);
+}
+
+-(void)downpullButtonClicked{
+    _downPullButton.selected = !_downPullButton.selected;
 }
 
 -(void)setMall:(id<YTMall>)mall{
