@@ -62,7 +62,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTMajorArea> _activePoiMajorArea;
     BOOL _blurMenuShown;
     id<YTMall> _targetMall;
+    
+    //商圈入口记录的mall
+    id<YTMall> _recordMall;
     BOOL _shownUser;
+    
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -110,7 +114,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
-            
+            _recordMall = [[[_majorArea floor] block] mall];
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -122,7 +126,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (self) {
         if ( floor != nil) {
             _majorArea = [[floor majorAreas] objectAtIndex:0];
-            
+            _recordMall = [[[_majorArea floor] block] mall];
         }
         _type = YTMapViewControllerTypeFloor;
     }
@@ -163,27 +167,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createBlurMenuWithCallBack:nil];
 
     [self createSearchView];
-
-
-    /*
-    
-    if(_minorArea == nil){
-        
-        NSLog(@"didload");
-        [self createBlurMenu];
-        
-    }
-    else{
-        _noBeaconCover.hidden = YES;
-    }
-    
-    if (_type == YTMapViewControllerTypeNavigation) {
-        
-        [self userMoveToMinorArea:_minorArea];
-        [_beaconManager startRangingBeacons];
-        return;
-    }*/
-
 
 }
 
@@ -785,6 +768,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
+    
+    if(_type == YTMapViewControllerTypeFloor || _type == YTMapViewControllerTypeMerchant){
+        
+        if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_recordMall identifier]]){
+            return;
+        }
+        
+    }
     
     if(_type != YTMapViewControllerTypeNavigation){
         if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
