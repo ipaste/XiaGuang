@@ -127,6 +127,22 @@
     return [UIImage imageWithCGImage:newImageRef];
 }
 
-
++ (UIImage *)imageFromImage:(UIImage *)image rotate:(CGFloat)aRotate{
+    UIImage *tempImage = image;
+    
+    UIGraphicsBeginImageContext(tempImage.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextTranslateCTM(context, tempImage.size.width / 2, tempImage.size.height / 2);
+    CGContextRotateCTM(context, aRotate);
+    CGContextTranslateCTM(context, -tempImage.size.width / 2, -tempImage.size.height / 2);
+    
+    [tempImage drawInRect:CGRectMake(0, 0, tempImage.size.width, tempImage.size.height)];
+    
+    UIImage *rotateImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return rotateImage;
+}
 
 @end

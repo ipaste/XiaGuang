@@ -19,5 +19,6 @@
 + (UIImage *)imageWithImageName:(NSString *)name rotate:(CGFloat)rotate;
 + (UIImage *)originImage:(UIImage *)image scaleToSize:(CGSize)size;
 + (UIImage *)imageFromImage:(UIImage *)image rect:(CGRect)rect;
++ (UIImage *)imageFromImage:(UIImage *)image rotate:(CGFloat)aRotate;
 
 @end
