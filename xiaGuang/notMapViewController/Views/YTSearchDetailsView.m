@@ -124,10 +124,11 @@
     _results = [NSMutableArray array];
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     FMResultSet *result = nil;
+    
     if (_mall) {
-       result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and ",[NSString stringWithFormat:@"%%%@%%",keyWord]];
+       result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and majorAreaId in ?",[NSString stringWithFormat:@"%%%@%%",keyWord],@""];
     }else{
-        result = [db executeQuery:@"select distinct merchantInstanceName from MerchantInstance"];
+        result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ?",[NSString stringWithFormat:@"%%%@%%",keyWord]];
     }
     
     while ([result next]) {

@@ -14,6 +14,7 @@
     NSString *_tmpFloorId;
     NSString *_tmpName;
     NSString *_tmpIsParking;
+    NSString *_tmpUnId;
     NSMutableArray *_tmpMinorAreas;
     
     NSMutableArray *_tmpMerchantAreas;
@@ -49,6 +50,7 @@
             _tmpFloorId = [findResultSet stringForColumn:@"floorId"];
             _tmpName = [findResultSet stringForColumn:@"majorAreaName"];
             _tmpIsParking = [findResultSet stringForColumn:@"isParking"];
+            _tmpUnId = [findResultSet stringForColumnIndex:@"unId"];
             _tmpWorldToMapRatio = [findResultSet doubleForColumn:@"worldToMapDistRatio"];
         }
     }
@@ -212,6 +214,9 @@
     return [_tmpIsParking boolValue];
 }
 
+-(NSString *)unId{
+    return _tmpUnId;
+}
 
 -(double)worldToMapRatio {
     return _tmpWorldToMapRatio;

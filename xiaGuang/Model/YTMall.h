@@ -23,7 +23,7 @@
 @property(weak,nonatomic)NSArray *blocks;
 @property(weak,nonatomic)NSArray *merchantLocations;
 @property(weak,nonatomic)NSArray *merchants;
-@property(nonatomic)CLLocationCoordinate2D coord;
+
 
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;

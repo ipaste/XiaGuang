@@ -26,7 +26,7 @@
 @synthesize blocks;
 @synthesize merchants;
 
--(id) initWithAVObject:(AVObject *)object{
+-(id)initWithAVObject:(AVObject *)object{
     
     self = [super init];
     if(self){
@@ -47,7 +47,6 @@
 
 -(NSArray *)blocks{
     if(_blocks == nil){
-        
         _blocks = [[NSMutableArray alloc] init];
         
         AVQuery *query = [[AVQuery alloc] initWithClassName:@"Block"];
@@ -101,7 +100,6 @@
 -(NSArray *)merchants{
     if(_merchants == nil){
         _merchants = [[NSMutableArray alloc] init];
-        
         AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANT_CLASS_NAME];
         query.maxCacheAge = 24 * 3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
@@ -116,29 +114,6 @@
     }
     
     return [_merchants copy];
-}
-//-(NSArray *)merchantLocations{
-//    if(_merchantLocs == nil){
-//        
-//        _merchantLocs = [[NSMutableArray alloc] init];
-//        
-//        AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANTLOCATION_CLASS_NAME];
-//        query.maxCacheAge = 24 * 3600;
-//        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-//        
-//        [query whereKey:MERCHANTLOCATION_CLASS_MALL_KEY equalTo:_internalObject];
-//        [query includeKey:@"mall,majorArea,floor,inMinorArea"];
-//        NSArray *result = [query findObjects];
-//        for(AVObject *tempAVObject in result){
-//            YTCloudMerchant *merchat = [[YTCloudMerchant alloc]initWithAVObject:tempAVObject];
-//            [_merchantLocs addObject:merchat];
-//        }
-//    }
-//    
-//    return _merchantLocs;
-//}
--(CLLocationCoordinate2D)coord{
-    return CLLocationCoordinate2DMake([_internalObject[MALL_CLASS_LATITUDE_KEY] floatValue], [_internalObject[MALL_CLASS_LONGITUDE_KEY] floatValue]);
 }
 
 -(UIImage *)infoBackground{
