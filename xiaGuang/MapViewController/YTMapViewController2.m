@@ -199,7 +199,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     NSLog(@"didAppear");
-    if(_userMinorArea == nil || _beaconManager.currentClosest == nil){
+    if(_userMinorArea == nil ){
         
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
@@ -210,11 +210,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if(_menu == nil){
                     [self createBlurMenuWithCallBack:^{
                         [_menu show];
+                        _blurMenuShown = YES;
                     }];
                     //[_menu show];
                 }
                 else{
                     [_menu show];
+                    _blurMenuShown = YES;
                 }
                 if([_mapView currentState] != YTMapViewDetailStateNormal){
                     [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
@@ -249,40 +251,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
-    /*AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-     [query whereKeyExists:@"localDBId" ];
-     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-     query.maxCacheAge = 3 * 24 * 3600;
-     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-     if (!error) {
-     
-     
-     _malls = [NSMutableArray array];
-     
-     for (AVObject *mallObject in objects) {
-     YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
-     
-     [_malls addObject:mall];
-     
-     }
-     [self instantiateMenu];
-     if(callback!= nil){
-     callback();
-     }
-     
-     }else{
-     //获取失败
-     if(_alert == nil){
-     _alert = [[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil];
-     
-     if(_userMinorArea == nil){
-     [_alert show];
-     }
-     
-     }
-     }
-     
-     }];*/
+
     _malls = [NSMutableArray array];
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
@@ -374,6 +343,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     [_mapView addPois:pois];
+    
+    
+    NSArray *minors = [majorArea minorAreas];
+    NSMutableArray *minorsArray = [NSMutableArray array];
+    for(YTLocalMinorArea *minor in minors){
+        YTPoi *tmpMinorPoi = [minor producePoi];
+        [minorsArray addObject:tmpMinorPoi];
+    }
+    [_mapView addPois:minorsArray];
+    
     
     if(highlightPoi != nil && _navigationView.isNavigating){
         [_mapView superHighlightPoi:highlightPoi];
@@ -742,28 +721,46 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)noBeaconsFound{
     
 }
--(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
-    _majorArea = [YTMajorAreaVoter getMajorArea:beacon];
-    NSLog(@"primary beacon shifted to %@, %@",beacon.major,beacon.minor);
 
-    id<YTMinorArea> minorArea = [self getMinorArea:beacon];
-    if (_majorArea != nil && minorArea != nil) {
+
+-(void)rangedBeacons:(NSArray *)beacons{
+    
+    if(beacons.count <= 0){
+        return;
+    }
+    
+    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    
+    id<YTMinorArea> bestGuessMinorArea = [self topMinorAreaWithInMajorAreaId:votedMajorAreaId inBeacons:beacons];
+    if(bestGuessMinorArea == nil){
+        return;
+    }
+    _majorArea = [bestGuessMinorArea majorArea];
+    
+    if (_majorArea != nil) {
         
-        if(![[[minorArea majorArea] identifier] isEqualToString:[YTMajorAreaVoter shouldSwitchToMajorAreaId:_beaconManager.readbeacons]]){
-            NSLog(@"current closest minorArea is not on the same majorArea as what top 10 beacons agree");
-            return;
-        }
-        
-        [self userMoveToMinorArea:minorArea];
+        [self userMoveToMinorArea:bestGuessMinorArea];
         if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
             _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
-
+            
         }
         [self setTargetMall:[[[_majorArea floor] block] mall]];
     }
 }
 
-
+-(id<YTMinorArea>)topMinorAreaWithInMajorAreaId:(NSString *)majorAreaId
+                                   inBeacons:(NSArray *)beacons
+{
+    
+    for(ESTBeacon *tmp in beacons){
+        id<YTMinorArea> minor = [self getMinorArea:tmp];
+        if([[[minor majorArea] identifier] isEqualToString:majorAreaId]){
+            return minor;
+        }
+    }
+    return nil;
+    
+}
 
 -(void)showUserAtCoordinate:(CLLocationCoordinate2D)coordinate{
     if(_shownUser){
@@ -798,6 +795,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if(_blurMenuShown){
         [_menu hide];
         _noBeaconCover.hidden = YES;
+        _blurMenuShown = NO;
         [self redrawBlockAndFloorSwitch];
     }
     
@@ -848,7 +846,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 -(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    NSLog(@"finish anim");
+    //NSLog(@"finish anim");
     _changeFloorIndicator.hidden = YES;
 }
 
@@ -1243,6 +1241,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if(_blurMenuShown){
                     [_menu hide];
                     _noBeaconCover.hidden = YES;
+                    _blurMenuShown = NO;
                     [self redrawBlockAndFloorSwitch];
                 }
             }
