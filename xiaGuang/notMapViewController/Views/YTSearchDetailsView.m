@@ -122,35 +122,58 @@
         [_searchResultstableView reloadData];
     }
     _results = [NSMutableArray array];
-    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-    query.limit = 10;
-    
-    [query includeKey:@"mall,floor.block.mall"];
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMResultSet *result = nil;
     if (_mall) {
-        AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
-        [mallQuery whereKey:@"name" equalTo:[_mall mallName]];
-        [query whereKey:@"mall" matchesQuery:mallQuery];
+       result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and ",[NSString stringWithFormat:@"%%%@%%",keyWord]];
+    }else{
+        result = [db executeQuery:@"select distinct merchantInstanceName from MerchantInstance"];
     }
-
-    [query whereKey:@"name" matchesRegex:keyWord modifiers:@"i"];
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-       
-        for (AVObject *merchantObject in objects) {
-            YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
-
-            [_results addObject:merchant];
-        }
-        [_searchResultstableView reloadData];
-        if (_results.count > 0) {
-            _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-            _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
-            _notLabel.hidden = YES;
-        }else{
-            _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-            _notLabel.hidden = NO;
-        }
-    }];
+    while ([result next]) {
+        YTLocalMerchantInstance *tmpMerchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
+        [_results addObject:tmpMerchant];
+    }
+    
+    [_searchResultstableView reloadData];
+    
+    if (_results.count > 0) {
+        _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
+        _notLabel.hidden = YES;
+    }else{
+        _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _notLabel.hidden = NO;
+    }
+//    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+//    query.limit = 10;
+//    
+//    [query includeKey:@"mall,floor.block.mall"];
+//    if (_mall) {
+//        AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+//        [mallQuery whereKey:@"name" equalTo:[_mall mallName]];
+//        [query whereKey:@"mall" matchesQuery:mallQuery];
+//    }
+//
+//    [query whereKey:@"name" matchesRegex:keyWord modifiers:@"i"];
+//    
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//       
+//        for (AVObject *merchantObject in objects) {
+//            YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
+//
+//            [_results addObject:merchant];
+//        }
+//        [_searchResultstableView reloadData];
+//        if (_results.count > 0) {
+//            _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+//            _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
+//            _notLabel.hidden = YES;
+//        }else{
+//            _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//            _notLabel.hidden = NO;
+//        }
+//    }];
     
 }
 
@@ -218,8 +241,8 @@
             
         }
         
-        id<YTMerchant> merchant = _results[indexPath.row];
-        NSString *merchantName = [merchant merchantName];
+        id<YTMerchantLocation> merchant = _results[indexPath.row];
+        NSString *merchantName = [merchant merchantLocationName];
         NSString *remarks = [NSString stringWithFormat:@"%@ %@ %@",[[merchant floor] floorName],[[[merchant floor] block] blockName],[[merchant mall] mallName]];
 /*
         CGFloat merchantNameWidth = [merchantName boundingRectWithSize:CGSizeMake(200, 44) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
