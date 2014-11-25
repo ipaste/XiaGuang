@@ -409,13 +409,13 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }
     [self refreshLocatorIfNeeded];
     
-    [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:YES];
+    [_mapView setCenterCoordinate:_userCoordintate animated:YES];
 }
 
 -(void)moveCurrentParkingPositionClicked{
     CLLocationCoordinate2D target;
     if (_state == YTParkingStateMarked) {
-        target = [[_tmpMarker inMinorArea] coordinate];
+        target = [_tmpMarker coordinate];
         if (![[[_tmpMarker majorArea] identifier] isEqualToString:[_currenDisplayMajorArea identifier]]) {
             [self displayMapWithMajorArea:[_tmpMarker majorArea]];
             
@@ -448,7 +448,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                 [self displayMapWithMajorArea:[_tmpMarker majorArea]];
             }else{
                 [self parkingMarkedShowInMap:YES];
-                //[self displayMapWithMajorArea:_currenDisplayMajorArea];
             }
             _timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(updateParkingChargeLabel:) userInfo:nil repeats:YES];
             [self markedStateWithAnimation:animation];
