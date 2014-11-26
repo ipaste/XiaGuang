@@ -200,6 +200,10 @@
     }];
 }
 
+-(NSString *)unId{
+    return @"1";
+}
+
 -(YTPoi *)producePoi{
     YTMerchantPoi *result = [[YTMerchantPoi alloc]  initWithMerchantInstance:self];
     return result;

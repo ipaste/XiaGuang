@@ -24,7 +24,7 @@
 @property (nonatomic,assign) CLLocationCoordinate2D coordinate;
 @property (weak,nonatomic) NSNumber *displayLevel;
 @property (weak,nonatomic) id<YTMinorArea> inMinorArea;
-
+@property (weak,nonatomic) NSString *unId;
 
 @property (nonatomic) float lableWidth;
 @property (nonatomic) float lableHeight;

@@ -93,10 +93,12 @@
         callback(mallImage,nil);
     }];
 }
+
 -(UIImage *)logo{
     AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
     return [UIImage imageWithData:[file getData]];
 }
+
 -(NSArray *)merchants{
     if(_merchants == nil){
         _merchants = [[NSMutableArray alloc] init];
@@ -249,12 +251,11 @@
     }];
 
 }
+
 -(NSString *)localDB{
-    if (_internalObject[@"localDBId"]) {
-        return nil;
-    }
-    return @"";
+    return _internalObject[@"localDBId"];
 }
+
 -(YTLocalMall *)getLocalCopy{
     
     if(_tmpLocalMall == nil){

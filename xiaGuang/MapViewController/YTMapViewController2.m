@@ -161,30 +161,30 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
-
+    
     [self createSearchView];
-
-
+    
+    
     /*
+     
+     if(_minorArea == nil){
+     
+     NSLog(@"didload");
+     [self createBlurMenu];
+     
+     }
+     else{
+     _noBeaconCover.hidden = YES;
+     }
+     
+     if (_type == YTMapViewControllerTypeNavigation) {
+     
+     [self userMoveToMinorArea:_minorArea];
+     [_beaconManager startRangingBeacons];
+     return;
+     }*/
     
-    if(_minorArea == nil){
-        
-        NSLog(@"didload");
-        [self createBlurMenu];
-        
-    }
-    else{
-        _noBeaconCover.hidden = YES;
-    }
     
-    if (_type == YTMapViewControllerTypeNavigation) {
-        
-        [self userMoveToMinorArea:_minorArea];
-        [_beaconManager startRangingBeacons];
-        return;
-    }*/
-
-
 }
 
 
@@ -736,7 +736,32 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
 }
 
-
+-(void)selectedUnIds:(NSArray *)unIds{
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    if([db open]){
+        NSString *unId = [unIds firstObject];
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where unId = ?",unId];
+        [result next];
+        YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+        
+        if([tmpMerchantInstance identifier] == nil){
+            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该地图中找不到" cancelButtonTitle:@"知道了"]show];
+            return;
+        }
+        id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
+        _selectedPoi = [tmpMerchantInstance producePoi];
+        [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
+        
+        if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
+            [self switchFloor:[tmpMajorArea floor]];
+        }else{
+            [_mapView highlightPoi:_selectedPoi animated:YES];
+        }
+        [_mapView setCenterCoordinate:[tmpMerchantInstance coordinate] animated:YES];
+        [self showCallOut];
+        
+    }
+}
 
 #pragma mark beacons delegate methods
 -(void)noBeaconsFound{
@@ -745,7 +770,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
     _majorArea = [YTMajorAreaVoter getMajorArea:beacon];
     NSLog(@"primary beacon shifted to %@, %@",beacon.major,beacon.minor);
-
+    
     id<YTMinorArea> minorArea = [self getMinorArea:beacon];
     if (_majorArea != nil && minorArea != nil) {
         
@@ -757,7 +782,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self userMoveToMinorArea:minorArea];
         if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
             _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
-
+            
         }
         [self setTargetMall:[[[_majorArea floor] block] mall]];
     }

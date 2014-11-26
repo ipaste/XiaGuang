@@ -24,7 +24,9 @@
     UITableView *_searchResultstableView;
     UITableView *_historyTableView;
     NSMutableArray *_results;
-    NSArray *_historicalRecord;
+    NSMutableArray *_unIds;
+    NSArray *_recordObjects;
+    NSString *_majorAreaIds;
     NSArray *_popularMerchants;
 }
 @end
@@ -73,13 +75,16 @@
             }
         }];
         
-        
-        
         [_scrollView addSubview:_hotSearchView];
+        
         
         _fileManager = [YTFileManager defaultManager];
         
-        _historyTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_hotSearchView.frame), CGRectGetWidth(_scrollView.frame) , _historicalRecord.count * HISTORYTABLECELL_HEIGHT + 35) style:UITableViewStylePlain];
+        [self setHistoricalRecordNames:[_fileManager readDataWithFileName:@"history"]];
+        
+        NSInteger count = _recordObjects.count == 0 ? 1:_recordObjects.count;
+        
+        _historyTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_hotSearchView.frame), CGRectGetWidth(_scrollView.frame) , count * HISTORYTABLECELL_HEIGHT + 35) style:UITableViewStylePlain];
         _historyTableView.backgroundColor = [UIColor clearColor];
         _historyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _historyTableView.delegate = self;
@@ -103,6 +108,8 @@
         _notLabel.hidden = YES;
         [_searchResultstableView addSubview:_notLabel];
         self.hidden = YES;
+        
+        _majorAreaIds = [self getMajorAreaId:_mall];
     }
     return self;
     
@@ -113,88 +120,58 @@
         _scrollView.hidden = NO;
         return;
     }
-
+    
     //关键字处理
     _scrollView.hidden = YES;
     _searchResultstableView.hidden = NO;
     if (_results != nil) {
         [_results removeAllObjects];
+        [_unIds removeAllObjects];
         [_searchResultstableView reloadData];
     }
     _results = [NSMutableArray array];
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-    FMResultSet *result = nil;
+    _unIds = [NSMutableArray array];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMResultSet *result = nil;
+        if (_mall) {
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like ? and majorAreaId in %@ and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",_majorAreaIds];
+            
+            result = [db executeQuery:sql,[NSString stringWithFormat:@"%%%@%%",keyWord]];
+        }else{
+            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"%%%@%%",keyWord]];
+        }
+        
+        while ([result next]) {
+            YTLocalMerchantInstance *tmpMerchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
+            [_results addObject:tmpMerchant];
+            
+            [_unIds addObject:[self merchantsWithMerchantName:[tmpMerchant merchantLocationName]]];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_searchResultstableView reloadData];
+            
+            if (_results.count > 0) {
+                _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
+                _notLabel.hidden = YES;
+            }else{
+                _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                _notLabel.hidden = NO;
+            }
+        });
+    });
     
-    if (_mall) {
-       result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and majorAreaId in ?",[NSString stringWithFormat:@"%%%@%%",keyWord],@""];
-    }else{
-        result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ?",[NSString stringWithFormat:@"%%%@%%",keyWord]];
-    }
-    
-    while ([result next]) {
-        YTLocalMerchantInstance *tmpMerchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
-        [_results addObject:tmpMerchant];
-    }
-    
-    [_searchResultstableView reloadData];
-    
-    if (_results.count > 0) {
-        _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
-        _notLabel.hidden = YES;
-    }else{
-        _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _notLabel.hidden = NO;
-    }
-//    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-//    query.limit = 10;
-//    
-//    [query includeKey:@"mall,floor.block.mall"];
-//    if (_mall) {
-//        AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
-//        [mallQuery whereKey:@"name" equalTo:[_mall mallName]];
-//        [query whereKey:@"mall" matchesQuery:mallQuery];
-//    }
-//
-//    [query whereKey:@"name" matchesRegex:keyWord modifiers:@"i"];
-//    
-//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//       
-//        for (AVObject *merchantObject in objects) {
-//            YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
-//
-//            [_results addObject:merchant];
-//        }
-//        [_searchResultstableView reloadData];
-//        if (_results.count > 0) {
-//            _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-//            _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
-//            _notLabel.hidden = YES;
-//        }else{
-//            _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//            _notLabel.hidden = NO;
-//        }
-//    }];
     
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if ([tableView isEqual:_historyTableView]) {
-        _historicalRecord = [_fileManager readDataWithFileName:@"history"];
-        
-        CGRect frame = _historyTableView.frame;
-        if (_historicalRecord.count > 0) {
-            frame.size.height = _historicalRecord.count * HISTORYTABLECELL_HEIGHT + 35;
-        }else{
-            frame.size.height = 1 * HISTORYTABLECELL_HEIGHT + 35;
-        }
-        _historyTableView.frame = frame;
-        
-        if (_historicalRecord.count <= 0) {
+        if (_recordObjects.count <= 0) {
             return 1;
         }
-        return _historicalRecord.count;
-        
+        return _recordObjects.count;
     }
     
     return _results.count;
@@ -213,13 +190,14 @@
             historycell.textLabel.font = [UIFont systemFontOfSize:14];
             historycell.textLabel.frame = CGRectMake(25, 0, CGRectGetWidth(historycell.frame) - 25, HISTORYTABLECELL_HEIGHT);
             historycell.selectedBackgroundView = selectedBackgroundView;
-
+            
         }
-        if (_historicalRecord.count <= 0) {
+        if (_recordObjects.count <= 0) {
             historycell.textLabel.text = @"暂无历史";
             historycell.selectionStyle = UITableViewCellSelectionStyleNone;
         }else{
-            historycell.textLabel.text = _historicalRecord[indexPath.row];
+            id<YTMerchantLocation> tmpMerchantInstance = _recordObjects[indexPath.row];
+            historycell.textLabel.text = [tmpMerchantInstance merchantLocationName];
         }
         return historycell;
     }else{
@@ -229,34 +207,20 @@
             cell.backgroundColor = [UIColor clearColor];
             
             cell.selectedBackgroundView = selectedBackgroundView;
-    
+            
             cell.textLabel.textColor = [UIColor colorWithString:@"606060"];
             cell.textLabel.font = [UIFont systemFontOfSize:14];
             cell.textLabel.tag = 0;
-
+            
             cell.detailTextLabel.textColor = [UIColor colorWithString:@"dcdcdc"];
             cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
             cell.detailTextLabel.textAlignment = 2;
             cell.detailTextLabel.tag = 1;
-
-            
         }
         
         id<YTMerchantLocation> merchant = _results[indexPath.row];
         NSString *merchantName = [merchant merchantLocationName];
-        NSString *remarks = [NSString stringWithFormat:@"%@ %@ %@",[[merchant floor] floorName],[[[merchant floor] block] blockName],[[merchant mall] mallName]];
-/*
-        CGFloat merchantNameWidth = [merchantName boundingRectWithSize:CGSizeMake(200, 44) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
-
-        CGRect frame = cell.te.frame;
-        frame.size.width = merchantNameWidth;
-        label.frame = frame;
-        
-        frame = subLabel.frame;
-        frame.origin.x = CGRectGetMaxX(label.frame) + 5;
-        frame.size.width = CGRectGetWidth(self.frame) - CGRectGetWidth(label.frame) - 35;
-        subLabel.frame = frame;
-     */
+        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%ld家",[_unIds[indexPath.row] count]];
         cell.textLabel.text = merchantName;
         cell.detailTextLabel.text = remarks;
         return cell;
@@ -266,10 +230,11 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if ([tableView isEqual:_historyTableView]) {
-        if (_historicalRecord.count <= 0){
+        if (_recordObjects.count <= 0){
             return;
         }
-        [self.delegate selectSearchResultsWithMerchantnName:_historicalRecord[indexPath.row]];
+        id<YTMerchantLocation> tmpMerchantLocation = _recordObjects[indexPath.row];
+        [self.delegate selectSearchResultsWithUnids:[self merchantsWithMerchantName:[tmpMerchantLocation merchantLocationName]]];
         
     }else if([tableView isEqual:_searchResultstableView]){
         NSMutableArray *history = [NSMutableArray arrayWithArray:[_fileManager readDataWithFileName:@"history"]];
@@ -279,13 +244,14 @@
         }
         
         if (_results.count > 0) {
-            id<YTMerchant> merchant = _results[indexPath.row];
-            [history insertObject:[merchant merchantName] atIndex:0];
+            id<YTMerchantLocation> tmpMerchantLocation = _results[indexPath.row];
+            [history insertObject:[tmpMerchantLocation merchantLocationName] atIndex:0];
             [_fileManager saveWithData:history andCreateFileName:@"history"];
+            [self setHistoricalRecordNames:history];
             [_historyTableView reloadData];
             _scrollView.hidden = NO;
             _searchResultstableView.hidden = YES;
-            [self.delegate selectSearchResultsWithMerchantnName:[merchant merchantName]];
+            [self.delegate selectSearchResultsWithUnids:_unIds[indexPath.row]];
         }
     }
     
@@ -327,12 +293,12 @@
     [label addSubview:line];
     return label;
 }
+
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     return [[UIView alloc]init];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-
     [self.delegate cancelSearchInput];
 }
 
@@ -342,7 +308,61 @@
     NSString *merchantName = tmp[@"name"];
     [self.delegate selectSearchResultsWithMerchantnName:merchantName];
 }
+
+-(NSString *)getMajorAreaId:(YTLocalMall *)aMall{
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMResultSet *result = [db executeQuery:@"select * from MajorArea where mallId = ?",aMall.identifier];
+    NSMutableString *resultString = [NSMutableString stringWithFormat:@"("];
+    while ([result next]) {
+        YTLocalMajorArea *tmpMajorArea = [[YTLocalMajorArea alloc]initWithDBResultSet:result];
+        [resultString appendString:[NSString stringWithFormat:@"%@,",[tmpMajorArea identifier]]];
+    }
+    NSRange tmpRange;
+    tmpRange.length = 1;
+    tmpRange.location = resultString.length - 1;
+    [resultString deleteCharactersInRange:tmpRange];
+    [resultString appendString:@")"];
+    
+    return [resultString copy];
+}
+
+-(NSArray *)merchantsWithMerchantName:(NSString *)merchantName{
+    NSMutableArray *merchantCount = [NSMutableArray array];
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMResultSet *result = nil;
+    if (_mall) {
+        NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName = ? and majorAreaId in %@",_majorAreaIds];
+        result = [db executeQuery:sql, merchantName];
+    }else{
+        result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ?",merchantName];
+    }
+    
+    while ([result next]) {
+        YTLocalMerchantInstance *merchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
+        [merchantCount addObject:[merchant unId]];
+    }
+    
+    return [merchantCount copy];
+}
+
+-(void)setHistoricalRecordNames:(NSArray *)recordNames{
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    NSMutableArray *tmpRecord = [NSMutableArray array];
+    for (NSString *merchantName in recordNames) {
+        FMResultSet *result = nil;
+        
+        result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ? ",merchantName];
+    
+        [result next];
+        YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
+        [tmpRecord addObject:tmpMerchantInstance];
+        
+    }
+    _recordObjects = [tmpRecord copy];
+}
+
 -(void)dealloc{
+    [_unIds removeAllObjects];
     [_results removeAllObjects];
     NSLog(@"searchDetails dealloc");
 }

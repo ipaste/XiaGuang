@@ -211,6 +211,14 @@
     [self.delegate selectedMerchantName:merchantName];
 }
 
+-(void)selectSearchResultsWithUnids:(NSArray *)unIds{
+    
+    if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
+        [self.delegate searchCancelButtonClicked];
+    }
+    [self cancelAnimation:NO completion:nil];
+    [self.delegate selectedUnIds:unIds];
+}
 #pragma mark clear按钮 cancel按钮
 -(void)clearText{
     [self searchBar:_searchBar dealWithTextChange:@""];

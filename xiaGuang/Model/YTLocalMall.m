@@ -29,7 +29,6 @@
         }
     }
     return self;
-    
 }
 
 -(NSString *)mallName{
@@ -74,7 +73,6 @@
         }
         
     }
-    
     return _tmpMerchantInstance;
 }
 
