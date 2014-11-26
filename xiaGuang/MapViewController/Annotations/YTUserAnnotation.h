@@ -9,11 +9,10 @@
 #import "YTAnnotation.h"
 #import <CoreLocation/CoreLocation.h>
 #import "YTLocalMajorArea.h"
-#import "YTStaticResourceManager.h"
 #import "RMMarker+RMMarker_YTExtension.h"
 @interface YTUserAnnotation : YTAnnotation<CLLocationManagerDelegate>
 
 -(id)initWithMapView:(RMMapView *)aMapView
  andCoordinate:(CLLocationCoordinate2D)coordinate;
-
+-(void)setOffset:(CGFloat)offset;
 @end

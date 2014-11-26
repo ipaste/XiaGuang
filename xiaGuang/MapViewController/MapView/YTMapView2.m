@@ -14,7 +14,7 @@
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
-    
+    CGFloat _offset;
 }
 
 #pragma mark init
@@ -52,6 +52,10 @@
 
 -(void)setCenterCoordinate:(CLLocationCoordinate2D)coordinate animated:(BOOL)animated{
     [_internalMapView setCenterCoordinate:coordinate animated:animated];
+}
+
+-(void)setMapOffset:(CGFloat)offset{
+    _offset = offset;
 }
 
 #pragma mark Map data manipulation
@@ -191,7 +195,7 @@
 -(void)showUserLocationAtCoordinate:(CLLocationCoordinate2D)coordinate{
     if(_userAnnotation == nil){
         _userAnnotation = [[YTUserAnnotation alloc] initWithMapView:_internalMapView andCoordinate:coordinate];
-        
+        [_userAnnotation setOffset:_offset];
         [_internalMapView addAnnotation:_userAnnotation];
     }
     else{

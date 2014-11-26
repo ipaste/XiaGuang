@@ -11,6 +11,7 @@
 @implementation YTUserAnnotation{
     RMMarker *_resultLayer;
     id<YTMall> _mall;
+    CGFloat _offset;
     CLLocationManager *_locationManager;
 }
 
@@ -26,14 +27,6 @@
         [_locationManager startUpdatingHeading];
         
         self.annotationType = @"user";
-        
-      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-          FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-          FMResultSet *result = [db executeQuery:@"select * from MajorArea where mapName = ?",[[aMapView tileSource] shortName]];
-          YTLocalMajorArea *majorArea = [[YTLocalMajorArea alloc]initWithDBResultSet:result];
-          _mall = [[[majorArea floor] block] mall];
-      });
-        
     }
     return self;
 }
@@ -68,12 +61,15 @@
             
             marker.transform = CATransform3DIdentity;
             
-            CATransform3D transform3d = CATransform3DMakeRotation(M_PI *  newHeading.magneticHeading / (180 - [_mall offset]), 0.0, 0.0, 1.0);
+            CATransform3D transform3d = CATransform3DMakeRotation(M_PI *  newHeading.magneticHeading / (180 - _offset), 0.0, 0.0, 1.0);
             
             marker.transform = transform3d;
             break;
         }
     }
+}
+-(void)setOffset:(CGFloat)offset{
+    _offset = offset;
 }
 -(NSString *)annotationKey{
     return @"user";

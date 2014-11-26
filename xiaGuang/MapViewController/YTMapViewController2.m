@@ -1383,7 +1383,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     _targetMall = aMall;
+    [_mapView setMapOffset:[_targetMall offset]];
     [self createSearchView];
+  
 }
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){
