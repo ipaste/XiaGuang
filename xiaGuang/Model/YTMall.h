@@ -23,6 +23,7 @@
 @property(weak,nonatomic)NSArray *blocks;
 @property(weak,nonatomic)NSArray *merchantLocations;
 @property(weak,nonatomic)NSArray *merchants;
+@property(nonatomic)CGFloat offset;
 @property(nonatomic)CLLocationCoordinate2D coord;
 
 

@@ -10,12 +10,13 @@
 
 @implementation YTServiceStationAnnotation{
     id<YTServiceStation> _serviceStation;
+    RMMarker *_resultLayer;
 }
 
 @synthesize displayLevel;
 
 -(id)initWithMapView:(RMMapView *)aMapView
-        andServiceStation:(id<YTServiceStation>)ServiceStation
+   andServiceStation:(id<YTServiceStation>)ServiceStation
 {
     self = [super initWithMapView:aMapView coordinate:[ServiceStation coordinate] andTitle:nil];
     if(self){
@@ -31,35 +32,16 @@
 }
 
 -(RMMapLayer *)produceLayer{
+    _resultLayer = [[RMMarker alloc] initWithBubbleHeight:2 width:2];
     
-    RMMarker *resultLayer = [[RMMarker alloc] initWithBubbleHeight:2 width:2];
-    if(self.state == YTAnnotationStateHighlighted){
-        resultLayer.opacity = 1;
-        
-        [resultLayer showBubble:YES];
-        [resultLayer setMerchantIcon:[UIImage imageNamed:@"nav_ico_13"]];
-    }
-    if(self.state == YTAnnotationStateHidden){
-        
-        resultLayer.opacity = 0;
-    }
-    
-    return resultLayer;
-    
+    return _resultLayer;
 }
 
 -(void)highlightAnimated:(BOOL)animated{
-    if(self.state == YTAnnotationStateSuperHighlighted){
-        [super highlightAnimated:animated];
-        [(RMMarker *)self.layer cancelSuperHighlight];
-        [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_13"]];
-        return;
-    }
     [super highlightAnimated:animated];
-    [(RMMarker *)self.layer showBubble:animated];
-    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_13"]];
     self.layer.opacity = 1;
-    
+    [(RMMarker *)self.layer cancelSuperHighlight];
+    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_13"]];
 }
 
 
@@ -72,6 +54,7 @@
     [super superHighlight:animated];
     RMMarker *curLayer = (RMMarker *)self.layer;
     [curLayer superHightlightMerchantLayer];
+    [curLayer showMerchantAnimation:animated];
     [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_13"]];
 }
 
