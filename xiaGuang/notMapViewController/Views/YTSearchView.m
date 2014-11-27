@@ -202,22 +202,15 @@
 
 }
 
--(void)selectSearchResultsWithMerchantnName:(NSString *)merchantName{
-    
-    if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
-        [self.delegate searchCancelButtonClicked];
-    }
-    [self cancelAnimation:NO completion:nil];
-    [self.delegate selectedMerchantName:merchantName];
-}
 
--(void)selectSearchResultsWithUnids:(NSArray *)unIds{
+
+-(void)selectSearchResultsWithDBIds:(NSArray *)dbIds{
     
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
     [self cancelAnimation:NO completion:nil];
-    [self.delegate selectedUnIds:unIds];
+    [self.delegate selectedDBIds:dbIds];
 }
 #pragma mark clear按钮 cancel按钮
 -(void)clearText{

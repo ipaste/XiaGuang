@@ -14,8 +14,7 @@
 @optional
 -(void)searchCancelButtonClicked;
 @required
--(void)selectedMerchantName:(NSString *)name;
--(void)selectedUnIds:(NSArray *)unIds;
+-(void)selectedDBIds:(NSArray *)dbIds;
 @end
 
 @interface YTSearchView : UIView

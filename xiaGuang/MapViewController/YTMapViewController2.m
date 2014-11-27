@@ -684,6 +684,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)searchButtonClicked{
     if (_selectedPoi != nil) {
+        [_mapView hidePoi:_selectedPoi animated:YES];
         [self hideCallOut];
     }
     [_searchView showSearchViewWithAnimation:YES];
@@ -704,50 +705,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_searchView hideSearchViewWithAnimation:YES];
 }
 
--(void)selectedMerchantName:(NSString *)name{
+-(void)selectedDBIds:(NSArray *)dbIds{
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
-        
-        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ?",name];
+        NSString *dbId = [dbIds firstObject];
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where MerchantInstanceId = ?",dbId];
         [result next];
-        YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
-        
-        if([tmpMerchantInstance identifier] == nil){
+        if(result == nil){
             [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该地图中找不到" cancelButtonTitle:@"知道了"]show];
             return;
         }
-        
-        id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
-        if([[[[[tmpMajorArea floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
-            _selectedPoi = [tmpMerchantInstance producePoi];
-            [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
-            
-            if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
-                [self switchFloor:[tmpMajorArea floor]];
-            }else{
-                [_mapView highlightPoi:_selectedPoi animated:YES];
-            }
-            [_mapView setCenterCoordinate:[tmpMerchantInstance coordinate] animated:YES];
-            [self showCallOut];
-        }else{
-            
-            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"该店铺不在%@内",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
-        }
-    }
-}
-
--(void)selectedUnIds:(NSArray *)unIds{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-    if([db open]){
-        NSString *unId = [unIds firstObject];
-        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where unId = ?",unId];
-        [result next];
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
-        
-        if([tmpMerchantInstance identifier] == nil){
-            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该地图中找不到" cancelButtonTitle:@"知道了"]show];
-            return;
-        }
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
         _selectedPoi = [tmpMerchantInstance producePoi];
         [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
@@ -1138,6 +1106,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     } completion:^(BOOL finished) {
         _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60);
         _navigationView.frame = CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60);
+        _navigationView.hidden = YES;
         _selectedPoi = nil;
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;

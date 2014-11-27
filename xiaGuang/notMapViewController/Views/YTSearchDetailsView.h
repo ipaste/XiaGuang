@@ -12,8 +12,7 @@
 @class YTSearchDetailsView;
 @protocol YTSearchDetailsDelegate <NSObject>
 @required
--(void)selectSearchResultsWithMerchantnName:(NSString *)merchantName;
--(void)selectSearchResultsWithUnids:(NSArray *)unIds;
+-(void)selectSearchResultsWithDBIds:(NSArray *)dbIds;
 -(void)cancelSearchInput;
 @end
 @interface YTSearchDetailsView : UIView

@@ -23,7 +23,7 @@
 @property(weak,nonatomic)NSArray *blocks;
 @property(weak,nonatomic)NSArray *merchantLocations;
 @property(weak,nonatomic)NSArray *merchants;
-@property(weak,nonatomic)NSString *unId;
+@property(weak,nonatomic)NSString *uniId;
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;

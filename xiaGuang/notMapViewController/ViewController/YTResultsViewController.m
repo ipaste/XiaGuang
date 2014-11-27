@@ -24,6 +24,7 @@
     NSString *_mallName;
     NSString *_floorName;
     UILabel *_notLabel;
+    NSArray *_ids;
     NSMutableArray *_merchants;
     id<YTMall> _mall;
     BOOL _isCategory;
@@ -58,43 +59,21 @@
             _subCategory = subKey;
             _isCategory = true;
         }
-        if(!_isCategory){
-            _merchantName = key;
-        }
+
         if(_mall){
             _mallName = [mall mallName];
         }
-        _isFirst = YES;
-        
-        _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
-        
-        _tableView.delegate = self;
-        
-        _tableView.dataSource = self;
-        
-        _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-        
-        _tableView.tableFooterView = [[UIView alloc]init];
-        
-        _tableView.showsVerticalScrollIndicator = NO;
-        
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
-        [_tableView addFooterWithTarget:self action:@selector(pullToRefresh)];
-        
-        [self.view addSubview:_tableView];
-        
-        _notLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,100, CGRectGetWidth(self.view.frame), 45)];
-        _notLabel.font = [UIFont systemFontOfSize:20];
-        _notLabel.textColor = [UIColor colorWithString:@"c8c8c8"];
-        _notLabel.text = @"无结果";
-        _notLabel.textAlignment = 1;
-        _notLabel.hidden = YES;
-        [_tableView addSubview:_notLabel];
-        
-        _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
-        _categoryResultsView.delegate = self;
-        [self.view addSubview:_categoryResultsView];
+       
+    }
+    return self;
+}
+
+-(instancetype)initWithSearchInMall:(id<YTMall>)mall andResultsLocalDBIds:(NSArray *)ids{
+    self = [super init];
+    if (self) {
+        _mall = mall;
+        _mallName = [mall mallName];
+        _ids = ids;
     }
     return self;
 }
@@ -106,13 +85,46 @@
     self.navigationItem.title = @"搜索结果";
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     
+    _isFirst = YES;
+    
+    _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
+    
+    _tableView.delegate = self;
+    
+    _tableView.dataSource = self;
+    
+    _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    
+    _tableView.tableFooterView = [[UIView alloc]init];
+    
+    _tableView.showsVerticalScrollIndicator = NO;
+    
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [_tableView addFooterWithTarget:self action:@selector(pullToRefresh)];
+    
+    [self.view addSubview:_tableView];
+    
+    _notLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,100, CGRectGetWidth(self.view.frame), 45)];
+    _notLabel.font = [UIFont systemFontOfSize:20];
+    _notLabel.textColor = [UIColor colorWithString:@"c8c8c8"];
+    _notLabel.text = @"无结果";
+    _notLabel.textAlignment = 1;
+    _notLabel.hidden = YES;
+    [_tableView addSubview:_notLabel];
+    
+    _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
+    _categoryResultsView.delegate = self;
+    [self.view addSubview:_categoryResultsView];
+    
+    
     [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
         _merchants = [NSMutableArray arrayWithArray:merchants];
-        if (_merchantName != nil) {
-            for (id<YTMerchant> merchant in merchants) {
-                _subCategory = [[merchant type] lastObject];
-                _category = [[merchant type] firstObject];
-            }
+        if (!_isCategory) {
+            id<YTMerchant> tmpMerchant = [merchants firstObject];
+            _subCategory = [[tmpMerchant type] lastObject];
+            _category = [[tmpMerchant type] firstObject];
+            
         }
         [_categoryResultsView setKey:_category subKey:_subCategory];
         [self reloadData];
@@ -126,15 +138,7 @@
     frame.origin.y = topHeight + 40;
     frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 40;
     _tableView.frame = frame;
-    /*
-     if (_merchantName == nil) {
-     frame.origin.y = topHeight + 40;
-     frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 40;
-     }else{
-     frame.origin.y = topHeight;
-     frame.size.height = CGRectGetHeight(self.view.frame) - topHeight ;
-     }
-     */
+
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
     frame = _categoryResultsView.frame;
@@ -158,7 +162,7 @@
 
 -(void)getMerchantsWithSkip:(int)skip numbers:(int)number andBlock:(void (^)(NSArray *merchants))block{
     NSMutableArray *merchants = [NSMutableArray array];
-    NSString *whereKey = _isCategory ? MERCHANT_CLASS_TYPE_KEY : MERCHANT_CLASS_NAME_KEY;
+    NSString *whereKey = _isCategory ? MERCHANT_CLASS_TYPE_KEY : MERCHANT_CLASS_LOCALDBId_KEY;
     
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query orderByAscending:@"name"];
@@ -174,7 +178,8 @@
             }
         }
     }else{
-        [query whereKey:whereKey equalTo:_merchantName];
+       // [query whereKey:whereKey equalTo:_merchantName];
+        [query whereKey:whereKey containedIn:_ids];
     }
     if (_floorName != nil) {
         AVQuery *floorQuery = [AVQuery queryWithClassName:@"Floor"];
@@ -261,7 +266,7 @@
     if ([_mallName isEqualToString:@"全部"]){
         _mallName = nil;
     }
-    
+    _isCategory = YES;
     [self getMerchantsWithSkip:0 numbers:10 andBlock:^(NSArray *merchants) {
         _merchants = [NSMutableArray arrayWithArray:merchants];
         [self reloadData];

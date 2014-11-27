@@ -93,14 +93,10 @@
     [_searchView hideSearchViewWithAnimation:NO];
 }
 
--(void)selectedMerchantName:(NSString *)name{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResutsKey:name];
+-(void)selectedDBIds:(NSArray *)dbIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:dbIds];
     resultsVC.isSearch = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
-}
-
--(void)selectedUnIds:(NSArray *)unIds{
-    NSLog(@"%@",unIds);
 }
 
 #pragma mark View 1

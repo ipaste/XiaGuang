@@ -76,4 +76,7 @@
     return _tmpMerchantInstance;
 }
 
+-(NSString *)uniId{
+    return nil;
+}
 @end

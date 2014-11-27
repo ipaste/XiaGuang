@@ -214,7 +214,7 @@
     return [_tmpIsParking boolValue];
 }
 
--(NSString *)unId{
+-(NSString *)uniId{
     return _tmpUnId;
 }
 

@@ -276,7 +276,9 @@
     return _tmpLocalMall;
     
 }
-
+-(NSString *)uniId{
+    return nil;
+}
 -(AVObject *)getCloudObj{
     return _internalObject;
 }
