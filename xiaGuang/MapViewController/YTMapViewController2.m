@@ -83,6 +83,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _targetCord;
     
     NSMutableArray *_malls;
+    NSMutableArray *_allElvatorAndEscalator;
     
     YTBeaconBasedLocator *_locator;
     
@@ -142,7 +143,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)viewDidLoad{
     [super viewDidLoad];
     _shownUser = NO;
-    
+    _allElvatorAndEscalator = [NSMutableArray array];
     _malls = [NSMutableArray array];
     _isFirstBluetoothPrompt = YES;
     _isFirstEnter = YES;
@@ -360,6 +361,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
             highlightPoi = tmpPoi;
         }
+        [_allElvatorAndEscalator addObject:tmpPoi];
         [pois addObject:tmpPoi];
     }
     
@@ -368,6 +370,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
             highlightPoi = tmpPoi;
         }
+        [_allElvatorAndEscalator addObject:tmpPoi];
         [pois addObject:tmpPoi];
     }
     
@@ -393,13 +396,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconsPoi = [minorsArray copy];*/
     
     
-    if(highlightPoi != nil && _navigationView.isNavigating){
-        [_mapView superHighlightPoi:highlightPoi animated:NO];
-        //[_mapView highlightPoi:highlightPoi animated:NO];
-    }
     if(highlightPoi != nil && !_navigationView.isNavigating){
-        //[_mapView superHighlightPoi:highlightPoi];
+        
         [_mapView highlightPoi:highlightPoi animated:NO];
+    }
+    
+    if (_navigationView.isNavigating){
+        if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]]) {
+           
+            [_mapView highlightPois:_allElvatorAndEscalator animated:YES];
+        
+        }else{
+            [_mapView hidePois:_allElvatorAndEscalator animated:NO];
+        }
+        
+        if (highlightPoi != nil) {
+            [_mapView superHighlightPoi:highlightPoi animated:NO];
+        }
     }
     
     if(_activePois != nil && _activePois.count > 0 && [[_activePoiMajorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
@@ -874,7 +887,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
         
-        if (![[_curDisplayedMajorArea identifier]isEqualToString:[[minorArea majorArea] identifier]] && _navigationView.isNavigating) {
+        if (![[[_navigationPlan.targetPoiSource majorArea] identifier]isEqualToString:[[minorArea majorArea] identifier]] && _navigationView.isNavigating) {
             _navigationView.isShowSwitchButton = YES;
         }
         if(!_navigationView.isNavigating){
@@ -982,6 +995,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)handlePoiForMajorArea:(id<YTMajorArea>)majorArea{
     [_mapView removeAnnotations];
     [_mapView removeUserLocation];
+    [_allElvatorAndEscalator removeAllObjects];
     _shownUser = NO;
     [self injectPoisForMajorArea:majorArea];
 }
@@ -1060,8 +1074,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _curDisplayedMajorArea = [_userMinorArea majorArea];
         [self handlePoiForMajorArea:[_userMinorArea majorArea]];
     }
-    
-    
     
     
     if([[[[merchantLocation majorArea]floor] floorName] isEqualToString:[[[_userMinorArea majorArea] floor] floorName]]){
@@ -1144,7 +1156,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     [_mapView hidePoi:_selectedPoi animated:YES];
-    
+    [_mapView hidePois:_allElvatorAndEscalator animated:YES];
+
     
     [UIView animateWithDuration:.2 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
