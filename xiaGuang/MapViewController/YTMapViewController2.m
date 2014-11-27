@@ -534,6 +534,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         //hide callout and POI for
+        double distance = [_mapView distanceFromCoordinate1:coordinate toCoordinate2:[_merchantLocation coordinate]];
+        NSLog(@"distanceFromTapToMerchant:%f",distance);
         if([_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
             [mapView hidePoi:_selectedPoi animated:NO];
             [self hideCallOut];
@@ -554,6 +556,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate{
+    
+    
+    
+    
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         
         //hide callout and POI for
@@ -1093,7 +1099,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         //[_mapView zoomToShowPoint1:[userMajorAreaElevator coordinate]  point2:[_userMinorArea coordinate]];
     }
     
-    [_navigationPlan updateWithCurrentUserMinorArea:_userMinorArea andDisplayedMajorArea:_curDisplayedMajorArea];
+    double distance = [_mapView distanceFromCoordinate1:_userCoordintate toCoordinate2:[_navigationPlan.targetPoiSource coordinate]];
+    [_navigationPlan updateWithCurrentUserMinorArea:_userMinorArea distanceToTarget:distance andDisplayedMajorArea:_curDisplayedMajorArea];
     [_navigationView updateInstruction];
     
     [self showNavigationViewsCopmeletion:^{
@@ -1305,7 +1312,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark helper
 -(void)updateNavManagerIfNeeded{
     if(_navigationView.isNavigating == YES){
-        [_navigationPlan updateWithCurrentUserMinorArea:_userMinorArea andDisplayedMajorArea:_curDisplayedMajorArea];
+        double distance = [_mapView distanceFromCoordinate1:_userCoordintate toCoordinate2:[_navigationPlan.targetPoiSource coordinate]];
+        [_navigationPlan updateWithCurrentUserMinorArea:_userMinorArea distanceToTarget:distance andDisplayedMajorArea:_curDisplayedMajorArea];
         [_navigationView updateInstruction];
     }
 }

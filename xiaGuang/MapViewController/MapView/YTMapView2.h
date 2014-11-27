@@ -84,4 +84,8 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 -(YTMapViewDetailState)currentState;
 -(void)setMapViewDetailState:(YTMapViewDetailState)detailState;
 
+
+-(double)distanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
+                   toCoordinate2:(CLLocationCoordinate2D)coordinate2;
+
 @end
