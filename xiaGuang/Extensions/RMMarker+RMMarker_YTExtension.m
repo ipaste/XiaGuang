@@ -323,11 +323,30 @@ static YTCompletion Completion = nil;
         textLayer.foregroundColor = [UIColor blueColor].CGColor;
         textLayer.fontSize = 12;
         textLayer.string = string;
+        
+        CATextLayer *textLayer2 = [CATextLayer layer];
+        textLayer2.name = @"score";
+        textLayer2.frame = CGRectMake(CGRectGetMinX(self.bounds)-20, CGRectGetMinY(self.frame), 50, 30);
+        textLayer2.foregroundColor = [UIColor redColor].CGColor;
+        textLayer2.fontSize = 12;
+        
+        
         [self addSublayer:textLayer];
+        [self addSublayer:textLayer2];
     }
     return self;
     
 }
+
+-(void)writeScore:(double)score{
+    for(CALayer *layer in self.sublayers){
+        if([layer.name isEqualToString:@"score"]){
+            ((CATextLayer *)layer).string = [NSString stringWithFormat:@"%.1f",score];
+            return;
+        }
+    }
+}
+
 - (void)activeBubbleImage:(UIImage *)image{
     
     CALayer *curBubble = [self getBubbleLayer];

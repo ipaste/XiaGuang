@@ -34,6 +34,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _currentViewDisplay;
     BOOL _selectOnOneOfThePoi;
     
+    BOOL _shownFloorChange;
+    
     YTMapViewControllerType _type;
     
     YTNavigationBar *_navigationBar;
@@ -61,7 +63,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTMajorArea> _activePoiMajorArea;
     BOOL _blurMenuShown;
     id<YTMall> _targetMall;
+    
+    NSArray *_beaconsPoi;
+    
+    
+    //商圈入口记录的mall
+    id<YTMall> _recordMall;
     BOOL _shownUser;
+    
     
     //navigation related
     YTNavigationModePlan *_navigationPlan;
@@ -80,6 +89,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     CLLocationCoordinate2D _userCoordintate;
     
     CLLocationCoordinate2D _lastRecordedCoordinate;
+    
+    NSString *_lastMajorAreaId;
     
 }
 @end
@@ -108,6 +119,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
+            _recordMall = [[[_majorArea floor] block] mall];
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -119,7 +131,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (self) {
         if ( floor != nil) {
             _majorArea = [[floor majorAreas] objectAtIndex:0];
-            
+            _recordMall = [[[_majorArea floor] block] mall];
         }
         _type = YTMapViewControllerTypeFloor;
     }
@@ -302,6 +314,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view addSubview:_mapView];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
+    _shownFloorChange = NO;
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
@@ -371,14 +384,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
 
-//    NSArray *minors = [majorArea minorAreas];
-//    NSMutableArray *minorsArray = [NSMutableArray array];
-//    for(YTLocalMinorArea *minor in minors){
-//        YTPoi *tmpMinorPoi = [minor producePoi];
-//        [minorsArray addObject:tmpMinorPoi];
-//    }
-//    [_mapView addPois:minorsArray];
-    
+    /*
+    NSArray *minors = [majorArea minorAreas];
+    NSMutableArray *minorsArray = [NSMutableArray array];
+    for(YTLocalMinorArea *minor in minors){
+        YTMinorAreaPoi *tmpMinorPoi = [minor producePoi];
+        [minorsArray addObject:tmpMinorPoi];
+    }
+    [_mapView addPois:minorsArray];
+    _beaconsPoi = [minorsArray copy];
+    */
+
 
     
     if(highlightPoi != nil && _navigationView.isNavigating){
@@ -396,8 +412,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
-
-
 -(void)createNavigationBar{
     _navigationBar = [[YTNavigationBar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 64)];
     _navigationBar.delegate = self;
@@ -749,13 +763,31 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)rangedBeacons:(NSArray *)beacons{
-    
+    if(_locator==nil){
+        NSLog(@"locator nil");
+    }
     if(beacons.count <= 0){
+
         return;
     }
     
-    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    for(YTMinorAreaPoi *beaconPoi in _beaconsPoi){
+        [_mapView setScore:-1.0 forMinorAreaPoi:beaconPoi];
+    }
+    for(ESTBeacon *beacon in beacons){
+        YTLocalMinorArea *tmpMinor = [self getMinorArea:beacon];
+        YTMinorAreaPoi *relatedBeacon = [tmpMinor producePoi];
+        [_mapView setScore:[beacon.distance doubleValue] forMinorAreaPoi:relatedBeacon];
+    }
     
+    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    if(_lastMajorAreaId != nil){
+        if(![votedMajorAreaId isEqualToString:_lastMajorAreaId]){
+            NSString *tmp = [votedMajorAreaId copy];
+            votedMajorAreaId = _lastMajorAreaId;
+            _lastMajorAreaId = tmp;
+        }
+    }
     id<YTMinorArea> bestGuessMinorArea = [self topMinorAreaWithInMajorAreaId:votedMajorAreaId inBeacons:beacons];
     if(bestGuessMinorArea == nil){
         return;
@@ -811,6 +843,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)userMoveToMinorArea:(id<YTMinorArea>)minorArea{
     
+    if(_type == YTMapViewControllerTypeFloor || _type == YTMapViewControllerTypeMerchant){
+        
+        if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_recordMall identifier]]){
+            return;
+        }
+        
+    }
+    
     if(_type != YTMapViewControllerTypeNavigation){
         if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
             return;
@@ -827,6 +867,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //当检测到换了一个mall
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
+        _shownFloorChange = NO;
         [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
         _curDisplayedMajorArea = [minorArea majorArea];
         [self redrawBlockAndFloorSwitch];
@@ -841,26 +882,30 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _navigationView.isShowSwitchButton = YES;
         }
         if(!_navigationView.isNavigating){
-            [_moveCurrentButton promptFloorChange:[[[_userMinorArea majorArea] floor] floorName]];
-            [_changeFloorIndicator.layer removeAllAnimations];
             
-            _changeFloorIndicator.hidden = NO;
-            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
-            animation.toValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y+30];
-            animation.fromValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y];
-            animation.duration = 0.5;
-            animation.delegate = self;
-            animation.repeatCount = 5;
-            [_changeFloorIndicator.layer addAnimation:animation forKey:@"animation"];
+            if(!_shownFloorChange){
+                [_moveCurrentButton promptFloorChange:[[[_userMinorArea majorArea] floor] floorName]];
+                [_changeFloorIndicator.layer removeAllAnimations];
             
+                _changeFloorIndicator.hidden = NO;
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+                animation.toValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y+30];
+                animation.fromValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y];
+                animation.duration = 0.5;
+                animation.delegate = self;
+                animation.repeatCount = 5;
+                [_changeFloorIndicator.layer addAnimation:animation forKey:@"animation"];
+                _shownFloorChange = YES;
+            }
         }
         
         [_mapView removeUserLocation];
-        [_beaconManager removeListener:_locator];
-        _locator = nil;
+        //[_beaconManager removeListener:_locator];
+        //_locator = nil;
         _shownUser = NO;
         
     }else{
+        _shownFloorChange = NO;
         [self showUserAtCoordinate:_userCoordintate];
         _switchingFloor = NO;
     }
@@ -895,6 +940,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
         
         [_mapView displayMapNamed:[majorArea mapName]];
+        _shownFloorChange = NO;
         if([[[_userMinorArea majorArea] identifier] isEqualToString:[majorArea identifier]]){
             [self refreshLocatorWithMapView:_mapView.map majorArea:majorArea];
         }
@@ -916,7 +962,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
-        
+        _shownFloorChange = NO;
         [_mapView setZoom:1 animated:NO];
         
         if([[[_userMinorArea majorArea] identifier] isEqualToString:[majorArea identifier]]){
@@ -1012,6 +1058,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if (![[[_userMinorArea majorArea] identifier]isEqualToString:[_curDisplayedMajorArea identifier]]) {
         [_mapView displayMapNamed:[[_userMinorArea majorArea] mapName]];
+        _shownFloorChange = NO;
         [self refreshLocatorWithMapView:_mapView.map majorArea:[_userMinorArea majorArea]];
         [_switchFloorView promptFloorChange:[[_userMinorArea majorArea] floor]];
         _curDisplayedMajorArea = [_userMinorArea majorArea];
@@ -1036,7 +1083,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         //id<YTElevator> userMajorAreaElevator = [[[_userMinorArea majorArea] elevators] objectAtIndex:0];
         //[_mapView zoomToShowPoint1:[userMajorAreaElevator coordinate]  point2:[_userMinorArea coordinate]];
-        //_targetCord =[userMajorAreaElevator coordinate];
     }
     
     [_navigationPlan updateWithCurrentUserMinorArea:_userMinorArea andDisplayedMajorArea:_curDisplayedMajorArea];
@@ -1342,6 +1388,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
     [_mapView displayMapNamed:[_majorArea mapName]];
+    _shownFloorChange = NO;
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     _curDisplayedMajorArea = _majorArea;
     [self handlePoiForMajorArea:_majorArea];
@@ -1393,10 +1440,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
     
     [_locator start];
+    [_beaconManager addListener:_locator];
     _locator.delegate = self;
     _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
     
 }
+
 -(void)setTargetMall:(id<YTMall>)aMall{
     if ([[_targetMall identifier]isEqualToString:[aMall identifier]]) {
         return;
@@ -1406,6 +1455,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createSearchView];
   
 }
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){
         [self dismissViewControllerAnimated:YES completion:nil];

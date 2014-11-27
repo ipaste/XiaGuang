@@ -17,6 +17,8 @@
 #import "YTMerchantAnnotation.h"
 #import "YTUserAnnotation.h"
 #import "RMMapView+RMMapViewTileSourceHelpers.h"
+#import "YTMinorAreaPoi.h"
+#import "RMMarker+RMMarker_YTExtension.h"
 
 typedef enum : NSUInteger {
     YTMapViewDetailStateNormal = 0,
@@ -74,6 +76,9 @@ typedef enum : NSUInteger {
 -(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated;
+
+-(void)setScore:(double)score
+forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 
 #pragma mark 导航相关的state
 -(YTMapViewDetailState)currentState;

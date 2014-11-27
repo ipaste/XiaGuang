@@ -184,6 +184,13 @@
     
 }
 
+-(void)setScore:(double)score
+forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
+{
+    YTMinorAreaAnnotation *minorAnno = [_annotationSource annotationForPoi:minorPoi];
+    RMMarker * layer = minorAnno.layer;
+    [layer writeScore:score];
+}
 
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated{
     for(YTPoi *tmpPoi in pois){
