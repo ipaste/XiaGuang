@@ -66,12 +66,12 @@
 		AE24A8D21A08A6D400A0CE91 /* kkmallL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8C41A08A6D400A0CE91 /* kkmallL1.mbtiles */; };
 		AE24A8D31A08A6D400A0CE91 /* kkmallL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8C51A08A6D400A0CE91 /* kkmallL2.mbtiles */; };
 		AE24A8D41A08A6D400A0CE91 /* kkmallL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8C61A08A6D400A0CE91 /* kkmallL3.mbtiles */; };
-		AE24A8D51A08A6D400A0CE91 /* KKmallL4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8C71A08A6D400A0CE91 /* KKmallL4.mbtiles */; };
 		AE24A8D61A08A6D400A0CE91 /* YITIANB1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8C81A08A6D400A0CE91 /* YITIANB1.mbtiles */; };
 		AE24A8D71A08A6D400A0CE91 /* YITIANB2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8C91A08A6D400A0CE91 /* YITIANB2.mbtiles */; };
 		AE24A8D81A08A6D400A0CE91 /* YITIANL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */; };
 		AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */; };
 		AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */; };
+		AE33E0891A27184100CDBF2A /* KKmallL4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */; };
 		AE859E171A0CB9A10044074F /* YTLocalEscalator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E161A0CB9A10044074F /* YTLocalEscalator.m */; };
 		AE859E1A1A0CBA880044074F /* YTEscalatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E191A0CBA880044074F /* YTEscalatorPoi.m */; };
 		AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */; };
@@ -311,12 +311,12 @@
 		AE24A8C41A08A6D400A0CE91 /* kkmallL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL1.mbtiles; sourceTree = "<group>"; };
 		AE24A8C51A08A6D400A0CE91 /* kkmallL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL2.mbtiles; sourceTree = "<group>"; };
 		AE24A8C61A08A6D400A0CE91 /* kkmallL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = kkmallL3.mbtiles; sourceTree = "<group>"; };
-		AE24A8C71A08A6D400A0CE91 /* KKmallL4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = KKmallL4.mbtiles; sourceTree = "<group>"; };
 		AE24A8C81A08A6D400A0CE91 /* YITIANB1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANB1.mbtiles; sourceTree = "<group>"; };
 		AE24A8C91A08A6D400A0CE91 /* YITIANB2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANB2.mbtiles; sourceTree = "<group>"; };
 		AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL1.mbtiles; sourceTree = "<group>"; };
 		AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL2.mbtiles; sourceTree = "<group>"; };
 		AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL3.mbtiles; sourceTree = "<group>"; };
+		AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = KKmallL4.mbtiles; sourceTree = "<group>"; };
 		AE859E141A0CB9560044074F /* YTEscalator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTEscalator.h; sourceTree = "<group>"; };
 		AE859E151A0CB9A10044074F /* YTLocalEscalator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalEscalator.h; sourceTree = "<group>"; };
 		AE859E161A0CB9A10044074F /* YTLocalEscalator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalEscalator.m; sourceTree = "<group>"; };
@@ -630,6 +630,7 @@
 		AE24A7F91A022E1B00A0CE91 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */,
 				AEE032C11A22E3C5002AFB9C /* haianchengeastL1.mbtiles */,
 				AEE032C21A22E3C5002AFB9C /* haianchengeastL2.mbtiles */,
 				AEE032C31A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles */,
@@ -654,7 +655,6 @@
 				AE24A8C41A08A6D400A0CE91 /* kkmallL1.mbtiles */,
 				AE24A8C51A08A6D400A0CE91 /* kkmallL2.mbtiles */,
 				AE24A8C61A08A6D400A0CE91 /* kkmallL3.mbtiles */,
-				AE24A8C71A08A6D400A0CE91 /* KKmallL4.mbtiles */,
 				AE24A8C81A08A6D400A0CE91 /* YITIANB1.mbtiles */,
 				AE24A8C91A08A6D400A0CE91 /* YITIANB2.mbtiles */,
 				AE24A8CA1A08A6D400A0CE91 /* YITIANL1.mbtiles */,
@@ -1272,10 +1272,10 @@
 				AE24A8D41A08A6D400A0CE91 /* kkmallL3.mbtiles in Resources */,
 				AEE032CC1A22E3C5002AFB9C /* haianchengeastL2.mbtiles in Resources */,
 				AE24A8681A02431700A0CE91 /* shop_load_down@2x.png in Resources */,
-				AE24A8D51A08A6D400A0CE91 /* KKmallL4.mbtiles in Resources */,
 				AEE032D31A22E3C5002AFB9C /* kkmallpark-3.mbtiles in Resources */,
 				AE24A8D81A08A6D400A0CE91 /* YITIANL1.mbtiles in Resources */,
 				AE24A8D21A08A6D400A0CE91 /* kkmallL1.mbtiles in Resources */,
+				AE33E0891A27184100CDBF2A /* KKmallL4.mbtiles in Resources */,
 				AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */,
 				AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */,
 				AEE032CD1A22E3C5002AFB9C /* haianchengeastpark-1.mbtiles in Resources */,
