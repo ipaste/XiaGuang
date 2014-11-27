@@ -50,8 +50,13 @@
     
 }
 
--(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
-    _recordMinorArea = [self getMinorArea:beacon];
+-(void)rangedBeacons:(NSArray *)beacons{
+    if(beacons.count > 0){
+        _recordMinorArea = [self getMinorArea:beacons[0]];
+    }
+    else{
+        _recordMinorArea = nil;
+    }
 }
 
 -(void)noBeaconsFound{

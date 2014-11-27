@@ -304,6 +304,13 @@
     float swLatitude = MIN(point1.latitude,point2.latitude);
     float swLongtitude = MIN(point1.longitude, point2.longitude);
     
+    
+    neLatitude = MIN(neLatitude+10, 90);
+    neLongtitude = MIN(neLongtitude+20, 180);
+    
+    swLatitude = MAX(swLatitude-10, -90);
+    swLongtitude = MAX(swLongtitude-20, -180);
+    
     CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(neLatitude, neLongtitude);
     CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(swLatitude, swLongtitude);
     

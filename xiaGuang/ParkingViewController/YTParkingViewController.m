@@ -607,7 +607,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 #pragma mark BeaconManager
--(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
+-(void)moveToBeacon:(ESTBeacon *)beacon{
     
     id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
     if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
@@ -636,6 +636,36 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             [self userMoveToMinorArea:tmpMinorArea];
         }
     }
+    
+}
+
+-(void)rangedBeacons:(NSArray *)beacons{
+    
+    if(beacons.count <= 0){
+        return;
+    }
+    
+    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    
+    ESTBeacon *bestGuessBeacon = [self topBeaconWithInMajorAreaId:votedMajorAreaId inBeacons:beacons];
+    if(bestGuessBeacon == nil){
+        return;
+    }
+    
+    [self moveToBeacon:bestGuessBeacon];
+}
+
+-(ESTBeacon *)topBeaconWithInMajorAreaId:(NSString *)majorAreaId
+                                      inBeacons:(NSArray *)beacons
+{
+    
+    for(ESTBeacon *tmp in beacons){
+        id<YTMinorArea> minor = [self getMinorArea:tmp];
+        if([[[minor majorArea] identifier] isEqualToString:majorAreaId]){
+            return tmp;
+        }
+    }
+    return nil;
     
 }
 
