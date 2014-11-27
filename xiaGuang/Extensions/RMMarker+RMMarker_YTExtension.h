@@ -29,6 +29,7 @@ typedef void (^YTCompletion)(void);
 -(void)hideElevatorAnimation;
 -(id)initWithMerchant:(NSString *)merchantName;
 -(id)initWithBubbleHeight:(float)height width:(float)width;
+-(void)writeScore:(double)score;
 -(void)setMerchantIcon:(UIImage *)image;
 
 -(void)superHightlightMerchantLayer;

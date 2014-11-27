@@ -44,7 +44,7 @@
     x /= count;
     y /= count;
     
-    int roundThreshold = 1000;
+    int roundThreshold = 100;
     
     for (int k = 0; k < roundThreshold; k++) {
         

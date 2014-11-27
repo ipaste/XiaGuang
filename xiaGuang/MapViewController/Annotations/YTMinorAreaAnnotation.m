@@ -36,7 +36,9 @@
     NSString *major = [beacon.major stringValue];
     NSString *minor = [beacon.minor stringValue];
     RMMarker *resultLayer = [[RMMarker alloc] initWithBeaconForMajorAreaID:major  minorID:minor];
-    resultLayer.opacity = 1;/*
+    resultLayer.opacity = 1;
+    //[resultLayer writeScore:-1.0];
+    /*
     if(self.state == YTAnnotationStateHighlighted){
         resultLayer.opacity = 1;
         

@@ -47,7 +47,7 @@
         _mapView = mapView;
         
         _beaconManager = beaconManager;
-        [_beaconManager addListener:self];
+        //[_beaconManager addListener:self];
         
         _majorArea = majorArea;
         
