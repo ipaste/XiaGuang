@@ -21,11 +21,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _label = [[UILabel alloc]initWithFrame:CGRectMake(70, 5, 200, 30)];
+        _label = [[UILabel alloc]initWithFrame:CGRectMake(70, 5, 160, 30)];
         _startNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - CGRectGetHeight(frame) - 15, 4, frame.size.height + 10, frame.size.height - 8)];
         _merchantLogo = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, frame.size.height - 10, frame.size.height - 10)];
         _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
-        
+        _merchantLogo.backgroundColor = [UIColor whiteColor];
         [self addSubview:_merchantLogo];
         [self addSubview:_startNavigationButton];
         [self addSubview:_label];
@@ -54,17 +54,22 @@
 }
 
 -(void)setMerchantInfo:(id<YTMerchantLocation>)merchantLocation{
+    _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+    _merchantLogo.backgroundColor = [UIColor clearColor];
     _label.text = [merchantLocation merchantLocationName];
+   
+    [merchantLocation getCloudMerchantTypeWithCallBack:^(NSArray *result, NSError *error) {
+        [self setType:result];
+    }];
+    
     [merchantLocation getCloudThumbNailWithCallBack:^(UIImage *result, NSError *error) {
         if (error) {
             _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
         }else{
-            _merchantLogo.image = result;
-            
+            if (result != nil){
+                _merchantLogo.image = result;
+            }
         }
-    }];
-    [merchantLocation getCloudMerchantTypeWithCallBack:^(NSArray *result, NSError *error) {
-        [self setType:result];
     }];
     _poiSource = merchantLocation;
 }
@@ -77,6 +82,7 @@
     }
     _label.text = poi.name;
     _merchantLogo.image = [UIImage imageNamed:poi.iconName];
+    _merchantLogo.backgroundColor = [UIColor whiteColor];
     _poiSource = poi;
     [self setType:@[@"公共设施"]];
 }
