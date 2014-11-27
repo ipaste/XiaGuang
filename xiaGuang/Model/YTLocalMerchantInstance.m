@@ -200,6 +200,8 @@
     }];
 }
 
+
+
 -(YTPoi *)producePoi{
     YTMerchantPoi *result = [[YTMerchantPoi alloc]  initWithMerchantInstance:self];
     return result;

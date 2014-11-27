@@ -141,7 +141,6 @@
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     YTCategory *category  = _categorys[indexPath.row];
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResutsKey:category.text];
     resultsVC.isSearch = NO;
@@ -150,14 +149,13 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
--(void)selectedMerchantName:(NSString *)name{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResutsKey:name];
+
+-(void)selectedDBIds:(NSArray *)dbIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:dbIds];
     resultsVC.isSearch = YES;
     resultsVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
-
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 2) {

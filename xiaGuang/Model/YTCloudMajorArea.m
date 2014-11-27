@@ -26,7 +26,7 @@
 
 
 
--(id) initWithAVObject:(AVObject *)object{
+-(id)initWithAVObject:(AVObject *)object{
     self = [super init];
     if(self){
         _internalObject = object;

@@ -14,5 +14,5 @@
 
 -(id)initWithSearchInMall:(id<YTMall>)mall andResutsKey:(NSString *)key;
 -(id)initWithSearchInMall:(id<YTMall>)mall andResutsKey:(NSString *)key andSubKey:(NSString *)subKey;
-
+-(instancetype)initWithSearchInMall:(id<YTMall>)mall andResultsLocalDBIds:(NSArray *)ids;
 @end
