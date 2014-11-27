@@ -15,6 +15,7 @@
     NSMutableDictionary *_poiDict;
     
     NSMutableArray *_merchantAnnoArray;
+    NSMutableArray *_poiArray;
 }
 
 -(id)init{
@@ -23,6 +24,7 @@
         _internalDict = [[NSMutableDictionary alloc] init];
         _poiDict = [[NSMutableDictionary alloc] init];
         _merchantAnnoArray = [NSMutableArray array];
+        _poiArray = [NSMutableArray array];
     }
     return self;
 }
@@ -33,6 +35,8 @@
     
     if([annotation isMemberOfClass:[YTMerchantAnnotation class]]){
         [_merchantAnnoArray addObject:annotation];
+    }else{
+        [_poiArray addObject:annotation];
     }
 }
 
@@ -51,14 +55,15 @@
     if([anno isMemberOfClass:[YTMerchantAnnotation class]]){
         [_merchantAnnoArray removeObject:anno];
     }
-
-}
     
+}
+
 
 -(void)removeAllAnnotations{
-    _internalDict = [[NSMutableDictionary alloc] init];
-    _poiDict = [[NSMutableDictionary alloc] init];
-    _merchantAnnoArray = [NSMutableArray array];
+    [_internalDict removeAllObjects];
+    [_poiDict removeAllObjects];
+    [_merchantAnnoArray removeAllObjects];
+    [_poiArray removeAllObjects];
 }
 
 -(void)removeAnnotationsForPois:(NSArray *)pois{
@@ -98,8 +103,17 @@
         }
     }
     
+    for (int i = 0; i < _poiArray.count; i++) {
+        tmp = _poiArray[i];
+        tmpCoord = [YTCanonicalCoordinate mapToCanonicalCoordinate:tmp.coordinate mapView:mapView];
+        double tmpDist = [self distanceFromPoint1:tmpCoord toPoint2:targetCord];
+        if(result == nil || tmpDist<curMinDistance){
+            curMinDistance = tmpDist;
+            result = tmp;
+        }
+    }
+    
     double nomarlizedMaxDistance = (mapView.zoom-5.0) * -2.5;
-    NSLog(@"%lf",nomarlizedMaxDistance);
     if (curMinDistance > nomarlizedMaxDistance) {
         return nil;
     }
@@ -107,7 +121,7 @@
 }
 
 -(double)distanceFromPoint1:(CGPoint)point1
-                  toPoint2:(CGPoint)point2{
+                   toPoint2:(CGPoint)point2{
     
     double xdiff = point1.x - point2.x;
     double ydiff = point1.y - point2.y;

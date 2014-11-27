@@ -11,6 +11,7 @@
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
+    CGFloat _offset;
     NSMutableArray *_tmpBlocks;
     NSMutableArray *_tmpMerchantInstance;
 }
@@ -26,6 +27,7 @@
         if(self){
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
+            _offset = [findResultSet doubleForColumn:@"offset"];
         }
     }
     return self;
@@ -76,7 +78,7 @@
     return _tmpMerchantInstance;
 }
 
--(NSString *)uniId{
-    return nil;
+-(CGFloat)offset{
+    return _offset;
 }
 @end

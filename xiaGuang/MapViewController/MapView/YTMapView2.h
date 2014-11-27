@@ -53,6 +53,7 @@ typedef enum : NSUInteger {
 -(void)zoomOut;
 -(void)setCenterCoordinate:(CLLocationCoordinate2D)coordinate animated:(BOOL)animated;
 -(void)zoomToShowPoint1:(CLLocationCoordinate2D)point1 point2:(CLLocationCoordinate2D)point2;
+-(void)setMapOffset:(CGFloat)offset;
 
 #pragma mark Map data manipulation
 
@@ -70,7 +71,7 @@ typedef enum : NSUInteger {
 #pragma mark Annotation animations
 -(void)highlightPois:(NSArray *)pois animated:(BOOL)animated;
 -(void)highlightPoi:(YTPoi *)poi animated:(BOOL)animated;
--(void)superHighlightPoi:(YTPoi *)poi;
+-(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated;
 

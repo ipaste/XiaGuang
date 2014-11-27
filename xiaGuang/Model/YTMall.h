@@ -24,6 +24,9 @@
 @property(weak,nonatomic)NSArray *merchantLocations;
 @property(weak,nonatomic)NSArray *merchants;
 @property(weak,nonatomic)NSString *uniId;
+@property(nonatomic)CGFloat offset;
+@property(nonatomic)CLLocationCoordinate2D coord;
+
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;

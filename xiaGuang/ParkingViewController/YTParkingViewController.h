@@ -25,6 +25,8 @@
 #import <POP.h>
 #import "YTMoveCurrentLocationButton.h"
 #import "YTBeaconBasedLocator.h"
+#import "YTMajorAreaVoter.h"
+
 @interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate,YTCurrentParkingDelegate,YTMoveCurrentLocationDelegate,YTBeaconManagerDelegate,YTMessageBoxDelegate,YTNavigationDelegate,YTBeaconBasedLocatorDelegate>
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea;
 @end

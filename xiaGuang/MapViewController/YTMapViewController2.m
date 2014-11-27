@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _isFirstBluetoothPrompt;
     BOOL _isFirstEnter;
     BOOL _currentViewDisplay;
+    BOOL _selectOnOneOfThePoi;
     
     YTMapViewControllerType _type;
     
@@ -51,8 +52,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     UIImageView *_noBeaconCover;
     BlurMenu *_menu;
     UIAlertView *_alert;
-    
-    
     
     //states
     id<YTMajorArea> _curDisplayedMajorArea;
@@ -96,7 +95,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (minorArea != nil) {
             _userMinorArea = minorArea;
             _majorArea = [minorArea majorArea];
-            
         }
         _type = YTMapViewControllerTypeNavigation;
     }
@@ -110,7 +108,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if (merchantLocation != nil) {
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
-            
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -147,9 +144,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     
-    
     [self setTargetMall:[[[_majorArea floor] block]mall]];
-    
     [self createNavigationBar];
     [self createMapView];
     [self createCurLocationButton];
@@ -161,6 +156,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
+
     
     [self createSearchView];
     
@@ -184,22 +180,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
      return;
      }*/
     
-    
 }
 
 
 -(void)viewWillDisappear:(BOOL)animated{
     _currentViewDisplay = NO;
-    
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-    
-    NSLog(@"didAppear");
+
     if(_userMinorArea == nil || _beaconManager.currentClosest == nil){
+
         
         if(!_blurMenuShown){
             _noBeaconCover.hidden = NO;
@@ -210,11 +202,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if(_menu == nil){
                     [self createBlurMenuWithCallBack:^{
                         [_menu show];
+                        _blurMenuShown = YES;
                     }];
                     //[_menu show];
                 }
                 else{
                     [_menu show];
+                    _blurMenuShown = YES;
                 }
                 if([_mapView currentState] != YTMapViewDetailStateNormal){
                     [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
@@ -249,40 +243,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
-    /*AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-     [query whereKeyExists:@"localDBId" ];
-     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-     query.maxCacheAge = 3 * 24 * 3600;
-     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-     if (!error) {
-     
-     
-     _malls = [NSMutableArray array];
-     
-     for (AVObject *mallObject in objects) {
-     YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
-     
-     [_malls addObject:mall];
-     
-     }
-     [self instantiateMenu];
-     if(callback!= nil){
-     callback();
-     }
-     
-     }else{
-     //获取失败
-     if(_alert == nil){
-     _alert = [[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil];
-     
-     if(_userMinorArea == nil){
-     [_alert show];
-     }
-     
-     }
-     }
-     
-     }];*/
+
     _malls = [NSMutableArray array];
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
@@ -350,16 +311,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)injectPoisForMajorArea:(id<YTMajorArea>)majorArea{
-    
-    
-    
     if([[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [self showUserAtCoordinate:_userCoordintate];
     }
     
     NSArray *merchants = [majorArea merchantLocations];
-    
+    NSArray *elevators = [majorArea elevators];
+    NSArray *bathrooms = [majorArea bathrooms];
+    NSArray *escalators = [majorArea escalators];
+    NSArray *serviceStations = [majorArea serviceStations];
+
     NSMutableArray *pois = [NSMutableArray array];
     
     YTPoi *highlightPoi = nil;
@@ -368,15 +330,59 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         YTPoi *tmpPoi = [tmpMerchant producePoi];
         if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
             highlightPoi = tmpPoi;
-            
+        }
+        [pois addObject:tmpPoi];
+    }
+    
+    for (id<YTBathroom> tmpBathroom in bathrooms) {
+        YTPoi *tmpPoi = [tmpBathroom producePoi];
+        if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+            highlightPoi = tmpPoi;
+        }
+        [pois addObject:tmpPoi];
+    }
+    
+    for (id<YTElevator> tmpElevator in elevators) {
+        YTPoi *tmpPoi = [tmpElevator producePoi];
+        if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+            highlightPoi = tmpPoi;
+        }
+        [pois addObject:tmpPoi];
+    }
+    
+    for (id<YTEscalator> tmpEscalator in escalators) {
+        YTPoi *tmpPoi = [tmpEscalator producePoi];
+        if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+            highlightPoi = tmpPoi;
+        }
+        [pois addObject:tmpPoi];
+    }
+    
+    
+    for (id<YTServiceStation> tmpServiceStation in serviceStations) {
+        YTPoi *tmpPoi = [tmpServiceStation producePoi];
+        if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+            highlightPoi = tmpPoi;
         }
         [pois addObject:tmpPoi];
     }
     
     [_mapView addPois:pois];
     
+    
+
+    NSArray *minors = [majorArea minorAreas];
+    NSMutableArray *minorsArray = [NSMutableArray array];
+    for(YTLocalMinorArea *minor in minors){
+        YTPoi *tmpMinorPoi = [minor producePoi];
+        [minorsArray addObject:tmpMinorPoi];
+    }
+    [_mapView addPois:minorsArray];
+    
+
+    
     if(highlightPoi != nil && _navigationView.isNavigating){
-        [_mapView superHighlightPoi:highlightPoi];
+        [_mapView superHighlightPoi:highlightPoi animated:NO];
         //[_mapView highlightPoi:highlightPoi animated:NO];
     }
     if(highlightPoi != nil && !_navigationView.isNavigating){
@@ -385,13 +391,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     if(_activePois != nil && _activePois.count > 0 && [[_activePoiMajorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
-        [_mapView addPois:_activePois];
         [_mapView highlightPois:_activePois animated:NO];
-        [_mapView superHighlightPoi:_selectedPoi];
+        [_mapView superHighlightPoi:_selectedPoi animated:YES];
     }
     
 }
-
 
 
 -(void)createNavigationBar{
@@ -457,8 +461,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 -(void)createDetailsView{
     _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60)];
-    _detailsView.delegate = self;
     _detailsView.hidden = YES;
+    _detailsView.delegate = self;
     [self.view addSubview:_detailsView];
 }
 
@@ -491,9 +495,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)createNavigationView{
     _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60)];
+    _navigationView.hidden = YES;
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
-    _navigationView.hidden = YES;
     [self.view addSubview:_navigationView];
     [_navigationView.layer pop_animationForKey:@"shake"];
 }
@@ -506,14 +510,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
     
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
-        
         //hide callout and POI for
         if([_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
             [mapView hidePoi:_selectedPoi animated:NO];
             [self hideCallOut];
         }
         else{
-            [self hideCallOut];
+            if (!_selectOnOneOfThePoi){
+                [mapView hidePoi:_selectedPoi animated:NO];
+                [self hideCallOut];
+            }
         }
     }
     if (_switchBlockView.toggle) {
@@ -528,13 +534,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         
         //hide callout and POI for
-        if([_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
-            [mapView hidePoi:_selectedPoi animated:NO];
-            [self hideCallOut];
-        }
-        else{
-            [self hideCallOut];
-        }
+        
+        [self hideCallOut];
+        [mapView hidePoi:_selectedPoi animated:NO];
+        
     }
     if (_switchBlockView.toggle) {
         [_switchBlockView toggleBlockView];
@@ -549,8 +552,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTPoiSource> sourceModel = [poi sourceModel];
     
     //if there's activePoi
-    if(_activePois != nil && [sourceModel isKindOfClass:[YTLocalMerchantInstance class]]){
-        
+    if([sourceModel isKindOfClass:[YTLocalMerchantInstance class]] && _selectOnOneOfThePoi){
         return;
     }
     
@@ -559,27 +561,28 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if([sourceModel isMemberOfClass:[YTLocalMerchantInstance class]]){
             [mapView highlightPoi:poi animated:YES];
             [_detailsView setCommonPoi:sourceModel];
-            [self showCallOut];
             _selectedPoi = poi;
+            [self showCallOut];
         }
         else{
-            
             if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
-                [mapView highlightPoi:_selectedPoi animated:YES];
-                _selectedPoi = poi;
-                [mapView superHighlightPoi:_selectedPoi];
-                [_detailsView setCommonPoi:sourceModel];
+                if (!_selectOnOneOfThePoi) {
+                    [mapView hidePoi:_selectedPoi animated:YES];
+                    [mapView superHighlightPoi:poi animated:YES];
+                    [_detailsView setCommonPoi:sourceModel];
+                    _selectedPoi = poi;
+                }else{
+                    [mapView highlightPoi:_selectedPoi animated:NO];
+                    [mapView superHighlightPoi:poi animated:NO];
+                    [_detailsView setCommonPoi:sourceModel];
+                    _selectedPoi = poi;
+                }
                 [self showCallOut];
             }
         }
-    }
-    else if([mapView currentState] == YTMapViewDetailStateNavigating){
-        
-    }
-    else if([mapView currentState] == YTMapViewDetailStateShowDetail){
+    }else if([mapView currentState] == YTMapViewDetailStateShowDetail){
         
         if([sourceModel isMemberOfClass:[YTLocalMerchantInstance class]]){
-            
             if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
                 [mapView hidePoi:_selectedPoi animated:YES];
                 _selectedPoi = poi;
@@ -589,10 +592,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         else{
             if (![poi.poiKey isEqualToString:_selectedPoi.poiKey]) {
-                [mapView highlightPoi:_selectedPoi animated:YES];
-                _selectedPoi = poi;
-                [mapView superHighlightPoi:_selectedPoi];
-                [_detailsView setCommonPoi:sourceModel];
+                if (!_selectOnOneOfThePoi) {
+                    [mapView hidePoi:_selectedPoi animated:YES];
+                    [mapView superHighlightPoi:poi animated:YES];
+                    [_detailsView setCommonPoi:sourceModel];
+                    _selectedPoi = poi;
+                }else{
+                    [mapView highlightPoi:_selectedPoi animated:NO];
+                    [mapView superHighlightPoi:poi animated:NO];
+                    _selectedPoi = poi;
+                }
+                
             }
         }
     }
@@ -603,7 +613,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _moveTargetButton.hidden = NO;
     if (_type != YTMapViewControllerTypeMerchant){
         _detailsView.hidden = NO;
-        _navigationView.hidden = NO;
     }
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
@@ -635,13 +644,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
     } completion:^(BOOL finished) {
         _detailsView.hidden = NO;
-        _navigationView.hidden = NO;
     }];
 }
 -(void)hideCallOut{
-    if(![_selectedPoi isMemberOfClass:[YTMerchantPoi class]]){
-        [_mapView highlightPoi:_selectedPoi animated:NO];
-    }
+
     _selectedPoi = nil;
     
     [UIView animateWithDuration:.5 animations:^{
@@ -697,6 +703,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_switchBlockView.toggle){
         [_switchBlockView toggleBlockView];
     }
+    if (_selectedPoi != nil){
+        _navigationView.hidden = YES;
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -735,19 +744,25 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)noBeaconsFound{
     
 }
--(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
-    _majorArea = [YTMajorAreaVoter getMajorArea:beacon];
-    NSLog(@"primary beacon shifted to %@, %@",beacon.major,beacon.minor);
+
+
+-(void)rangedBeacons:(NSArray *)beacons{
     
-    id<YTMinorArea> minorArea = [self getMinorArea:beacon];
-    if (_majorArea != nil && minorArea != nil) {
-        
-        if(![[[minorArea majorArea] identifier] isEqualToString:[YTMajorAreaVoter shouldSwitchToMajorAreaId:_beaconManager.readbeacons]]){
-            NSLog(@"current closest minorArea is not on the same majorArea as what top 10 beacons agree");
-            return;
-        }
-        
-        [self userMoveToMinorArea:minorArea];
+    if(beacons.count <= 0){
+        return;
+    }
+    
+    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    
+    id<YTMinorArea> bestGuessMinorArea = [self topMinorAreaWithInMajorAreaId:votedMajorAreaId inBeacons:beacons];
+    if(bestGuessMinorArea == nil){
+        return;
+    }
+    _majorArea = [bestGuessMinorArea majorArea];
+    
+    if (_majorArea != nil) {
+        [self userMoveToMinorArea:bestGuessMinorArea];
+
         if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
             _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
             
@@ -756,7 +771,19 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
 }
 
-
+-(id<YTMinorArea>)topMinorAreaWithInMajorAreaId:(NSString *)majorAreaId
+                                   inBeacons:(NSArray *)beacons
+{
+    
+    for(ESTBeacon *tmp in beacons){
+        id<YTMinorArea> minor = [self getMinorArea:tmp];
+        if([[[minor majorArea] identifier] isEqualToString:majorAreaId]){
+            return minor;
+        }
+    }
+    return nil;
+    
+}
 
 -(void)showUserAtCoordinate:(CLLocationCoordinate2D)coordinate{
     if(_shownUser){
@@ -791,6 +818,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if(_blurMenuShown){
         [_menu hide];
         _noBeaconCover.hidden = YES;
+        _blurMenuShown = NO;
         [self redrawBlockAndFloorSwitch];
     }
     
@@ -841,7 +869,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 -(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    NSLog(@"finish anim");
+    //NSLog(@"finish anim");
     _changeFloorIndicator.hidden = YES;
 }
 
@@ -961,6 +989,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark DetailsView delegate
 -(void)navigatingToPoiSourceClicked:(id<YTPoiSource>)merchantLocation{
+    _navigationView.hidden = NO;
     NSString *message = nil;
     if (!_bluetoothOn) {
         message = @"蓝牙尚未打开";
@@ -993,7 +1022,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([[[[merchantLocation majorArea]floor] floorName] isEqualToString:[[[_userMinorArea majorArea] floor] floorName]]){
         [_mapView zoomToShowPoint1:[merchantLocation coordinate]  point2:[_userMinorArea coordinate]];
         YTPoi *poi = [merchantLocation producePoi];
-        [_mapView superHighlightPoi:poi];
+
+        [_mapView superHighlightPoi:poi animated:YES];
+        //[_mapView setCenterCoordinate:CLLocationCoordinate2DMake(0, 0) animated:YES];
+        //[_mapView setZoom:0.7 animated:NO];
+
         _targetCord = [merchantLocation coordinate];
         
     }
@@ -1065,6 +1098,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _shownUser = NO;
             break;
     }
+    
     [_mapView hidePoi:_selectedPoi animated:YES];
     
     
@@ -1110,7 +1144,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _selectedPoi = nil;
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
-        
+        _navigationView.hidden = YES;
         if(_activePois != nil){
             [self cancelCommonPoiState];
         }
@@ -1130,23 +1164,22 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }else{
         if (_activePois.count > 0) {
             [_mapView hidePois:_activePois animated:YES];
-            [_mapView removePois:_activePois];
         }
         YTCommonlyUsed *commonlyUsed = poiObject;
         _activePois = [self getPoisForGroupName:[poiObject name]];
         _activePoiMajorArea = _curDisplayedMajorArea;
         if(_activePois != nil && _activePois.count > 0){
-            [_mapView addPois:_activePois];
             [_mapView setCenterCoordinate:CLLocationCoordinate2DMake(0, 0) animated:YES];
             [_mapView setZoom:1 animated:NO];
             [_mapView highlightPois:_activePois animated:YES];
             [_selectedPoiButton setPoiImage:commonlyUsed.icon];
-            
+            _selectOnOneOfThePoi = YES;
         }
         else{
             [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
             [_poiView deleteSelectedPoi];
             [self cancelCommonPoiState];
+            _selectOnOneOfThePoi = NO;
         }
         
     }
@@ -1184,11 +1217,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark selectedPoi delegate
 -(void)selectedPoiButtonClicked{
-    if(_navigationView.isNavigating || [_mapView currentState] == YTMapViewDetailStateShowDetail){
+    if(_navigationView.isNavigating){
         return;
     }
+    _selectOnOneOfThePoi = NO;
     [self cancelCommonPoiState];
     [_selectedPoiButton hide];
+    [_mapView hidePoi:_selectedPoi animated:NO];
+    if(_selectedPoi != nil){
+        [self hideCallOut];
+    }
+    
 }
 
 -(void)cancelCommonPoiState{
@@ -1237,6 +1276,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 if(_blurMenuShown){
                     [_menu hide];
                     _noBeaconCover.hidden = YES;
+                    _blurMenuShown = NO;
                     [self redrawBlockAndFloorSwitch];
                 }
             }
@@ -1360,7 +1400,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     _targetMall = aMall;
+    [_mapView setMapOffset:[_targetMall offset]];
     [self createSearchView];
+  
 }
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){

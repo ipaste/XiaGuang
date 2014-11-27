@@ -14,7 +14,7 @@
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
-    
+    CGFloat _offset;
 }
 
 #pragma mark init
@@ -54,11 +54,14 @@
     [_internalMapView setCenterCoordinate:coordinate animated:animated];
 }
 
+-(void)setMapOffset:(CGFloat)offset{
+    _offset = offset;
+}
+
 #pragma mark Map data manipulation
 -(void)displayMapNamed:(NSString *)mapName{
     
     [_internalMapView addAndDisplayTileSourceNamed:mapName];
-    
 }
 
 -(void)addPois:(NSArray *)pois{
@@ -71,7 +74,6 @@
         [annos addObject:tmpAnnotation];
         
     }
-    
     
     [_internalMapView addAnnotations:annos];
     
@@ -170,9 +172,9 @@
     
 }
 
--(void)superHighlightPoi:(YTPoi *)poi{
+-(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated{
     YTAnnotation *tmpAnnotation = [_annotationSource annotationForPoi:poi];
-    [tmpAnnotation superHighlight:YES];
+    [tmpAnnotation superHighlight:animated];
 }
 
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated{
@@ -193,7 +195,7 @@
 -(void)showUserLocationAtCoordinate:(CLLocationCoordinate2D)coordinate{
     if(_userAnnotation == nil){
         _userAnnotation = [[YTUserAnnotation alloc] initWithMapView:_internalMapView andCoordinate:coordinate];
-        
+        [_userAnnotation setOffset:_offset];
         [_internalMapView addAnnotation:_userAnnotation];
     }
     else{
@@ -301,6 +303,13 @@
     
     float swLatitude = MIN(point1.latitude,point2.latitude);
     float swLongtitude = MIN(point1.longitude, point2.longitude);
+    
+    
+    neLatitude = MIN(neLatitude+10, 90);
+    neLongtitude = MIN(neLongtitude+20, 180);
+    
+    swLatitude = MAX(swLatitude-10, -90);
+    swLongtitude = MAX(swLongtitude-20, -180);
     
     CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(neLatitude, neLongtitude);
     CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(swLatitude, swLongtitude);

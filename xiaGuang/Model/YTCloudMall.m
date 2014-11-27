@@ -276,8 +276,9 @@
     return _tmpLocalMall;
     
 }
--(NSString *)uniId{
-    return nil;
+
+-(CGFloat)offset{
+    return [self getLocalCopy].offset;
 }
 -(AVObject *)getCloudObj{
     return _internalObject;
