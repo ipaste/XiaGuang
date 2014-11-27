@@ -202,15 +202,16 @@
 
 }
 
--(void)selectSearchResultsWithMerchantnName:(NSString *)merchantName{
+
+
+-(void)selectSearchResultsWithDBIds:(NSArray *)dbIds{
     
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
     [self cancelAnimation:NO completion:nil];
-    [self.delegate selectedMerchantName:merchantName];
+    [self.delegate selectedDBIds:dbIds];
 }
-
 #pragma mark clear按钮 cancel按钮
 -(void)clearText{
     [self searchBar:_searchBar dealWithTextChange:@""];

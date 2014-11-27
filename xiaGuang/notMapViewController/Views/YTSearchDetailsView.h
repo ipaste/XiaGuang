@@ -12,14 +12,12 @@
 @class YTSearchDetailsView;
 @protocol YTSearchDetailsDelegate <NSObject>
 @required
--(void)selectSearchResultsWithMerchantnName:(NSString *)merchantName;
+-(void)selectSearchResultsWithDBIds:(NSArray *)dbIds;
 -(void)cancelSearchInput;
 @end
 @interface YTSearchDetailsView : UIView
 
 @property (weak,nonatomic)id<YTSearchDetailsDelegate> delegate;
-
-
 /*
  *  mall为nil时,则搜索所有mall的店铺
  */

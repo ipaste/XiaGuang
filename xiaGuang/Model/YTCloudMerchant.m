@@ -96,5 +96,7 @@
     return _tmpMerchantInstance;
     
 }
-
+-(NSString *)localDBId{
+    return _object[@"localDBId"];
+}
 @end

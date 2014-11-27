@@ -31,7 +31,6 @@
         }
     }
     return self;
-    
 }
 
 -(NSString *)mallName{
@@ -76,9 +75,9 @@
         }
         
     }
-    
     return _tmpMerchantInstance;
 }
+
 -(CGFloat)offset{
     return _offset;
 }
