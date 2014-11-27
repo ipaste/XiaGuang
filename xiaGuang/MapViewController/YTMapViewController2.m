@@ -371,13 +371,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
 
-    NSArray *minors = [majorArea minorAreas];
-    NSMutableArray *minorsArray = [NSMutableArray array];
-    for(YTLocalMinorArea *minor in minors){
-        YTPoi *tmpMinorPoi = [minor producePoi];
-        [minorsArray addObject:tmpMinorPoi];
-    }
-    [_mapView addPois:minorsArray];
+//    NSArray *minors = [majorArea minorAreas];
+//    NSMutableArray *minorsArray = [NSMutableArray array];
+//    for(YTLocalMinorArea *minor in minors){
+//        YTPoi *tmpMinorPoi = [minor producePoi];
+//        [minorsArray addObject:tmpMinorPoi];
+//    }
+//    [_mapView addPois:minorsArray];
     
 
     
@@ -715,16 +715,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)selectedDBIds:(NSArray *)dbIds{
+    if (dbIds.count <= 0) {
+        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"%@ 中没有这个商家",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
+        return;
+    }
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
         NSString *dbId = [dbIds firstObject];
         FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where MerchantInstanceId = ?",dbId];
         [result next];
-        if(result == nil){
-            [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"该地图中找不到" cancelButtonTitle:@"知道了"]show];
-            return;
-        }
+     
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+        
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
         _selectedPoi = [tmpMerchantInstance producePoi];
         [_detailsView setCommonPoi:[_selectedPoi sourceModel]];

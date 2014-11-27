@@ -352,7 +352,7 @@
         FMResultSet *result = nil;
         
         result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ? ",merchantName];
-    
+        
         [result next];
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
         [tmpRecord addObject:tmpMerchantInstance];
