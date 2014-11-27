@@ -263,9 +263,11 @@
 
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+    [query whereKeyExists:@"localDBId"];
+    [query whereKey:@"localDBId" notEqualTo:@""];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 3600;
+    query.maxCacheAge = 1 * 3600;
     [query whereKey:@"mall" equalTo:mall];
     [query includeKey:@"mall,floor"];
     query.limit = 10;

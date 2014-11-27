@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _blurMenuShown;
     id<YTMall> _targetMall;
     
-    NSArray *_beaconsPoi;
+    //NSArray *_beaconsPoi;
     
     
     //商圈入口记录的mall
@@ -382,8 +382,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView addPois:pois];
     
-    
-
     /*
     NSArray *minors = [majorArea minorAreas];
     NSMutableArray *minorsArray = [NSMutableArray array];
@@ -392,10 +390,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [minorsArray addObject:tmpMinorPoi];
     }
     [_mapView addPois:minorsArray];
-    _beaconsPoi = [minorsArray copy];
-    */
-
-
+    _beaconsPoi = [minorsArray copy];*/
+    
     
     if(highlightPoi != nil && _navigationView.isNavigating){
         [_mapView superHighlightPoi:highlightPoi animated:NO];
@@ -770,7 +766,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
         return;
     }
-    
+    /*
     for(YTMinorAreaPoi *beaconPoi in _beaconsPoi){
         [_mapView setScore:-1.0 forMinorAreaPoi:beaconPoi];
     }
@@ -778,7 +774,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         YTLocalMinorArea *tmpMinor = [self getMinorArea:beacon];
         YTMinorAreaPoi *relatedBeacon = [tmpMinor producePoi];
         [_mapView setScore:[beacon.distance doubleValue] forMinorAreaPoi:relatedBeacon];
-    }
+    }*/
     
     NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
     if(_lastMajorAreaId != nil){
