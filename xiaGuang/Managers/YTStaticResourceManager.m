@@ -138,7 +138,7 @@
 - (void)startBackgroundDownload {
     if (_timer == nil) {
         // check every hour
-        _timer = [NSTimer scheduledTimerWithTimeInterval:10
+        _timer = [NSTimer scheduledTimerWithTimeInterval:10*60
                                                   target:self
                                                 selector:@selector(checkAndDownloadData:)
                                                 userInfo:nil
