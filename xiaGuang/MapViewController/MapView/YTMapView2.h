@@ -19,6 +19,7 @@
 #import "RMMapView+RMMapViewTileSourceHelpers.h"
 #import "YTMinorAreaPoi.h"
 #import "RMMarker+RMMarker_YTExtension.h"
+#import "YTCanonicalCoordinate.h"
 
 typedef enum : NSUInteger {
     YTMapViewDetailStateNormal = 0,
@@ -85,7 +86,7 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 -(void)setMapViewDetailState:(YTMapViewDetailState)detailState;
 
 
--(double)distanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
-                   toCoordinate2:(CLLocationCoordinate2D)coordinate2;
+-(double)canonicalDistanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
+                            toCoordinate2:(CLLocationCoordinate2D)coordinate2;
 
 @end

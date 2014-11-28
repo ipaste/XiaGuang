@@ -37,7 +37,7 @@
         instrunction.mainInstruction = @"请行至目标";
         instrunction.rightInstruction = @"您与终点在同一楼层";
         
-        if(self.distanceToTarget < 350)
+        if(self.distanceToTarget < 15)
         {
             instrunction = [[YTNavigationInstruction alloc] init];
             instrunction.type = YTNavigationInstructionApproachingDestination;

@@ -230,7 +230,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 #pragma mark RMMapViewDelegate methods
 -(void)doubleTapOnMap:(RMMapView *)map at:(CGPoint)point{
     CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
-    NSLog(@"lat:%f, long:%f",coord.latitude,coord.longitude);
     
     [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
@@ -331,10 +330,11 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     //[_mapView setZoom:_mapView.zoom animated:YES];
 }
 
--(double)distanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
+-(double)canonicalDistanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
                    toCoordinate2:(CLLocationCoordinate2D)coordinate2{
-    CGPoint point1 = [_internalMapView coordinateToPixel:coordinate1];
-    CGPoint point2 = [_internalMapView coordinateToPixel:coordinate2];
+    CGPoint point1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:coordinate1 mapView:_internalMapView];
+    
+    CGPoint point2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:coordinate2 mapView:_internalMapView];
     double xdiff = point1.x - point2.x;
     double ydiff = point1.y - point2.y;
     

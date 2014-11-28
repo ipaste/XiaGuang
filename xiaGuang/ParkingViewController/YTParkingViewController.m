@@ -725,7 +725,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)updateNavManagerIfNeeded{
     
     if(_navigationView.isNavigating == YES){
-        double distance = [_mapView distanceFromCoordinate1:_userCoordintate toCoordinate2:[_navigationModePlan.targetPoiSource coordinate]];
+        double distance = [_mapView canonicalDistanceFromCoordinate1:_userCoordintate toCoordinate2:[_navigationModePlan.targetPoiSource coordinate]];
         [_navigationModePlan updateWithCurrentUserMinorArea:_userMinorArea distanceToTarget:distance andDisplayedMajorArea:_currenDisplayMajorArea];
         
         [_navigationView updateInstruction];
