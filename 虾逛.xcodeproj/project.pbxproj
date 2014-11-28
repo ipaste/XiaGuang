@@ -18,7 +18,6 @@
 		78ADBEBD1A09EBB5000688E3 /* YTDistanceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEB91A09EBB5000688E3 /* YTDistanceData.m */; };
 		78ADBEBE1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */; };
 		78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */; };
-		78DB4AE01A0C83E4003A6025 /* db.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78DB4ADF1A0C83E4003A6025 /* db.plist */; };
 		AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */; };
 		AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */; };
 		AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */; };
@@ -72,16 +71,15 @@
 		AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */; };
 		AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */; };
 		AE33E0891A27184100CDBF2A /* KKmallL4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */; };
+		AE33E08C1A27219600CDBF2A /* YTStaticResourceDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */; };
 		AE859E171A0CB9A10044074F /* YTLocalEscalator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E161A0CB9A10044074F /* YTLocalEscalator.m */; };
 		AE859E1A1A0CBA880044074F /* YTEscalatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E191A0CBA880044074F /* YTEscalatorPoi.m */; };
 		AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */; };
 		AE859E211A0CC07E0044074F /* YTLocalServiceStation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E201A0CC07E0044074F /* YTLocalServiceStation.m */; };
 		AE859E241A0CC1DB0044074F /* YTServiceStationPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E231A0CC1DB0044074F /* YTServiceStationPoi.m */; };
 		AE859E271A0CC2D00044074F /* YTServiceStationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E261A0CC2D00044074F /* YTServiceStationAnnotation.m */; };
-		AE859E5F1A19AD780044074F /* YTMapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E5E1A19AD780044074F /* YTMapManager.m */; };
 		AED846381A0C9C1B0055FD14 /* YTElevatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */; };
 		AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */; };
-		AEE032B11A1A2BCD002AFB9C /* static.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032B01A1A2BCD002AFB9C /* static.plist */; };
 		AEE032B91A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */; };
 		AEE032BC1A1EEC47002AFB9C /* YTMajorAreaVoter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */; };
 		AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032BF1A22E1B3002AFB9C /* manifest.plist */; };
@@ -224,7 +222,6 @@
 		78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTKalmanFilteredPositionBot.m; sourceTree = "<group>"; };
 		78ADBEC01A09EE45000688E3 /* YTBeaconBasedLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeaconBasedLocator.h; sourceTree = "<group>"; };
 		78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconBasedLocator.m; sourceTree = "<group>"; };
-		78DB4ADF1A0C83E4003A6025 /* db.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = db.plist; sourceTree = "<group>"; };
 		AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
 		AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
 		AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
@@ -317,6 +314,8 @@
 		AE24A8CB1A08A6D400A0CE91 /* YITIANL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL2.mbtiles; sourceTree = "<group>"; };
 		AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = YITIANL3.mbtiles; sourceTree = "<group>"; };
 		AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = KKmallL4.mbtiles; sourceTree = "<group>"; };
+		AE33E08A1A27219600CDBF2A /* YTStaticResourceDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStaticResourceDownloader.h; sourceTree = "<group>"; };
+		AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStaticResourceDownloader.m; sourceTree = "<group>"; };
 		AE859E141A0CB9560044074F /* YTEscalator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTEscalator.h; sourceTree = "<group>"; };
 		AE859E151A0CB9A10044074F /* YTLocalEscalator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalEscalator.h; sourceTree = "<group>"; };
 		AE859E161A0CB9A10044074F /* YTLocalEscalator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalEscalator.m; sourceTree = "<group>"; };
@@ -331,13 +330,10 @@
 		AE859E231A0CC1DB0044074F /* YTServiceStationPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTServiceStationPoi.m; sourceTree = "<group>"; };
 		AE859E251A0CC2D00044074F /* YTServiceStationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTServiceStationAnnotation.h; sourceTree = "<group>"; };
 		AE859E261A0CC2D00044074F /* YTServiceStationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTServiceStationAnnotation.m; sourceTree = "<group>"; };
-		AE859E5D1A19AD780044074F /* YTMapManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapManager.h; sourceTree = "<group>"; };
-		AE859E5E1A19AD780044074F /* YTMapManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMapManager.m; sourceTree = "<group>"; };
 		AED846361A0C9C1B0055FD14 /* YTElevatorPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorPoi.h; sourceTree = "<group>"; };
 		AED846371A0C9C1B0055FD14 /* YTElevatorPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorPoi.m; sourceTree = "<group>"; };
 		AED846391A0C9DE30055FD14 /* YTElevatorAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTElevatorAnnotation.h; sourceTree = "<group>"; };
 		AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTElevatorAnnotation.m; sourceTree = "<group>"; };
-		AEE032B01A1A2BCD002AFB9C /* static.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = static.plist; sourceTree = "<group>"; };
 		AEE032B71A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RMMBTilesSource+YTExtension.h"; sourceTree = "<group>"; };
 		AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RMMBTilesSource+YTExtension.m"; sourceTree = "<group>"; };
 		AEE032BA1A1EEC47002AFB9C /* YTMajorAreaVoter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMajorAreaVoter.h; sourceTree = "<group>"; };
@@ -667,8 +663,6 @@
 				AE24A7FE1A022E1B00A0CE91 /* haianchengparking2.mbtiles */,
 				AE24A7FF1A022E1B00A0CE91 /* huanlehaian.mbtiles */,
 				AE24A8001A022E1B00A0CE91 /* huanlehaianpark.mbtiles */,
-				AE859E5D1A19AD780044074F /* YTMapManager.h */,
-				AE859E5E1A19AD780044074F /* YTMapManager.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -678,8 +672,6 @@
 			children = (
 				AEE032BF1A22E1B3002AFB9C /* manifest.plist */,
 				AE24A8091A0242F200A0CE91 /* highGuangDB */,
-				78DB4ADF1A0C83E4003A6025 /* db.plist */,
-				AEE032B01A1A2BCD002AFB9C /* static.plist */,
 			);
 			path = DB;
 			sourceTree = "<group>";
@@ -687,6 +679,8 @@
 		AE24A8301A02430300A0CE91 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				AE33E08A1A27219600CDBF2A /* YTStaticResourceDownloader.h */,
+				AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */,
 				AEE032BA1A1EEC47002AFB9C /* YTMajorAreaVoter.h */,
 				AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */,
 				AE24A8311A02430300A0CE91 /* YTBeaconManager.h */,
@@ -1247,7 +1241,6 @@
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
 				AE24A8D71A08A6D400A0CE91 /* YITIANB2.mbtiles in Resources */,
 				AEE032D11A22E3C5002AFB9C /* kkmallL3Jpark.mbtiles in Resources */,
-				AEE032B11A1A2BCD002AFB9C /* static.plist in Resources */,
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
 				AE24A8D91A08A6D400A0CE91 /* YITIANL2.mbtiles in Resources */,
 				AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */,
@@ -1264,7 +1257,6 @@
 				AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */,
 				AEE032D41A22E3C5002AFB9C /* kkmallpark-4.mbtiles in Resources */,
 				AE24A8D01A08A6D400A0CE91 /* cocoparkL3.mbtiles in Resources */,
-				78DB4AE01A0C83E4003A6025 /* db.plist in Resources */,
 				D9825F3D1A1317160053F8D2 /* JingJiBaiNaL2.mbtiles in Resources */,
 				AE24A8D11A08A6D400A0CE91 /* kkmallB1.mbtiles in Resources */,
 				AE24A8CE1A08A6D400A0CE91 /* cocoparkL1.mbtiles in Resources */,
@@ -1380,7 +1372,6 @@
 				AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */,
 				D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */,
 				AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */,
-				AE859E5F1A19AD780044074F /* YTMapManager.m in Sources */,
 				D94C27C51A02639F009FF2F3 /* YTZoomStepper.m in Sources */,
 				D94C28391A0263CF009FF2F3 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */,
 				AE24A83B1A02430300A0CE91 /* YTStaticResourceManager.m in Sources */,
@@ -1404,6 +1395,7 @@
 				D94C28161A0263C6009FF2F3 /* YTSettingViewController.m in Sources */,
 				D94C27AB1A02639F009FF2F3 /* YTExitAnnotation.m in Sources */,
 				D94C27A81A02639F009FF2F3 /* YTAnnotation.m in Sources */,
+				AE33E08C1A27219600CDBF2A /* YTStaticResourceDownloader.m in Sources */,
 				D94C283A1A0263CF009FF2F3 /* UIScrollView+MJExtension.m in Sources */,
 				D94C28371A0263CF009FF2F3 /* RMMapView+RMMapViewTileSourceHelpers.m in Sources */,
 				78ADBEBD1A09EBB5000688E3 /* YTDistanceData.m in Sources */,

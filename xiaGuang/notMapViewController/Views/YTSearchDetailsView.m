@@ -48,6 +48,7 @@
         
         AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
         [query whereKeyExists:@"localDBId"];
+        [query whereKey:@"localDBId" notEqualTo:@""];
         if (mall) {
             AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
             [mallQuery whereKey:@"name" equalTo:[mall mallName]];

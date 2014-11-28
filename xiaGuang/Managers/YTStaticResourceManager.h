@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
+#import "YTStaticResourceDownloader.h"
 
 @interface YTStaticResourceManager : NSObject
 
