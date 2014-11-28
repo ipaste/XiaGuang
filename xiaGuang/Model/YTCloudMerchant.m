@@ -35,7 +35,10 @@
 
 -(NSArray *)type{
     NSString *type = _object[MERCHANT_CLASS_TYPE_KEY];
-    NSMutableArray *types = [NSMutableArray arrayWithArray:[type componentsSeparatedByString:@" "]];
+    if (type.length <= 0) {
+        return @[];
+    }
+    NSMutableArray *types = [NSMutableArray arrayWithArray:[type componentsSeparatedByString:@""]];
     if ([[types lastObject] isEqualToString:@""]) {
         [types removeLastObject];
     }

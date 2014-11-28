@@ -119,14 +119,16 @@
     
     
     [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
-        _merchants = [NSMutableArray arrayWithArray:merchants];
-        if (!_isCategory) {
-            id<YTMerchant> tmpMerchant = [merchants firstObject];
-            _subCategory = [[tmpMerchant type] lastObject];
-            _category = [[tmpMerchant type] firstObject];
-            
+        if (merchants != nil) {
+            _merchants = [NSMutableArray arrayWithArray:merchants];
+            if (!_isCategory) {
+                id<YTMerchant> tmpMerchant = [merchants firstObject];
+                _subCategory = [[tmpMerchant type] lastObject];
+                _category = [[tmpMerchant type] firstObject];
+                
+            }
+            [_categoryResultsView setKey:_category subKey:_subCategory];
         }
-        [_categoryResultsView setKey:_category subKey:_subCategory];
         [self reloadData];
     }];
 }
@@ -161,9 +163,7 @@
 }
 
 -(void)getMerchantsWithSkip:(int)skip numbers:(int)number andBlock:(void (^)(NSArray *merchants))block{
-    NSMutableArray *merchants = [NSMutableArray array];
-    NSString *whereKey = _isCategory ? MERCHANT_CLASS_TYPE_KEY : MERCHANT_CLASS_LOCALDBId_KEY;
-    
+    NSMutableArray *merchants = [NSMutableArray array];    
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query orderByAscending:@"name"];
     [query includeKey:@"mall,floor"];
@@ -171,15 +171,18 @@
     query.skip = skip;
     if (_isCategory) {
         if (_subCategory != nil) {
-            [query whereKey:whereKey containsString:_subCategory];
+            [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_subCategory];
         }else{
             if (_category != nil){
-                [query whereKey:whereKey containsString:_category];
+                [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
             }
         }
     }else{
-       // [query whereKey:whereKey equalTo:_merchantName];
-        [query whereKey:whereKey containedIn:_ids];
+        if (_ids.count <= 0 || _ids == nil) {
+            block(nil);
+            return;
+        }
+        [query whereKey:MERCHANT_CLASS_UNIID_KEY containedIn:_ids];
     }
     if (_floorName != nil) {
         AVQuery *floorQuery = [AVQuery queryWithClassName:@"Floor"];
@@ -236,7 +239,7 @@
 
 -(void)reloadData{
     [_tableView reloadData];
-    if (_merchants.count == 0) {
+    if (_merchants.count == 0 || _merchants == nil) {
         _notLabel.hidden = NO;
     }else{
         _notLabel.hidden = YES;

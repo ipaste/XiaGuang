@@ -92,12 +92,12 @@
     _isShowSearchView = NO;
     [_searchView hideSearchViewWithAnimation:NO];
 }
-
--(void)selectedDBIds:(NSArray *)dbIds{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:dbIds];
+-(void)selectedUniIds:(NSArray *)uniIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:uniIds];
     resultsVC.isSearch = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
+
 
 #pragma mark View 1
 -(void)mainView{
@@ -262,7 +262,7 @@
 }
 
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
-    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+    AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query whereKeyExists:@"localDBId"];
     [query whereKey:@"localDBId" notEqualTo:@""];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];

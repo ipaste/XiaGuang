@@ -204,15 +204,14 @@
 }
 
 
-
--(void)selectSearchResultsWithDBIds:(NSArray *)dbIds{
-    
+-(void)selectSearchResultsWithUniIds:(NSArray *)uniIds{
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
     [self cancelAnimation:NO completion:nil];
-    [self.delegate selectedDBIds:dbIds];
+    [self.delegate selectedUniIds:uniIds];
 }
+
 #pragma mark clear按钮 cancel按钮
 -(void)clearText{
     [self searchBar:_searchBar dealWithTextChange:@""];
