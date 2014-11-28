@@ -31,8 +31,8 @@
     CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds);
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
-        CGFloat searchBarX = 0;
-        _searchBarWidth =  CGRectGetWidth(self.frame);
+        CGFloat searchBarX = 5;
+        _searchBarWidth =  CGRectGetWidth(self.frame) - 10;
         CGFloat cancelX = CGRectGetWidth(self.frame)- 45;
         if (indent) {
             _isIndent = indent;
@@ -89,6 +89,7 @@
         _searchClearButton.frame = CGRectMake(249 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }
     
+    [_cancelButton setCenter:CGPointMake(_cancelButton.center.x, _searchBar.center.y)];
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
     [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
