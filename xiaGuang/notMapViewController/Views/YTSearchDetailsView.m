@@ -117,23 +117,24 @@
     
 }
 -(void)searchWithKeyword:(NSString *)keyWord{
-    if (keyWord.length <= 0) {
-        _searchResultstableView.hidden = YES;
-        _scrollView.hidden = NO;
-        return;
-    }
-    
-    //关键字处理
-    _scrollView.hidden = YES;
-    _searchResultstableView.hidden = NO;
-    if (_results != nil) {
-        [_results removeAllObjects];
-        [_unIds removeAllObjects];
-        [_searchResultstableView reloadData];
-    }
-    _results = [NSMutableArray array];
-    _unIds = [NSMutableArray array];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        if (keyWord.length <= 0) {
+            _searchResultstableView.hidden = YES;
+            _scrollView.hidden = NO;
+            return;
+        }
+        
+        //关键字处理
+        _scrollView.hidden = YES;
+        _searchResultstableView.hidden = NO;
+        if (_results != nil) {
+            [_results removeAllObjects];
+            [_unIds removeAllObjects];
+            [_searchResultstableView reloadData];
+        }
+        _results = [NSMutableArray array];
+        _unIds = [NSMutableArray array];
+        
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *result = nil;
         if (_mall) {
@@ -222,7 +223,7 @@
         
         id<YTMerchantLocation> merchant = _results[indexPath.row];
         NSString *merchantName = [merchant merchantLocationName];
-        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%d家",[_unIds[indexPath.row] count]];
+        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%ld家",[_unIds[indexPath.row] count]];
         cell.textLabel.text = merchantName;
         cell.detailTextLabel.text = remarks;
         return cell;
