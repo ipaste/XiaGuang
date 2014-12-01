@@ -13,6 +13,7 @@
     NSString *_tmpMallId;
     NSString *_tmpMerchantInstanceName;
     NSString *_tmpMajorAreaId;
+    NSString *_tmpUniId;
     double _tmpLatitude;
     double _tmpLongtitude;
     NSString *_tmpMinorAreaId;
@@ -66,6 +67,7 @@
             _tmpDisplayLevel = [findResultSet doubleForColumn:@"displayLevel"];
             _tmpLableHeight = [findResultSet doubleForColumn:@"labelHeight"];
             _tmpLableWidth = [findResultSet doubleForColumn:@"labelWidth"];
+            _tmpUniId = [findResultSet stringForColumn:@"uniId"];
         }
     }
     return self;
@@ -166,8 +168,8 @@
 }
 
 -(void)getCloudThumbNailWithCallBack:(void (^)(UIImage *, NSError *))callback{
-        AVQuery *query = [[AVQuery alloc] initWithClassName:@"Merchant"];
-        [query whereKey:@"localDBId" equalTo:_tmpMerchantInstanceId];
+        AVQuery *query = [[AVQuery alloc] initWithClassName:CLOUD_MERCHANT_CLASS_NAME];
+        [query whereKey:@"uniId" equalTo:_tmpUniId];
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         query.maxCacheAge = 24 * 3600;
     
@@ -188,8 +190,8 @@
 }
 
 -(void)getCloudMerchantTypeWithCallBack:(void (^)(NSArray *result,NSError *error))callback{
-    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-    [query whereKey:@"localDBId" equalTo:_tmpMerchantInstanceId];
+    AVQuery *query = [AVQuery queryWithClassName:CLOUD_MERCHANT_CLASS_NAME];
+    [query whereKey:@"uniId" equalTo:_tmpUniId];
     [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         if (object == nil || error) {
             callback(nil,error);
@@ -200,7 +202,9 @@
     }];
 }
 
-
+-(NSString *)uniId{
+    return _tmpUniId;
+}
 
 -(YTPoi *)producePoi{
     YTMerchantPoi *result = [[YTMerchantPoi alloc]  initWithMerchantInstance:self];

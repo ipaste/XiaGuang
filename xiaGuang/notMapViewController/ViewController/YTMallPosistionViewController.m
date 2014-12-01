@@ -66,8 +66,6 @@
     CGRect frame = _detailsView.frame;
     frame.origin.y = CGRectGetHeight(self.view.frame) - CGRectGetHeight(frame) - topHeight;
     _detailsView.frame = frame;
-    
-    
 }
 
 -(void)dealloc{

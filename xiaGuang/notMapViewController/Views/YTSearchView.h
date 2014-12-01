@@ -14,7 +14,7 @@
 @optional
 -(void)searchCancelButtonClicked;
 @required
--(void)selectedDBIds:(NSArray *)dbIds;
+-(void)selectedUniIds:(NSArray *)uniIds;
 @end
 
 @interface YTSearchView : UIView

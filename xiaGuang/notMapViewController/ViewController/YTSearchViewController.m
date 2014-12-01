@@ -150,8 +150,8 @@
 }
 
 
--(void)selectedDBIds:(NSArray *)dbIds{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:dbIds];
+-(void)selectedUniIds:(NSArray *)uniIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:uniIds];
     resultsVC.isSearch = YES;
     resultsVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];

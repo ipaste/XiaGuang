@@ -27,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, PANEL_SIZE, PANEL_SIZE) items:@[@"商城",@"停车",@"设置",@"地图"]];
+    _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, PANEL_SIZE, PANEL_SIZE) items:@[@"商圈",@"停车",@"设置",@"地图"]];
     [_panel setItemsTheImage:@[[UIImage imageNamed:@"home_ico_mall_pr"],[UIImage imageNamed:@"home_ico_parking_pr"],[UIImage imageNamed:@"home_ico_set_pr"],[UIImage imageNamed:@"home_ico_map_pr"]] highlightImages:@[[UIImage imageNamed:@"home_ico_mall_un"],[UIImage imageNamed:@"home_ico_parking_un"],[UIImage imageNamed:@"home_ico_set_un"],[UIImage imageNamed:@"home_ico_map_un"]]];
     _panel.delegate = self;
     [self.view addSubview:_panel];

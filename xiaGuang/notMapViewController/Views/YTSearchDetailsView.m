@@ -43,12 +43,13 @@
         [self addSubview:_scrollView];
         
         
+        
         _hotSearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(self.frame), 128)];
         [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索" indent:25]];
         
-        AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-        [query whereKeyExists:@"localDBId"];
-        [query whereKey:@"localDBId" notEqualTo:@""];
+        AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
+        [query whereKeyExists:@"uniId"];
+        [query whereKey:@"uniId" notEqualTo:@""];
         if (mall) {
             AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
             [mallQuery whereKey:@"name" equalTo:[mall mallName]];
@@ -116,23 +117,24 @@
     
 }
 -(void)searchWithKeyword:(NSString *)keyWord{
-    if (keyWord.length <= 0) {
-        _searchResultstableView.hidden = YES;
-        _scrollView.hidden = NO;
-        return;
-    }
-    
-    //关键字处理
-    _scrollView.hidden = YES;
-    _searchResultstableView.hidden = NO;
-    if (_results != nil) {
-        [_results removeAllObjects];
-        [_unIds removeAllObjects];
-        [_searchResultstableView reloadData];
-    }
-    _results = [NSMutableArray array];
-    _unIds = [NSMutableArray array];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        if (keyWord.length <= 0) {
+            _searchResultstableView.hidden = YES;
+            _scrollView.hidden = NO;
+            return;
+        }
+        
+        //关键字处理
+        _scrollView.hidden = YES;
+        _searchResultstableView.hidden = NO;
+        if (_results != nil) {
+            [_results removeAllObjects];
+            [_unIds removeAllObjects];
+            [_searchResultstableView reloadData];
+        }
+        _results = [NSMutableArray array];
+        _unIds = [NSMutableArray array];
+        
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *result = nil;
         if (_mall) {
@@ -235,7 +237,7 @@
             return;
         }
         id<YTMerchantLocation> tmpMerchantLocation = _recordObjects[indexPath.row];
-        [self.delegate selectSearchResultsWithDBIds:[self merchantsWithMerchantName:[tmpMerchantLocation merchantLocationName]]];
+        [self.delegate selectSearchResultsWithUniIds:[self merchantsWithMerchantName:[tmpMerchantLocation merchantLocationName]]];
         
     }else if([tableView isEqual:_searchResultstableView]){
         NSMutableArray *history = [NSMutableArray arrayWithArray:[_fileManager readDataWithFileName:@"history"]];
@@ -252,7 +254,7 @@
             [_historyTableView reloadData];
             _scrollView.hidden = NO;
             _searchResultstableView.hidden = YES;
-            [self.delegate selectSearchResultsWithDBIds:_unIds[indexPath.row]];
+            [self.delegate selectSearchResultsWithUniIds:_unIds[indexPath.row]];
         }
     }
     
@@ -306,8 +308,8 @@
 -(void)jumpToMerchant:(UIButton *)sender{
     NSInteger index = sender.tag;
     AVObject *tmp = [_popularMerchants objectAtIndex:index];
-    NSString *merchantId = tmp[@"localDBId"];
-    [self.delegate selectSearchResultsWithDBIds:@[merchantId]];
+    NSString *merchantId = tmp[@"uniId"];
+    [self.delegate selectSearchResultsWithUniIds:@[merchantId]];
 }
 
 -(NSString *)getMajorAreaId:(YTLocalMall *)aMall{
@@ -340,7 +342,7 @@
     
     while ([result next]) {
         YTLocalMerchantInstance *merchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
-        [merchantCount addObject:[merchant identifier]];
+        [merchantCount addObject:[merchant uniId]];
     }
     
     return [merchantCount copy];
@@ -359,6 +361,12 @@
         [tmpRecord addObject:tmpMerchantInstance];
         
     }
+    if (_historyTableView != nil){ 
+        CGRect frame = _historyTableView.frame;
+        frame.size.height = tmpRecord.count * HISTORYTABLECELL_HEIGHT + 35;
+        _historyTableView.frame = frame;
+    }
+    
     _recordObjects = [tmpRecord copy];
 }
 
