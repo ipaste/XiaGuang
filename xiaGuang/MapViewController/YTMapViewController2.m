@@ -663,6 +663,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)showCallOut{
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
+    _shownCallout = YES;
     if (_type != YTMapViewControllerTypeMerchant){
         _detailsView.hidden = NO;
     }
@@ -675,7 +676,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame = _changeFloorIndicator.frame;
         frame.origin.y -= HOISTING_HEIGHT;
         _changeFloorIndicator.frame = frame;
-        
         
         frame = _moveTargetButton.frame;
         frame.origin.y -= HOISTING_HEIGHT;
@@ -696,13 +696,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
     } completion:^(BOOL finished) {
         _detailsView.hidden = NO;
-        _shownCallout = YES;
+        
     }];
 }
 -(void)hideCallOut{
 
     _selectedPoi = nil;
-    
+    _shownCallout = NO;
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
         
@@ -736,7 +736,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _moveTargetButton.hidden = YES;
         _detailsView.hidden = YES;
         _navigationView.hidden = YES;
-        _shownCallout = NO;
     }];
 }
 
@@ -1024,6 +1023,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if(_shownCallout && [_mapView currentState] != YTMapViewDetailStateNavigating){
             _selectedPoi = nil;
             [self hideCallOut];
+            
         }
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
