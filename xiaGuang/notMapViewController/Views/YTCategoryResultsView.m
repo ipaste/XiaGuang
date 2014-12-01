@@ -16,6 +16,8 @@
     NSMutableArray *_categoryCount;
     UIButton *_curSelectButton;
     UIButton *_mallButton;
+    NSString *_mallUniId;
+    NSString *_floorUniId;
     YTCategoryResultsTableView *_categoryResltsTableView;
     NSString *_buttonName;
 }
@@ -26,9 +28,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         _mall = mall;
-    
+        
         _categoryCount = [NSMutableArray array];
-       
+        
         [self setKey:key subKey:subKey];
         
         NSArray *buttonNames = nil;
@@ -139,8 +141,7 @@
     NSString *tmpKey = key;
     NSString *category = nil;
     NSString *subCategory = nil;
-    NSString *mallUniId = nil;
-    NSString *floorUniId = nil;
+    
     for (UIButton *tempButton in _categoryCount) {
         switch (tempButton.tag) {
             case 0:
@@ -154,37 +155,38 @@
                 break;
             case 1:
             {
-                FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-                
-                if (!_mall){//全部商场
-                    if (key == nil) {
-                        mallUniId = nil;
-                        floorUniId = nil;
-                        tmpKey = @"全部商圈";
-                    }else{
-                        FMResultSet *results = [db executeQuery:@"select * from Mall where mallId = ?",key];
-                        [results next];
-                        YTLocalMall *tmpMall = [[YTLocalMall alloc]initWithDBResultSet:results];
-                        mallUniId = [tmpMall identifier];
-                        floorUniId = nil;
-                        tmpKey = [tmpMall mallName];
+                if ([_curSelectButton isEqual:tempButton]) {
+                    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+                    
+                    if (!_mall){//全部商场
+                        if (key == nil) {
+                            _mallUniId = nil;
+                            _floorUniId = nil;
+                            tmpKey = @"全部商圈";
+                        }else{
+                            FMResultSet *results = [db executeQuery:@"select * from Mall where mallId = ?",key];
+                            [results next];
+                            YTLocalMall *tmpMall = [[YTLocalMall alloc]initWithDBResultSet:results];
+                            _mallUniId = [tmpMall identifier];
+                            _floorUniId = nil;
+                            tmpKey = [tmpMall mallName];
+                        }
+                        
+                    }else{//全部楼层
+                        _mallUniId = [_mall localDB];
+                        if (key == nil) {
+                            _floorUniId = nil;
+                            tmpKey = @"全部楼层";
+                        }else{
+                            
+                            FMResultSet *results = [db executeQuery:@"select * from Floor where uniId = ? and mallId = ?",key,_mallUniId];
+                            [results next];
+                            YTLocalFloor *tmpFloor = [[YTLocalFloor alloc]initWithDBResultSet:results];
+                            _floorUniId = [tmpFloor uniId];
+                            tmpKey = [tmpFloor floorName];
+                        }
                     }
                     
-                }else{//全部楼层
-                    mallUniId = [_mall localDB];
-                    if (key == nil) {
-                        floorUniId = nil;
-                        tmpKey = @"全部楼层";
-                    }else{
-                        
-                        FMResultSet *results = [db executeQuery:@"select * from Floor where uniId = ? and mallId = ?",key,mallUniId];
-                        [results next];
-                        YTLocalFloor *tmpFloor = [[YTLocalFloor alloc]initWithDBResultSet:results];
-                        floorUniId = [tmpFloor uniId];
-                        tmpKey = [tmpFloor floorName];
-                    }
-                }
-                if ([_curSelectButton isEqual:tempButton]) {
                     [_curSelectButton setTitle:tmpKey forState:UIControlStateDisabled];
                     [_curSelectButton setTitle:tmpKey forState:UIControlStateNormal];
                 }
@@ -204,9 +206,9 @@
         subCategory = @"全部";
     }
     
-
-    [self.delegate searchKeyForCategoryTitle:category subCategoryTitle:subCategory mallUniId:mallUniId floorUniId:floorUniId];
-   
+    
+    [self.delegate searchKeyForCategoryTitle:category subCategoryTitle:subCategory mallUniId:_mallUniId floorUniId:_floorUniId];
+    
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
