@@ -21,8 +21,8 @@
     NSString *_category;
     NSString *_subCategory;
     NSString *_merchantName;
-    NSString *_mallName;
-    NSString *_floorName;
+    NSString *_mallUniId;
+    NSString *_floorUniId;
     UILabel *_notLabel;
     NSArray *_ids;
     NSMutableArray *_merchants;
@@ -59,11 +59,11 @@
             _subCategory = subKey;
             _isCategory = true;
         }
-
+        
         if(_mall){
-            _mallName = [mall mallName];
+            _mallUniId = [mall localDB];
         }
-       
+        
     }
     return self;
 }
@@ -72,7 +72,7 @@
     self = [super init];
     if (self) {
         _mall = mall;
-        _mallName = [mall mallName];
+        _mallUniId = [mall localDB];
         _ids = ids;
     }
     return self;
@@ -140,7 +140,7 @@
     frame.origin.y = topHeight + 40;
     frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 40;
     _tableView.frame = frame;
-
+    
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
     frame = _categoryResultsView.frame;
@@ -163,7 +163,7 @@
 }
 
 -(void)getMerchantsWithSkip:(int)skip numbers:(int)number andBlock:(void (^)(NSArray *merchants))block{
-    NSMutableArray *merchants = [NSMutableArray array];    
+    NSMutableArray *merchants = [NSMutableArray array];
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query orderByAscending:@"name"];
     [query includeKey:@"mall,floor"];
@@ -184,19 +184,17 @@
         }
         [query whereKey:MERCHANT_CLASS_UNIID_KEY containedIn:_ids];
     }
-    if (_floorName != nil) {
-        AVQuery *floorQuery = [AVQuery queryWithClassName:@"Floor"];
-        [floorQuery whereKey:@"floorName" equalTo:_floorName];
-        [query whereKey:@"floor" matchesQuery:floorQuery];
-
+    
+    if (_floorUniId != nil) {
+        AVQuery *floorObject = [AVQuery queryWithClassName:@"Floor"];
+        [floorObject whereKey:@"uniId" equalTo:_floorUniId];
+        [query whereKey:@"floor" matchesQuery:floorObject];
     }
     
-    if (_mallName != nil) {
+    if (_mallUniId != nil) {
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
-        [mallObject whereKey:@"name" containsString:_mallName];
+        [mallObject whereKey:@"localDBId" equalTo:_mallUniId];
         [query whereKey:@"mall" matchesQuery:mallObject];
-
-        //[query whereKey:@"mall" equalTo:[mallObject getFirstObject]];
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -245,37 +243,33 @@
         _notLabel.hidden = YES;
     }
 }
-
--(void)searchKeyForCategoryTitle:(NSString *)category subCategoryTitle:(NSString *)subCategory mallName:(NSString *)mallName floor:(NSString *)floorName{
+-(void)searchKeyForCategoryTitle:(NSString *)category subCategoryTitle:(NSString *)subCategory mallUniId:(NSString *)malluniId floorUniId:(NSString *)floorUniId{
     [_merchants removeAllObjects];
     [_tableView reloadData];
-    //#warning 加载动画
-    NSLog(@"category:%@  subCategory:%@ mallName:%@ floorName:%@",category,subCategory,mallName,floorName);
-    _category = category;
+    NSLog(@"category:%@  subCategory:%@ mallUniId:%@ floorUniId:%@",category,subCategory,malluniId,floorUniId);
+    
     _subCategory = subCategory;
-    _floorName = floorName;
-    _mallName = mallName;
-    if ([_category isEqualToString:@"全部"]) {
+    
+    if ([category isEqualToString:@"全部"]) {
         _category = nil;
+    }else{
+        _category = category;
     }
-    if ([_subCategory isEqualToString:@"全部"]) {
+    if ([subCategory isEqualToString:@"全部"]) {
         _subCategory = nil;
+    }else{
+        _subCategory = subCategory;
     }
-    
-    if ([_floorName isEqualToString:@"全部"]){
-        _floorName = nil;
-    }
-    
-    if ([_mallName isEqualToString:@"全部"]){
-        _mallName = nil;
-    }
+    _mallUniId = malluniId;
+    _floorUniId = floorUniId;
     _isCategory = YES;
+    
     [self getMerchantsWithSkip:0 numbers:10 andBlock:^(NSArray *merchants) {
         _merchants = [NSMutableArray arrayWithArray:merchants];
         [self reloadData];
     }];
-    
 }
+
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMerchantViewCell *cell = (YTMerchantViewCell *)[tableView cellForRowAtIndexPath:indexPath];

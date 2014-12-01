@@ -154,6 +154,7 @@
     mallVC.mall = tmpMall;
     [self.navigationController pushViewController:mallVC animated:YES];
 }
+
 -(NSArray *)mallCenterSortFromObjects:(NSArray *)objects{
     NSMutableArray *malls = [NSMutableArray array];
     NSDictionary *tmpDictionary = [_userDefaults dictionaryWithKey:MALL_SORT];

@@ -241,7 +241,6 @@
         [self.navigationController pushViewController:moreVC animated:YES];
     }else{
         YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResutsKey:category.text];
-        resultsVC.isSearch = NO;
         [self.navigationController pushViewController:resultsVC animated:YES];
     }
 }
@@ -263,8 +262,8 @@
 
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
-    [query whereKeyExists:@"localDBId"];
-    [query whereKey:@"localDBId" notEqualTo:@""];
+    [query whereKeyExists:@"uniId"];
+    [query whereKey:@"uniId" notEqualTo:@"0"];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 1 * 3600;

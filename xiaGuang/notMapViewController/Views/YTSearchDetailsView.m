@@ -43,6 +43,7 @@
         [self addSubview:_scrollView];
         
         
+        
         _hotSearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(self.frame), 128)];
         [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索" indent:25]];
         
@@ -221,7 +222,7 @@
         
         id<YTMerchantLocation> merchant = _results[indexPath.row];
         NSString *merchantName = [merchant merchantLocationName];
-        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%ld家",[_unIds[indexPath.row] count]];
+        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%d家",[_unIds[indexPath.row] count]];
         cell.textLabel.text = merchantName;
         cell.detailTextLabel.text = remarks;
         return cell;
@@ -359,6 +360,12 @@
         [tmpRecord addObject:tmpMerchantInstance];
         
     }
+    if (_historyTableView != nil){ 
+        CGRect frame = _historyTableView.frame;
+        frame.size.height = tmpRecord.count * HISTORYTABLECELL_HEIGHT + 35;
+        _historyTableView.frame = frame;
+    }
+    
     _recordObjects = [tmpRecord copy];
 }
 

@@ -12,7 +12,7 @@
 #import "YTLocalMall.h"
 #import "YTMerchantLocation.h"
 #import <AVOSCloud/AVOSCloud.h>
-#define CLOUD_MERCHANT_CLASS_NAME @"Merchant2"
+#define CLOUD_MERCHANT_CLASS_NAME @"Merchant"
 @interface YTLocalMerchantInstance : NSObject<YTMerchantLocation>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;

@@ -12,7 +12,7 @@
 #import "YTFloor.h"
 #import "YTLocalMerchantInstance.h"
 
-#define MERCHANT_CLASS_NAME @"Merchant2"
+#define MERCHANT_CLASS_NAME @"Merchant"
 #define MERCHANT_CLASS_MALL_KEY @"mall"
 #define MERCHANT_CLASS_NAME_KEY @"name"
 #define MERCHANT_CLASS_UNIID_KEY @"uniId"

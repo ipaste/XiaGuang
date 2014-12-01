@@ -430,7 +430,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             title = @"返回";
             break;
         case YTMapViewControllerTypeMerchant:
-            title = @"店铺详情";
+            title = @"返回";
             break;
         case YTMapViewControllerTypeNavigation:
             title = @"首页";
@@ -813,7 +813,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
             
         }
-        [self setTargetMall:[[[_majorArea floor] block] mall]];
+        if (_type == YTMapViewControllerTypeNavigation) {
+            [self setTargetMall:[[[_majorArea floor] block] mall]];
+        }
     }
 }
 

@@ -191,7 +191,7 @@
 
 -(void)getCloudMerchantTypeWithCallBack:(void (^)(NSArray *result,NSError *error))callback{
     AVQuery *query = [AVQuery queryWithClassName:CLOUD_MERCHANT_CLASS_NAME];
-    [query whereKey:@"localDBId" equalTo:_tmpMerchantInstanceId];
+    [query whereKey:@"uniId" equalTo:_tmpUniId];
     [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         if (object == nil || error) {
             callback(nil,error);

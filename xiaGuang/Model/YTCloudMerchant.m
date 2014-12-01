@@ -35,10 +35,10 @@
 
 -(NSArray *)type{
     NSString *type = _object[MERCHANT_CLASS_TYPE_KEY];
-    if (type.length <= 0) {
-        return @[];
+    if (type.length <= 0 || type == nil) {
+        return nil;
     }
-    NSMutableArray *types = [NSMutableArray arrayWithArray:[type componentsSeparatedByString:@""]];
+    NSMutableArray *types = [NSMutableArray arrayWithArray:[type componentsSeparatedByString:@" "]];
     if ([[types lastObject] isEqualToString:@""]) {
         [types removeLastObject];
     }
@@ -81,7 +81,8 @@
 }
 
 -(YTLocalMerchantInstance *)getLocalMerchantInstance{
-    if(_object[@"localDBId"] == nil || [_object[@"localDBId"] isEqualToString:@""]){
+    NSString *uniId = _object[@"uniId"];
+    if ([uniId isEqualToString:@"0"] || uniId == nil) {
         return nil;
     }
     
@@ -90,7 +91,7 @@
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
-            FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceId = ?",_object[@"localDBId"]];
+            FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",_object[@"uniId"]];
             [result next];
             
             _tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];

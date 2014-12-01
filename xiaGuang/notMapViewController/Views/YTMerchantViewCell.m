@@ -41,7 +41,7 @@
         
         _addressLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_merchantNameLabel.frame), CGRectGetMaxY(_merchantNameLabel.frame) + 5, 150, 14)];
         
-
+        
         _line = [[UIView alloc]init];
         
         _subCategoryImageView = [NSMutableArray array];
@@ -56,13 +56,13 @@
             [subCategory addSubview:subLabel];
             [_subCategoryLabel addObject:subLabel];
         }
-    
+        
         
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];
         [self addSubview:_addressLable];
         [self addSubview:_line];
-    
+        
     }
     return self;
 }
@@ -84,7 +84,7 @@
     [_addressLable setTextColor:[UIColor colorWithString:@"aaaaaa"]];
     
     NSArray *subType = [self.merchant type];
-    if (subType.count > 0){
+    if (subType.count > 0 && subType != nil){
         UIImageView *beforeImageView = nil;
         for (int i = 0; i < _subCategoryImageView.count; i++) {
             UIImageView *imageView = _subCategoryImageView[i];
@@ -124,7 +124,10 @@
             imageView.hidden = YES;
             label.hidden = YES;
         }
+
     }
+    
+    
     
     
     
