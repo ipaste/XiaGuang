@@ -174,31 +174,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [self createSearchView];
     
-    
-    /*
-     
-     if(_minorArea == nil){
-     
-     NSLog(@"didload");
-     [self createBlurMenu];
-     
-     }
-     else{
-     _noBeaconCover.hidden = YES;
-     }
-     
-     if (_type == YTMapViewControllerTypeNavigation) {
-     
-     [self userMoveToMinorArea:_minorArea];
-     [_beaconManager startRangingBeacons];
-     return;
-     }*/
-    
 }
 
 
 -(void)viewWillDisappear:(BOOL)animated{
     _currentViewDisplay = NO;
+    [self cancelCommonPoiState];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -790,9 +771,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)selectedUniIds:(NSArray *)uniIds{
     if (uniIds.count <= 0) {
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"%@ 中没有这个商家",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
-        if(_activePoiMajorArea != nil){
-            [self cancelCommonPoiState];
-        }
+        
         return;
     }
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
@@ -806,11 +785,20 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
+        
+        if(_selectedPoi != nil){
+            [_mapView hidePoi:_selectedPoi animated:NO];
+        }
         _selectedPoi = [tmpMerchantInstance producePoi];
         [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
         
         if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
             [self switchFloor:[tmpMajorArea floor]];
+            
+            //switchFloor will empty _selectedPoi rehighlight here
+            _selectedPoi = [tmpMerchantInstance producePoi];
+            [_mapView highlightPoi:_selectedPoi animated:YES];
+            
         }else{
             [_mapView highlightPoi:_selectedPoi animated:YES];
         }
