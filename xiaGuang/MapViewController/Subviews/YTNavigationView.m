@@ -22,6 +22,7 @@
     UIImageView *_icon;
     YTMessageBox *_messageBox;
     id <YTPoiSource> _poiSource;
+    BOOL _approachMessageShown;
 }
 @end
 
@@ -130,10 +131,11 @@
     
     
     _subLabel.text = instruction.mainInstruction;
-    if (instruction.type == YTNavigationInstructionApproachingDestination) {
+    if (instruction.type == YTNavigationInstructionApproachingDestination && !_approachMessageShown) {
          YTMessageBox *tmpMessage = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"您已经到达了终点,是否结束导航"];
         tmpMessage.delegate = self;
         [tmpMessage show];
+        _approachMessageShown = YES;
     }
 }
 
@@ -164,5 +166,6 @@
     [self.delegate stopNavigationMode];
     _isCancelling = NO;
     _isNavigating = NO;
+    _approachMessageShown = NO;
 }
 @end

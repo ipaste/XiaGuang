@@ -42,9 +42,10 @@
     
     [super highlightAnimated:animated];
     self.layer.opacity = 1;
-    [(RMMarker *)self.layer showBubble:animated];
-    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_9"]];
     
+    [(RMMarker *)self.layer showBubble:animated];
+    [(RMMarker *)self.layer cancelSuperHighlight];
+    [(RMMarker *)self.layer setMerchantIcon:[UIImage imageNamed:@"nav_ico_9"]];
 
 }
 
