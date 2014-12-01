@@ -335,13 +335,21 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSArray *bathrooms = [majorArea bathrooms];
     NSArray *escalators = [majorArea escalators];
     NSArray *serviceStations = [majorArea serviceStations];
-
+    NSArray *exits = [majorArea exits];
     NSMutableArray *pois = [NSMutableArray array];
     
     YTPoi *highlightPoi = nil;
     
     for(id<YTMerchantLocation> tmpMerchant in merchants){
         YTPoi *tmpPoi = [tmpMerchant producePoi];
+        if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
+            highlightPoi = tmpPoi;
+        }
+        [pois addObject:tmpPoi];
+    }
+    
+    for(id<YTExit> tmpExits in exits){
+        YTPoi *tmpPoi = [tmpExits producePoi];
         if ([tmpPoi.poiKey isEqualToString:_selectedPoi.poiKey]) {
             highlightPoi = tmpPoi;
         }
