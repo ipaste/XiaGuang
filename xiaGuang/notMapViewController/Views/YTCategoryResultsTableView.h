@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTMall.h"
+#import "YTLocalMall.h"
+#import "YTCategory.h"
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTSelectCategoryViewCell.h"
+#import "YTStaticResourceManager.h"
 typedef NS_ENUM(NSInteger, YTCategoryResultsStyle) {
     YTCategoryResultsStyleAllCategory,
     YTCategoryResultsStyleAllMall,

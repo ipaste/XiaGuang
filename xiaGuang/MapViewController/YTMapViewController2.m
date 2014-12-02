@@ -420,7 +420,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             title = @"返回";
             break;
         case YTMapViewControllerTypeMerchant:
-            title = @"店铺详情";
+            title = @"返回";
             break;
         case YTMapViewControllerTypeNavigation:
             title = @"首页";
@@ -767,16 +767,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }*/
 }
 
--(void)selectedDBIds:(NSArray *)dbIds{
-    if (dbIds.count <= 0) {
+-(void)selectedUniIds:(NSArray *)uniIds{
+    if (uniIds.count <= 0) {
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"%@ 中没有这个商家",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
         
         return;
     }
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
-        NSString *dbId = [dbIds firstObject];
-        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where MerchantInstanceId = ?",dbId];
+        NSString *uniId = [uniIds firstObject];
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",uniId];
         [result next];
      
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
@@ -858,7 +858,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
             
         }
-        [self setTargetMall:[[[_majorArea floor] block] mall]];
+        if (_type == YTMapViewControllerTypeNavigation) {
+            [self setTargetMall:[[[_majorArea floor] block] mall]];
+        }
     }
 }
 

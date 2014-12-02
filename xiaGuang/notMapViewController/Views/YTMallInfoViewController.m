@@ -92,12 +92,12 @@
     _isShowSearchView = NO;
     [_searchView hideSearchViewWithAnimation:NO];
 }
-
--(void)selectedDBIds:(NSArray *)dbIds{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:dbIds];
+-(void)selectedUniIds:(NSArray *)uniIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:uniIds];
     resultsVC.isSearch = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
+
 
 #pragma mark View 1
 -(void)mainView{
@@ -241,7 +241,6 @@
         [self.navigationController pushViewController:moreVC animated:YES];
     }else{
         YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResutsKey:category.text];
-        resultsVC.isSearch = NO;
         [self.navigationController pushViewController:resultsVC animated:YES];
     }
 }
@@ -262,9 +261,9 @@
 }
 
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
-    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-    [query whereKeyExists:@"localDBId"];
-    [query whereKey:@"localDBId" notEqualTo:@""];
+    AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
+    [query whereKeyExists:@"uniId"];
+    [query whereKey:@"uniId" notEqualTo:@"0"];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 1 * 3600;

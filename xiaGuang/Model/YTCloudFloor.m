@@ -63,4 +63,7 @@
     return _majorAreas;
 }
 
+-(NSString *)uniId{
+    return _internalObject[@"uniId"];
+}
 @end

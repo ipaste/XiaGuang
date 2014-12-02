@@ -86,12 +86,14 @@
     if (_isIndent){
         _searchClearButton.frame = CGRectMake(210 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }else{
-        _searchClearButton.frame = CGRectMake(249 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+        _searchClearButton.frame = CGRectMake(239 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }
     
-    [_cancelButton setCenter:CGPointMake(_cancelButton.center.x, _searchBar.center.y)];
+    
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
+    
+    [_cancelButton setCenter:CGPointMake(_cancelButton.center.x, _searchBar.center.y)];
     [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
     [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
     [_cancelButton setTitleColor:[UIColor colorWithString:@"fac890"] forState:UIControlStateHighlighted];
@@ -204,15 +206,14 @@
 }
 
 
-
--(void)selectSearchResultsWithDBIds:(NSArray *)dbIds{
-    
+-(void)selectSearchResultsWithUniIds:(NSArray *)uniIds{
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
     [self cancelAnimation:NO completion:nil];
-    [self.delegate selectedDBIds:dbIds];
+    [self.delegate selectedUniIds:uniIds];
 }
+
 #pragma mark clear按钮 cancel按钮
 -(void)clearText{
     [self searchBar:_searchBar dealWithTextChange:@""];

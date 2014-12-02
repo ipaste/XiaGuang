@@ -33,6 +33,8 @@
     }
     _iconView = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) / 2 - 50, y, 100, 100)];
     _iconView.image = [UIImage imageNamed:@"set_img_logo"];
+    _iconView.layer.cornerRadius = 10;
+    _iconView.layer.masksToBounds = YES;
     //_iconView.backgroundColor = [UIColor colorWithString:@"e95e37"];
     [self.view addSubview:_iconView];
     
@@ -44,7 +46,7 @@
     [self.view addSubview:_titleLable];
     
     _subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_titleLable.frame), CGRectGetMaxY(_titleLable.frame) + 5, CGRectGetWidth(_titleLable.frame), 13)];
-    _subTitleLabel.text = @"V1.0.0";
+    _subTitleLabel.text = @"V1.1.2";
     _subTitleLabel.textAlignment = 1;
     _subTitleLabel.textColor = [UIColor colorWithString:@"909090"];
     _subTitleLabel.font = [UIFont systemFontOfSize:13];
@@ -57,9 +59,6 @@
     _copyright.textAlignment = 1;
     _copyright.font = [UIFont systemFontOfSize:13];
     [self.view addSubview:_copyright];
-    
-    
-    
 }
 
 
