@@ -9,7 +9,6 @@
 #import "YTMapViewController2.h"
 
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
-
 #define HOISTING_HEIGHT 70
 typedef NS_ENUM(NSInteger, YTMapViewControllerType){
     YTMapViewControllerTypeNavigation = 0,
@@ -22,10 +21,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTMessageTypeFromNavigationButton
 };
 
+
 @interface YTMapViewController2 (){
     id<YTMajorArea> _majorArea;
     YTBeaconManager *_beaconManager;
     YTBluetoothManager *_bluetoothManager;
+    YTMultipleMerchantView *_multipleView;
     id<YTMerchantLocation> _merchantLocation;
     
     BOOL _bluetoothOn;
@@ -520,7 +521,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark MapViewDelegate
 -(void)mapView:(YTMapView2 *)mapView singleTapOnMap:(CLLocationCoordinate2D)coordinate{
-    
+    if (_multipleView.isShow) {
+        [_multipleView hide];
+        _multipleView = nil;
+    }
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
         //hide callout and POI for
         
@@ -544,15 +548,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate{
-    
-    
+    if (_multipleView.isShow) {
+        [_multipleView hide];
+        _multipleView = nil;
+    }
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
-        
         //hide callout and POI for
-        
-        [self hideCallOut];
         [mapView hidePoi:_selectedPoi animated:NO];
-        
+        [self hideCallOut];
     }
     if (_switchBlockView.toggle) {
         [_switchBlockView toggleBlockView];
@@ -563,7 +566,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
-    
+    if (_multipleView.isShow) {
+        [_multipleView hide];
+        _multipleView = nil;
+    }
     id<YTPoiSource> sourceModel = [poi sourceModel];
     
     //if there's activePoi
@@ -630,7 +636,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(BOOL)selectedOnSameGroupCommonPoi:(YTPoi *)poi{
-    
+    if (_multipleView.isShow) {
+        [_multipleView hide];
+        _multipleView = nil;
+    }
     if(_activeGroupName == nil){
         return NO;
     }
@@ -663,9 +672,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
     _shownCallout = YES;
-    if (_type != YTMapViewControllerTypeMerchant){
-        _detailsView.hidden = NO;
-    }
+    _detailsView.hidden = NO;
+
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -694,7 +702,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _detailsView.frame = frame;
         
     } completion:^(BOOL finished) {
-        _detailsView.hidden = NO;
+
         
     }];
 }
@@ -735,13 +743,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _moveTargetButton.hidden = YES;
         _detailsView.hidden = YES;
         _navigationView.hidden = YES;
+
     }];
 }
 
 #pragma mark YTNavigationBarManager
 
 -(void)searchButtonClicked{
-    
+    if (_multipleView.isShow) {
+        [_multipleView hide];
+    }
     [_searchView showSearchViewWithAnimation:YES];
 }
 
@@ -772,6 +783,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         return;
     }
+    if (uniIds.count >= 2){
+        _multipleView =  [[YTMultipleMerchantView alloc]initWithUniIds:uniIds delegate:self];
+        [_multipleView showInView:self.view];
+        return;
+    }
+    
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
         NSString *uniId = [uniIds firstObject];
@@ -779,8 +796,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [result next];
      
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
-        
-        
         
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
         
@@ -791,7 +806,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
         
         if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
-            [self switchFloor:[tmpMajorArea floor]];
+            [self switchFloor:[tmpMajorArea floor] hideCallOut:NO];
             
             //switchFloor will empty _selectedPoi rehighlight here
             _selectedPoi = [tmpMerchantInstance producePoi];
@@ -810,6 +825,33 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if(_activePoiMajorArea != nil){
         [self cancelCommonPoiState];
     }
+}
+
+-(void)selectToMerchantInstance:(id<YTMerchantLocation>)merchantInstance{
+    id<YTMajorArea> tmpMajorArea = [merchantInstance majorArea];
+    
+    if(_selectedPoi != nil){
+        [_mapView hidePoi:_selectedPoi animated:NO];
+    }
+    _selectedPoi = [merchantInstance producePoi];
+    [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
+    
+    if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
+        [self switchFloor:[tmpMajorArea floor] hideCallOut:NO];
+        
+        //switchFloor will empty _selectedPoi rehighlight here
+        _selectedPoi = [merchantInstance producePoi];
+        [_mapView highlightPoi:_selectedPoi animated:YES];
+        
+    }else{
+        [_mapView highlightPoi:_selectedPoi animated:YES];
+    }
+    [_mapView setCenterCoordinate:[merchantInstance coordinate] animated:YES];
+    
+    if(!_shownCallout){
+        [self showCallOut];
+    }
+
 }
 
 #pragma mark beacons delegate methods
@@ -1019,10 +1061,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 -(void)switchFloor:(id<YTFloor>)floor{
     
+    [self switchFloor:floor hideCallOut:YES];
+    
+    
+}
+
+-(void)switchFloor:(id<YTFloor>)floor
+    hideCallOut:(BOOL)hide{
+    
     id<YTMajorArea> majorArea = [[floor majorAreas] firstObject];
     if (![[floor floorName] isEqualToString:[[_curDisplayedMajorArea floor]floorName]]) {
-        if(_shownCallout && [_mapView currentState] != YTMapViewDetailStateNavigating){
-            _selectedPoi = nil;
+        if( hide && _shownCallout && [_mapView currentState] != YTMapViewDetailStateNavigating ){
+            
             [self hideCallOut];
             
         }
@@ -1046,8 +1096,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     [self handlePoiForMajorArea:majorArea];
-    
-    
 }
 
 
