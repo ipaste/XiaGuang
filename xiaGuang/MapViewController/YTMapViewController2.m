@@ -664,9 +664,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _poiButton.hidden = YES;
     _moveTargetButton.hidden = NO;
     _shownCallout = YES;
-    if (_type != YTMapViewControllerTypeMerchant){
-        _detailsView.hidden = NO;
-    }
+    _detailsView.hidden = NO;
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -696,7 +694,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _detailsView.frame = frame;
         
     } completion:^(BOOL finished) {
-        _detailsView.hidden = NO;
+
         
     }];
 }

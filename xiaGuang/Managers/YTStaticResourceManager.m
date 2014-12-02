@@ -78,7 +78,6 @@
 {
     self = [super init];
     if (self) {
-        
         NSLog(@"%@",CURRENT_DIR);
         if(![FCFileManager existsItemAtPath:CURRENT_DIR]){
             [FCFileManager createDirectoriesForPath:CURRENT_DIR];
