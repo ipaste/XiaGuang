@@ -185,7 +185,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 
-    if(_userMinorArea == nil || _beaconManager.currentClosest == nil){
+    if(_userMinorArea == nil){
 
         
         if(!_blurMenuShown){
@@ -199,7 +199,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                         [_menu show];
                         _blurMenuShown = YES;
                     }];
-                    //[_menu show];
                 }
                 else{
                     [_menu show];
@@ -1373,15 +1372,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
     
-    if([_beaconManager currentClosest] != nil){
-        [self userMoveToMinorArea:[self getMinorArea:[_beaconManager currentClosest]]];
-    }
     if([_mapView currentState] != YTMapViewDetailStateNormal){
         if([_mapView currentState] == YTMapViewDetailStateNavigating){
             [_navigationView stopNavigationMode];
         }
         if([_mapView currentState] == YTMapViewDetailStateShowDetail){
-            [self hideCallOut];
+            //[self hideCallOut];
         }
         [self handlePoiForMajorArea:_curDisplayedMajorArea];
     }

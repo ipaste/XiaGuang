@@ -43,9 +43,6 @@
     
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
-    if([_beaconManager currentClosest] != nil){
-        _recordMinorArea = [self getMinorArea:[_beaconManager currentClosest]];
-    }
     _beaconManager.delegate = self;
     
 }
