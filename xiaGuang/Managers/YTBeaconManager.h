@@ -44,10 +44,6 @@
 
 -(NSNumber *) computedDistanceForBeacon:(ESTBeacon *)beacon;
 
-//-(NSArray *)activeBeacons;
--(ESTBeacon *)currentClosest;
-
-
 -(BOOL) isBeaconInRange:(ESTBeacon *)beacon;
 
 #pragma mark -

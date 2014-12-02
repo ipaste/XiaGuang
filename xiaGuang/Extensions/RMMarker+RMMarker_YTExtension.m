@@ -438,7 +438,9 @@ static YTCompletion Completion = nil;
     Completion = nil;
     for (CALayer *curLayer in self.sublayers) {
         if ([curLayer.name isEqualToString:BUBBLE_LAYER_NAME]) {
+            
             [curLayer removeAllAnimations];
+            curLayer.hidden = NO;
             curLayer.opacity = 1;
             if (animation) {
                 CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
@@ -481,6 +483,8 @@ static YTCompletion Completion = nil;
     Completion = nil;
     for (CALayer *curLayer in self.sublayers) {
         if ([curLayer.name isEqualToString:BUBBLE_LAYER_NAME]) {
+            curLayer.hidden = YES;
+            /*
             [curLayer removeAllAnimations];
             if (animation) {
                 CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
@@ -491,11 +495,14 @@ static YTCompletion Completion = nil;
                 boundsAnimation.duration = .5;
                 boundsAnimation.delegate = self;
                 boundsAnimation.fillMode = kCAFillModeForwards;
+                
                 [curLayer addAnimation:boundsAnimation forKey:@"merchantHide"];
-            }
+                
+            }*/
             break;
         }
     }
+    
 }
 
 - (void)hideBubble:(BOOL)animation{

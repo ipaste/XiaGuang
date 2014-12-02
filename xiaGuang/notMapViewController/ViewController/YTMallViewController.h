@@ -16,6 +16,7 @@
 #import "YTMallMerchantBundle.h"
 #import "YTMallInfoViewController.h"
 #import "MJRefresh.h"
+#import "YTLoadingView.h"
 #import <AVQuery.h>
 #import "YTUserDefaults.h"
 @interface YTMallViewController : UIViewController

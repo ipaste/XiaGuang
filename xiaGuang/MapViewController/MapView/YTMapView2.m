@@ -325,9 +325,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     
     [_internalMapView reloadTileSource:_internalMapView.tileSource];
     
-    
-    
-    //[_mapView setZoom:_mapView.zoom animated:YES];
 }
 
 -(double)canonicalDistanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1

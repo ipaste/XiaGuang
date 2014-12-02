@@ -15,6 +15,7 @@
     NSMutableArray *_mallObjects;
     NSMutableArray *_bundleObjects;
     YTUserDefaults *_userDefaults;
+    YTLoadingView *_loadingView;
     float _num;
     BOOL _isLoadingDone;
 }
@@ -36,6 +37,9 @@
         _userDefaults = [YTUserDefaults standardUserDefaults];
         _bundleObjects = [NSMutableArray array];
         _mallObjects = [NSMutableArray array];
+        
+        
+        
     }
     return self;
 }
@@ -43,6 +47,8 @@
 {
     [super viewDidLoad];
     
+    _loadingView = [[YTLoadingView alloc]initWithPosistion:CGPointMake(0, 64)];
+    [self.view addSubview:_loadingView];
     [self loadTableView];
     
 }
@@ -58,10 +64,12 @@
 
 
 -(void)loadTableView{
+    [_loadingView start];
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 2*3600;
     [query whereKeyExists:@"localDBId"];
+    [query includeKey:@"mallNameLogo"];
     [query whereKey:@"localDBId" notEqualTo:@""];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -85,12 +93,13 @@
             }
             
             [_tableView reloadData];
+            
         }else{
             //获取失败
             NSLog(@"无网络");
             [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
         }
-        
+        [_loadingView stop];
     }];
 }
 
