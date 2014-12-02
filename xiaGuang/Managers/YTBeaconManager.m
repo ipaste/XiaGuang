@@ -27,7 +27,6 @@
 @interface YTBeaconManager(){
     ESTBeaconManager *_estimoteBeaconManager;
     ESTBeaconRegion *_region;
-    ESTBeacon *_currentClosest;
     NSDictionary *_lostDict;
     NSDictionary *_distanceDict;
     NSMutableArray *_actives;
@@ -143,15 +142,6 @@
     }
     
     return result;
-}
-
-
-
-
--(ESTBeacon *)currentClosest{
-    
-    return _currentClosest;
-    
 }
 
 - (void)addListener:(id<YTBeaconManagerUpdateListener>)listener {
