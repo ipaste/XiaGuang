@@ -545,15 +545,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate{
-    
-    
     if (_selectedPoi && mapView.currentState == YTMapViewDetailStateShowDetail) {
-        
         //hide callout and POI for
-        
-        [self hideCallOut];
         [mapView hidePoi:_selectedPoi animated:NO];
-        
+        [self hideCallOut];
     }
     if (_switchBlockView.toggle) {
         [_switchBlockView toggleBlockView];
@@ -773,6 +768,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         return;
     }
+    
+    
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     if([db open]){
         NSString *uniId = [uniIds firstObject];
