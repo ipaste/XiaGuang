@@ -28,12 +28,17 @@
     NSArray *_recordObjects;
     NSString *_majorAreaIds;
     NSArray *_popularMerchants;
+    NSOperationQueue *_searchOpQueue;
 }
 @end
 @implementation YTSearchDetailsView
 -(id)initWithFrame:(CGRect)frame andDataSourceMall:(id<YTMall>)mall{
     self = [super initWithFrame:frame];
     if (self) {
+        _results = [NSMutableArray array];
+        _unIds = [NSMutableArray array];
+        _searchOpQueue = [[NSOperationQueue alloc] init];
+        _searchOpQueue.maxConcurrentOperationCount = 1;
         _mall = mall;
         _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         _scrollView.delegate = self;
@@ -117,24 +122,19 @@
     
 }
 -(void)searchWithKeyword:(NSString *)keyWord{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        if (keyWord.length <= 0) {
-            _searchResultstableView.hidden = YES;
-            _scrollView.hidden = NO;
+    
+    if (keyWord.length <= 0) {
+        _searchResultstableView.hidden = YES;
+        _scrollView.hidden = NO;
+        return;
+    }
+    
+    NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:^{
+        
+        if(op.isCancelled){
+            NSLog(@"cancelled op so we don't search");
             return;
         }
-        
-        //关键字处理
-        _scrollView.hidden = YES;
-        _searchResultstableView.hidden = NO;
-        if (_results != nil) {
-            [_results removeAllObjects];
-            [_unIds removeAllObjects];
-            [_searchResultstableView reloadData];
-        }
-        _results = [NSMutableArray array];
-        _unIds = [NSMutableArray array];
-        
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *result = nil;
         if (_mall) {
@@ -144,29 +144,51 @@
         }else{
             result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"%%%@%%",keyWord]];
         }
-        
+        NSMutableArray *results = [NSMutableArray array];
+        NSMutableArray *uniIds = [NSMutableArray array];
         while ([result next]) {
             YTLocalMerchantInstance *tmpMerchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
-            [_results addObject:tmpMerchant];
             
-            [_unIds addObject:[self merchantsWithMerchantName:[tmpMerchant merchantLocationName]]];
+            [results addObject:tmpMerchant];
+            
+            [uniIds addObject:[self merchantsWithMerchantName:[tmpMerchant merchantLocationName]]];
+            
+           
+        }
+        NSDictionary *resultDict = @{@"merchants":results,@"uniIds":uniIds};
+        if(!op.cancelled){
+            NSLog(@"cancelled op so we don't callback");
+            [self performSelectorOnMainThread:@selector(updateUI:) withObject:resultDict waitUntilDone:YES];
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_searchResultstableView reloadData];
-            
-            if (_results.count > 0) {
-                _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
-                _notLabel.hidden = YES;
-            }else{
-                _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-                _notLabel.hidden = NO;
-            }
-        });
-    });
+    }];
+    [_searchOpQueue cancelAllOperations];
+    [_searchOpQueue addOperation:op];
     
     
+    
+    
+}
+
+
+
+-(void)updateUI:(NSDictionary *)resultFromOperation{
+    NSLog(@"返回了");
+    
+    _unIds = resultFromOperation[@"uniIds"];
+    _results = resultFromOperation[@"merchants"];
+    _scrollView.hidden = YES;
+    _searchResultstableView.hidden = NO;
+    [_searchResultstableView reloadData];
+    
+    if (_results.count > 0) {
+        _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _searchResultstableView.separatorColor = [UIColor colorWithString:@"c8c8c8"];
+        _notLabel.hidden = YES;
+    }else{
+        _searchResultstableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _notLabel.hidden = NO;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

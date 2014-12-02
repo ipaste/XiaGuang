@@ -665,6 +665,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _moveTargetButton.hidden = NO;
     _shownCallout = YES;
     _detailsView.hidden = NO;
+
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -674,7 +675,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame = _changeFloorIndicator.frame;
         frame.origin.y -= HOISTING_HEIGHT;
         _changeFloorIndicator.frame = frame;
-        
         
         frame = _moveTargetButton.frame;
         frame.origin.y -= HOISTING_HEIGHT;
@@ -735,7 +735,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _moveTargetButton.hidden = YES;
         _detailsView.hidden = YES;
         _navigationView.hidden = YES;
-        
+
     }];
 }
 
@@ -1031,6 +1031,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         if( hide && _shownCallout && [_mapView currentState] != YTMapViewDetailStateNavigating ){
             
             [self hideCallOut];
+            
         }
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
