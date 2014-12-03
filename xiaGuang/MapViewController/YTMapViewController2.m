@@ -66,6 +66,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTMall> _targetMall;
     NSString *_activeGroupName;
     BOOL _shownCallout;
+    BOOL _viewDidAppear;
     //NSArray *_beaconsPoi;
     
     
@@ -159,9 +160,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     
-    [self setTargetMall:[[[_majorArea floor] block]mall]];
     [self createNavigationBar];
     [self createMapView];
+    [self setTargetMall:[[[_majorArea floor] block]mall]];
     [self createCurLocationButton];
     [self createCommonPoiButton];
     [self createZoomStepper];
@@ -180,6 +181,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)viewWillDisappear:(BOOL)animated{
     _currentViewDisplay = NO;
     [self cancelCommonPoiState];
+    _viewDidAppear = NO;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -227,6 +229,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _currentViewDisplay = YES;
     [_bluetoothManager refreshBluetoothState];
     if (_type == YTMapViewControllerTypeMerchant) {
+        
         [_mapView setCenterCoordinate:[_merchantLocation coordinate] animated:NO];
         _selectedPoi = [_merchantLocation producePoi];
         [_mapView highlightPoi:_selectedPoi animated:YES];
@@ -234,6 +237,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         [self showCallOut];
     }
+    
+    _viewDidAppear = YES;
 }
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
@@ -490,6 +495,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
     _switchFloorView.delegate = self;
     [self.view addSubview:_switchFloorView];
+    [self redrawBlockAndFloorSwitch];
 }
 
 -(void)redrawBlockAndFloorSwitch{
@@ -671,7 +677,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _moveTargetButton.hidden = NO;
     _shownCallout = YES;
     _detailsView.hidden = NO;
-
+    if(_type == YTMapViewControllerTypeMerchant){
+        _shownFloorChange = YES;
+    }
     [UIView animateWithDuration:.5 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
         CGRect frame = _moveCurrentButton.frame;
@@ -700,7 +708,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _detailsView.frame = frame;
         
     } completion:^(BOOL finished) {
-
+        if(_type == YTMapViewControllerTypeMerchant){
+            _shownFloorChange = NO;
+        }
         
     }];
 }
@@ -765,6 +775,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _navigationView.hidden = YES;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+    if(_type != YTMapViewControllerTypeNavigation){
+        [_beaconManager removeListener:_locator];
+        _locator = nil;
+    }
 }
 
 #pragma mark YTSearchViewManager
@@ -976,12 +990,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
         
-        if (![[[_navigationPlan.targetPoiSource majorArea] identifier]isEqualToString:[[minorArea majorArea] identifier]] && _navigationView.isNavigating) {
+        /*if (![[[_navigationPlan.targetPoiSource majorArea] identifier]isEqualToString:[[minorArea majorArea] identifier]] && _navigationView.isNavigating) {
             _navigationView.isShowSwitchButton = YES;
-        }
+        }*/
         if(!_navigationView.isNavigating){
             
-            if(!_shownFloorChange){
+            if(!_shownFloorChange && _viewDidAppear){
                 [_moveCurrentButton promptFloorChange:[[[_userMinorArea majorArea] floor] floorName]];
                 [_changeFloorIndicator.layer removeAllAnimations];
             
@@ -995,6 +1009,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 [_changeFloorIndicator.layer addAnimation:animation forKey:@"animation"];
                 _shownFloorChange = YES;
             }
+        }
+        else{
+            _navigationView.isShowSwitchButton = YES;
         }
         
         [_mapView removeUserLocation];
