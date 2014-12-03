@@ -172,9 +172,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createPoiView];
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
-
-    
     [self createSearchView];
+    
     
 }
 
@@ -670,7 +669,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if(![poi isMemberOfClass:k]){
         return NO;
     }
-    
     return YES;
 }
 
