@@ -138,11 +138,11 @@
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *result = nil;
         if (_mall) {
-            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like ? and majorAreaId in %@ and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",_majorAreaIds];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like ? and uniId != 0 and majorAreaId in %@ and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",_majorAreaIds];
             
             result = [db executeQuery:sql,[NSString stringWithFormat:@"%%%@%%",keyWord]];
         }else{
-            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"%%%@%%",keyWord]];
+            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"%%%@%%",keyWord]];
         }
         NSMutableArray *results = [NSMutableArray array];
         NSMutableArray *uniIds = [NSMutableArray array];

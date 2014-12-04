@@ -1580,10 +1580,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if ([[_targetMall identifier]isEqualToString:[aMall identifier]]) {
         return;
     }
+    _navigationBar.titleName = [aMall mallName];
     _targetMall = aMall;
     [_mapView setMapOffset:[_targetMall offset]];
     [self createSearchView];
-  
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
