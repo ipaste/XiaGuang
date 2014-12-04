@@ -19,6 +19,14 @@ static YTCompletion Completion = nil;
         self.bounds = CGRectMake(0, 0, 0, 0);
         self.masksToBounds = NO;
 
+        CALayer *userLayer = [CALayer layer];
+        userLayer.masksToBounds = NO;
+        UIImage *userImage = [UIImage imageNamed:@"nav_img_me"];
+        userLayer.frame = CGRectMake(0, 0, userImage.size.width,userImage.size.height);
+        userLayer.anchorPoint = CGPointMake(1, 1);
+        userLayer.contents = (id)userImage.CGImage;
+        [self addSublayer:userLayer];
+        
         CALayer *layer = [CALayer layer];
         layer.frame = CGRectMake(-50,-50, 100, 100);
         layer.backgroundColor = [[UIColor blueColor] CGColor];
@@ -28,51 +36,41 @@ static YTCompletion Completion = nil;
         //[self addSublayer:layer];
         //[self didAppear];
         
-        CALayer *circle2 = [CALayer layer];
-        UIImage *circle2Image = [UIImage imageNamed:@"nav_img_circle2"];
-        circle2.frame = CGRectMake(-circle2Image.size.width / 2, -circle2Image.size.height / 2, circle2Image.size.width, circle2Image.size.height);
-        circle2.contents = (id)[circle2Image CGImage];
-        [self addSublayer:circle2];
-       
-        
-        CALayer *circle1 = [CALayer layer];
-        UIImage *circle1Image = [UIImage imageNamed:@"nav_img_circle1"];
-        circle1.frame = CGRectMake(-circle1Image.size.width / 2, -circle1Image.size.height / 2, circle1Image.size.width, circle1Image.size.height);
-        circle1.contents = (id)[circle1Image CGImage];
-        [self addSublayer:circle1];
-        
+//        CALayer *circle2 = [CALayer layer];
+//        UIImage *circle2Image = [UIImage imageNamed:@"nav_img_circle2"];
+//        circle2.frame = CGRectMake(-circle2Image.size.width / 2, -circle2Image.size.height / 2, circle2Image.size.width, circle2Image.size.height);
+//        circle2.contents = (id)[circle2Image CGImage];
+//        [self addSublayer:circle2];
+//       
+//        
+//        CALayer *circle1 = [CALayer layer];
+//        UIImage *circle1Image = [UIImage imageNamed:@"nav_img_circle1"];
+//        circle1.frame = CGRectMake(-circle1Image.size.width / 2, -circle1Image.size.height / 2, circle1Image.size.width, circle1Image.size.height);
+//        circle1.contents = (id)[circle1Image CGImage];
+//        [self addSublayer:circle1];
+//        
         CALayer *direction = [CALayer layer];
         layer.masksToBounds = NO;
-        UIImage *directionImage = [UIImage imageNamed:@"nav_img_pionter"];
+        UIImage *directionImage = [UIImage imageNamed:@"nav_img_arrow"];
         direction.frame = CGRectMake(-directionImage.size.width / 2,-directionImage.size.height / 2, directionImage.size.width, directionImage.size.height);
-        
-        //direction.backgroundColor = [[UIColor blackColor] CGColor];
-        
+        direction.anchorPoint = CGPointMake(0.5, 1);
         direction.contents = (id)[directionImage CGImage];
-        //direction.anchorPoint = CGPointMake(0.5, 1);
         direction.name = @"arrow";
         [self addSublayer:direction];
         
-        CALayer *userLayer = [CALayer layer];
-        userLayer.masksToBounds = NO;
-        UIImage *userImage = [UIImage imageNamed:@"nav_img_me"];
-        userLayer.frame = CGRectMake(0, 0, userImage.size.width - 40,userImage.size.height - 40);
-        userLayer.anchorPoint = CGPointMake(1, 1);
-        userLayer.contentsScale = 0.8;
-        userLayer.contents = (id)userImage.CGImage;
-       //[self addSublayer:userLayer];
+
        
-        CABasicAnimation *circle1animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        circle1animation.toValue = [NSNumber numberWithFloat:-M_PI * 2.0];
-        circle1animation.duration = 17.0;
-        circle1animation.repeatCount = MAXFLOAT;
-        [circle1 addAnimation:circle1animation forKey:@"circle1rotation"];
-        
-        CABasicAnimation *circle2animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        circle2animation.toValue = [NSNumber numberWithFloat:M_PI * 2.0];
-        circle2animation.duration = 20.0;
-        circle2animation.repeatCount = MAXFLOAT;
-        [circle2 addAnimation:circle2animation forKey:@"circle2rotation"];
+//        CABasicAnimation *circle1animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+//        circle1animation.toValue = [NSNumber numberWithFloat:-M_PI * 2.0];
+//        circle1animation.duration = 17.0;
+//        circle1animation.repeatCount = MAXFLOAT;
+//        [circle1 addAnimation:circle1animation forKey:@"circle1rotation"];
+//        
+//        CABasicAnimation *circle2animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+//        circle2animation.toValue = [NSNumber numberWithFloat:M_PI * 2.0];
+//        circle2animation.duration = 20.0;
+//        circle2animation.repeatCount = MAXFLOAT;
+//        [circle2 addAnimation:circle2animation forKey:@"circle2rotation"];
         
         
         

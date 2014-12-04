@@ -123,7 +123,7 @@
         
 
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-        FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where latitude is not null and majorAreaId = ?",_tmpMajorAreaId];
+        FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where latitude is not null and majorAreaId = ? and uniId != 0 ",_tmpMajorAreaId];
         
         _tmpMerchantAreas = [[NSMutableArray alloc] init];
         
