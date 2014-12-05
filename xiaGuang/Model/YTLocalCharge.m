@@ -13,6 +13,7 @@
     NSInteger _tmpK;
     NSInteger _tmpA;
     NSInteger _tmpMax;
+    NSInteger _freeTime;
 }
 
 -(id)initWithMallID:(NSString *)mallID{
@@ -27,6 +28,7 @@
             self.A = [result intForColumn:@"a"];
             self.P = [result intForColumn:@"p"];
             self.K = [result intForColumn:@"k"];
+            self.freeTime = [result intForColumn:@"freeTime"];
     }
     return self;
     
