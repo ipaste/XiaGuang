@@ -34,7 +34,9 @@
 }
 
 -(RMMapLayer *)produceLayer{
-    _resultLayer = [[RMMarker alloc] initWithBubbleHeight:2 width:2];
+    if (!_resultLayer) {
+        _resultLayer = [[RMMarker alloc] initWithBubbleHeight:2 width:2];
+    }
     return _resultLayer;
 }
 
