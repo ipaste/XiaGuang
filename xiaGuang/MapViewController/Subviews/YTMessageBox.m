@@ -16,7 +16,7 @@ typedef void(^YTMessageBoxCallBack)(NSInteger tag);
     UIImageView *_backgroundView;
     UIButton *_cancelButton;
     UIButton *_enterButton;
-    UIWindow *_window;
+   __weak UIWindow *_window;
     YTMessageBoxCallBack tmpCallBack;
 }
 @end
