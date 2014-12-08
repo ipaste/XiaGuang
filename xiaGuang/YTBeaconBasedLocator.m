@@ -242,6 +242,7 @@
 -(void)dealloc{
     NSLog(@"locator destroyed");
     
+    [_kalmanFilterBot stop];
     //dispatch_suspend(_queue);
     
     //dispatch_cancel(_queue);
