@@ -841,7 +841,11 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                             majorArea] floor] block] mall] identifier];
     YTLocalCharge *tmpCharge = [[YTLocalCharge alloc]initWithMallID:mallID];
     
-    charge = [YTChargeStandard chargeStandardForTime:hours p:(int)tmpCharge.P  k:(int)tmpCharge.K  a:(int)tmpCharge.A  maxMoney:(int)tmpCharge.Max];
+    if (hours > tmpCharge.freeTime) {
+        charge = [YTChargeStandard chargeStandardForTime:hours p:(int)tmpCharge.P  k:(int)tmpCharge.K  a:(int)tmpCharge.A  maxMoney:(int)tmpCharge.Max];
+    }else{
+        charge = 0;
+    }
     return [NSString stringWithFormat:@"%d 元",charge];
 }
 
