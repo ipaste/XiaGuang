@@ -1450,6 +1450,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
         if (_bluetoothOn) {
             [_beaconManager startRangingBeacons];
+            _beaconManager.delegate = self;
             if(_userMinorArea != nil){
                 if(_blurMenuShown){
                     [_menu hide];
