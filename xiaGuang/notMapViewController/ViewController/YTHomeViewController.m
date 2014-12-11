@@ -136,6 +136,7 @@
         case 0:
         {
             controller = [[YTMallViewController alloc]init];
+            [AVAnalytics event:@"商城"];
         }
             break;
         case 1:
@@ -143,6 +144,7 @@
             
             controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            [AVAnalytics event:@"停车"];
             if (controller == nil) return;
             [self presentViewController:controller animated:YES completion:^{
                 
@@ -152,7 +154,11 @@
         case 2:
         {
             controller = [[YTSettingViewController alloc]init];
+
             [(YTSettingViewController *)controller setIsLatest:_latest];
+
+            [AVAnalytics event:@"设置"];
+
         }
             break;
         case 3:
@@ -160,7 +166,7 @@
             if (_mapViewController == nil) {
                 _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
             }
-            
+            [AVAnalytics event:@"导航"];
             _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:_mapViewController animated:YES completion:nil];
         }

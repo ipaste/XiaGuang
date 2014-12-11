@@ -158,6 +158,7 @@
 }
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
+    
     self.hidden = NO;
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];

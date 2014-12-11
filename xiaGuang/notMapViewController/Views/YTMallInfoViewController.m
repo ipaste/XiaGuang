@@ -55,6 +55,12 @@
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
+    [AVAnalytics beginLogPageView:@"mallInfoViewController"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [AVAnalytics endLogPageView:@"mallInfoViewController"];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -295,6 +301,7 @@
 }
 
 -(void)showMallPosition:(UIButton *)sender{
+    [AVAnalytics event:@"showMallmap"];
     if (_posistionVC){
         [self.navigationController pushViewController:_posistionVC animated:YES];
     }

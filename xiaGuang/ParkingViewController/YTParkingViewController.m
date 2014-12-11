@@ -69,13 +69,30 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _initializationComplete = NO;
         _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
-        _beaconManager = [YTBeaconManager sharedBeaconManager];
-        _beaconManager.delegate = self;
-        [_beaconManager startRangingBeacons];
+
         _shownUser = NO;
         
     }
     return self;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    _beaconManager = [YTBeaconManager sharedBeaconManager];
+    _beaconManager.delegate = self;
+    [_beaconManager startRangingBeacons];
+    [super viewDidAppear:animated];
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [AVAnalytics beginLogPageView:@"parkingViewController"];
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [AVAnalytics endLogPageView:@"parkingViewController"];
 }
 
 -(void)viewDidLoad{

@@ -22,6 +22,7 @@
     int _inMotion;
     
     NSOperationQueue *_transitionQueue;
+    NSTimer *_timer;
 }
 
 - (void)detectMotion;
@@ -38,7 +39,7 @@
         _stepCounter = [[YTNaiveStepDetector alloc] init];
         _stepCounter.delegate = self;
         
-        [NSTimer scheduledTimerWithTimeInterval:0.5
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                          target:self
                                        selector:@selector(detectMotion)
                                        userInfo:nil
@@ -63,7 +64,10 @@
 }
 
 - (void)stop {
+    
+    [_timer invalidate];
     [_stepCounter stop];
+    
 }
 
 - (void)detectStep {
@@ -83,15 +87,17 @@
     if (_godNumber >= _threshold) {
         if (!_inMotion) {
             _inMotion = YES;
+            __weak YTMotionDetector *pt = self;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate inMotionWithYTMotionDetector:self];
+                [_delegate inMotionWithYTMotionDetector:pt];
             });
         }
     } else {
         if (_inMotion) {
            _inMotion = NO;
+            __weak YTMotionDetector *pt = self;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate atRestWithYTMotionDetector:self];
+                [_delegate atRestWithYTMotionDetector:pt];
             });
         }
     }
