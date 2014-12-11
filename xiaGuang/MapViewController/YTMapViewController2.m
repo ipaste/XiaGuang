@@ -67,6 +67,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSString *_activeGroupName;
     BOOL _shownCallout;
     BOOL _viewDidAppear;
+    
+    BOOL _firstBlueToothRefresh;
     //NSArray *_beaconsPoi;
     
     
@@ -177,11 +179,32 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if(_type == YTMapViewControllerTypeNavigation){
+        [AVAnalytics beginLogPageView:@"mapViewController-navigation"];
+    }
+    else if(_type == YTMapViewControllerTypeMerchant){
+        [AVAnalytics beginLogPageView:@"mapViewController-merchant"];
+    }
+    else if(_type == YTMapViewControllerTypeFloor){
+        [AVAnalytics beginLogPageView:@"mapViewController-mall"];
+    }
+}
 
 -(void)viewWillDisappear:(BOOL)animated{
     _currentViewDisplay = NO;
     [self cancelCommonPoiState];
     _viewDidAppear = NO;
+    if(_type == YTMapViewControllerTypeNavigation){
+        [AVAnalytics endLogPageView:@"mapViewController-navigation"];
+    }
+    else if(_type == YTMapViewControllerTypeMerchant){
+        [AVAnalytics endLogPageView:@"mapViewController-merchant"];
+    }
+    else if(_type == YTMapViewControllerTypeFloor){
+        [AVAnalytics endLogPageView:@"mapViewController-mall"];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -227,7 +250,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     _currentViewDisplay = YES;
+    
+    _firstBlueToothRefresh = YES;
     [_bluetoothManager refreshBluetoothState];
+    
     if (_type == YTMapViewControllerTypeMerchant) {
         
         [_mapView setCenterCoordinate:[_merchantLocation coordinate] animated:NO];
@@ -1149,6 +1175,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //if same floor
     if([[[_curDisplayedMajorArea floor] identifier] isEqualToString:[[[_userMinorArea majorArea] floor] identifier]]){
         [_mapView setCenterCoordinate:_userCoordintate animated:YES];
+        [AVAnalytics event:@"sameFloorMoveToUser"];
         
     }
     //different floor
@@ -1157,6 +1184,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:NO];
         [_switchFloorView promptFloorChange:[[_userMinorArea majorArea] floor]];
+        [AVAnalytics event:@"differentFloorMoveToUser"];
     }
     
 }
@@ -1172,10 +1200,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)navigatingToPoiSourceClicked:(id<YTPoiSource>)merchantLocation{
     _navigationView.hidden = NO;
     NSString *message = nil;
+    [AVAnalytics event:@"开始导航" label:[merchantLocation name]];
     if (!_bluetoothOn) {
         message = @"蓝牙尚未打开";
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:message cancelButtonTitle:@"知道了"]show];
+        [AVAnalytics event:@"蓝牙未打开时导航"];
         return;
+    }
+    else{
+        [AVAnalytics event:@"蓝牙已经打开时导航"];
     }
     if(_userMinorArea == nil){
         
@@ -1436,6 +1469,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
     
+    if(_currentViewDisplay && _firstBlueToothRefresh){
+        NSDictionary *userInfo = notification.userInfo;
+        BOOL on = [userInfo[@"isOpen"] boolValue];
+        if(on){
+            [AVAnalytics event:@"进入mapview时蓝牙开启"];
+        }
+        else{
+            [AVAnalytics event:@"进入mapview时蓝牙关闭"];
+        }
+        
+    }
+    
     if([_mapView currentState] != YTMapViewDetailStateNormal){
         if([_mapView currentState] == YTMapViewDetailStateNavigating){
             [_navigationView stopNavigationMode];
@@ -1449,6 +1494,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         NSDictionary *userInfo = notification.userInfo;
         _bluetoothOn = [userInfo[@"isOpen"] boolValue];
         if (_bluetoothOn) {
+            if(!_firstBlueToothRefresh){
+                [AVAnalytics event:@"开启蓝牙动作"];
+            }
             [_beaconManager startRangingBeacons];
             _beaconManager.delegate = self;
             if(_userMinorArea != nil){
@@ -1464,6 +1512,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
         }else{
             
+            if(!_firstBlueToothRefresh){
+                [AVAnalytics event:@"关闭蓝牙动作"];
+            }
             
             _userMinorArea = nil;
             [_mapView removeUserLocation];
@@ -1475,6 +1526,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
         }
     }
+    
+    _firstBlueToothRefresh = NO;
 }
 
 - (NSString *)messageFromButtonType:(YTMessageType)type{

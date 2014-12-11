@@ -83,6 +83,18 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [super viewDidAppear:animated];
 }
 
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [AVAnalytics beginLogPageView:@"parkingViewController"];
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [AVAnalytics endLogPageView:@"parkingViewController"];
+}
+
 -(void)viewDidLoad{
     
     UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
