@@ -178,6 +178,8 @@
                 cell.textLabel.text = @"版本更新";
                 if (!self.isLatest) {
                     //跳转AppStore
+                    NSString *url = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d",922405498];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
                 }else{
                     return;
                 }
