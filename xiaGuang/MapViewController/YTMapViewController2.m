@@ -470,7 +470,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _searchView = [[YTSearchView alloc]initWithMall:_targetMall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView addInView:self.view show:NO];
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"]];
+    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
 }
 -(void)createCurLocationButton{
     _moveCurrentButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];

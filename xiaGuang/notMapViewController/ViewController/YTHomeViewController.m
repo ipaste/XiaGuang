@@ -15,6 +15,7 @@
     YTBluetoothManager *_bluetoothManager;
     
     BOOL _blueToothOn;
+    BOOL _latest;
     
     YTBeaconManager *_beaconManager;
     
@@ -44,6 +45,16 @@
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *url = [[NSURL alloc]initWithString:@"http://itunes.apple.com/cn/lookup?id=922405498"];
+        NSData *jsonData = [NSData dataWithContentsOfURL:url];
+        NSString *cloudVersion = [[[[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil] valueForKey:@"results"] valueForKey:@"version"] firstObject];
+        NSString *localVersion = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleShortVersionString"];
+        if (cloudVersion != localVersion){
+            _latest = false;
+        }
+    });
     
 }
 
@@ -143,8 +154,11 @@
         case 2:
         {
             controller = [[YTSettingViewController alloc]init];
-            [(YTSettingViewController *)controller setIsLatest:YES];
+
+            [(YTSettingViewController *)controller setIsLatest:_latest];
+
             [AVAnalytics event:@"设置"];
+
         }
             break;
         case 3:

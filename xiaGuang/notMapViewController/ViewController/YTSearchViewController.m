@@ -33,7 +33,7 @@
     self.navigationItem.title = @"虾逛";
     self.navigationItem.titleView = [[UIView alloc]init];
     self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];

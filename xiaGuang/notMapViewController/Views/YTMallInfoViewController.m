@@ -41,7 +41,7 @@
     _scrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"]];
+    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
     [self.view addSubview:_scrollView];

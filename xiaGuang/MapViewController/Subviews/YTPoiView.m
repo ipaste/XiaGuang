@@ -9,7 +9,7 @@
 #import "YTPoiView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTPoiView(){
-    UIWindow *_window;
+   __weak UIWindow *_window;
     
     JWBlurView *_background;
     
