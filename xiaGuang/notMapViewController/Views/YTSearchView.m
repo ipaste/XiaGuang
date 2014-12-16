@@ -8,6 +8,7 @@
 
 #import "YTSearchView.h"
 #import "YTSearchDetailsView.h"
+#import <AVOSCloud/AVOSCloud.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTSearchView()<UISearchBarDelegate,YTSearchDetailsDelegate>{
     id<YTMall> _mall;
@@ -208,6 +209,9 @@
 
 
 -(void)selectSearchResultsWithUniIds:(NSArray *)uniIds{
+    
+    [AVAnalytics event:@"选中某搜索结果"];
+    
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
