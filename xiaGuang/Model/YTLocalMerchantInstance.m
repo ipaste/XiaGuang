@@ -28,6 +28,8 @@
     id<YTFloor> _tmpFloor;
     id<YTMajorArea> _tmpMajorArea;
     id<YTMinorArea> _tmpMinorArea;
+    
+    NSMutableArray *_tmpDoors;
 }
 
 
@@ -40,9 +42,10 @@
 @synthesize displayLevel;
 @synthesize inMinorArea;
 @synthesize address;
-@synthesize lableHeight;
-@synthesize lableWidth;
 @synthesize name;
+@synthesize uniId;
+@synthesize iconName;
+@synthesize doors;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -68,6 +71,7 @@
             _tmpLableHeight = [findResultSet doubleForColumn:@"labelHeight"];
             _tmpLableWidth = [findResultSet doubleForColumn:@"labelWidth"];
             _tmpUniId = [findResultSet stringForColumn:@"uniId"];
+            
         }
     }
     return self;
@@ -209,5 +213,25 @@
 -(YTPoi *)producePoi{
     YTMerchantPoi *result = [[YTMerchantPoi alloc]  initWithMerchantInstance:self];
     return result;
+}
+
+-(NSArray *)doors{
+    if(_tmpDoors == nil){
+        
+        _tmpDoors = [NSMutableArray new];
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        if([db open]){
+            NSString *query = @"select d.doorId,d.latitude,d.longtitude from Door as d join MerchantInstanceDoorLinkTable as mt on d.doorId = mt.doorId where mt.merchantInstanceId = ?";
+            FMResultSet *result = [db executeQuery:query,_tmpMerchantInstanceId];
+            
+            while([result next]){
+                
+                YTLocalDoor *tmpDoor = [[YTLocalDoor alloc] initWithDBResultSet:result];
+                [_tmpDoors addObject:tmpDoor];
+            }
+            
+        }
+    }
+    return _tmpDoors;
 }
 @end

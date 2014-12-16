@@ -126,6 +126,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
             _recordMall = [[[_majorArea floor] block] mall];
+            
+            NSArray *doors = [merchantLocation doors];
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -867,6 +869,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)selectToMerchantInstance:(id<YTMerchantLocation>)merchantInstance{
+    
+    
+    
     id<YTMajorArea> tmpMajorArea = [merchantInstance majorArea];
     
     if(_selectedPoi != nil){
