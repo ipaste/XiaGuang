@@ -221,8 +221,8 @@
         _tmpDoors = [NSMutableArray new];
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
-            NSString *query = @"select d.doorId,d.latitude,d.longtitude from Door as d join MerchantInstanceDoorLinkTable as mt on d.doorId = mt.doorId where mt.merchantInstanceId = ?";
-            FMResultSet *result = [db executeQuery:query,_tmpMerchantInstanceId];
+            NSString *query = @"select * from Door where uniId = ?";
+            FMResultSet *result = [db executeQuery:query,_tmpUniId];
             
             while([result next]){
                 
