@@ -72,6 +72,7 @@
 		AE24A8DA1A08A6D400A0CE91 /* YITIANL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8CC1A08A6D400A0CE91 /* YITIANL3.mbtiles */; };
 		AE33E0891A27184100CDBF2A /* KKmallL4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */; };
 		AE33E08C1A27219600CDBF2A /* YTStaticResourceDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */; };
+		AE630BDA1A3EC4A100A562AA /* YTLocalDoor.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */; };
 		AE859E171A0CB9A10044074F /* YTLocalEscalator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E161A0CB9A10044074F /* YTLocalEscalator.m */; };
 		AE859E1A1A0CBA880044074F /* YTEscalatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E191A0CBA880044074F /* YTEscalatorPoi.m */; };
 		AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */; };
@@ -321,6 +322,9 @@
 		AE33E0881A27184100CDBF2A /* KKmallL4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = KKmallL4.mbtiles; sourceTree = "<group>"; };
 		AE33E08A1A27219600CDBF2A /* YTStaticResourceDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStaticResourceDownloader.h; sourceTree = "<group>"; };
 		AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStaticResourceDownloader.m; sourceTree = "<group>"; };
+		AE630BD71A3EC43800A562AA /* YTDoor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTDoor.h; sourceTree = "<group>"; };
+		AE630BD81A3EC4A100A562AA /* YTLocalDoor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalDoor.h; sourceTree = "<group>"; };
+		AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalDoor.m; sourceTree = "<group>"; };
 		AE859E141A0CB9560044074F /* YTEscalator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTEscalator.h; sourceTree = "<group>"; };
 		AE859E151A0CB9A10044074F /* YTLocalEscalator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalEscalator.h; sourceTree = "<group>"; };
 		AE859E161A0CB9A10044074F /* YTLocalEscalator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalEscalator.m; sourceTree = "<group>"; };
@@ -808,6 +812,9 @@
 				AE859E1E1A0CC0510044074F /* YTServiceStation.h */,
 				AE859E1F1A0CC07E0044074F /* YTLocalServiceStation.h */,
 				AE859E201A0CC07E0044074F /* YTLocalServiceStation.m */,
+				AE630BD71A3EC43800A562AA /* YTDoor.h */,
+				AE630BD81A3EC4A100A562AA /* YTLocalDoor.h */,
+				AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1475,6 +1482,7 @@
 				78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */,
 				D94C28451A0263EE009FF2F3 /* YTMallMerchantBundle.m in Sources */,
 				D94C28341A0263CF009FF2F3 /* MJRefreshConst.m in Sources */,
+				AE630BDA1A3EC4A100A562AA /* YTLocalDoor.m in Sources */,
 				D94C28041A0263C6009FF2F3 /* YTResultsViewController.m in Sources */,
 				D94C28081A0263C6009FF2F3 /* YTCategoryViewCell.m in Sources */,
 				AE24A89C1A02432000A0CE91 /* YTCloudFloor.m in Sources */,
