@@ -21,7 +21,6 @@
     if(self){
             FMDatabase *db = [YTStaticResourceManager sharedManager].db;
             [db open];
-        
             FMResultSet *result = [db executeQuery:@"select * from ChargeEngine where mallId = ?",mallID];
             [result next];
             self.Max = [result intForColumn:@"max"];

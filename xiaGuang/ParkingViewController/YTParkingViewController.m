@@ -847,6 +847,13 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(NSString *)chargeWithTime:(NSTimeInterval)time{
     int hours = 0;
     int charge = 0;
+    int minute = (int)time % 3600 / 60;
+    BOOL free = NO;
+    
+    NSString *mallID = [[[[[_tmpMarker
+                            majorArea] floor] block] mall] identifier];
+    YTLocalCharge *tmpCharge = [[YTLocalCharge alloc]initWithMallID:mallID];
+    
     hours = (int)time / 3600;
     if (hours == 0) {
         hours = 1;
@@ -854,11 +861,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         int tmpHours = (int)time % 3600 / 60 >= 0 ? 1:0;
         hours += tmpHours;
     }
-    NSString *mallID = [[[[[_tmpMarker
-                            majorArea] floor] block] mall] identifier];
-    YTLocalCharge *tmpCharge = [[YTLocalCharge alloc]initWithMallID:mallID];
     
-    if (hours > tmpCharge.freeTime) {
+    if (minute > tmpCharge.freeTime) {
         charge = [YTChargeStandard chargeStandardForTime:hours p:(int)tmpCharge.P  k:(int)tmpCharge.K  a:(int)tmpCharge.A  maxMoney:(int)tmpCharge.Max];
     }else{
         charge = 0;
@@ -896,8 +900,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)refreshLocatorWithMapView:(RMMapView *)aMapView
                        majorArea:(id<YTMajorArea>)aMajorArea{
-    
-    
     
     if(_locator == nil){
         _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
