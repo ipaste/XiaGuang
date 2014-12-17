@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _majorArea = [merchantLocation majorArea];
             _recordMall = [[[_majorArea floor] block] mall];
             
-            NSArray *doors = [merchantLocation doors];
+        
         }
         _type = YTMapViewControllerTypeMerchant;
     }
