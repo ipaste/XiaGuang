@@ -91,6 +91,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSMutableArray *_allElvatorAndEscalator;
     
     YTBeaconBasedLocator *_locator;
+    NSMutableDictionary *_mapGraphDictionary;
     
     CLLocationCoordinate2D _userCoordintate;
     
@@ -156,6 +157,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _isFirstEnter = YES;
     _curDisplayedMajorArea = _majorArea;
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
+    
+    _mapGraphDictionary = [[NSMutableDictionary alloc] init];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
     
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
@@ -177,6 +180,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
+    
+    
     
     
 }
@@ -1626,6 +1631,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_beaconManager removeListener:_locator];
     
+    
+    YTMapGraph *tmpGraph;
+    if([_mapGraphDictionary objectForKey:aMajorArea.identifier] != nil){
+        tmpGraph = [_mapGraphDictionary objectForKey:aMajorArea];
+    }
+    else{
+        tmpGraph = [[YTMapGraph alloc] initWithMajorArea:aMajorArea mapView:aMapView];
+        [_mapGraphDictionary setObject:tmpGraph forKey:aMajorArea.identifier];
+    }
+    
+    //todo:把刚创建好的tmpGraph传给_locator
     _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
     
     [_locator start];
