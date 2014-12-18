@@ -13,6 +13,7 @@
     NSString *_tmpMallId;
     NSString *_tmpMerchantInstanceName;
     NSString *_tmpMajorAreaId;
+    NSString *_tmpUniId;
     double _tmpLatitude;
     double _tmpLongtitude;
     NSString *_tmpMinorAreaId;
@@ -27,6 +28,8 @@
     id<YTFloor> _tmpFloor;
     id<YTMajorArea> _tmpMajorArea;
     id<YTMinorArea> _tmpMinorArea;
+    
+    NSMutableArray *_tmpDoors;
 }
 
 
@@ -39,9 +42,10 @@
 @synthesize displayLevel;
 @synthesize inMinorArea;
 @synthesize address;
-@synthesize lableHeight;
-@synthesize lableWidth;
 @synthesize name;
+@synthesize uniId;
+@synthesize iconName;
+@synthesize doors;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -66,6 +70,8 @@
             _tmpDisplayLevel = [findResultSet doubleForColumn:@"displayLevel"];
             _tmpLableHeight = [findResultSet doubleForColumn:@"labelHeight"];
             _tmpLableWidth = [findResultSet doubleForColumn:@"labelWidth"];
+            _tmpUniId = [findResultSet stringForColumn:@"uniId"];
+            
         }
     }
     return self;
@@ -166,8 +172,8 @@
 }
 
 -(void)getCloudThumbNailWithCallBack:(void (^)(UIImage *, NSError *))callback{
-        AVQuery *query = [[AVQuery alloc] initWithClassName:@"Merchant"];
-        [query whereKey:@"localDBId" equalTo:_tmpMerchantInstanceId];
+        AVQuery *query = [[AVQuery alloc] initWithClassName:CLOUD_MERCHANT_CLASS_NAME];
+        [query whereKey:@"uniId" equalTo:_tmpUniId];
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         query.maxCacheAge = 24 * 3600;
     
@@ -188,8 +194,8 @@
 }
 
 -(void)getCloudMerchantTypeWithCallBack:(void (^)(NSArray *result,NSError *error))callback{
-    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-    [query whereKey:@"localDBId" equalTo:_tmpMerchantInstanceId];
+    AVQuery *query = [AVQuery queryWithClassName:CLOUD_MERCHANT_CLASS_NAME];
+    [query whereKey:@"uniId" equalTo:_tmpUniId];
     [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         if (object == nil || error) {
             callback(nil,error);
@@ -200,8 +206,32 @@
     }];
 }
 
+-(NSString *)uniId{
+    return _tmpUniId;
+}
+
 -(YTPoi *)producePoi{
     YTMerchantPoi *result = [[YTMerchantPoi alloc]  initWithMerchantInstance:self];
     return result;
+}
+
+-(NSArray *)doors{
+    if(_tmpDoors == nil){
+        
+        _tmpDoors = [NSMutableArray new];
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        if([db open]){
+            NSString *query = @"select * from Door where uniId = ?";
+            FMResultSet *result = [db executeQuery:query,_tmpUniId];
+            
+            while([result next]){
+                
+                YTLocalDoor *tmpDoor = [[YTLocalDoor alloc] initWithDBResultSet:result];
+                [_tmpDoors addObject:tmpDoor];
+            }
+            
+        }
+    }
+    return _tmpDoors;
 }
 @end

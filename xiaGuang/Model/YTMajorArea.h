@@ -20,6 +20,7 @@
 @property (nonatomic,weak) NSArray *exits;
 @property (nonatomic,weak) NSArray *escalators;
 @property (nonatomic,weak) NSArray *serviceStations;
+@property (nonatomic,weak) NSString *uniId;
 @property (nonatomic) BOOL isParking;
 @property (nonatomic) double worldToMapRatio;
 

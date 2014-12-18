@@ -19,8 +19,10 @@
 }
 
 -(void)updateWithCurrentUserMinorArea:(id<YTMinorArea>)userMinor
+                       distanceToTarget:(double)distance
                 andDisplayedMajorArea:(id<YTMajorArea>)curDisplayMajorArea{
     
+    self.distanceToTarget = distance;
     self.userMinorArea = userMinor;
     self.displayMajorArea = curDisplayMajorArea;
     
@@ -35,6 +37,14 @@
         instrunction.mainInstruction = @"请行至目标";
         instrunction.rightInstruction = @"您与终点在同一楼层";
         
+        if(self.distanceToTarget < 15)
+        {
+            instrunction = [[YTNavigationInstruction alloc] init];
+            instrunction.type = YTNavigationInstructionApproachingDestination;
+            instrunction.mainInstruction = @"你已经到达终点";
+            instrunction.rightInstruction = @"您与终点在同一楼层";
+        }
+        
     }
     else{
         instrunction = [[YTNavigationInstruction alloc] init];
@@ -45,13 +55,7 @@
         
     }
     
-    if([[[_targetPoiSource inMinorArea] identifier] isEqualToString:[_userMinorArea identifier]])
-    {
-        instrunction = [[YTNavigationInstruction alloc] init];
-        instrunction.type = YTNavigationInstructionApproachingDestination;
-        instrunction.mainInstruction = @"你已经到达终点";
-        instrunction.rightInstruction = @"您与终点在同一楼层";
-    }
+    
     
     return instrunction;
 }

@@ -33,7 +33,7 @@
     self.navigationItem.title = @"虾逛";
     self.navigationItem.titleView = [[UIView alloc]init];
     self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -141,7 +141,6 @@
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     YTCategory *category  = _categorys[indexPath.row];
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResutsKey:category.text];
     resultsVC.isSearch = NO;
@@ -150,14 +149,13 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
--(void)selectedMerchantName:(NSString *)name{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResutsKey:name];
+
+-(void)selectedUniIds:(NSArray *)uniIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:uniIds];
     resultsVC.isSearch = YES;
     resultsVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
-
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 2) {

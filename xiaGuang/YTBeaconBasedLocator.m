@@ -47,7 +47,7 @@
         _mapView = mapView;
         
         _beaconManager = beaconManager;
-        [_beaconManager addListener:self];
+        //[_beaconManager addListener:self];
         
         _majorArea = majorArea;
         
@@ -143,7 +143,16 @@
             
             FMResultSet *r2 = [db executeQuery:[NSString stringWithFormat:@"select * from MinorArea where minorAreaId=%d", minorArea]];
             
+            
             if ([r2 next]) {
+            
+                NSString *majorAreaId = [r2 stringForColumn:@"majorAreaId"];
+                
+                if(![majorAreaId isEqualToString:_majorArea.identifier]){
+                    
+                    continue;
+                    
+                }
                 
                 double lat = [r2 doubleForColumn:@"latitude"];
                 double lon = [r2 doubleForColumn:@"longtitude"];
@@ -174,7 +183,7 @@
                         
                         double distDiff = distData.distance - oldDist.distance;
                         
-                        double ratio = 2; // adjust this value
+                        double ratio = 4; // adjust this value
                         
                         double dist = MAX(0.01, oldDist.distance + ratio * distDiff);
                         
@@ -183,6 +192,7 @@
                                                                         distance:dist];
                     }
                     
+                    //NSLog(@"特殊 major:%@ minor:%@ adjusted distance:%f",beacon.major,beacon.minor,adjustedDist.distance);
                     [distances addObject:adjustedDist];
                     
                 } else {
@@ -232,6 +242,7 @@
 -(void)dealloc{
     NSLog(@"locator destroyed");
     
+    [_kalmanFilterBot stop];
     //dispatch_suspend(_queue);
     
     //dispatch_cancel(_queue);

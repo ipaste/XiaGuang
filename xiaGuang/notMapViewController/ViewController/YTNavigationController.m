@@ -58,7 +58,7 @@
         }
     }else{
         navigationController.navigationBar.clipsToBounds = NO;
-        [navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
+        [navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
     }
     
 }

@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>version</key>
-	<integer>2</integer>
+	<integer>5</integer>
 	<key>db</key>
-	<integer>6</integer>
+	<integer>7</integer>
 	<key>hac1</key>
 	<integer>0</integer>
 	<key>hac2</key>
@@ -17,7 +17,7 @@
 	<key>haianchengparking2</key>
 	<integer>0</integer>
 	<key>huanlehaian</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>huanlehaianpark</key>
 	<integer>0</integer>
 	<key>YITIANB1</key>
@@ -31,35 +31,35 @@
 	<key>YITIANL3</key>
 	<integer>0</integer>
 	<key>kkmallB1</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>kkmallL1</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>kkmallL2</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>kkmallL3</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>KKmallL4</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>cocoparkB1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>cocoparkL1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>cocoparkL2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>cocoparkL3</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>JingJiBaiNaB1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>JingJiBainaB1halfpark</key>
 	<integer>0</integer>
 	<key>JingJiBainaB1park</key>
 	<integer>0</integer>
 	<key>JingJiBaiNaL1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>JingJiBaiNaL2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>JingJiBaiNaL3</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>kkmallB1Jpark</key>
 	<integer>0</integer>
 	<key>kkmallL2Jpark</key>
@@ -73,12 +73,14 @@
 	<key>kkmallpark-4</key>
 	<integer>0</integer>
 	<key>haianchengeastL1</key>
-	<integer>0</integer>
-	<key>haianchengeastL2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>haianchengeastL2</key>
 	<integer>0</integer>
 	<key>haianchengeastpark-2</key>
 	<integer>0</integer>
+	<key>haianchengeastpark-1</key>
+	<integer>0</integer>
+	<key>YITIANpark-3</key>
+	<string>0</string>
 </dict>
 </plist>

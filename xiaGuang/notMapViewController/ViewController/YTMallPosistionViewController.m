@@ -20,8 +20,7 @@
     if (self) {
         _mapImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
         _mapImageView.image = image;
-        
-        _mapImageView.contentMode =UIViewContentModeScaleAspectFill;
+
         [self.view addSubview:_mapImageView];
         
         self.navigationItem.title = @"商圈位置";
@@ -58,6 +57,9 @@
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_detailsView.frame) / 2, CGRectGetWidth(self.view.frame), 0.5)];
         line.backgroundColor = [UIColor colorWithString:@"dcdcdc"];
         [_detailsView addSubview:line];
+        
+        self.view.clipsToBounds = YES;
+
     }
     return self;
 }
@@ -66,8 +68,7 @@
     CGRect frame = _detailsView.frame;
     frame.origin.y = CGRectGetHeight(self.view.frame) - CGRectGetHeight(frame) - topHeight;
     _detailsView.frame = frame;
-    
-    
+    _mapImageView.center = CGPointMake(self.view.center.x, _mapImageView.center.y);
 }
 
 -(void)dealloc{

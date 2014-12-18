@@ -26,7 +26,7 @@
 @synthesize blocks;
 @synthesize merchants;
 
--(id) initWithAVObject:(AVObject *)object{
+-(id)initWithAVObject:(AVObject *)object{
     
     self = [super init];
     if(self){
@@ -47,7 +47,6 @@
 
 -(NSArray *)blocks{
     if(_blocks == nil){
-        
         _blocks = [[NSMutableArray alloc] init];
         
         AVQuery *query = [[AVQuery alloc] initWithClassName:@"Block"];
@@ -94,14 +93,15 @@
         callback(mallImage,nil);
     }];
 }
+
 -(UIImage *)logo{
     AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
     return [UIImage imageWithData:[file getData]];
 }
+
 -(NSArray *)merchants{
     if(_merchants == nil){
         _merchants = [[NSMutableArray alloc] init];
-        
         AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANT_CLASS_NAME];
         query.maxCacheAge = 24 * 3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
@@ -116,29 +116,6 @@
     }
     
     return [_merchants copy];
-}
-//-(NSArray *)merchantLocations{
-//    if(_merchantLocs == nil){
-//        
-//        _merchantLocs = [[NSMutableArray alloc] init];
-//        
-//        AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANTLOCATION_CLASS_NAME];
-//        query.maxCacheAge = 24 * 3600;
-//        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-//        
-//        [query whereKey:MERCHANTLOCATION_CLASS_MALL_KEY equalTo:_internalObject];
-//        [query includeKey:@"mall,majorArea,floor,inMinorArea"];
-//        NSArray *result = [query findObjects];
-//        for(AVObject *tempAVObject in result){
-//            YTCloudMerchant *merchat = [[YTCloudMerchant alloc]initWithAVObject:tempAVObject];
-//            [_merchantLocs addObject:merchat];
-//        }
-//    }
-//    
-//    return _merchantLocs;
-//}
--(CLLocationCoordinate2D)coord{
-    return CLLocationCoordinate2DMake([_internalObject[MALL_CLASS_LATITUDE_KEY] floatValue], [_internalObject[MALL_CLASS_LONGITUDE_KEY] floatValue]);
 }
 
 -(UIImage *)infoBackground{
@@ -274,23 +251,21 @@
     }];
 
 }
+
 -(NSString *)localDB{
-    if (_internalObject[@"localDBId"]) {
-        return nil;
-    }
-    return @"";
+    return _internalObject[@"localDBId"];
 }
+
 -(YTLocalMall *)getLocalCopy{
-    
     if(_tmpLocalMall == nil){
-        NSString *localDBId = _internalObject[@"localDBId"];
-        if (localDBId == nil || localDBId.length <= 0) {
+        NSString *uniId = _internalObject[@"localDBId"];
+        if (uniId == nil || uniId.length <= 0) {
             return nil;
         }
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
-            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",localDBId];
+            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",uniId];
             [result next];
             
             _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
@@ -301,6 +276,9 @@
     
 }
 
+-(CGFloat)offset{
+    return [self getLocalCopy].offset;
+}
 -(AVObject *)getCloudObj{
     return _internalObject;
 }

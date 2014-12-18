@@ -15,6 +15,7 @@
     YTBluetoothManager *_bluetoothManager;
     
     BOOL _blueToothOn;
+    BOOL _latest;
     
     YTBeaconManager *_beaconManager;
     
@@ -27,11 +28,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, PANEL_SIZE, PANEL_SIZE) items:@[@"商城",@"停车",@"设置",@"地图"]];
+    _panel = [[YTPanel alloc]initWithFrame:CGRectMake(0, 0, PANEL_SIZE, PANEL_SIZE) items:@[@"商圈",@"停车",@"设置",@"地图"]];
     [_panel setItemsTheImage:@[[UIImage imageNamed:@"home_ico_mall_pr"],[UIImage imageNamed:@"home_ico_parking_pr"],[UIImage imageNamed:@"home_ico_set_pr"],[UIImage imageNamed:@"home_ico_map_pr"]] highlightImages:@[[UIImage imageNamed:@"home_ico_mall_un"],[UIImage imageNamed:@"home_ico_parking_un"],[UIImage imageNamed:@"home_ico_set_un"],[UIImage imageNamed:@"home_ico_map_un"]]];
     _panel.delegate = self;
     [self.view addSubview:_panel];
-    
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
@@ -43,15 +43,29 @@
     
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
-    if([_beaconManager currentClosest] != nil){
-        _recordMinorArea = [self getMinorArea:[_beaconManager currentClosest]];
-    }
     _beaconManager.delegate = self;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *url = [[NSURL alloc]initWithString:@"http://itunes.apple.com/cn/lookup?id=922405498"];
+        NSData *jsonData = [NSData dataWithContentsOfURL:url];
+        if(jsonData != nil){
+            NSString *cloudVersion = [[[[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil] valueForKey:@"results"] valueForKey:@"version"] firstObject];
+            NSString *localVersion = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleShortVersionString"];
+            if (cloudVersion != localVersion){
+                _latest = false;
+            }
+        }
+    });
     
 }
 
--(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon{
-    _recordMinorArea = [self getMinorArea:beacon];
+-(void)rangedBeacons:(NSArray *)beacons{
+    if(beacons.count > 0){
+        _recordMinorArea = [self getMinorArea:beacons[0]];
+    }
+    else{
+        _recordMinorArea = nil;
+    }
 }
 
 -(void)noBeaconsFound{
@@ -123,6 +137,7 @@
         case 0:
         {
             controller = [[YTMallViewController alloc]init];
+            [AVAnalytics event:@"商城"];
         }
             break;
         case 1:
@@ -130,6 +145,7 @@
             
             controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
             controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            [AVAnalytics event:@"停车"];
             if (controller == nil) return;
             [self presentViewController:controller animated:YES completion:^{
                 
@@ -139,7 +155,11 @@
         case 2:
         {
             controller = [[YTSettingViewController alloc]init];
-            [(YTSettingViewController *)controller setIsLatest:YES];
+
+            [(YTSettingViewController *)controller setIsLatest:_latest];
+
+            [AVAnalytics event:@"设置"];
+
         }
             break;
         case 3:
@@ -147,7 +167,7 @@
             if (_mapViewController == nil) {
                 _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
             }
-            
+            [AVAnalytics event:@"导航"];
             _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             [self presentViewController:_mapViewController animated:YES completion:nil];
         }

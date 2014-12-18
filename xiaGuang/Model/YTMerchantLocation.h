@@ -13,6 +13,7 @@
 #import "YTMinorArea.h"
 #import <CoreLocation/CoreLocation.h>
 #import "YTPoiSource.h"
+#import "YTDoor.h"
 @protocol YTMerchantLocation <YTPoiSource>
 
 @property (weak,nonatomic) NSString *identifier;
@@ -22,12 +23,11 @@
 @property (weak,nonatomic) id<YTMajorArea> majorArea;
 @property (weak,nonatomic) id<YTMall> mall;
 @property (nonatomic,assign) CLLocationCoordinate2D coordinate;
-@property (weak,nonatomic) NSNumber *displayLevel;
 @property (weak,nonatomic) id<YTMinorArea> inMinorArea;
+@property (weak,nonatomic) NSString  *uniId;
 
+@property (weak,nonatomic,readonly) NSArray *doors;
 
-@property (nonatomic) float lableWidth;
-@property (nonatomic) float lableHeight;
 
 -(void)getCloudThumbNailWithCallBack:(void (^)(UIImage *result,NSError *error))callback;
 

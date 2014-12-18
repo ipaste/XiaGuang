@@ -15,6 +15,6 @@
 @property (assign,nonatomic) NSInteger K;
 @property (assign,nonatomic) NSInteger P;
 @property (assign,nonatomic) NSInteger Max;
-
+@property (assign,nonatomic) NSInteger freeTime;
 -(id)initWithMallID:(NSString *)mallID;
 @end

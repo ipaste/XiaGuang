@@ -159,7 +159,7 @@
         switch (indexPath.row) {
             case 0:
             {
-                NSString *url = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d",922405498];
+                NSString *url = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d",922405498];
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
                  return;
             }
@@ -178,6 +178,8 @@
                 cell.textLabel.text = @"版本更新";
                 if (!self.isLatest) {
                     //跳转AppStore
+                    NSString *url = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d",922405498];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
                 }else{
                     return;
                 }
@@ -201,6 +203,7 @@
      [self.navigationController pushViewController:controller animated:YES];
     
 }
+
 
 -(void)dealloc{
     for (UITableViewCell *tmpCell in [_tableView visibleCells]) {

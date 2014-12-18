@@ -13,6 +13,7 @@
     NSInteger _tmpK;
     NSInteger _tmpA;
     NSInteger _tmpMax;
+    NSInteger _freeTime;
 }
 
 -(id)initWithMallID:(NSString *)mallID{
@@ -20,13 +21,13 @@
     if(self){
             FMDatabase *db = [YTStaticResourceManager sharedManager].db;
             [db open];
-        
             FMResultSet *result = [db executeQuery:@"select * from ChargeEngine where mallId = ?",mallID];
             [result next];
             self.Max = [result intForColumn:@"max"];
             self.A = [result intForColumn:@"a"];
             self.P = [result intForColumn:@"p"];
             self.K = [result intForColumn:@"k"];
+            self.freeTime = [result intForColumn:@"freeTime"];
     }
     return self;
     

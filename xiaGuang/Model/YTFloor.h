@@ -11,6 +11,7 @@
 @protocol YTFloor <NSObject>
 
 @property(weak,nonatomic)NSString *identifier;
+@property(weak,nonatomic)NSString *uniId;
 @property(weak,nonatomic)NSString *floorName;
 @property(weak,nonatomic)NSArray *majorAreas;
 @property(weak,nonatomic)id <YTBlock> block;

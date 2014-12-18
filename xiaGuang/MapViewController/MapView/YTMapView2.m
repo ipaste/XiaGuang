@@ -14,7 +14,7 @@
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
-    
+    CGFloat _offset;
 }
 
 #pragma mark init
@@ -54,11 +54,14 @@
     [_internalMapView setCenterCoordinate:coordinate animated:animated];
 }
 
+-(void)setMapOffset:(CGFloat)offset{
+    _offset = offset;
+}
+
 #pragma mark Map data manipulation
 -(void)displayMapNamed:(NSString *)mapName{
     
     [_internalMapView addAndDisplayTileSourceNamed:mapName];
-    
 }
 
 -(void)addPois:(NSArray *)pois{
@@ -71,7 +74,6 @@
         [annos addObject:tmpAnnotation];
         
     }
-    
     
     [_internalMapView addAnnotations:annos];
     
@@ -170,9 +172,9 @@
     
 }
 
--(void)superHighlightPoi:(YTPoi *)poi{
+-(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated{
     YTAnnotation *tmpAnnotation = [_annotationSource annotationForPoi:poi];
-    [tmpAnnotation superHighlight:YES];
+    [tmpAnnotation superHighlight:animated];
 }
 
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated{
@@ -182,6 +184,13 @@
     
 }
 
+-(void)setScore:(double)score
+forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
+{
+    YTMinorAreaAnnotation *minorAnno = [_annotationSource annotationForPoi:minorPoi];
+    RMMarker * layer = minorAnno.layer;
+    [layer writeScore:score];
+}
 
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated{
     for(YTPoi *tmpPoi in pois){
@@ -193,7 +202,7 @@
 -(void)showUserLocationAtCoordinate:(CLLocationCoordinate2D)coordinate{
     if(_userAnnotation == nil){
         _userAnnotation = [[YTUserAnnotation alloc] initWithMapView:_internalMapView andCoordinate:coordinate];
-        
+        [_userAnnotation setOffset:_offset];
         [_internalMapView addAnnotation:_userAnnotation];
     }
     else{
@@ -221,7 +230,7 @@
 #pragma mark RMMapViewDelegate methods
 -(void)doubleTapOnMap:(RMMapView *)map at:(CGPoint)point{
     CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
-    NSLog(@"lat:%f, long:%f",coord.latitude,coord.longitude);
+    
     [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
 
@@ -302,6 +311,13 @@
     float swLatitude = MIN(point1.latitude,point2.latitude);
     float swLongtitude = MIN(point1.longitude, point2.longitude);
     
+    
+    neLatitude = MIN(neLatitude+10, 90);
+    neLongtitude = MIN(neLongtitude+20, 180);
+    
+    swLatitude = MAX(swLatitude-10, -90);
+    swLongtitude = MAX(swLongtitude-20, -180);
+    
     CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(neLatitude, neLongtitude);
     CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(swLatitude, swLongtitude);
     
@@ -309,9 +325,18 @@
     
     [_internalMapView reloadTileSource:_internalMapView.tileSource];
     
+}
+
+-(double)canonicalDistanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
+                   toCoordinate2:(CLLocationCoordinate2D)coordinate2{
+    CGPoint point1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:coordinate1 mapView:_internalMapView];
     
+    CGPoint point2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:coordinate2 mapView:_internalMapView];
+    double xdiff = point1.x - point2.x;
+    double ydiff = point1.y - point2.y;
     
-    //[_mapView setZoom:_mapView.zoom animated:YES];
+    return sqrt(xdiff*xdiff+ydiff*ydiff);
+    
 }
 
 @end

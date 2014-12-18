@@ -39,9 +39,9 @@
     [super viewDidLoad];
     _scrollView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
     _scrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    _searchView = [[YTSearchView alloc]initWithMall:self.mall placeholder:@"商城/品牌" indent:NO];
+    _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"]];
+    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
     [self.view addSubview:_scrollView];
@@ -55,6 +55,12 @@
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
+    [AVAnalytics beginLogPageView:@"mallInfoViewController"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [AVAnalytics endLogPageView:@"mallInfoViewController"];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -92,12 +98,12 @@
     _isShowSearchView = NO;
     [_searchView hideSearchViewWithAnimation:NO];
 }
-
--(void)selectedMerchantName:(NSString *)name{
-    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResutsKey:name];
+-(void)selectedUniIds:(NSArray *)uniIds{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:uniIds];
     resultsVC.isSearch = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
+
 
 #pragma mark View 1
 -(void)mainView{
@@ -241,7 +247,6 @@
         [self.navigationController pushViewController:moreVC animated:YES];
     }else{
         YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResutsKey:category.text];
-        resultsVC.isSearch = NO;
         [self.navigationController pushViewController:resultsVC animated:YES];
     }
 }
@@ -262,10 +267,12 @@
 }
 
 -(void)getHotsBlack:(void (^)(NSArray *merchants))black{
-    AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+    AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
+    [query whereKeyExists:@"uniId"];
+    [query whereKey:@"uniId" notEqualTo:@"0"];
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 3600;
+    query.maxCacheAge = 1 * 3600;
     [query whereKey:@"mall" equalTo:mall];
     [query includeKey:@"mall,floor"];
     query.limit = 10;
@@ -294,6 +301,7 @@
 }
 
 -(void)showMallPosition:(UIButton *)sender{
+    [AVAnalytics event:@"showMallmap"];
     if (_posistionVC){
         [self.navigationController pushViewController:_posistionVC animated:YES];
     }

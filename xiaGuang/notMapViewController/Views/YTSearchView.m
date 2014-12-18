@@ -8,6 +8,7 @@
 
 #import "YTSearchView.h"
 #import "YTSearchDetailsView.h"
+#import <AVOSCloud/AVOSCloud.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTSearchView()<UISearchBarDelegate,YTSearchDetailsDelegate>{
     id<YTMall> _mall;
@@ -31,8 +32,8 @@
     CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds);
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
-        CGFloat searchBarX = 0;
-        _searchBarWidth =  CGRectGetWidth(self.frame);
+        CGFloat searchBarX = 5;
+        _searchBarWidth =  CGRectGetWidth(self.frame) - 10;
         CGFloat cancelX = CGRectGetWidth(self.frame)- 45;
         if (indent) {
             _isIndent = indent;
@@ -86,11 +87,14 @@
     if (_isIndent){
         _searchClearButton.frame = CGRectMake(210 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }else{
-        _searchClearButton.frame = CGRectMake(249 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+        _searchClearButton.frame = CGRectMake(239 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }
+    
     
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
+    
+    [_cancelButton setCenter:CGPointMake(_cancelButton.center.x, _searchBar.center.y)];
     [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
     [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
     [_cancelButton setTitleColor:[UIColor colorWithString:@"fac890"] forState:UIControlStateHighlighted];
@@ -155,6 +159,7 @@
 }
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
+    
     self.hidden = NO;
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
@@ -202,13 +207,16 @@
 
 }
 
--(void)selectSearchResultsWithMerchantnName:(NSString *)merchantName{
+
+-(void)selectSearchResultsWithUniIds:(NSArray *)uniIds{
+    
+    [AVAnalytics event:@"选中某搜索结果"];
     
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
     [self cancelAnimation:NO completion:nil];
-    [self.delegate selectedMerchantName:merchantName];
+    [self.delegate selectedUniIds:uniIds];
 }
 
 #pragma mark clear按钮 cancel按钮

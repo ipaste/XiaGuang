@@ -38,7 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
     UIImageView *background = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"shop_bg_map"]];
     
     
@@ -95,11 +95,6 @@
 }
 
 -(void)jumpToMap:(id)button{
-    YTLocalMall *tmpMall = [(YTCloudMall*)[_merchant mall] getLocalCopy];
-    if (tmpMall == nil) {
-        [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:@"当前商城地图正在建设" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil] show];
-        return;
-    }
     YTLocalMerchantInstance *targetMerchantInstance = [(YTCloudMerchant *)_merchant getLocalMerchantInstance];
     if(targetMerchantInstance == nil){
         [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"当前商铺没有进入数据库" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil] show];

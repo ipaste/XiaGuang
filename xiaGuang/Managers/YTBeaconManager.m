@@ -27,7 +27,6 @@
 @interface YTBeaconManager(){
     ESTBeaconManager *_estimoteBeaconManager;
     ESTBeaconRegion *_region;
-    ESTBeacon *_currentClosest;
     NSDictionary *_lostDict;
     NSDictionary *_distanceDict;
     NSMutableArray *_actives;
@@ -115,61 +114,8 @@
         [listener YTBeaconManager:self rangedBeacons:beacons];
     }
     
-    if(_lostCount == LOST_THRESHOLD){
-        _currentClosest = nil;
-        _shiftPotential = nil;
-        [self.delegate noBeaconsFound];
-        _lostCount++;
-        return;
-    }
-    
-    if([beacons count] == 0){
-        
-        NSLog(@"lost");
-        _currentClosest = nil;
-        if(_lostCount <= LOST_THRESHOLD){
-            _lostCount++;
-        }
-        return;
-    }
-    
-    
-    ESTBeacon * closestBeacon = beacons[0]; // assumption here is closest is at index 0 returned from lower-level sdk
-    
-    if([closestBeacon.distance floatValue] == -1.0){
-        _lostCount ++;
-        return;
-    }
-    
-    if(_shiftPotential == NULL){
-        if(![closestBeacon equalTo:_currentClosest]){
-            _shiftPotential = closestBeacon;
-        }
-    }
-    
-    if(![closestBeacon equalTo:_currentClosest]){
-        
-        if([_shiftPotential equalTo:closestBeacon]){
-            
-            _shiftCount++;
-        }
-        else{
-            _shiftCount = 0;
-            _shiftPotential = closestBeacon;
-        }
-        
-    }
-    
-    
-    
-    if(_shiftCount >= SHIFT_THRESHOLD){
-        _currentClosest = closestBeacon;
-        _shiftCount = 0;
-        _lostCount = 0;
-        [self.delegate primaryBeaconShiftedTo:closestBeacon];
-    }
-    
-    [self processDistance: beacons];
+    [self.delegate rangedBeacons:beacons];
+
 }
 
 -(BOOL)isBeaconInRange:(ESTBeacon *)beacon{
@@ -184,38 +130,6 @@
     return distance;
 }
 
-
--(void)processDistance:(NSArray *)beacons{
-    //todo:test code here once we get 2 beacons
-    for (ESTBeacon *beacon in beacons){
-        
-        float curDistance = [beacon.distance floatValue];
-        
-        if(curDistance == -1.0){
-            
-            if([_actives containsObject:beacon]){
-                
-                NSNumber *curLostCount = [_lostDict valueForKey:beacon.macAddress];
-                if(curLostCount == NULL){
-                    curLostCount = [NSNumber numberWithInteger: 0];
-                }
-            
-                curLostCount = [NSNumber numberWithInteger: [curLostCount intValue]+1];
-                if([curLostCount intValue] >= LOST_THRESHOLD){
-                    [_actives removeObject:beacon];
-                    [_lostDict setValue:NULL forKey:beacon.macAddress];
-                }
-            }
-            
-        }
-        
-        else{
-            //compute distance here!!! need another beacon for this.
-        }
-    }
-    
-}
-
 - (NSArray *)filterWhiteListedBeacon:(NSArray *)list {
     NSMutableArray *result = [[NSMutableArray alloc] init];
     
@@ -224,22 +138,10 @@
         if([_whitelist objectForKey:[NSString  stringWithFormat:@"%@-%@",beacon.major,beacon.minor]] != nil){
             [result addObject:beacon];
         }
-        /*
-        for(YTMajorMinorPair *pair in _whitelist){
-            
-            if([beacon.minor isEqual:pair.minor] && [beacon.major isEqual:pair.major]){
-                [result addObject:beacon];
-            }
-        }*/
+        
     }
     
     return result;
-}
-
--(ESTBeacon *)currentClosest{
-    
-    return _currentClosest;
-    
 }
 
 - (void)addListener:(id<YTBeaconManagerUpdateListener>)listener {

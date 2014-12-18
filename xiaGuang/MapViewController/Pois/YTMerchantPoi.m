@@ -25,7 +25,7 @@
 
 -(NSString *)poiKey{
     if(_key==nil){
-        _key = [NSString stringWithFormat:@"merchant-%@",[_merchantLocation merchantLocationName]];
+        _key = [NSString stringWithFormat:@"merchant-%@",[_merchantLocation identifier]];
         
     }
     return _key;

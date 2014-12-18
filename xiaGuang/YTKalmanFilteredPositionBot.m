@@ -111,6 +111,12 @@
                                              repeats:YES];
 }
 
+
+-(void)stop{
+    [_motionD stop];
+    [_timer invalidate];
+}
+
 - (void)timeBasedUpdate {
     
     if (_ignoreTimeUpdate) {

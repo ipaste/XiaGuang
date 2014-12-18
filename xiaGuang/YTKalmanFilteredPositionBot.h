@@ -18,6 +18,7 @@
                          mapView:(RMMapView *)mapView;
 
 - (void)start;
+- (void)stop;
 
 - (CGPoint)reportSample:(CGPoint)sample;
 
