@@ -18,6 +18,7 @@
 		78ADBEBD1A09EBB5000688E3 /* YTDistanceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEB91A09EBB5000688E3 /* YTDistanceData.m */; };
 		78ADBEBE1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */; };
 		78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */; };
+		78B69AF51A4290D100BEB31C /* YTMapGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B69AF41A4290D100BEB31C /* YTMapGraph.m */; };
 		AE24A8011A022E1B00A0CE91 /* hac1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */; };
 		AE24A8021A022E1B00A0CE91 /* hac2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */; };
 		AE24A8031A022E1B00A0CE91 /* hac3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */; };
@@ -228,6 +229,8 @@
 		78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTKalmanFilteredPositionBot.m; sourceTree = "<group>"; };
 		78ADBEC01A09EE45000688E3 /* YTBeaconBasedLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeaconBasedLocator.h; sourceTree = "<group>"; };
 		78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconBasedLocator.m; sourceTree = "<group>"; };
+		78B69AF31A4290D100BEB31C /* YTMapGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapGraph.h; sourceTree = "<group>"; };
+		78B69AF41A4290D100BEB31C /* YTMapGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMapGraph.m; sourceTree = "<group>"; };
 		AE24A7FA1A022E1B00A0CE91 /* hac1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac1.mbtiles; sourceTree = "<group>"; };
 		AE24A7FB1A022E1B00A0CE91 /* hac2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac2.mbtiles; sourceTree = "<group>"; };
 		AE24A7FC1A022E1B00A0CE91 /* hac3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = hac3.mbtiles; sourceTree = "<group>"; };
@@ -630,6 +633,15 @@
 			name = Algorithm;
 			sourceTree = "<group>";
 		};
+		78B69AF21A4290C400BEB31C /* Skeleton */ = {
+			isa = PBXGroup;
+			children = (
+				78B69AF31A4290D100BEB31C /* YTMapGraph.h */,
+				78B69AF41A4290D100BEB31C /* YTMapGraph.m */,
+			);
+			name = Skeleton;
+			sourceTree = "<group>";
+		};
 		ACF92A6A230A5189D341655C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -863,6 +875,7 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
+				78B69AF21A4290C400BEB31C /* Skeleton */,
 				78ADBEA01A09EA67000688E3 /* Positioning */,
 				AE24A8B51A03855500A0CE91 /* BlurMenu */,
 				D94C28181A0263CF009FF2F3 /* Extensions */,
@@ -1484,6 +1497,7 @@
 				D94C28341A0263CF009FF2F3 /* MJRefreshConst.m in Sources */,
 				AE630BDA1A3EC4A100A562AA /* YTLocalDoor.m in Sources */,
 				D94C28041A0263C6009FF2F3 /* YTResultsViewController.m in Sources */,
+				78B69AF51A4290D100BEB31C /* YTMapGraph.m in Sources */,
 				D94C28081A0263C6009FF2F3 /* YTCategoryViewCell.m in Sources */,
 				AE24A89C1A02432000A0CE91 /* YTCloudFloor.m in Sources */,
 				AE24A8BB1A03855500A0CE91 /* BlurMenuItemCell.m in Sources */,
