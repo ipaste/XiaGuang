@@ -1,0 +1,35 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "fill",
+          "width" : 4,
+          "height" : 3
+        },
+        "capInsets" : {
+          "bottom" : 30,
+          "top" : 27,
+          "right" : 34,
+          "left" : 34
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "bg_box@2x.png",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

@@ -7,13 +7,15 @@
 //
 
 #import "YTLocalMall.h"
-
+#import "YTCloudMall.h"
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
     CGFloat _offset;
     NSMutableArray *_tmpBlocks;
     NSMutableArray *_tmpMerchantInstance;
+    UIImage *_titleImage;
+    UIImage *_background;
 }
 
 @synthesize mallName;
@@ -80,5 +82,41 @@
 
 -(CGFloat)offset{
     return _offset;
+}
+
+
+-(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
+    if (_titleImage == nil || _background == nil) {
+        __block AVObject *internalObject = nil;
+        __block UIImage *titleImage = nil;
+        __block UIImage *background = nil;
+        __block NSError *error = [[NSError alloc]initWithDomain:@"com.xiashopping" code:404 userInfo:nil];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+            [query whereKey:@"localDBId" equalTo:[self identifier]];
+            internalObject = [query getFirstObject];
+            titleImage = [UIImage imageWithData:[internalObject[@"mall_img_title"] getData]];
+            background = [UIImage imageWithData:[internalObject[@"mall_img_background"] getData]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (titleImage != nil && background != nil) {
+                    _background = background;
+                    _titleImage = titleImage;
+                    callback(titleImage,background,nil);
+                }else{
+                    callback(nil,nil,error);
+                }
+            });
+            
+        });
+    }else{
+        
+        callback(_titleImage,_background,nil);
+    }
+}
+
+-(YTCloudMall *)getCloudMall{
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    [query whereKey:@"localDBId" equalTo:[self identifier]];
+    return [[YTCloudMall alloc]initWithAVObject:[query getFirstObject]];
 }
 @end

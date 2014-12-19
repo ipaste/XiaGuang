@@ -13,18 +13,16 @@
     UIViewController *_mapViewController;
     UIImageView *_backgroundImageView;
     YTBluetoothManager *_bluetoothManager;
-    UIView *_backgroundBlurView;
     UIToolbar *_blurView;
     UIButton *_navigationButton;
     UIButton *_carButton;
     BBTableView *_tableView;
     BOOL _blueToothOn;
     BOOL _latest;
-    
     YTBeaconManager *_beaconManager;
     id<YTMinorArea> _recordMinorArea;
-    
     NSMutableArray *_malls;
+    NetworkStatus _status;
 }
 @end
 
@@ -33,15 +31,20 @@
     self = [super init];
     if (self) {
         _malls = [NSMutableArray array];
-        
+        Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
+        [reachability startNotifier];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bg"]];
+    UIImage *backgroundImage = [UIImage imageNamed:@"img_default.jpg"];
+    _backgroundImageView = [[UIImageView alloc]initWithFrame: CGRectMake(0, BLUR_HEIGHT, CGRectGetWidth(self.view.frame), backgroundImage.size.height)];
+    _backgroundImageView.image = backgroundImage;
     [self.view addSubview:_backgroundImageView];
+    
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
     
@@ -60,9 +63,6 @@
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
     
-    _backgroundBlurView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), BLUR_HEIGHT)];
-//    _backgroundBlurView.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.8];
-//    [self.view addSubview:_backgroundBlurView];
     _blurView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), BLUR_HEIGHT)];
     _blurView.tintColor = [UIColor blackColor];
     _blurView.barStyle = UIBarStyleBlack;
@@ -75,6 +75,8 @@
     [_navigationButton setImage:[UIImage imageNamed:@"icon_gps"] forState:UIControlStateNormal];
     [_navigationButton setTitle:@"导航" forState:UIControlStateNormal];
     [_navigationButton setTitleColor:[UIColor colorWithString:@"b2b2b2" alpha:1.0] forState:UIControlStateHighlighted];
+    [_navigationButton addTarget:self action:@selector(jumpToMap:) forControlEvents:UIControlEventTouchUpInside];
+    _navigationButton.tag = 1;
     [_navigationButton setTitleEdgeInsets:UIEdgeInsetsMake(50, -35, 0, 0)];
     [_navigationButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 35, 0, 0)];
     _navigationButton.layer.cornerRadius = 10;
@@ -89,6 +91,8 @@
     [_carButton setTitleColor:[UIColor colorWithString:@"b2b2b2" alpha:1.0] forState:UIControlStateHighlighted];
     [_carButton setTitleEdgeInsets:UIEdgeInsetsMake(50, -35, 0, 0)];
     [_carButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 35, 0, 0)];
+    _carButton.tag = 2;
+    [_carButton addTarget:self action:@selector(jumpToMap:) forControlEvents:UIControlEventTouchUpInside];
     _carButton.layer.cornerRadius = 10;
     [_blurView addSubview:_carButton];
     
@@ -96,7 +100,8 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
-    self.view.backgroundColor = [UIColor whiteColor];
+    
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg"].CGImage;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *url = [[NSURL alloc]initWithString:@"http://itunes.apple.com/cn/lookup?id=922405498"];
         NSData *jsonData = [NSData dataWithContentsOfURL:url];
@@ -109,24 +114,18 @@
         }
     });
     
-    
-    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-    [query whereKeyExists:@"localDBId"];
-    [query whereKey:@"localDBId" notEqualTo:@""];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        for (AVObject *object in objects) {
-            YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:object];
-            [_malls addObject:mall];
-        }
-        [_tableView reloadData];
-        
-    }];
-    
+    FMDatabase *database = [YTStaticResourceManager sharedManager].db;
+    FMResultSet *result = [database executeQuery:@"select * from Mall"];
+    while ([result next]) {
+        YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
+        [_malls addObject:mall];
+    }
+    [_tableView reloadData];
 }
 
 -(UIView *)leftBarButtonItemCustomView{
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 60, 40)];
-    [leftButton addTarget:self action:@selector(test) forControlEvents:UIControlEventTouchUpInside];
+    [leftButton addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
     [leftButton setImage:[UIImage imageNamed:@"icon_search"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
     [leftButton setImageEdgeInsets:UIEdgeInsetsMake(0, -40, 0, 0)];
@@ -137,12 +136,9 @@
     UIImage *image = [UIImage imageNamed:@"icon_set"];
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, image.size.width, image.size.height)];
     [rightButton setImage:image forState:UIControlStateNormal];
-    [rightButton addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(jumpToSetting:) forControlEvents:UIControlEventTouchUpInside];
     [rightButton setImage:[UIImage imageNamed:@"icon_setOn"] forState:UIControlStateHighlighted];
     return rightButton;
-}
--(void)test{
-
 }
 
 
@@ -151,23 +147,29 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
-    NSString *identifier = [NSString stringWithFormat:@"%d",(indexPath.row%_malls.count)];
+    NSString *identifier = @"Cell";
     YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    static int counter = 0;
     if (!cell) {
-        NSLog(@"counter:%d",counter);
-        counter++;
         cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        //cell.textLabel.text = @"hahahah";
-        cell.mall = _malls[indexPath.row];
     }
-    
+    cell.mall = _malls[indexPath.row];
     return cell;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
+    mallInfoVC.mall = _malls[indexPath.row % _malls.count];
+    [self.navigationController pushViewController:mallInfoVC animated:true];
+}
+
+-(void)reachabilityChanged:(NSNotification *)notification{
+    Reachability *tmpReachability = notification.object;
+    if (_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) {
+        [_tableView reloadData];
+    }
+    _status =  tmpReachability.currentReachabilityStatus;
+}
 
 -(void)rangedBeacons:(NSArray *)beacons{
     if(beacons.count > 0){
@@ -194,56 +196,35 @@
     return minorArea;
 }
 
--(void)clickedPanelAtIndex:(NSInteger)index{
-    UIViewController *controller = nil;
-    switch (index) {
-        case 0:
-        {
-            controller = [[YTMallViewController alloc]init];
-            [AVAnalytics event:@"商城"];
-        }
-            break;
-        case 1:
-        {
-            
-            controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
-            controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-            [AVAnalytics event:@"停车"];
-            if (controller == nil) return;
-            [self presentViewController:controller animated:YES completion:^{
-                
-            }];
-        }
-            return;
-        case 2:
-        {
-            controller = [[YTSettingViewController alloc]init];
-
-            [(YTSettingViewController *)controller setIsLatest:_latest];
-
-            [AVAnalytics event:@"设置"];
-
-        }
-            break;
-        case 3:
-        {
-            if (_mapViewController == nil) {
-                _mapViewController = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
-            }
-            [AVAnalytics event:@"导航"];
-            _mapViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-            [self presentViewController:_mapViewController animated:YES completion:nil];
-        }
-            
-            return;
-    }
-    if(controller == nil) return;
-    [self.navigationController pushViewController:controller animated:YES];
-}
 
 -(void)jumpToSearch:(UIButton *)sender{
     YTSearchViewController *searchVC = [[YTSearchViewController alloc]init];
     [self.navigationController pushViewController:searchVC animated:YES];
+}
+
+-(void)jumpToSetting:(UIButton *)sender{
+    YTSettingViewController *settingVC = [[YTSettingViewController alloc]init];
+    [settingVC setIsLatest:_latest];
+    [AVAnalytics event:@"设置"];
+    [self.navigationController pushViewController:settingVC animated:YES];
+}
+
+-(void)jumpToMap:(UIButton *)sender{
+    UIViewController *controller = nil;
+    if (sender.tag == 1){
+        if (_mapViewController == nil) {
+            controller = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
+        }else{
+            controller = _mapViewController;
+        }
+        [AVAnalytics event:@"导航"];
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    }else{
+        controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [AVAnalytics event:@"停车"];
+    }
+    [self presentViewController:controller animated:true completion:nil];
 }
 
 -(void)detectedBluetoothStateHasChanged:(NSNotification *)notification{

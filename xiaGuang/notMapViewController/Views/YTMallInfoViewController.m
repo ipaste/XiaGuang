@@ -39,7 +39,7 @@
     [super viewDidLoad];
     _scrollView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
     _scrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
+    _searchView = [[YTSearchView alloc]initWithMall:self.mall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
@@ -190,7 +190,7 @@
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
     }];
     
-    [_mall getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
+    [[(YTLocalMall*)_mall getCloudMall] getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
         _posistionVC = [[YTMallPosistionViewController alloc]initWithImage:mapImage address:address phoneNumber:phoneNumber];
     }];
 
@@ -252,7 +252,7 @@
 }
 -(void)jumpToFloorMap:(UIButton *)sender{
     id <YTFloor> floor = nil;
-    YTLocalMall *localmall = [(YTCloudMall *)self.mall getLocalCopy];
+    YTLocalMall *localmall = self.mall;
     if (localmall == nil){
         [[[UIAlertView alloc]initWithTitle:@"虾逛" message:@"地图正在建设中." delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
         return;
@@ -270,10 +270,11 @@
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query whereKeyExists:@"uniId"];
     [query whereKey:@"uniId" notEqualTo:@"0"];
-    AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
+    AVQuery *mall = [AVQuery queryWithClassName:@"Mall"];
+    [mall whereKey:@"localDBId" equalTo:[self.mall identifier]];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 1 * 3600;
-    [query whereKey:@"mall" equalTo:mall];
+    [query whereKey:@"mall" matchesQuery:mall];
     [query includeKey:@"mall,floor"];
     query.limit = 10;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
