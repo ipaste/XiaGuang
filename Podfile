@@ -10,3 +10,4 @@ pod 'UnrarKit','2.2.3'
 pod 'FCFileManager','1.0.6'
 pod 'PESGraph','0.2.1'
 pod 'FXBlurView','1.6.3'
+
