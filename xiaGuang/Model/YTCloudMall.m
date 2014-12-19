@@ -245,6 +245,7 @@
             
         });
     }else{
+        
         callback(_titleImage,_background,nil);
     }
 }

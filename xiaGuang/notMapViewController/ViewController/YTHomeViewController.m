@@ -14,10 +14,10 @@
     UIImageView *_backgroundImageView;
     YTBluetoothManager *_bluetoothManager;
     UIView *_backgroundBlurView;
-    FXBlurView *_blurView;
+    UIToolbar *_blurView;
     UIButton *_navigationButton;
     UIButton *_carButton;
-    UITableView *_tableView;
+    BBTableView *_tableView;
     BOOL _blueToothOn;
     BOOL _latest;
     
@@ -33,17 +33,7 @@
     self = [super init];
     if (self) {
         _malls = [NSMutableArray array];
-        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        [query whereKeyExists:@"localDBId"];
-        [query whereKey:@"localDBId" notEqualTo:@""];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            for (AVObject *object in objects) {
-                YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:object];
-                [_malls addObject:mall];
-            }
-            [_tableView reloadData];
-            
-        }];
+        
     }
     return self;
 }
@@ -59,24 +49,24 @@
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
     
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
+    _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     _tableView.delegate = self;
     _tableView.rowHeight = 130;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [_tableView setEnableInfiniteScrolling:YES];
     
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
     
     _backgroundBlurView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), BLUR_HEIGHT)];
-    _backgroundBlurView.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.8];
-    [self.view addSubview:_backgroundBlurView];
-    _blurView = [[FXBlurView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), BLUR_HEIGHT)];
+//    _backgroundBlurView.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.8];
+//    [self.view addSubview:_backgroundBlurView];
+    _blurView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), BLUR_HEIGHT)];
     _blurView.tintColor = [UIColor blackColor];
-    _blurView.blurRadius = 25;
-    _blurView.iterations = 1;
-    [_blurView setDynamic:true];
+    _blurView.barStyle = UIBarStyleBlack;
+    _blurView.translucent = YES;
     [self.view addSubview:_blurView];
     
     _navigationButton = [[UIButton alloc]initWithFrame:CGRectMake(8, 72, 148, 88)];
@@ -119,6 +109,19 @@
         }
     });
     
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    [query whereKeyExists:@"localDBId"];
+    [query whereKey:@"localDBId" notEqualTo:@""];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        for (AVObject *object in objects) {
+            YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:object];
+            [_malls addObject:mall];
+        }
+        [_tableView reloadData];
+        
+    }];
+    
 }
 
 -(UIView *)leftBarButtonItemCustomView{
@@ -148,12 +151,20 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    
+    
+    NSString *identifier = [NSString stringWithFormat:@"%d",(indexPath.row%_malls.count)];
+    YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    static int counter = 0;
     if (!cell) {
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        NSLog(@"counter:%d",counter);
+        counter++;
+        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        //cell.textLabel.text = @"hahahah";
+        cell.mall = _malls[indexPath.row];
     }
-    cell.mall = _malls[indexPath.row];
+    
     return cell;
 }
 
