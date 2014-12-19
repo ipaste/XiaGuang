@@ -27,6 +27,7 @@
 @property(nonatomic)CGFloat offset;
 @property(nonatomic)CLLocationCoordinate2D coord;
 
+-(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback;
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;

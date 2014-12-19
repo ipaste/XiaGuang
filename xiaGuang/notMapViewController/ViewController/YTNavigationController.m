@@ -14,6 +14,7 @@
     UIImageView *_backgroundView;
     BOOL _isReGet;
 }
+
 -(instancetype)initWithCreateHomeViewController{
     _homeVC = [[YTHomeViewController alloc]init];
     self = [super initWithRootViewController:_homeVC];
@@ -24,53 +25,64 @@
     return self;
 }
 
-
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
     _displayController = viewController;
-    if ([viewController isEqual:_homeVC] || [viewController isMemberOfClass:[YTSettingViewController class]] || [viewController isMemberOfClass:[YTMallViewController class]]) {
-         _backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-        if (BIGGER_THEN_IPHONE5) {
-            _backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
-        }else{
-            _backgroundView.image = [UIImage imageNamed:@"home_bg960@2x.jpg"];
-        }
-        [viewController.view insertSubview:_backgroundView atIndex:0];
-        navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    if ([viewController isEqual:_homeVC]) {
+        navigationController.navigationBar.clipsToBounds = true;
+        navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
         [navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-        navigationController.navigationBar.clipsToBounds = YES;
-        navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        
-    }else if([viewController isMemberOfClass:[YTMallInfoViewController class]]){
-        navigationController.navigationBar.clipsToBounds = NO;
-        [[(YTMallInfoViewController *)viewController mall] getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
-            [navigationController.navigationBar setBackgroundImage:result forBarMetrics:UIBarMetricsDefault];
-        }];
-        if (_isReGet) {
-            _isReGet = NO;
-            [[(YTMallInfoViewController *)viewController mall] getMallInfoTitleCallBack:^(UIImage *result, NSError *error) {
-                UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
-                UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, result.size.width / 2, result.size.height / 2)];
-                titleImageView.center = titleView.center;
-                titleImageView.image = result;
-                [titleView addSubview:titleImageView];
-                viewController.navigationItem.titleView = titleView;
-            }];
-        }
-    }else{
-        navigationController.navigationBar.clipsToBounds = NO;
-        [navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
+        [navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     }
-    
+
 }
 
--(UIViewController *)popViewControllerAnimated:(BOOL)animated{
-    if ([_displayController isEqual:_homeVC] || [_displayController isMemberOfClass:[YTSettingViewController class]] || [_displayController isMemberOfClass:[YTMallViewController class]]) {
-        [_backgroundView removeFromSuperview];
-    }else if ([_displayController isMemberOfClass:[YTMallInfoViewController class]]){
-        _isReGet = YES;
-    }
-    return [super popViewControllerAnimated:animated];
-}
+//- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
+//    _displayController = viewController;
+//    if ([viewController isEqual:_homeVC] || [viewController isMemberOfClass:[YTSettingViewController class]] || [viewController isMemberOfClass:[YTMallViewController class]]) {
+//         _backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+//        if (BIGGER_THEN_IPHONE5) {
+//            _backgroundView.image = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
+//        }else{
+//            _backgroundView.image = [UIImage imageNamed:@"home_bg960@2x.jpg"];
+//        }
+//        [viewController.view insertSubview:_backgroundView atIndex:0];
+//        navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//        [navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+//        navigationController.navigationBar.clipsToBounds = YES;
+//        navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+//        
+//    }else if([viewController isMemberOfClass:[YTMallInfoViewController class]]){
+//        navigationController.navigationBar.clipsToBounds = NO;
+//        [[(YTMallInfoViewController *)viewController mall] getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
+//            [navigationController.navigationBar setBackgroundImage:result forBarMetrics:UIBarMetricsDefault];
+//        }];
+//        if (_isReGet) {
+//            _isReGet = NO;
+//            [[(YTMallInfoViewController *)viewController mall] getMallInfoTitleCallBack:^(UIImage *result, NSError *error) {
+//                UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
+//                UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, result.size.width / 2, result.size.height / 2)];
+//                titleImageView.center = titleView.center;
+//                titleImageView.image = result;
+//                [titleView addSubview:titleImageView];
+//                viewController.navigationItem.titleView = titleView;
+//            }];
+//        }
+//    }else{
+//        navigationController.navigationBar.clipsToBounds = NO;
+//        [navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    
+//}
+//
+//-(UIViewController *)popViewControllerAnimated:(BOOL)animated{
+//    if ([_displayController isEqual:_homeVC] || [_displayController isMemberOfClass:[YTSettingViewController class]] || [_displayController isMemberOfClass:[YTMallViewController class]]) {
+//        [_backgroundView removeFromSuperview];
+//    }else if ([_displayController isMemberOfClass:[YTMallInfoViewController class]]){
+//        _isReGet = YES;
+//    }
+//    return [super popViewControllerAnimated:animated];
+//}
 
 -(void)dealloc{
     NSLog(@"ytNavigationController destroyed");
