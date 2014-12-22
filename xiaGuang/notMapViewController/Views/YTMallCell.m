@@ -12,6 +12,8 @@
 @interface YTMallCell(){
     UIImageView *_mallBackgroundView;
     UIImageView *_titleImageView;
+    UIImageView *_cellBackground;
+    BOOL _isFetch;
 }
 @end
 
@@ -20,35 +22,49 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _mallBackgroundView = [[UIImageView alloc]init];
-        _mallBackgroundView.frame = CGRectMake(10, 10, 300, 120);
+        _mallBackgroundView.frame = CGRectMake(10, 5, 300, 120);
         _titleImageView = [[UIImageView alloc]init];
-        _titleImageView.frame = CGRectMake(20, 20, 150, 30);
         _mallBackgroundView.layer.cornerRadius = 10;
         _mallBackgroundView.layer.masksToBounds = true;
         self.backgroundColor = [UIColor clearColor];
+        _titleImageView.frame = CGRectMake(20, 90, 150, 30);
+        
+        _cellBackground = [[UIImageView alloc]init];
+        _cellBackground.image = [UIImage imageNamed:@"bg_box"];
         [self addSubview:_mallBackgroundView];
         [self addSubview:_titleImageView];
+        [self addSubview:_cellBackground];
     }
     
     return self;
 }
 
 -(void)layoutSubviews{
-    
-    
-    
+    _cellBackground.frame = self.bounds;
+    _mallBackgroundView.layer.cornerRadius = 8;
+    _mallBackgroundView.layer.masksToBounds = true;
+    self.backgroundColor = [UIColor clearColor];
 }
 
 -(void)setMall:(id<YTMall>)mall{
-    
+    _mallBackgroundView.image = nil;
+    _titleImageView.image = nil;
+    _isFetch = false;
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
         
         _mallBackgroundView.image = background;
         _titleImageView.image = titleImage;
         
+        if (!error) {
+            _mallBackgroundView.image = background;
+            _titleImageView.image = titleImage;
+            _isFetch = true;
+        }
     }];
     _mall = mall;
 }
-
+-(BOOL)isFetch{
+    return _isFetch;
+}
 
 @end

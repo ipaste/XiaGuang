@@ -12,6 +12,7 @@
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
 #import "YTMallViewController.h"
+#import "Reachability.h"
 #import "YTParkingViewController.h"
 #import "YTBluetoothManager.h"
 #import "FXBlurView.h"

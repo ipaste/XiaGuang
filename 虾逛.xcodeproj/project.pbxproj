@@ -194,6 +194,7 @@
 		D9825F3C1A1317160053F8D2 /* JingJiBaiNaL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F361A1317160053F8D2 /* JingJiBaiNaL1.mbtiles */; };
 		D9825F3D1A1317160053F8D2 /* JingJiBaiNaL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F371A1317160053F8D2 /* JingJiBaiNaL2.mbtiles */; };
 		D9825F3E1A1317160053F8D2 /* JingJiBaiNaL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9825F381A1317160053F8D2 /* JingJiBaiNaL3.mbtiles */; };
+		D992B0231A440F5300666AA0 /* img_default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D992B0221A440F5300666AA0 /* img_default.jpg */; };
 		D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */; };
 		D9AE507B1A0B4F160080CF21 /* YTBeaconPosistionPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */; };
 		D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */; };
@@ -556,6 +557,7 @@
 		D9825F361A1317160053F8D2 /* JingJiBaiNaL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaL1.mbtiles; sourceTree = "<group>"; };
 		D9825F371A1317160053F8D2 /* JingJiBaiNaL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaL2.mbtiles; sourceTree = "<group>"; };
 		D9825F381A1317160053F8D2 /* JingJiBaiNaL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = JingJiBaiNaL3.mbtiles; sourceTree = "<group>"; };
+		D992B0221A440F5300666AA0 /* img_default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_default.jpg; sourceTree = "<group>"; };
 		D9AE50711A0A1F280080CF21 /* YTMallPosistionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPosistionViewController.h; sourceTree = "<group>"; };
 		D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPosistionViewController.m; sourceTree = "<group>"; };
 		D9AE50791A0B4F160080CF21 /* YTBeaconPosistionPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTBeaconPosistionPoi.h; path = pois/YTBeaconPosistionPoi.h; sourceTree = "<group>"; };
@@ -753,6 +755,7 @@
 			children = (
 				AE24A8611A02431700A0CE91 /* home_bg1136@2x.jpg */,
 				AE24A8621A02431700A0CE91 /* home_bg960@2x.jpg */,
+				D992B0221A440F5300666AA0 /* img_default.jpg */,
 				AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */,
 				AE24A8641A02431700A0CE91 /* shop_load_down@2x.png */,
 			);
@@ -1306,6 +1309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE24A8051A022E1B00A0CE91 /* haianchengparking2.mbtiles in Resources */,
+				D992B0231A440F5300666AA0 /* img_default.jpg in Resources */,
 				AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */,
 				AEE032CE1A22E3C5002AFB9C /* haianchengeastpark-2.mbtiles in Resources */,
 				AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */,

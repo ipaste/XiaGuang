@@ -11,8 +11,9 @@
 #import "YTStaticResourceManager.h"
 #import "YTMall.h"
 #import "YTLocalFloor.h"
+@class YTCloudMall;
 @interface YTLocalMall : NSObject<YTMall>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;
-
+-(YTCloudMall *)getCloudMall;
 @end
