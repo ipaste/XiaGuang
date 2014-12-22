@@ -23,6 +23,9 @@
         _mallBackgroundView.frame = CGRectMake(10, 10, 300, 120);
         _titleImageView = [[UIImageView alloc]init];
         _titleImageView.frame = CGRectMake(20, 20, 150, 30);
+        _mallBackgroundView.layer.cornerRadius = 10;
+        _mallBackgroundView.layer.masksToBounds = true;
+        self.backgroundColor = [UIColor clearColor];
         [self addSubview:_mallBackgroundView];
         [self addSubview:_titleImageView];
     }
@@ -32,19 +35,13 @@
 
 -(void)layoutSubviews{
     
-    _mallBackgroundView.layer.cornerRadius = 10;
-    _mallBackgroundView.layer.masksToBounds = true;
-    self.backgroundColor = [UIColor clearColor];
+    
     
 }
 
 -(void)setMall:(id<YTMall>)mall{
     
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
-        NSLog(@"fetch something");
-        
-        NSLog(@"background size: %f,%f",titleImage.size.width,titleImage.size.height);
-        
         
         _mallBackgroundView.image = background;
         _titleImageView.image = titleImage;
