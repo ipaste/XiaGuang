@@ -227,23 +227,27 @@
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
     if (_titleImage == nil || _background == nil) {
-        __block UIImage *titleImage = nil;
-        __block UIImage *background = nil;
-        __block NSError *error = [[NSError alloc]initWithDomain:@"com.xiashopping" code:404 userInfo:nil];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            titleImage = [UIImage imageWithData:[_internalObject[@"mall_img_title"] getData]];
-            background = [UIImage imageWithData:[_internalObject[@"mall_img_background"] getData]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (titleImage != nil && background != nil) {
-                    _background = background;
-                    _titleImage = titleImage;
-                    callback(titleImage,background,nil);
-                }else{
+        if (_titleImage == nil) {
+            [_internalObject[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                if (error) {
                     callback(nil,nil,error);
+                    return ;
                 }
-            });
-            
-        });
+                _titleImage = [UIImage imageWithData:data];
+                callback(_titleImage,_background,error);
+            }];
+        }
+        
+        if (_background == nil) {
+            [_internalObject[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                if (error) {
+                    callback(nil,nil,error);
+                    return ;
+                }
+                _background = [UIImage imageWithData:data];
+                callback(_titleImage,_background,error);
+            }];
+        }
     }else{
         
         callback(_titleImage,_background,nil);

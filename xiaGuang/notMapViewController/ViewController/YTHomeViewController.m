@@ -168,11 +168,12 @@
 
 -(void)reachabilityChanged:(NSNotification *)notification{
     Reachability *tmpReachability = notification.object;
+    
     if (_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) {
         [self changeLocalMallVariableCloudMall:^{
             [_tableView reloadData];
         }];
-    }else if(tmpReachability.currentReachabilityFlags != NotReachable){
+    }else if(tmpReachability.currentReachabilityStatus != NotReachable){
         [self changeLocalMallVariableCloudMall:^{
             [_tableView reloadData];
         }];
@@ -180,20 +181,22 @@
     _status =  tmpReachability.currentReachabilityStatus;
 }
 -(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
-    NSMutableArray *array = [NSMutableArray array];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (YTLocalMall *mall in _malls) {
-            [array addObject:[mall getCloudMall]];
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    [query whereKeyExists:@"localDBId"];
+    [query whereKey:@"localDBId" notEqualTo:@""];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableArray *array = [NSMutableArray array];
+        for (AVObject *mall in objects) {
+            YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
+            [array addObject:cloudMall];
         }
         [_malls removeAllObjects];
         _malls = nil;
         _malls = array;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (callBack != nil) {
-                callBack();
-            }
-        });
-    });
+        if (callBack != nil) {
+            callBack();
+        }
+    }];
 }
 -(void)rangedBeacons:(NSArray *)beacons{
     if(beacons.count > 0){

@@ -15,5 +15,4 @@
 @interface YTLocalMall : NSObject<YTMall>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;
--(YTCloudMall *)getCloudMall;
 @end
