@@ -13,7 +13,6 @@
 #import <FCFileManager.h>
 #import <UnrarKit/URKArchive.h>
 #import "YTBeaconManager.h"
-
 @interface AppDelegate () {
     double _timeInToBackground;
 }
@@ -21,7 +20,6 @@
 @end
 
 @implementation AppDelegate
-
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.

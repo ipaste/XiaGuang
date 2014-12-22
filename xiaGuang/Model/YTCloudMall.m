@@ -13,6 +13,8 @@
 
 @implementation YTCloudMall{
     AVObject *_internalObject;
+    UIImage *_titleImage;
+    UIImage *_background;
     NSMutableArray *_blocks;
     NSMutableArray *_merchantLocs;
     NSMutableArray *_merchants;
@@ -211,7 +213,42 @@
         
     }
 }
+-(void)getMallImgBackground:(void (^)(UIImage *result,NSError* error))callback{
+    AVFile *file = _internalObject[@"mall_img_background"];
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if (!error) {
+            UIImage *mallImage = [UIImage imageWithData:data];
+            callback(mallImage,nil);
+        }else{
+             callback(nil,error);
+        }
+    }];
+}
 
+-(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
+    if (_titleImage == nil || _background == nil) {
+        __block UIImage *titleImage = nil;
+        __block UIImage *background = nil;
+        __block NSError *error = [[NSError alloc]initWithDomain:@"com.xiashopping" code:404 userInfo:nil];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            titleImage = [UIImage imageWithData:[_internalObject[@"mall_img_title"] getData]];
+            background = [UIImage imageWithData:[_internalObject[@"mall_img_background"] getData]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (titleImage != nil && background != nil) {
+                    _background = background;
+                    _titleImage = titleImage;
+                    callback(titleImage,background,nil);
+                }else{
+                    callback(nil,nil,error);
+                }
+            });
+            
+        });
+    }else{
+        
+        callback(_titleImage,_background,nil);
+    }
+}
 
 -(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback{
     AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];

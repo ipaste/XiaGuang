@@ -12,7 +12,6 @@
 #import "YTCloudMall.h"
 #import "YTMerchantInfoViewController.h"
 #import "YTSettingViewController.h"
-#import <MMProgressHUD.h>
 #import "YTMallMerchantBundle.h"
 #import "YTMallInfoViewController.h"
 #import "MJRefresh.h"

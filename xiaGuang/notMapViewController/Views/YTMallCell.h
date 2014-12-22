@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "YTMall.h"
-#import "YTMerchant.h"
-#import "YTMallMerchantBundle.h"
 @interface YTMallCell : UITableViewCell<UIScrollViewDelegate>
-@property (nonatomic,weak) YTMallMerchantBundle *mallMerchantBundle;
+@property (weak,nonatomic) id <YTMall> mall;
+@property (nonatomic,readonly) BOOL isFetch;
 @end

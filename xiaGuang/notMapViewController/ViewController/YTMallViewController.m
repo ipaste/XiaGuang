@@ -138,7 +138,7 @@
     if (!cell) {
         cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-    cell.mallMerchantBundle = _bundleObjects[indexPath.section];
+    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
