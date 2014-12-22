@@ -10,4 +10,5 @@
 #import "YTMall.h"
 @interface YTMallCell : UITableViewCell<UIScrollViewDelegate>
 @property (weak,nonatomic) id <YTMall> mall;
+@property (nonatomic,readonly) BOOL isFetch;
 @end

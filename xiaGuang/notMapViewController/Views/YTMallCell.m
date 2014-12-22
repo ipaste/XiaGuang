@@ -13,6 +13,7 @@
     UIImageView *_mallBackgroundView;
     UIImageView *_titleImageView;
     UIImageView *_cellBackground;
+    BOOL _isFetch;
 }
 @end
 
@@ -45,12 +46,18 @@
 -(void)setMall:(id<YTMall>)mall{
     _mallBackgroundView.image = nil;
     _titleImageView.image = nil;
+    _isFetch = false;
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
-        _mallBackgroundView.image = background;
-        _titleImageView.image = titleImage;
+        if (!error) {
+            _mallBackgroundView.image = background;
+            _titleImageView.image = titleImage;
+            _isFetch = true;
+        }
     }];
     _mall = mall;
 }
-
+-(BOOL)isFetch{
+    return _isFetch;
+}
 
 @end

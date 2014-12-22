@@ -190,7 +190,12 @@
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
     }];
     
-    [[(YTLocalMall*)_mall getCloudMall] getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
+    id<YTMall> mall = _mall;
+    
+    if (mall == nil) {
+        [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+    }
+    [mall getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
         _posistionVC = [[YTMallPosistionViewController alloc]initWithImage:mapImage address:address phoneNumber:phoneNumber];
     }];
 
@@ -270,11 +275,8 @@
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query whereKeyExists:@"uniId"];
     [query whereKey:@"uniId" notEqualTo:@"0"];
-    AVQuery *mall = [AVQuery queryWithClassName:@"Mall"];
-    [mall whereKey:@"localDBId" equalTo:[self.mall identifier]];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 1 * 3600;
-    [query whereKey:@"mall" matchesQuery:mall];
     [query includeKey:@"mall,floor"];
     query.limit = 10;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

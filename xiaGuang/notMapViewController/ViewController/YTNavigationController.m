@@ -36,21 +36,23 @@
     }else if([viewController isMemberOfClass:[YTMallInfoViewController class]]){
         navigationController.navigationBar.clipsToBounds = NO;
         navigationController.navigationBar.tintColor = [UIColor whiteColor];
-        id<YTMall> mall = [(YTLocalMall *)[(YTMallInfoViewController *)viewController mall] getCloudMall];
-        [mall
-         getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
-             [navigationController.navigationBar setBackgroundImage:result forBarMetrics:UIBarMetricsDefault];
-         }];
-        if (_isReGet) {
-            _isReGet = NO;
-            [mall getMallInfoTitleCallBack:^(UIImage *result, NSError *error) {
-                UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
-                UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, result.size.width / 2, result.size.height / 2)];
-                titleImageView.center = titleView.center;
-                titleImageView.image = result;
-                [titleView addSubview:titleImageView];
-                viewController.navigationItem.titleView = titleView;
-            }];
+        id<YTMall> mall = [(YTMallInfoViewController *)viewController mall];
+        if (mall) {
+            [mall
+             getInfoBackgroundImageWithCallBack:^(UIImage *result, NSError *error) {
+                 [navigationController.navigationBar setBackgroundImage:result forBarMetrics:UIBarMetricsDefault];
+             }];
+            if (_isReGet) {
+                _isReGet = NO;
+                [mall getMallInfoTitleCallBack:^(UIImage *result, NSError *error) {
+                    UIView *titleView = [[UIView alloc]initWithFrame:CGRectZero];
+                    UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, result.size.width / 2, result.size.height / 2)];
+                    titleImageView.center = titleView.center;
+                    titleImageView.image = result;
+                    [titleView addSubview:titleImageView];
+                    viewController.navigationItem.titleView = titleView;
+                }];
+            }
         }
     }else if([viewController isMemberOfClass:[YTSettingViewController class]]){
         _backgroundView = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
@@ -113,6 +115,8 @@
 -(UIViewController *)popViewControllerAnimated:(BOOL)animated{
     if ([_displayController isMemberOfClass:[YTMallInfoViewController class]]){
         _isReGet = YES;
+    }else if ([_displayController isMemberOfClass:[YTSettingViewController class]]){
+        [_backgroundView removeFromSuperview];
     }
     return [super popViewControllerAnimated:animated];
 }

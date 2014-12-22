@@ -125,19 +125,19 @@
 
 -(UIView *)leftBarButtonItemCustomView{
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 60, 40)];
-    [leftButton addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
-    [leftButton setImage:[UIImage imageNamed:@"icon_search"] forState:UIControlStateNormal];
-    [leftButton setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
+    [leftButton addTarget:self action:@selector(jumpToSetting:) forControlEvents:UIControlEventTouchUpInside];
+    [leftButton setImage:[UIImage imageNamed:@"icon_set"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"icon_setOn"] forState:UIControlStateHighlighted];
     [leftButton setImageEdgeInsets:UIEdgeInsetsMake(0, -40, 0, 0)];
     return leftButton;
 }
 
 -(UIView *)rightBarButtonItemCustomView{
-    UIImage *image = [UIImage imageNamed:@"icon_set"];
+    UIImage *image = [UIImage imageNamed:@"icon_search"];
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, image.size.width, image.size.height)];
     [rightButton setImage:image forState:UIControlStateNormal];
-    [rightButton addTarget:self action:@selector(jumpToSetting:) forControlEvents:UIControlEventTouchUpInside];
-    [rightButton setImage:[UIImage imageNamed:@"icon_setOn"] forState:UIControlStateHighlighted];
+    [rightButton addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
     return rightButton;
 }
 
@@ -158,19 +158,43 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
-    mallInfoVC.mall = _malls[indexPath.row % _malls.count];
-    [self.navigationController pushViewController:mallInfoVC animated:true];
+    YTMallCell *cell = (YTMallCell *)[tableView cellForRowAtIndexPath:indexPath];
+    if (cell.isFetch) {
+        YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
+        mallInfoVC.mall = _malls[indexPath.row % _malls.count];
+        [self.navigationController pushViewController:mallInfoVC animated:true];
+    }
 }
 
 -(void)reachabilityChanged:(NSNotification *)notification{
     Reachability *tmpReachability = notification.object;
     if (_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) {
-        [_tableView reloadData];
+        [self changeLocalMallVariableCloudMall:^{
+            [_tableView reloadData];
+        }];
+    }else if(tmpReachability.currentReachabilityFlags != NotReachable){
+        [self changeLocalMallVariableCloudMall:^{
+            [_tableView reloadData];
+        }];
     }
     _status =  tmpReachability.currentReachabilityStatus;
 }
-
+-(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
+    NSMutableArray *array = [NSMutableArray array];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (YTLocalMall *mall in _malls) {
+            [array addObject:[mall getCloudMall]];
+        }
+        [_malls removeAllObjects];
+        _malls = nil;
+        _malls = array;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (callBack != nil) {
+                callBack();
+            }
+        });
+    });
+}
 -(void)rangedBeacons:(NSArray *)beacons{
     if(beacons.count > 0){
         _recordMinorArea = [self getMinorArea:beacons[0]];

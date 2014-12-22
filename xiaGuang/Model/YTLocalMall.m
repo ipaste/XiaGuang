@@ -117,6 +117,10 @@
 -(YTCloudMall *)getCloudMall{
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     [query whereKey:@"localDBId" equalTo:[self identifier]];
-    return [[YTCloudMall alloc]initWithAVObject:[query getFirstObject]];
+    AVObject *mall = [query getFirstObject];
+    if (mall == nil) {
+        return nil;
+    }
+    return [[YTCloudMall alloc]initWithAVObject:mall];
 }
 @end
