@@ -223,7 +223,7 @@
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [_dataSourceInterceptor.receiver tableView:tableView cellForRowAtIndexPath:MORPHED_INDEX_PATH(indexPath)];
+    return [_dataSourceInterceptor.receiver tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
 

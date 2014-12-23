@@ -21,6 +21,8 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        
+        
         _mallBackgroundView = [[UIImageView alloc]init];
         _mallBackgroundView.frame = CGRectMake(10, 5, 300, 120);
         _titleImageView = [[UIImageView alloc]init];
@@ -31,6 +33,8 @@
         
         _cellBackground = [[UIImageView alloc]init];
         _cellBackground.image = [UIImage imageNamed:@"bg_box"];
+        
+        _cellBackground.frame = CGRectMake(0, 0, 320, 130);
         [self addSubview:_mallBackgroundView];
         [self addSubview:_titleImageView];
         [self addSubview:_cellBackground];
@@ -39,22 +43,28 @@
     return self;
 }
 
+
+
 -(void)layoutSubviews{
-    _cellBackground.frame = self.bounds;
+    
+    [super layoutSubviews];
     _mallBackgroundView.layer.cornerRadius = 8;
     _mallBackgroundView.layer.masksToBounds = true;
     self.backgroundColor = [UIColor clearColor];
+    
+    
 }
 
+
+
+
 -(void)setMall:(id<YTMall>)mall{
+    
     _mallBackgroundView.image = nil;
     _titleImageView.image = nil;
     _isFetch = false;
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
-        
-        _mallBackgroundView.image = background;
-        _titleImageView.image = titleImage;
-        
+    
         if (!error) {
             if (titleImage != nil){
                 _titleImageView.image = titleImage;

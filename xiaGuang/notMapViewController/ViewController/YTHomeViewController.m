@@ -10,7 +10,7 @@
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define BLUR_HEIGHT 174
 
-#define STEP_LENGTH 80
+#define STEP_LENGTH 20
 @interface YTHomeViewController (){
     UIViewController *_mapViewController;
     UIImageView *_backgroundImageView;
@@ -29,8 +29,9 @@
     BOOL _scrollFired;
     BOOL _shouldScroll;
     
-    NSMutableDictionary *_cells;
+    NSMutableArray *_cells;
     NetworkStatus _status;
+    
 }
 @end
 
@@ -143,10 +144,23 @@
     
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
     FMResultSet *result = [database executeQuery:@"select * from Mall"];
+    _cells = [NSMutableArray new];
+    
+    
+    
+    int i = 0;
     while ([result next]) {
         YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
         [_malls addObject:mall];
+        
     }
+    for(int j = 0; j<_malls.count*3; j++){
+        YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        [_cells addObject:cell1];
+    }
+    
+    
     [_tableView reloadData];
     
     if(!_scrollFired){
@@ -155,7 +169,7 @@
         _shouldScroll = YES;
     }
     
-    _cells = [NSMutableDictionary new];
+    
     
     
     
@@ -166,6 +180,9 @@
 - (void)test {
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        
+        
         [UIView animateWithDuration:1
                               delay:0
                             options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
@@ -190,19 +207,42 @@
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     _shouldScroll = NO;
+    
     [_tableView.layer removeAllAnimations];
     
 }
 
+
+
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
-//        _shouldScroll = YES;
-  //      [self test];
+    if(!decelerate && !_shouldScroll){
+        _shouldScroll = YES;
+        [self test];
+    }
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    _shouldScroll = YES;
-    [self test];
+    
+    if(!_shouldScroll){
+        _shouldScroll = YES;
+        [self test];
+    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    _shouldScroll = NO;
+    [_tableView.layer removeAllAnimations];
+    _scrollFired = NO;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    if(!_scrollFired){
+        [self test];
+        _scrollFired = YES;
+        _shouldScroll = YES;
+    }
 }
 
 
@@ -217,7 +257,7 @@
     p.y = p.y + STEP_LENGTH;
     
     NSLog(@"about to scroll up to point: %f",p.y);
-    [_tableView setContentOffset: p];
+    _tableView.contentOffset = p;
 }
 
 -(UIView *)leftBarButtonItemCustomView{
@@ -244,41 +284,29 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
-    static int counter = 0;
-    NSString *identifier = [NSString stringWithFormat:@"%lu",(indexPath.row%_malls.count)];
 
-
-    //YTMallCell *cell = [_cells objectForKey:identifier];
-    /*
-    if(cell == nil){
-        NSLog(@"counter:%d",counter);
-        counter++;
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        //cell.textLabel.text = @"hahahah";
-        cell.mall = _malls[indexPath.row];
-        [_cells setObject:cell forKey:identifier];
-    }*/
-    
-    
-     
-    
-    
-    YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    /*YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
     if (!cell) {
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    cell.mall = _malls[indexPath.row];
+        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+        //cell.mall = mall;
+    }*/
+    
+    YTMallCell *cell = _cells[indexPath.row];
+    id<YTMall> mall = _malls[indexPath.row%_malls.count];
+    
+    NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
+    cell.mall = mall;
+    
+    //NSLog(@"cell for row at index: %d, setting it to display mall pics of %@",indexPath.row, [mall mallName]);
     
     return cell;
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMallCell *cell = (YTMallCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
         mallInfoVC.mall = _malls[indexPath.row % _malls.count];
@@ -301,6 +329,8 @@
     _status =  tmpReachability.currentReachabilityStatus;
 }
 -(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
+    
+    
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     [query whereKeyExists:@"localDBId"];
     [query whereKey:@"localDBId" notEqualTo:@""];
