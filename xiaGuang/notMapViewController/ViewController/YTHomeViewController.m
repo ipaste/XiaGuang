@@ -24,7 +24,6 @@
     YTBeaconManager *_beaconManager;
     id<YTMinorArea> _recordMinorArea;
     NSMutableArray *_malls;
-    
     BOOL _scrollFired;
     BOOL _shouldScroll;
     
@@ -88,6 +87,10 @@
     [_navigationButton setTitleEdgeInsets:UIEdgeInsetsMake(50, -35, 0, 0)];
     [_navigationButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 35, 0, 0)];
     _navigationButton.layer.cornerRadius = 10;
+    
+    
+    
+    
     [_blurView addSubview:_navigationButton];
     
     
@@ -125,8 +128,6 @@
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
     FMResultSet *result = [database executeQuery:@"select * from Mall"];
     _cells = [NSMutableArray new];
-    
-    
     
     int i = 0;
     while ([result next]) {

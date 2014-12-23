@@ -149,6 +149,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
     _shownUser = NO;
     _allElvatorAndEscalator = [NSMutableArray array];
     _malls = [NSMutableArray array];
@@ -177,6 +178,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
+     
     
     
 }

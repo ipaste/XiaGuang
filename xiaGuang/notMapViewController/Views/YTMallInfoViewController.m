@@ -257,7 +257,7 @@
 }
 -(void)jumpToFloorMap:(UIButton *)sender{
     id <YTFloor> floor = nil;
-    YTLocalMall *localmall = self.mall;
+    YTLocalMall *localmall = [(YTCloudMall*)self.mall getLocalCopy];
     if (localmall == nil){
         [[[UIAlertView alloc]initWithTitle:@"虾逛" message:@"地图正在建设中." delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
         return;
