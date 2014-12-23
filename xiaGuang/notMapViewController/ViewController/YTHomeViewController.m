@@ -248,30 +248,15 @@
     static int counter = 0;
     NSString *identifier = [NSString stringWithFormat:@"%lu",(indexPath.row%_malls.count)];
 
-
-    //YTMallCell *cell = [_cells objectForKey:identifier];
-    /*
-    if(cell == nil){
-        NSLog(@"counter:%d",counter);
-        counter++;
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        //cell.textLabel.text = @"hahahah";
-        cell.mall = _malls[indexPath.row];
-        [_cells setObject:cell forKey:identifier];
-    }*/
-    
-    
-     
-    
-    
     YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     
     if (!cell) {
         cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    cell.mall = _malls[indexPath.row];
+    if (_status != NotReachable) {
+        cell.mall = _malls[indexPath.row];
+    }
     
     return cell;
 }

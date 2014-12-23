@@ -90,7 +90,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
     _callBack = callback;
-    if (_titleImage == nil || _background == nil) {
+    if (![self checkCallBackConditions]) {
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
         [query whereKey:@"localDBId" equalTo:[self identifier]];
         [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
@@ -115,14 +115,15 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
                 }];
             }
         }];
-    }else{
-        [self checkCallBackConditions];
     }
 }
--(void)checkCallBackConditions{
+-(BOOL)checkCallBackConditions{
     if (_titleImage != nil && _background != nil) {
         _callBack(_titleImage,_background,nil);
         _callBack = nil;
+        return true;
+    }else{
+        return false;
     }
 }
 @end

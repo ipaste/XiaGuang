@@ -228,7 +228,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
     _callBack = callback;
-    if (_titleImage == nil || _background == nil) {
+    if (![self checkCallBackConditions]) {
         if (_titleImage == nil) {
             [_internalObject[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                 if (error) {
@@ -250,14 +250,16 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
                 [self checkCallBackConditions];
             }];
         }
-    }else{
-        [self checkCallBackConditions];
     }
 }
 
--(void)checkCallBackConditions{
+-(BOOL)checkCallBackConditions{
     if (_titleImage != nil && _background != nil) {
         _callBack(_titleImage,_background,nil);
+        _callBack = nil;
+        return true;
+    }else{
+        return false;
     }
 }
 
