@@ -120,26 +120,7 @@
             }
         }
     });
-    
-    /*
-    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-    [query whereKeyExists:@"localDBId"];
-    [query whereKey:@"localDBId" notEqualTo:@""];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        for (AVObject *object in objects) {
-            YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:object];
-            [_malls addObject:mall];
-        }
-        [_tableView reloadData];
-        if(!_scrollFired){
-            [self test];
-            _scrollFired = YES;
-            _shouldScroll = YES;
-        }
-        
-    }];*/
-    
-    
+
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
     FMResultSet *result = [database executeQuery:@"select * from Mall"];
     while ([result next]) {
@@ -155,9 +136,6 @@
     }
     
     _cells = [NSMutableDictionary new];
-    
-    
-    
 }
 
 
@@ -254,8 +232,10 @@
         cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    if (_status != NotReachable) {
-        cell.mall = _malls[indexPath.row];
+    id <YTMall> mall = _malls[indexPath.row];
+    
+    if([mall isMemberOfClass:[YTCloudMall class]]){
+        cell.mall = mall;
     }
     
     return cell;
@@ -272,7 +252,6 @@
 
 -(void)reachabilityChanged:(NSNotification *)notification{
     Reachability *tmpReachability = notification.object;
-    
     if (_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) {
         [self changeLocalMallVariableCloudMall:^{
             [_tableView reloadData];
