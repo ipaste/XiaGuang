@@ -25,7 +25,6 @@
     id<YTMinorArea> _recordMinorArea;
     NSMutableArray *_malls;
     
-    
     BOOL _scrollFired;
     BOOL _shouldScroll;
     

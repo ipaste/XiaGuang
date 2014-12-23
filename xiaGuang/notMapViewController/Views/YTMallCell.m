@@ -52,18 +52,14 @@
     _isFetch = false;
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
         
-        _mallBackgroundView.image = background;
-        _titleImageView.image = titleImage;
-        
         if (!error) {
-            if (titleImage != nil){
-                _titleImageView.image = titleImage;
-            }
-            if (background != nil) {
-                _mallBackgroundView.image = background;
-            }
+            _titleImageView.image = titleImage;
+            
+            _mallBackgroundView.image = background;
+            
+            _isFetch = true;
         }
-        _isFetch = true;
+        
     }];
     _mall = mall;
 }

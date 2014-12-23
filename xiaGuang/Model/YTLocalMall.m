@@ -8,6 +8,8 @@
 
 #import "YTLocalMall.h"
 #import "YTCloudMall.h"
+
+typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
@@ -16,6 +18,7 @@
     NSMutableArray *_tmpMerchantInstance;
     UIImage *_titleImage;
     UIImage *_background;
+    YTGetTitleImageAndBackgroundImageCallBack _callBack;
 }
 
 @synthesize mallName;
@@ -86,6 +89,7 @@
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
+    _callBack = callback;
     if (_titleImage == nil || _background == nil) {
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
         [query whereKey:@"localDBId" equalTo:[self identifier]];
@@ -97,7 +101,7 @@
                         return ;
                     }
                     _titleImage = [UIImage imageWithData:data];
-                    callback(_titleImage,_background,error);
+                    [self checkCallBackConditions];
                 }];
             }
             if (_background == nil) {
@@ -107,13 +111,18 @@
                         return ;
                     }
                     _background = [UIImage imageWithData:data];
-                    callback(_titleImage,_background,error);
+                    [self checkCallBackConditions];
                 }];
             }
         }];
     }else{
-        callback(_titleImage,_background,nil);
+        [self checkCallBackConditions];
     }
 }
-
+-(void)checkCallBackConditions{
+    if (_titleImage != nil && _background != nil) {
+        _callBack(_titleImage,_background,nil);
+        _callBack = nil;
+    }
+}
 @end
