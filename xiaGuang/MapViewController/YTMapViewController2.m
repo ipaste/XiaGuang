@@ -176,7 +176,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createNavigationView];
     [self createPoiView];
     [self createNoBeaconCover];
-    [self createBlurMenuWithCallBack:nil];
+    //[self createBlurMenuWithCallBack:nil];
     [self createSearchView];
      
     
@@ -269,6 +269,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     _viewDidAppear = YES;
+    [self injectPoisForMajorArea:_curDisplayedMajorArea];
 }
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
@@ -335,7 +336,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
-    [self injectPoisForMajorArea:_majorArea];
+    //[self injectPoisForMajorArea:_majorArea];
     
 }
 
