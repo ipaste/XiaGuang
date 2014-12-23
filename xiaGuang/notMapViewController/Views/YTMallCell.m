@@ -24,7 +24,7 @@
         
         
         _mallBackgroundView = [[UIImageView alloc]init];
-        _mallBackgroundView.frame = CGRectMake(10, 5, 300, 120);
+        _mallBackgroundView.frame = CGRectMake(10, 4, 300, 123);
         _titleImageView = [[UIImageView alloc]init];
         _mallBackgroundView.layer.cornerRadius = 10;
         _mallBackgroundView.layer.masksToBounds = true;
@@ -64,16 +64,15 @@
     _titleImageView.image = nil;
     _isFetch = false;
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
-    
+
         if (!error) {
-            if (titleImage != nil){
-                _titleImageView.image = titleImage;
-            }
-            if (background != nil) {
-                _mallBackgroundView.image = background;
-            }
+            _titleImageView.image = titleImage;
+            
+            _mallBackgroundView.image = background;
+            
+            _isFetch = true;
         }
-        _isFetch = true;
+        
     }];
     _mall = mall;
 }

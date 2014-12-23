@@ -25,7 +25,6 @@
     id<YTMinorArea> _recordMinorArea;
     NSMutableArray *_malls;
     
-    
     BOOL _scrollFired;
     BOOL _shouldScroll;
     
@@ -122,26 +121,7 @@
             }
         }
     });
-    
-    /*
-    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-    [query whereKeyExists:@"localDBId"];
-    [query whereKey:@"localDBId" notEqualTo:@""];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        for (AVObject *object in objects) {
-            YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:object];
-            [_malls addObject:mall];
-        }
-        [_tableView reloadData];
-        if(!_scrollFired){
-            [self test];
-            _scrollFired = YES;
-            _shouldScroll = YES;
-        }
-        
-    }];*/
-    
-    
+
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
     FMResultSet *result = [database executeQuery:@"select * from Mall"];
     _cells = [NSMutableArray new];
@@ -168,10 +148,6 @@
         _scrollFired = YES;
         _shouldScroll = YES;
     }
-    
-    
-    
-    
     
 }
 
@@ -296,10 +272,11 @@
     id<YTMall> mall = _malls[indexPath.row%_malls.count];
     
     NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
-    cell.mall = mall;
+    if([mall isMemberOfClass:[YTCloudMall class]]){
+        cell.mall = mall;
+    }
     
     //NSLog(@"cell for row at index: %d, setting it to display mall pics of %@",indexPath.row, [mall mallName]);
-    
     return cell;
     
 }
@@ -316,7 +293,6 @@
 
 -(void)reachabilityChanged:(NSNotification *)notification{
     Reachability *tmpReachability = notification.object;
-    
     if (_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) {
         [self changeLocalMallVariableCloudMall:^{
             [_tableView reloadData];
