@@ -30,6 +30,8 @@
     NSMutableArray *_cells;
     NetworkStatus _status;
     
+    
+    UIToolbar *_transitionToolbar;
 }
 @end
 
@@ -150,6 +152,14 @@
         _shouldScroll = YES;
     }
     
+    _transitionToolbar = [[UIToolbar alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    _transitionToolbar.tintColor = [UIColor blackColor];
+    _transitionToolbar.barStyle = UIBarStyleBlack;
+    _transitionToolbar.translucent = YES;
+    _transitionToolbar.alpha = 0;
+    [self.view addSubview:_transitionToolbar];
+
+    
 }
 
 
@@ -220,6 +230,10 @@
         _scrollFired = YES;
         _shouldScroll = YES;
     }
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        _transitionToolbar.alpha = 0;
+    }];
 }
 
 
@@ -372,13 +386,21 @@
             controller = _mapViewController;
         }
         [AVAnalytics event:@"导航"];
-        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        //controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     }else{
         controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
-        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [AVAnalytics event:@"停车"];
     }
-    [self presentViewController:controller animated:true completion:nil];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        _transitionToolbar.alpha = 1;
+        
+    }completion:^(BOOL finished) {
+        [self presentViewController:controller animated:false completion:nil];
+    }];
+    
 }
 
 -(void)detectedBluetoothStateHasChanged:(NSNotification *)notification{

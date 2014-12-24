@@ -52,8 +52,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTSwitchBlockView *_switchBlockView;
     YTDetailsView *_detailsView;
     YTSelectedPoiButton *_selectedPoiButton;
-    UIImageView *_noBeaconCover;
-    BlurMenu *_menu;
+    UIToolbar *_toolbar;
+    
     UIAlertView *_alert;
     
     //states
@@ -175,8 +175,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
-    [self createNoBeaconCover];
-    //[self createBlurMenuWithCallBack:nil];
+    //[self createNoBeaconCover];
+    [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
      
     
@@ -185,6 +185,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self showBlur];
     if(_type == YTMapViewControllerTypeNavigation){
         [AVAnalytics beginLogPageView:@"mapViewController-navigation"];
     }
@@ -218,20 +219,22 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
         
         if(!_blurMenuShown){
-            _noBeaconCover.hidden = NO;
+            _toolbar.hidden = NO;
             
             if(_type == YTMapViewControllerTypeNavigation){
                 
                 
-                if(_menu == nil){
+                if(_toolbar == nil){
                     [self createBlurMenuWithCallBack:^{
-                        [_menu show];
-                        _blurMenuShown = YES;
+                        [UIView animateWithDuration:0.5 animations:^{
+                            [self showBlur];
+                        }];
                     }];
                 }
                 else{
-                    [_menu show];
-                    _blurMenuShown = YES;
+                    [UIView animateWithDuration:0.5 animations:^{
+                        [self showBlur];
+                    }];
                 }
                 if([_mapView currentState] != YTMapViewDetailStateNormal){
                     [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
@@ -241,14 +244,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
     }
     else{
-        _noBeaconCover.hidden = YES;
-        [_menu hide];
+        [self hideBlur];
     }
     
     if(_type != YTMapViewControllerTypeNavigation){
         
-        [_menu hide];
-        _noBeaconCover.hidden = YES;
+        [self hideBlur];
         [self redrawBlockAndFloorSwitch];
         
     }
@@ -295,32 +296,35 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 
--(void)createNoBeaconCover{
-    UIImage *fake;
-    if (BIGGER_THEN_IPHONE5) {
-        fake = [UIImage imageNamed:@"home_bg1136@2x.jpg"];
-    }else{
-        fake = [UIImage imageNamed:@"home_bg960@2x.jpg"];
-    }
-    _noBeaconCover = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    _noBeaconCover.image = fake;
-    //_noBeaconCover.backgroundColor = [UIColor blackColor];
-    //_noBeaconCover.alpha = 0.5;
-    _noBeaconCover.hidden = NO;
-    
-    [self.view addSubview:_noBeaconCover];
-}
+
 
 -(void)instantiateMenu{
-    NSMutableArray *mallNames = [NSMutableArray array];
-    for(id<YTMall> mall in _malls){
-        [mallNames addObject:[mall mallName]];
+    
+    if(_toolbar == nil){
+        NSMutableArray *mallNames = [NSMutableArray array];
+        for(id<YTMall> mall in _malls){
+            [mallNames addObject:[mall mallName]];
+        }
+        _toolbar = [[UIToolbar alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _toolbar.tintColor = [UIColor blackColor];
+        _toolbar.barStyle = UIBarStyleBlack;
+        _toolbar.translucent = YES;
+        [self.view addSubview:_toolbar];
+        [self showBlur];
     }
-    
-    _menu = [[BlurMenu alloc] initWithItems:mallNames parentView:self.view delegate:self];
-    
 }
 
+-(void)hideBlur{
+    
+    _toolbar.alpha = 0;
+    _blurMenuShown = NO;
+}
+
+-(void)showBlur{
+    
+    _toolbar.alpha = 1;
+    _blurMenuShown = YES;
+}
 
 
 
@@ -1005,9 +1009,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
     if(_blurMenuShown){
-        [_menu hide];
-        _noBeaconCover.hidden = YES;
-        _blurMenuShown = NO;
+        [UIView animateWithDuration:0.5 animations:^{
+            [self hideBlur];
+        }];
         [self redrawBlockAndFloorSwitch];
     }
     
@@ -1509,9 +1513,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _beaconManager.delegate = self;
             if(_userMinorArea != nil){
                 if(_blurMenuShown){
-                    [_menu hide];
-                    _noBeaconCover.hidden = YES;
-                    _blurMenuShown = NO;
+                    
+                    
+                    [UIView animateWithDuration:0.51 animations:^{
+                        [self hideBlur];
+                    }];
                     [self redrawBlockAndFloorSwitch];
                 }
             }
@@ -1558,16 +1564,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 
-#pragma mark blurMenu
--(void)menuDidHide{
-    //[self dismissViewControllerAnimated:YES completion:nil];
-    _blurMenuShown = NO;
-}
--(void)menuDidShow{
-    _blurMenuShown = YES;
-}
+
 -(void)selectedItemAtIndex:(NSInteger)index{
-    _noBeaconCover.hidden = YES;
     id<YTMall> selected = [_malls objectAtIndex:index];
     YTLocalMall *local;
     if([selected isMemberOfClass:[YTLocalMall class]]){
@@ -1587,7 +1585,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self redrawBlockAndFloorSwitch];
     [self setTargetMall:[[[_majorArea floor] block] mall]];
     _navigationBar.titleName = [_targetMall mallName];
-    [_menu hide];
+    
+    [self hideBlur];
 }
 
 -(void)backClicked{
