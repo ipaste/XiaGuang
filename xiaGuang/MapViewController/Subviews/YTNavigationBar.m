@@ -80,9 +80,17 @@
     _searchButton.hidden = !_searchButton.hidden;
 }
 
+-(void)changeSearchButtonWithHide:(BOOL)hide{
+    _searchButton.hidden = hide;
+}
+
 -(void)changeBackButton{
     _backButton.hidden = !_backButton.hidden;
     _backImageView.hidden =_backButton.hidden;
+}
+-(void)changeBackButtonWithHide:(BOOL)hide{
+    _backButton.hidden = hide;
+    _backImageView.hidden = hide;
 }
 
 -(void)clickToBackButtonWithDown{

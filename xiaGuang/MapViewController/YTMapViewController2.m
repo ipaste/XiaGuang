@@ -10,6 +10,7 @@
 
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define HOISTING_HEIGHT 70
+#define ROW_HEIGHT 65
 typedef NS_ENUM(NSInteger, YTMapViewControllerType){
     YTMapViewControllerTypeNavigation = 0,
     YTMapViewControllerTypeFloor,
@@ -53,7 +54,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTDetailsView *_detailsView;
     YTSelectedPoiButton *_selectedPoiButton;
     UIToolbar *_toolbar;
-    
+    UITableView *_mallTableView;
+    UILabel *_bluetoothLabel;
     UIAlertView *_alert;
     
     //states
@@ -178,8 +180,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //[self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
-     
-    
     
 }
 
@@ -273,6 +273,17 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self injectPoisForMajorArea:_curDisplayedMajorArea];
 }
 
+-(void)viewDidLayoutSubviews{
+    if ([_mallTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [_mallTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 10)];
+    }
+    
+    if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"] && [_mallTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [_mallTableView setLayoutMargins:UIEdgeInsetsMake(0, 10, 0, 10)];
+    }
+
+}
+
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
 
     _malls = [NSMutableArray array];
@@ -309,31 +320,51 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _toolbar.tintColor = [UIColor blackColor];
         _toolbar.barStyle = UIBarStyleBlack;
         _toolbar.translucent = YES;
-        [self.view addSubview:_toolbar];
+        [self.view insertSubview:_toolbar belowSubview:_navigationBar];
         [self showBlur];
+    }
+    
+    if (_bluetoothLabel == nil) {
+        _bluetoothLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_toolbar.frame) - 55, CGRectGetWidth(_toolbar.frame), 55)];
+        _bluetoothLabel.font = [UIFont systemFontOfSize:15];
+        _bluetoothLabel.textColor = [UIColor colorWithString:@"999999"];
+        _bluetoothLabel.text = @"您没有打开蓝牙或不在商城范围内";
+        _bluetoothLabel.textAlignment = 1;
+        [_toolbar addSubview:_bluetoothLabel];
+    }
+    
+    if (_mallTableView == nil) {
+        _mallTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetMinY(_bluetoothLabel.frame) - CGRectGetHeight(_navigationBar.frame)) style:UITableViewStylePlain];
+        _mallTableView.backgroundColor = [UIColor clearColor];
+        _mallTableView.separatorColor = [UIColor colorWithString:@"727272"];
+        _mallTableView.delegate = self;
+        _mallTableView.dataSource = self;
+        _mallTableView.showsVerticalScrollIndicator = false;
+        _mallTableView.layer.cornerRadius = 10;
+        _mallTableView.rowHeight = ROW_HEIGHT;
+        _mallTableView.layer.masksToBounds = true;
+        [_toolbar addSubview:_mallTableView];
     }
 }
 
 -(void)hideBlur{
-    
+    [_navigationBar changeSearchButtonWithHide:false];
     _toolbar.alpha = 0;
     _blurMenuShown = NO;
 }
 
 -(void)showBlur{
-    
+    [_navigationBar changeSearchButtonWithHide:true];
+    _navigationBar.titleName = @"选择商城";
     _toolbar.alpha = 1;
     _blurMenuShown = YES;
 }
-
-
-
 
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 10)];
     _mapView.delegate = self;
     
-    [self.view addSubview:_mapView];
+    [self.view insertSubview:_mapView belowSubview:_navigationBar];
     
     [_mapView displayMapNamed:[_majorArea mapName]];
     _shownFloorChange = NO;
@@ -468,6 +499,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     _navigationBar.backTitle = title;
     _navigationBar.titleName = [[[[_majorArea floor]block]mall] mallName];
+    if (_navigationBar.titleName == nil) {
+        _navigationBar.titleName = @"地图导航";
+    }
     [self.view addSubview:_navigationBar];
 }
 -(void)createSearchView{
@@ -484,39 +518,39 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)createCurLocationButton{
     _moveCurrentButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
     _moveCurrentButton.delegate = self;
-    [self.view addSubview:_moveCurrentButton];
+    [self.view insertSubview:_moveCurrentButton belowSubview:_navigationBar];
     
     
     _changeFloorIndicator = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(_moveCurrentButton.frame) ,CGRectGetMinY(_moveCurrentButton.frame) - 80 , CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
     _changeFloorIndicator.image = [UIImage imageWithImageName:@"nav_ico_ finger" andTintColor:[UIColor colorWithString:@"e95e37"]];
     _changeFloorIndicator.hidden = YES;
-    [self.view addSubview:_changeFloorIndicator];
+    [self.view insertSubview:_changeFloorIndicator belowSubview:_navigationBar];
     
     _moveTargetButton = [[YTMoveTargetLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 10,CGRectGetMinY(_moveCurrentButton.frame), CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
     _moveTargetButton.hidden = YES;
     _moveTargetButton.delegate = self;
-    [self.view addSubview:_moveTargetButton];
+    [self.view insertSubview:_moveTargetButton belowSubview:_navigationBar];
 }
 
 -(void)createCommonPoiButton{
     _poiButton = [[YTPoiButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 60, CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
     _poiButton.delegate = self;
-    [self.view addSubview:_poiButton];
+    [self.view insertSubview:_poiButton belowSubview:_navigationBar];
     
     _selectedPoiButton = [[YTSelectedPoiButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_poiButton.frame) + 10, CGRectGetMinY(_poiButton.frame), CGRectGetWidth(_poiButton.frame), CGRectGetHeight(_poiButton.frame))];
     _selectedPoiButton.delegate = self;
-    [self.view addSubview:_selectedPoiButton];
+    [self.view insertSubview:_selectedPoiButton belowSubview:_navigationBar];
 }
 -(void)createZoomStepper{
     _zoomStepper = [[YTZoomStepper alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_mapView.frame) - 55, CGRectGetMaxY(_mapView.frame) - 80, 45, 70)];
     _zoomStepper.delegate = self;
-    [self.view addSubview:_zoomStepper];
+    [self.view insertSubview:_zoomStepper belowSubview:_navigationBar];
 }
 -(void)createDetailsView{
     _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60)];
     _detailsView.hidden = YES;
     _detailsView.delegate = self;
-    [self.view addSubview:_detailsView];
+    [self.view insertSubview:_detailsView belowSubview:_navigationBar];
 }
 
 -(void)createBlockAndFloorSwitch{
@@ -524,13 +558,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_switchBlockView removeFromSuperview];
     _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
     _switchBlockView.delegate = self;
-    [self.view addSubview:_switchBlockView];
+    [self.view insertSubview:_switchBlockView belowSubview:_navigationBar];
     
     
     [_switchFloorView removeFromSuperview];
     _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
     _switchFloorView.delegate = self;
-    [self.view addSubview:_switchFloorView];
+    [self.view insertSubview:_switchFloorView belowSubview:_navigationBar];
     [self redrawBlockAndFloorSwitch];
 }
 
@@ -541,7 +575,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }else{
         _switchBlockView.hidden = YES;
     }
-    
     [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
 }
 
@@ -1228,7 +1261,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     
-    
+    [_navigationBar setHidden:true];
     [_navigationView startNavigationAndSetDestination:merchantLocation];
     
     _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetPoiSource:merchantLocation];
@@ -1322,7 +1355,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView hidePoi:_selectedPoi animated:YES];
     [_mapView hidePois:_allElvatorAndEscalator animated:YES];
-
+    [_navigationBar setHidden:false];
     
     [UIView animateWithDuration:.2 animations:^{
         [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
@@ -1490,7 +1523,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         else{
             [AVAnalytics event:@"进入mapview时蓝牙关闭"];
         }
-        
     }
     
     if([_mapView currentState] != YTMapViewDetailStateNormal){
@@ -1513,17 +1545,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _beaconManager.delegate = self;
             if(_userMinorArea != nil){
                 if(_blurMenuShown){
-                    
-                    
                     [UIView animateWithDuration:0.51 animations:^{
                         [self hideBlur];
                     }];
                     [self redrawBlockAndFloorSwitch];
                 }
             }
-            
-            
-            
         }else{
             
             if(!_firstBlueToothRefresh){
@@ -1635,6 +1662,50 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _locator.delegate = self;
     _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
     
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _malls.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.1];
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.textAlignment = 1;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    cell.textLabel.text = [_malls[indexPath.row] mallName];
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        
+        if(indexPath.row == _malls.count - 1){
+            if ([[UIDevice currentDevice].systemVersion hasPrefix:@"7"]){
+                [cell setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, CGRectGetWidth(_mallTableView.frame))];
+            }else{
+                [cell setSeparatorInset:UIEdgeInsetsMake(0, CGRectGetWidth(_mallTableView.frame), 0, 0)];
+            }
+            
+        }else{
+            [cell setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 10)];
+        }
+        
+    }
+    if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"] && [cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsMake(0, 10, 0, 10)];
+        if (indexPath.row == _malls.count -1){
+            [cell setLayoutMargins:UIEdgeInsetsMake(0, 0, 0, CGRectGetWidth(_mallTableView.frame))];
+        }
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self selectedItemAtIndex:indexPath.row];
 }
 
 -(void)setTargetMall:(id<YTMall>)aMall{
