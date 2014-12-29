@@ -146,6 +146,11 @@
     
     [_tableView reloadData];
     
+    [self changeLocalMallVariableCloudMall:^{
+        [_tableView reloadData];
+    }];
+    
+    
     if(!_scrollFired){
         [self test];
         _scrollFired = YES;
@@ -323,19 +328,24 @@
     
     
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+    query.maxCacheAge = 24 * 60 * 60;
     [query whereKeyExists:@"localDBId"];
     [query whereKey:@"localDBId" notEqualTo:@""];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSMutableArray *array = [NSMutableArray array];
-        for (AVObject *mall in objects) {
-            YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
-            [array addObject:cloudMall];
-        }
-        [_malls removeAllObjects];
-        _malls = nil;
-        _malls = array;
-        if (callBack != nil) {
-            callBack();
+        
+        if(!error && objects != nil && objects.count != 0){
+            NSMutableArray *array = [NSMutableArray array];
+            for (AVObject *mall in objects) {
+                YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
+                [array addObject:cloudMall];
+            }
+            [_malls removeAllObjects];
+            _malls = nil;
+            _malls = array;
+            if (callBack != nil) {
+                callBack();
+            }
         }
     }];
 }
