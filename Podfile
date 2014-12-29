@@ -11,4 +11,4 @@ pod 'Reachability','3.1.1'
 pod 'FCFileManager','1.0.6'
 pod 'PESGraph','0.2.1'
 pod 'FXBlurView','1.6.3'
-
+pod 'AFNetworking', '~> 2.0'

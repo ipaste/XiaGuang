@@ -13,6 +13,9 @@
 #import <FCFileManager.h>
 #import <UnrarKit/URKArchive.h>
 #import "YTBeaconManager.h"
+#import <AdSupport/AdSupport.h>
+#import <AFNetworking.h>
+
 @interface AppDelegate () {
     double _timeInToBackground;
 }
@@ -38,6 +41,9 @@
     
     _timeInToBackground = 0;
     
+    NSLog(@"%@",[self identifierForAdvertising]);
+    
+    [self youmiProcedure];
     return YES;
 }
 
@@ -77,4 +83,57 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (NSString *)identifierForAdvertising
+{
+    if([[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled])
+    {
+        NSUUID *IDFA = [[ASIdentifierManager sharedManager] advertisingIdentifier];
+        
+        return [IDFA UUIDString];
+    }
+    
+    return nil;
+}
+
+-(void)youmiProcedure{
+    
+    NSString *idfa = [self identifierForAdvertising];
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"YoumiRecord"];
+    [query whereKey:@"ifa" equalTo:idfa];
+    [query whereKey:@"sent" equalTo:@NO];
+    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        if(!error){
+            
+            NSString *url = object[@"callback"];
+            if(url != nil && ![url isEqualToString:@""]){
+                
+                NSString *decoded = [url stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                
+                if(decoded != nil && ![decoded isEqualToString:@""]){
+                    
+                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                    [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                        NSLog(@"JSON: %@", responseObject);
+                        object[@"sent"] = @YES;
+                        [object saveEventually];
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        object[@"failed"] = @YES;
+                        [object saveEventually];
+                    }];
+                }
+                else{
+                    object[@"failed"] = @YES;
+                    [object saveEventually];
+                }
+            }
+            
+            
+        }
+    }];
+    
+}
+
+    
 @end
