@@ -130,6 +130,7 @@
         }
     }];
     
+    [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:CURRENT_DIR]];
     
 }
 
@@ -256,20 +257,20 @@
                     if (error == nil) {
                         
                         dict[@"version"] = [NSNumber numberWithInt:version];
-                        
-                        
-                            
+                    
                         [self createStagingArea];
-                            
+                        
                         [data writeToFile:STAGING_MANIFEST_PATH atomically:YES];
+                        
+                        
                         NSMutableDictionary *curDict = [[NSMutableDictionary alloc] initWithContentsOfFile:CURRENT_MANIFEST_PATH];
                         NSMutableDictionary *stagingDict = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_MANIFEST_PATH];
                             
                         NSDictionary *updateTable = [self toUpdateToGetManifest1:stagingDict fromManifest2:curDict];
                         NSArray *deleteTable = [self toDeleteToGetManifest1:stagingDict fromManifest2:curDict];
-                            
                         [updateTable writeToFile:STAGING_UPDATE_TABLE atomically:YES];
                         [deleteTable writeToFile:STAGING_DELETE_TABLE atomically:YES];
+                        
                             
                         if([updateTable objectForKey:@"db"] != nil){
                             [_downloader startDownloadingDBVersion:[[updateTable objectForKey:@"db"] integerValue]];
@@ -338,7 +339,15 @@
     return result;
 }
 
-
+-(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url{
+    assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
+    NSError *error = nil;
+    BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
+    if (!success) {
+        NSLog(@"错误信息:%@",error);
+    }
+    return success;
+}
 
 
 @end

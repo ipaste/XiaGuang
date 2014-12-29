@@ -1611,8 +1611,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self handlePoiForMajorArea:_majorArea];
     [self redrawBlockAndFloorSwitch];
     [self setTargetMall:[[[_majorArea floor] block] mall]];
-    _navigationBar.titleName = [_targetMall mallName];
-    
     [self hideBlur];
 }
 
