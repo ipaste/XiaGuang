@@ -137,22 +137,21 @@
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *result = nil;
         if (_mall) {
-            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like ? and uniId != 0 and majorAreaId in %@ and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",_majorAreaIds];
-            
-            result = [db executeQuery:sql,[NSString stringWithFormat:@"%%%@%%",keyWord]];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance where majorAreaId in %@ group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord],_majorAreaIds];
+       
+            result = [db executeQuery:sql];
         }else{
-            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"%%%@%%",keyWord]];
+            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
         }
         NSMutableArray *results = [NSMutableArray array];
         NSMutableArray *uniIds = [NSMutableArray array];
+        
         while ([result next]) {
             YTLocalMerchantInstance *tmpMerchant = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
             
             [results addObject:tmpMerchant];
             
             [uniIds addObject:[self merchantsWithMerchantName:[tmpMerchant merchantLocationName]]];
-            
-           
         }
         NSDictionary *resultDict = @{@"merchants":results,@"uniIds":uniIds};
         if(!op.cancelled){
