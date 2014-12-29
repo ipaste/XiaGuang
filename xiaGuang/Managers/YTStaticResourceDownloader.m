@@ -56,7 +56,6 @@
                 return;
             }
             @synchronized(_updateTableLock){
-                
                 [data writeToFile:STAGING_DATA_DB_PATH atomically:YES];
                 NSMutableDictionary *update = [[NSMutableDictionary alloc] initWithContentsOfFile:STAGING_UPDATE_TABLE];
                 if([update objectForKey:@"db"] == nil){
@@ -145,7 +144,10 @@
                         NSLog(@"some crazy thing happens");
                     }
                     [update removeObjectForKey:tmp[@"mapName"]];
-                    [update writeToFile:STAGING_UPDATE_TABLE atomically:YES];
+                    if([self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:STAGING_UPDATE_TABLE]]){
+                        [update writeToFile:STAGING_UPDATE_TABLE atomically:YES];
+                    }
+                    
                     if([FCFileManager existsItemAtPath:STAGING_FAIL_TABLE]){
                         [self removeFailRecordForKey:tmp[@"mapName"]];
                     }
@@ -166,7 +168,10 @@
             failTable = [[NSMutableDictionary alloc] init];
         }
         [failTable setObject:[NSNumber numberWithInt:version] forKey:key];
-        [failTable writeToFile:STAGING_FAIL_TABLE atomically:YES];
+        if ([self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:STAGING_FAIL_TABLE]]) {
+            [failTable writeToFile:STAGING_FAIL_TABLE atomically:YES];
+        }
+        
     }
 }
 
@@ -180,9 +185,21 @@
         if([failTable objectForKey:key] != nil){
             [failTable removeObjectForKey:key];
         }
-        [failTable writeToFile:STAGING_FAIL_TABLE atomically:YES];
+        if ([self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:STAGING_FAIL_TABLE]]) {
+            [failTable writeToFile:STAGING_FAIL_TABLE atomically:YES];
+        }
+        
     }
     
+}
+-(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url{
+    assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
+    NSError *error = nil;
+    BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
+    if (!success) {
+        NSLog(@"错误信息:%@",error);
+    }
+    return success;
 }
 
 @end

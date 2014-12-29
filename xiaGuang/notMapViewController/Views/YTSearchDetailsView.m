@@ -240,7 +240,7 @@
         
         id<YTMerchantLocation> merchant = _results[indexPath.row];
         NSString *merchantName = [merchant merchantLocationName];
-        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%ld家",[_unIds[indexPath.row] count]];
+        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%d家",[_unIds[indexPath.row] count]];
         cell.textLabel.text = merchantName;
         cell.detailTextLabel.text = remarks;
         return cell;
