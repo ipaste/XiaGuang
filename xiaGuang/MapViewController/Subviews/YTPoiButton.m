@@ -16,8 +16,8 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(4, 4,CGRectGetWidth(frame) - 8,CGRectGetHeight(frame) - 8)];
-        _backgroundImageView.image = [UIImage imageNamed:@"nav_ico_more_un"];
+        _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0,CGRectGetWidth(frame),CGRectGetHeight(frame))];
+        _backgroundImageView.image = [UIImage imageNamed:@"nav_ico_more"];
         [self addTarget:self action:@selector(clickToButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_backgroundImageView];
     }
@@ -25,9 +25,6 @@
 }
 
 -(void)layoutSubviews{
-    
-    
-    self.backgroundColor = [UIColor colorWithRed:233/255.0f green:94/255.0 blue:55/255.0 alpha:0.9];
     self.layer.cornerRadius = CGRectGetWidth(self.frame) / 2;
 }
 

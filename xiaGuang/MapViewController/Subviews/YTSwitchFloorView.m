@@ -40,10 +40,6 @@
         [self addSubview:_floorButton];
 
         [_floorButton setBackgroundImage:[UIImage imageNamed:@"btbg_floor"] forState:UIControlStateNormal];
-        [_floorButton setBackgroundImage:[UIImage imageNamed:@"btbg_blockOn"] forState:UIControlStateHighlighted];
-        
-        
-        
     }
     return self;
 }
@@ -59,7 +55,7 @@
     
     //_floorButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
     
-    _floorView = [[YTFloorView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_floorButton.frame), CGRectGetMinY(_floorButton.frame), WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[_majorArea floor]block]floors]];
+    _floorView = [[YTFloorView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_floorButton.frame), CGRectGetMinY(_floorButton.frame) + 5, WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[_majorArea floor]block]floors]];
     _floorView.alpha = 0;
     [_floorButton setTitle:[[_majorArea floor]floorName] forState:UIControlStateNormal];
     _floorView.floorDelegate = self;
@@ -69,10 +65,10 @@
 
 -(void)layoutSubviews{
     [_floorButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_floorButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
-    [_floorButton addTarget:self action:@selector(toggleFloorControl:) forControlEvents:UIControlEventTouchUpInside];
-    _backgroundView.frame = self.bounds;
+    [_floorButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [_floorButton addTarget:self action:@selector(toggleFloorControl:) forControlEvents:UIControlEventTouchDown];
     
+    _backgroundView.frame = self.bounds;
    // self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     self.layer.cornerRadius = WIDTH_AND_HEIGHT / 2;
     self.layer.masksToBounds = YES;
@@ -101,11 +97,12 @@
             NSArray *floorItem = [[[_majorArea floor] block]floors];
             CGRect frame = self.frame;
             if (floorItem.count < 3) {
-                frame.size.height = (floorItem.count + 1 ) * WIDTH_AND_HEIGHT;
+                frame.size.height = floorItem.count * WIDTH_AND_HEIGHT;
             }else{
                 frame.size.height = 3.3 * WIDTH_AND_HEIGHT;
             }
             self.frame = frame;
+            
         }];
     }
 }

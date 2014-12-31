@@ -1,15 +1,15 @@
 //
-//  YTFloorView.m
+//  YTBlockView.m
 //  High逛
 //
 //  Created by Ke ZhuoPeng on 14-8-14.
 //  Copyright (c) 2014年 Yuan Tao. All rights reserved.
 //
 
-#import "YTFloorView.h"
+#import "YTBlockView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #define CELLIDENTIFIER @"FloorCell"
-@interface YTFloorView()<UITableViewDelegate,UITableViewDataSource>{
+@interface YTBlockView()<UITableViewDelegate,UITableViewDataSource>{
     id<YTMall> _relevantMall;
     NSMutableArray *_items;
     CGFloat _width_height;
@@ -17,7 +17,7 @@
     NSMutableArray *_buttons;
 }
 @end
-@implementation YTFloorView
+@implementation YTBlockView
 -(id)initWithFrame:(CGRect)frame andItem:(NSArray *)item{
     _items = [NSMutableArray arrayWithArray:item];
     _buttons = [NSMutableArray array];
@@ -55,16 +55,17 @@
     return _width_height - 7;
 }
 
--(void)setCurFloor:(id<YTFloor>)curFloor{
+-(void)setCurBlock:(id<YTBlock>)curBlock{
     if (_buttons.count > 0) {
         for (UIButton *button in _buttons) {
-            if ([button.titleLabel.text isEqualToString:[curFloor floorName]]) {
+            if ([button.titleLabel.text isEqualToString:[curBlock blockName]]) {
                 [self setCurButton:button];
             }
         }
     }
-    _curFloor = curFloor;
+    _curBlock = curBlock;
 }
+
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -83,10 +84,10 @@
     [_buttons addObject:button];
     
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    id <YTFloor> floor = _items[indexPath.row] ;
-    [button setTitle:[floor floorName] forState:UIControlStateNormal];
-    button.titleLabel.attributedText = [[NSAttributedString alloc]initWithString:[floor floorName]];
-    if ([button.titleLabel.text isEqualToString:[self.curFloor floorName]]) {
+    id <YTBlock> block = _items[indexPath.row] ;
+    [button setTitle:[block blockName] forState:UIControlStateNormal];
+    button.titleLabel.attributedText = [[NSAttributedString alloc]initWithString:[block blockName]];
+    if ([button.titleLabel.text isEqualToString:[self.curBlock blockName]]) {
         [self setCurButton:button];
     }
     return cell;
@@ -94,14 +95,14 @@
 
 -(void)floorButtonClick:(UIButton *)sender{
     [self setCurButton:sender];
-    for (id <YTFloor> floor in _items) {
-        if ([[floor floorName] isEqualToString:sender.titleLabel.text]) {
-            [self.floorDelegate floorView:self clickButtonAtFloor:floor];
+    for (id <YTBlock> block in _items) {
+        if ([[block blockName] isEqualToString:sender.titleLabel.text]) {
+            [self.blockDelegate blockView:self clickButtonAtBlock:block];
         }
     }
 }
 -(void)setCurButton:(UIButton *)sender{
-   
+    
     [_currentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithAttributedString:_currentButton.titleLabel.attributedText];
     
@@ -115,12 +116,9 @@
     NSRange titleRange = {0,sender.titleLabel.text.length};
     
     [string addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:titleRange];
-
+    
     sender.titleLabel.attributedText = string;
     _currentButton = sender;
 }
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    
-}
+
 @end

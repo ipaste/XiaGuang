@@ -199,6 +199,7 @@
 		D9AE507B1A0B4F160080CF21 /* YTBeaconPosistionPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */; };
 		D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */; };
 		D9CAE85D1A52A8290053E758 /* bg_inner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9CAE85C1A52A8290053E758 /* bg_inner.jpg */; };
+		D9CAE8601A53A52D0053E758 /* YTBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CAE85F1A53A52D0053E758 /* YTBlockView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -566,6 +567,8 @@
 		D9AE507C1A0B4FDA0080CF21 /* YTBeaconAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTBeaconAnnotation.h; path = subView/YTBeaconAnnotation.h; sourceTree = "<group>"; };
 		D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTBeaconAnnotation.m; path = subView/YTBeaconAnnotation.m; sourceTree = "<group>"; };
 		D9CAE85C1A52A8290053E758 /* bg_inner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg_inner.jpg; sourceTree = "<group>"; };
+		D9CAE85E1A53A52D0053E758 /* YTBlockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBlockView.h; sourceTree = "<group>"; };
+		D9CAE85F1A53A52D0053E758 /* YTBlockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBlockView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1038,6 +1041,8 @@
 				D94C27871A02639F009FF2F3 /* YTDirectionIndicator.m */,
 				D94C27881A02639F009FF2F3 /* YTFloorView.h */,
 				D94C27891A02639F009FF2F3 /* YTFloorView.m */,
+				D9CAE85E1A53A52D0053E758 /* YTBlockView.h */,
+				D9CAE85F1A53A52D0053E758 /* YTBlockView.m */,
 				D94C278A1A02639F009FF2F3 /* YTMallBuildingSelector.h */,
 				D94C278B1A02639F009FF2F3 /* YTMallBuildingSelector.m */,
 				D94C278C1A02639F009FF2F3 /* YTMessageBox.h */,
@@ -1479,6 +1484,7 @@
 				D94C27B31A02639F009FF2F3 /* JWBlurView.m in Sources */,
 				D94C28031A0263C6009FF2F3 /* YTNavigationController.m in Sources */,
 				D94C28111A0263C6009FF2F3 /* YTSelectCategoryViewCell.m in Sources */,
+				D9CAE8601A53A52D0053E758 /* YTBlockView.m in Sources */,
 				D94C27B81A02639F009FF2F3 /* YTMessageBox.m in Sources */,
 				78ADBEB11A09EB0E000688E3 /* YTDistanceBoundingBox.m in Sources */,
 				AE630BE61A43EC9100A562AA /* BBTableView.m in Sources */,
