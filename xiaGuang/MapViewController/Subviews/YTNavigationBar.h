@@ -18,6 +18,7 @@
 @property (weak,nonatomic) NSString *backTitle;
 @property (weak,nonatomic) NSString *titleName;
 -(void)changeSearchButton;
-
+-(void)changeSearchButtonWithHide:(BOOL)hide;
 -(void)changeBackButton;
+-(void)changeBackButtonWithHide:(BOOL)hide;
 @end

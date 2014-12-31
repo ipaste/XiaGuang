@@ -9,6 +9,8 @@
 #import "YTHomeViewController.h"
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define BLUR_HEIGHT 174
+
+#define STEP_LENGTH 20
 @interface YTHomeViewController (){
     UIViewController *_mapViewController;
     UIImageView *_backgroundImageView;
@@ -22,7 +24,14 @@
     YTBeaconManager *_beaconManager;
     id<YTMinorArea> _recordMinorArea;
     NSMutableArray *_malls;
+    BOOL _scrollFired;
+    BOOL _shouldScroll;
+    
+    NSMutableArray *_cells;
     NetworkStatus _status;
+    
+    
+    UIToolbar *_transitionToolbar;
 }
 @end
 
@@ -80,6 +89,10 @@
     [_navigationButton setTitleEdgeInsets:UIEdgeInsetsMake(50, -35, 0, 0)];
     [_navigationButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 35, 0, 0)];
     _navigationButton.layer.cornerRadius = 10;
+    
+    
+    
+    
     [_blurView addSubview:_navigationButton];
     
     
@@ -113,14 +126,134 @@
             }
         }
     });
-    
+
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
     FMResultSet *result = [database executeQuery:@"select * from Mall"];
+    _cells = [NSMutableArray new];
+    
+    int i = 0;
     while ([result next]) {
         YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
         [_malls addObject:mall];
+        
     }
+    for(int j = 0; j<_malls.count*3; j++){
+        YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        [_cells addObject:cell1];
+    }
+    
+    
     [_tableView reloadData];
+    
+    [self changeLocalMallVariableCloudMall:^{
+        [_tableView reloadData];
+    }];
+    
+    
+    if(!_scrollFired){
+        [self test];
+        _scrollFired = YES;
+        _shouldScroll = YES;
+    }
+    
+    _transitionToolbar = [[UIToolbar alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    _transitionToolbar.tintColor = [UIColor blackColor];
+    _transitionToolbar.barStyle = UIBarStyleBlack;
+    _transitionToolbar.translucent = YES;
+    _transitionToolbar.alpha = 0;
+    [self.view addSubview:_transitionToolbar];
+
+    
+}
+
+
+
+- (void)test {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        
+        
+        [UIView animateWithDuration:1
+                              delay:0
+                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
+                         animations:^{
+                                [self scrollDown];
+                         } completion:^(BOOL finished) {
+                             
+                             CGPoint p = _tableView.contentOffset;
+                             double toHeight = p.y + STEP_LENGTH;
+                             if(toHeight >= ( _tableView.contentSize.height - _tableView.frame.size.height) ){
+                                 p.y = p.y - _tableView.contentSize.height/3.0f;
+                                 [_tableView setContentOffset:p];
+                             }
+                             if(_shouldScroll){
+                                 [self test];
+                             }
+                         }];
+        
+    });
+    
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    _shouldScroll = NO;
+    
+    [_tableView.layer removeAllAnimations];
+    
+}
+
+
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    if(!decelerate && !_shouldScroll){
+        _shouldScroll = YES;
+        [self test];
+    }
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    
+    if(!_shouldScroll){
+        _shouldScroll = YES;
+        [self test];
+    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    _shouldScroll = NO;
+    [_tableView.layer removeAllAnimations];
+    _scrollFired = NO;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    if(!_scrollFired){
+        [self test];
+        _scrollFired = YES;
+        _shouldScroll = YES;
+    }
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        _transitionToolbar.alpha = 0;
+    }];
+}
+
+
+/*
+ 
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    [self test];
+}*/
+
+-(void)scrollDown{
+    CGPoint p = _tableView.contentOffset;
+    p.y = p.y + STEP_LENGTH;
+    
+    NSLog(@"about to scroll up to point: %f",p.y);
+    _tableView.contentOffset = p;
 }
 
 -(UIView *)leftBarButtonItemCustomView{
@@ -147,18 +280,30 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *identifier = @"Cell";
-    YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+
+    /*YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    
     if (!cell) {
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+        //cell.mall = mall;
+    }*/
+    
+    YTMallCell *cell = _cells[indexPath.row];
+    id<YTMall> mall = _malls[indexPath.row%_malls.count];
+    
+    NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
+    if([mall isMemberOfClass:[YTCloudMall class]]){
+        cell.mall = mall;
     }
-    cell.mall = _malls[indexPath.row];
+    
+    //NSLog(@"cell for row at index: %d, setting it to display mall pics of %@",indexPath.row, [mall mallName]);
     return cell;
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMallCell *cell = (YTMallCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
         mallInfoVC.mall = _malls[indexPath.row % _malls.count];
@@ -172,7 +317,7 @@
         [self changeLocalMallVariableCloudMall:^{
             [_tableView reloadData];
         }];
-    }else if(tmpReachability.currentReachabilityFlags != NotReachable){
+    }else if(tmpReachability.currentReachabilityStatus != NotReachable){
         [self changeLocalMallVariableCloudMall:^{
             [_tableView reloadData];
         }];
@@ -180,20 +325,29 @@
     _status =  tmpReachability.currentReachabilityStatus;
 }
 -(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
-    NSMutableArray *array = [NSMutableArray array];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (YTLocalMall *mall in _malls) {
-            [array addObject:[mall getCloudMall]];
-        }
-        [_malls removeAllObjects];
-        _malls = nil;
-        _malls = array;
-        dispatch_async(dispatch_get_main_queue(), ^{
+    
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+    query.maxCacheAge = 24 * 60 * 60;
+    [query whereKeyExists:@"localDBId"];
+    [query whereKey:@"localDBId" notEqualTo:@""];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if(!error && objects != nil && objects.count != 0){
+            NSMutableArray *array = [NSMutableArray array];
+            for (AVObject *mall in objects) {
+                YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
+                [array addObject:cloudMall];
+            }
+            [_malls removeAllObjects];
+            _malls = nil;
+            _malls = array;
             if (callBack != nil) {
                 callBack();
             }
-        });
-    });
+        }
+    }];
 }
 -(void)rangedBeacons:(NSArray *)beacons{
     if(beacons.count > 0){
@@ -242,13 +396,21 @@
             controller = _mapViewController;
         }
         [AVAnalytics event:@"导航"];
-        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        //controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     }else{
         controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
-        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [AVAnalytics event:@"停车"];
     }
-    [self presentViewController:controller animated:true completion:nil];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        _transitionToolbar.alpha = 1;
+        
+    }completion:^(BOOL finished) {
+        [self presentViewController:controller animated:false completion:nil];
+    }];
+    
 }
 
 -(void)detectedBluetoothStateHasChanged:(NSNotification *)notification{

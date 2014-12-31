@@ -697,6 +697,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }
     else{
         _locator = nil;
+        [_beaconManager removeListener:_locator];
         _shownUser = NO;
         [_mapView removeUserLocation];
         
@@ -759,6 +760,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }
     else{
         _locator = nil;
+        [_beaconManager removeListener:_locator];
         _shownUser = NO;
         [_mapView removeUserLocation];
         
@@ -879,6 +881,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     [_starNavigationButton removeFromSuperview];
     [_navigationBar removeFromSuperview];
     _locator = nil;
+    [_beaconManager removeListener:_locator];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
 
@@ -902,19 +905,22 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                        majorArea:(id<YTMajorArea>)aMajorArea{
     
     if(_locator == nil){
+        [_beaconManager removeListener:_locator];
         _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
         [_locator start];
         _locator.delegate = self;
+        [_beaconManager addListener:_locator];
         _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
         _locatorMajorArea = aMajorArea;
         return;
     }
     
     if(![[aMajorArea identifier] isEqualToString:[_locatorMajorArea identifier]]){
-        
+        [_beaconManager removeListener:_locator];
         _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
         [_locator start];
         _locator.delegate = self;
+        [_beaconManager addListener:_locator];
         _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
         _locatorMajorArea = aMajorArea;
         return;

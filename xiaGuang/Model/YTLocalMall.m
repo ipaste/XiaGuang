@@ -8,6 +8,8 @@
 
 #import "YTLocalMall.h"
 #import "YTCloudMall.h"
+
+typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
@@ -16,6 +18,7 @@
     NSMutableArray *_tmpMerchantInstance;
     UIImage *_titleImage;
     UIImage *_background;
+    YTGetTitleImageAndBackgroundImageCallBack _callBack;
 }
 
 @synthesize mallName;
@@ -86,41 +89,41 @@
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
-    if (_titleImage == nil || _background == nil) {
-        __block AVObject *internalObject = nil;
-        __block UIImage *titleImage = nil;
-        __block UIImage *background = nil;
-        __block NSError *error = [[NSError alloc]initWithDomain:@"com.xiashopping" code:404 userInfo:nil];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-            [query whereKey:@"localDBId" equalTo:[self identifier]];
-            internalObject = [query getFirstObject];
-            titleImage = [UIImage imageWithData:[internalObject[@"mall_img_title"] getData]];
-            background = [UIImage imageWithData:[internalObject[@"mall_img_background"] getData]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (titleImage != nil && background != nil) {
-                    _background = background;
-                    _titleImage = titleImage;
-                    callback(titleImage,background,nil);
-                }else{
-                    callback(nil,nil,error);
-                }
-            });
-            
-        });
-    }else{
-        
-        callback(_titleImage,_background,nil);
+    _callBack = callback;
+    if (![self checkCallBackConditions]) {
+        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+        [query whereKey:@"localDBId" equalTo:[self identifier]];
+        [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+            if (_titleImage == nil) {
+                [object[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    if (error) {
+                        callback(nil,nil,error);
+                        return ;
+                    }
+                    _titleImage = [UIImage imageWithData:data];
+                    [self checkCallBackConditions];
+                }];
+            }
+            if (_background == nil) {
+                [object[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    if (error) {
+                        callback(nil,nil,error);
+                        return ;
+                    }
+                    _background = [UIImage imageWithData:data];
+                    [self checkCallBackConditions];
+                }];
+            }
+        }];
     }
 }
-
--(YTCloudMall *)getCloudMall{
-    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-    [query whereKey:@"localDBId" equalTo:[self identifier]];
-    AVObject *mall = [query getFirstObject];
-    if (mall == nil) {
-        return nil;
+-(BOOL)checkCallBackConditions{
+    if (_titleImage != nil && _background != nil) {
+        _callBack(_titleImage,_background,nil);
+        _callBack = nil;
+        return true;
+    }else{
+        return false;
     }
-    return [[YTCloudMall alloc]initWithAVObject:mall];
 }
 @end

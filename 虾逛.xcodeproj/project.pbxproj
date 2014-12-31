@@ -77,6 +77,7 @@
 		AE630BE51A43EC9100A562AA /* BBCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BDE1A43EC9000A562AA /* BBCell.m */; };
 		AE630BE61A43EC9100A562AA /* BBTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BE01A43EC9000A562AA /* BBTableView.m */; };
 		AE630BE81A43EC9100A562AA /* BBTableViewInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BE41A43EC9100A562AA /* BBTableViewInterceptor.m */; };
+		AE7AB1B11A511F4E00E3A16F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE7AB1B01A511F4E00E3A16F /* AdSupport.framework */; };
 		AE859E171A0CB9A10044074F /* YTLocalEscalator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E161A0CB9A10044074F /* YTLocalEscalator.m */; };
 		AE859E1A1A0CBA880044074F /* YTEscalatorPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E191A0CBA880044074F /* YTEscalatorPoi.m */; };
 		AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AE859E1C1A0CBC9D0044074F /* YTEscalatorAnnotation.m */; };
@@ -338,6 +339,7 @@
 		AE630BE01A43EC9000A562AA /* BBTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBTableView.m; sourceTree = "<group>"; };
 		AE630BE31A43EC9100A562AA /* BBTableViewInterceptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBTableViewInterceptor.h; sourceTree = "<group>"; };
 		AE630BE41A43EC9100A562AA /* BBTableViewInterceptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBTableViewInterceptor.m; sourceTree = "<group>"; };
+		AE7AB1B01A511F4E00E3A16F /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		AE859E141A0CB9560044074F /* YTEscalator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTEscalator.h; sourceTree = "<group>"; };
 		AE859E151A0CB9A10044074F /* YTLocalEscalator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalEscalator.h; sourceTree = "<group>"; };
 		AE859E161A0CB9A10044074F /* YTLocalEscalator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalEscalator.m; sourceTree = "<group>"; };
@@ -571,6 +573,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE7AB1B11A511F4E00E3A16F /* AdSupport.framework in Frameworks */,
 				4BBE78B237D5A241D65373FE /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -888,6 +891,7 @@
 		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AE7AB1B01A511F4E00E3A16F /* AdSupport.framework */,
 				6DCAE2C2A48A5B340C97B34E /* libPods.a */,
 			);
 			name = Frameworks;

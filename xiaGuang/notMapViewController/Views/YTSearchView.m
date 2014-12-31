@@ -144,7 +144,7 @@
     frame.size.height = 64;
     self.frame = frame;
     
-    [view insertSubview:self atIndex:10];
+    [view addSubview:self];
     frame.origin.y = 64;
     frame.size.height = CGRectGetHeight(view.frame) - frame.origin.y;
     [self searchDetailsViewInitWithFrame:frame addInView:view];

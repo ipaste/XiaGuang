@@ -21,6 +21,8 @@
     int mTotalCellsVisible;
     BBTableViewInterceptor *_dataSourceInterceptor;
     NSInteger _totalRows;
+    BOOL _scrollFired;
+    NSTimer *_scrollTimer;
 }
 - (void)customIntitialization;
 - (NSIndexPath*)actualIndexPath;
@@ -80,6 +82,7 @@
     
     //check the top condition
     //check if the scroll view reached its top.. if so.. move it to center.. remember center is the start of the data repeating for 2nd time.
+    
     if( contentOffset.y<=0.0)
     {
         contentOffset.y = self.contentSize.height/3.0f;
@@ -190,8 +193,11 @@
     mTotalCellsVisible = self.frame.size.height / self.rowHeight;
     [self resetContentOffsetIfNeeded];
     [super layoutSubviews];
+    
     //[self setupShapeFormationInVisibleCells];
 }
+
+
 
 #pragma mark Setter/Getter
 - (void)setDataSource:(id<UITableViewDataSource>)dataSource
@@ -217,8 +223,10 @@
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [_dataSourceInterceptor.receiver tableView:tableView cellForRowAtIndexPath:MORPHED_INDEX_PATH(indexPath)];
+    return [_dataSourceInterceptor.receiver tableView:tableView cellForRowAtIndexPath:indexPath];
 }
+
+
 
 
 @end

@@ -34,4 +34,7 @@ typedef enum _ContentAlignment
 @property(nonatomic, assign) EBBTableViewContentAlignment contentAlignment;
 @property(nonatomic, assign) CGFloat horizontalRadiusCorrection;//value from 1.0 - 0.5;
 
+
+- (void)resetContentOffsetIfNeeded;
+
 @end
