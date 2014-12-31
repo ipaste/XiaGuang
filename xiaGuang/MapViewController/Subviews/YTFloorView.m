@@ -77,7 +77,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, _width_height, _width_height)];
-    [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [button.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [button addTarget:self action:@selector(floorButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [cell addSubview:button];
     [_buttons addObject:button];
@@ -101,7 +101,7 @@
 }
 -(void)setCurButton:(UIButton *)sender{
     [_currentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [sender setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [sender setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
     _currentButton = sender;
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{

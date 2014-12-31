@@ -275,6 +275,8 @@
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query whereKeyExists:@"uniId"];
     [query whereKey:@"uniId" notEqualTo:@"0"];
+    AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
+    [query whereKey:@"mall" equalTo:mall];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 1 * 3600;
     [query includeKey:@"mall,floor"];

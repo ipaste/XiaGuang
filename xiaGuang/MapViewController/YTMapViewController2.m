@@ -162,7 +162,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
     
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
-    background.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
+    background.image = [UIImage imageNamed:@"bg_inner.jpg"];
     [self.view addSubview:background];
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
@@ -177,7 +177,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
-    //[self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
     
@@ -361,7 +360,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createMapView{
-    _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 10)];
+    _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame))];
     _mapView.delegate = self;
     
     [self.view insertSubview:_mapView belowSubview:_navigationBar];
@@ -555,10 +554,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)createBlockAndFloorSwitch{
     
-    [_switchBlockView removeFromSuperview];
-    _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
-    _switchBlockView.delegate = self;
-    [self.view insertSubview:_switchBlockView belowSubview:_navigationBar];
+//    [_switchBlockView removeFromSuperview];
+//    _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
+//    _switchBlockView.delegate = self;
+//    [self.view insertSubview:_switchBlockView belowSubview:_navigationBar];
     
     
     [_switchFloorView removeFromSuperview];
