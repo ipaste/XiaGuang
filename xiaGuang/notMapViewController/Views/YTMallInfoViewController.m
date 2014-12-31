@@ -277,6 +277,8 @@
     [query whereKey:@"uniId" notEqualTo:@"0"];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 1 * 3600;
+    AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
+    [query whereKey:@"mall" equalTo:mall];
     [query includeKey:@"mall,floor"];
     query.limit = 10;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
