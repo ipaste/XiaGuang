@@ -9,7 +9,7 @@
 #import "YTMapViewController2.h"
 
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
-#define HOISTING_HEIGHT 70
+#define HOISTING_HEIGHT 80
 #define ROW_HEIGHT 65
 typedef NS_ENUM(NSInteger, YTMapViewControllerType){
     YTMapViewControllerTypeNavigation = 0,
@@ -548,7 +548,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)createDetailsView{
-    _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60)];
+    _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 80)];
     _detailsView.hidden = YES;
     
     _detailsView.delegate = self;

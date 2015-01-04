@@ -114,4 +114,7 @@
     }
     
 }
+-(void)setTintColor:(UIColor *)tintColor{
+    
+}
 @end
