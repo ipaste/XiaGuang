@@ -293,7 +293,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         FMResultSet *result = [db executeQuery:@"select * from Mall"];
         [result next];
         while([result hasAnotherRow]){
-            
             YTLocalMall *tmpMall = [[YTLocalMall alloc] initWithDBResultSet:result];
             [_malls addObject:tmpMall];
             [result next];
@@ -306,8 +305,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
-
-
 
 -(void)instantiateMenu{
     
@@ -323,28 +320,31 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self.view insertSubview:_toolbar belowSubview:_navigationBar];
         [self showBlur];
     }
-    
-    if (_bluetoothLabel == nil) {
-        _bluetoothLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_toolbar.frame) - 55, CGRectGetWidth(_toolbar.frame), 55)];
-        _bluetoothLabel.font = [UIFont systemFontOfSize:15];
-        _bluetoothLabel.textColor = [UIColor colorWithString:@"999999"];
-        _bluetoothLabel.text = @"您没有打开蓝牙或不在商城范围内";
-        _bluetoothLabel.textAlignment = 1;
-        [_toolbar addSubview:_bluetoothLabel];
+    if (_type == YTMapViewControllerTypeNavigation) {
+        _navigationBar.titleName = @"选择商城";
+        if (_bluetoothLabel == nil) {
+            _bluetoothLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_toolbar.frame) - 55, CGRectGetWidth(_toolbar.frame), 55)];
+            _bluetoothLabel.font = [UIFont systemFontOfSize:15];
+            _bluetoothLabel.textColor = [UIColor colorWithString:@"999999"];
+            _bluetoothLabel.text = @"您没有打开蓝牙或不在商城范围内";
+            _bluetoothLabel.textAlignment = 1;
+            [_toolbar addSubview:_bluetoothLabel];
+        }
+        
+        if (_mallTableView == nil) {
+            _mallTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetMinY(_bluetoothLabel.frame) - CGRectGetHeight(_navigationBar.frame)) style:UITableViewStylePlain];
+            _mallTableView.backgroundColor = [UIColor clearColor];
+            _mallTableView.separatorColor = [UIColor colorWithString:@"727272"];
+            _mallTableView.delegate = self;
+            _mallTableView.dataSource = self;
+            _mallTableView.showsVerticalScrollIndicator = false;
+            _mallTableView.layer.cornerRadius = 10;
+            _mallTableView.rowHeight = ROW_HEIGHT;
+            _mallTableView.layer.masksToBounds = true;
+            [_toolbar addSubview:_mallTableView];
+        }
     }
     
-    if (_mallTableView == nil) {
-        _mallTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetMinY(_bluetoothLabel.frame) - CGRectGetHeight(_navigationBar.frame)) style:UITableViewStylePlain];
-        _mallTableView.backgroundColor = [UIColor clearColor];
-        _mallTableView.separatorColor = [UIColor colorWithString:@"727272"];
-        _mallTableView.delegate = self;
-        _mallTableView.dataSource = self;
-        _mallTableView.showsVerticalScrollIndicator = false;
-        _mallTableView.layer.cornerRadius = 10;
-        _mallTableView.rowHeight = ROW_HEIGHT;
-        _mallTableView.layer.masksToBounds = true;
-        [_toolbar addSubview:_mallTableView];
-    }
 }
 
 -(void)hideBlur{
@@ -355,7 +355,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)showBlur{
     [_navigationBar changeSearchButtonWithHide:true];
-    _navigationBar.titleName = @"选择商城";
     _toolbar.alpha = 1;
     _blurMenuShown = YES;
 }
@@ -371,7 +370,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
-    //[self injectPoisForMajorArea:_majorArea];
     
 }
 
@@ -1123,6 +1121,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark switch floor and block delegate methods
 -(void)switchBlock:(id<YTBlock>)block{
+    
     id<YTMajorArea> majorArea = [[[[block floors] firstObject] majorAreas] firstObject];
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
         if(_shownCallout && [_mapView currentState] == YTMapViewDetailStateNormal){
@@ -1616,7 +1615,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)backClicked{
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
