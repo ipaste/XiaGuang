@@ -526,7 +526,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _changeFloorIndicator.hidden = YES;
     [self.view insertSubview:_changeFloorIndicator belowSubview:_navigationBar];
     
-    _moveTargetButton = [[YTMoveTargetLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 18,CGRectGetMinY(_moveCurrentButton.frame), CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
+    _moveTargetButton = [[YTMoveTargetLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 18,CGRectGetMinY(_moveCurrentButton.frame), 41, 41)];
     _moveTargetButton.hidden = YES;
     _moveTargetButton.delegate = self;
     [self.view insertSubview:_moveTargetButton belowSubview:_navigationBar];
@@ -567,8 +567,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view insertSubview:_switchBlockView belowSubview:_navigationBar];
     
     [self redrawBlockAndFloorSwitch];
-    
-    
 }
 
 -(void)redrawBlockAndFloorSwitch{
@@ -584,7 +582,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)createNavigationView{
-    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60)];
+    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 ,  CGRectGetWidth(_mapView.frame), 80)];
     _navigationView.hidden = YES;
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
@@ -1058,6 +1056,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
         _curDisplayedMajorArea = [minorArea majorArea];
         [self redrawBlockAndFloorSwitch];
+        if(_selectedPoi != nil){
+            [_mapView hidePoi:_selectedPoi animated:false];
+            [self hideCallOut];
+            
+        }
         [self handlePoiForMajorArea:_curDisplayedMajorArea];
     }
     
@@ -1265,8 +1268,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
-    
-    [_navigationBar setHidden:true];
+//
+//    [_navigationBar setHidden:true];
     [_navigationView startNavigationAndSetDestination:merchantLocation];
     
     _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetPoiSource:merchantLocation];
@@ -1302,12 +1305,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _shownCallout = NO;
         _poiButton.hidden = YES;
         _moveTargetButton.hidden = NO;
-        [_navigationView.layer pop_removeAllAnimations];
-        POPSpringAnimation *animation = [POPSpringAnimation animation];
-        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
-        animation.velocity = @1000;
-        animation.springBounciness = 20;
-        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
+//        [_navigationView.layer pop_removeAllAnimations];
+//        POPSpringAnimation *animation = [POPSpringAnimation animation];
+//        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
+//        animation.velocity = @1000;
+//        animation.springBounciness = 20;
+//        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
     }];
 }
 
@@ -1319,16 +1322,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _detailsView.frame = frame;
         
         frame = _navigationView.frame;
-        frame.origin.x = 20;
+        frame.origin.x = 0;
         _navigationView.frame = frame;
-        
-        frame = _switchBlockView.frame;
-        frame.origin.y -= 44;
-        _switchBlockView.frame = frame;
-        
-        frame = _switchFloorView.frame;
-        frame.origin.y -= 44;
-        _switchFloorView.frame = frame;
+//
+//        frame = _switchBlockView.frame;
+//        frame.origin.y -= 44;
+//        _switchBlockView.frame = frame;
+//        
+//        frame = _switchFloorView.frame;
+//        frame.origin.y -= 44;
+//        _switchFloorView.frame = frame;
         
     } completion:^(BOOL finished) {
         if (copmeletion != nil && finished) {
@@ -1384,13 +1387,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y += HOISTING_HEIGHT;
         _changeFloorIndicator.frame = frame;
         
-        frame = _switchBlockView.frame;
-        frame.origin.y += 44;
-        _switchBlockView.frame = frame;
-        
-        frame = _switchFloorView.frame;
-        frame.origin.y += 44;
-        _switchFloorView.frame = frame;
+//        frame = _switchBlockView.frame;
+//        frame.origin.y += 44;
+//        _switchBlockView.frame = frame;
+//        
+//        frame = _switchFloorView.frame;
+//        frame.origin.y += 44;
+//        _switchFloorView.frame = frame;
         
         frame = _selectedPoiButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
@@ -1398,8 +1401,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         
     } completion:^(BOOL finished) {
-        _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60);
-        _navigationView.frame = CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60);
+        _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 80);
+        _navigationView.frame =CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 ,  CGRectGetWidth(_mapView.frame), 80);
         _navigationView.hidden = YES;
         _selectedPoi = nil;
         _poiButton.hidden = NO;

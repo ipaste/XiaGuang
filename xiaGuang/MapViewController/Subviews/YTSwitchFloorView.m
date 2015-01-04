@@ -34,6 +34,7 @@
         _floorView = [[YTFloorView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_floorButton.frame), CGRectGetMinY(_floorButton.frame), WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[_majorArea floor]block]floors]];
         _floorView.alpha = 0;
         [_floorButton setTitle:[[_majorArea floor]floorName] forState:UIControlStateNormal];
+        
         _floorView.floorDelegate = self;
         _floorView.curFloor = [_majorArea floor];
         [self addSubview:_floorView];

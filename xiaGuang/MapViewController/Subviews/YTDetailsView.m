@@ -27,8 +27,8 @@
         _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
         _merchantLogo.backgroundColor = [UIColor whiteColor];
         
-         _label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_merchantLogo.frame) + 10, 21, 160, 30)];
-        _startNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - (CGRectGetHeight(frame) - 29) - 18, 14.5, CGRectGetHeight(frame) - 29, CGRectGetHeight(frame) - 29)];
+         _label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_merchantLogo.frame) + 10, 21, 160, 25)];
+        _startNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - (CGRectGetHeight(frame) - 29) - 18, 14.5, 51, 51)];
         
         [self addSubview:_merchantLogo];
         [self addSubview:_startNavigationButton];
@@ -53,7 +53,7 @@
     [_startNavigationButton addTarget:self action:@selector(clickStartNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [self setClipsToBounds:YES];
-    self.backgroundColor = [UIColor blackColor];
+    self.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.6];
 //    self.layer.cornerRadius = CGRectGetHeight(self.frame) / 2;
 //    self.layer.masksToBounds = YES;
 }
