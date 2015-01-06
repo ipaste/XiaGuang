@@ -71,6 +71,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _viewDidAppear;
     
     BOOL _firstBlueToothRefresh;
+    
+    YTPoi *_selectedTransport;
     //NSArray *_beaconsPoi;
     
     
@@ -86,6 +88,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTPoiView *_poiView;
     
     YTPoi *_selectedPoi;
+    
+    
     CLLocationCoordinate2D _userCord;
     CLLocationCoordinate2D _targetCord;
     
@@ -177,7 +181,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
-    //[self createNoBeaconCover];
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
     
@@ -464,8 +467,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     if (_navigationView.isNavigating){
         if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]] && [[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
-           
+            
+            
             [_mapView highlightPois:_allElvatorAndEscalator animated:YES];
+            YTPoi *closestTransport = [self closestTransportToCoordinate:_userMinorArea.coordinate];
+            [self showPathFromUserToPoi:closestTransport];
         
         }else{
             [_mapView hidePois:_allElvatorAndEscalator animated:NO];
@@ -482,6 +488,36 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
+
+-(YTPoi *)closestTransportToCoordinate:(CLLocationCoordinate2D)toCoord{
+    
+    CGPoint toPoint = [YTCanonicalCoordinate mapToCanonicalCoordinate:toCoord mapView:_mapView.map];
+    YTPoi *result;
+    double minDist = MAXFLOAT;
+    
+    
+    for(YTPoi *tmpPoi in _allElvatorAndEscalator){
+        
+        id<YTPoiSource> tmpelevator = tmpPoi.sourceModel;
+        CGPoint tmpPoint = [YTCanonicalCoordinate mapToCanonicalCoordinate:tmpelevator.coordinate mapView:_mapView.map];
+        
+        double xdiff = toPoint.x-tmpPoint.x;
+        double ydiff = toPoint.y-tmpPoint.y;
+        double curdistance = xdiff*xdiff + ydiff*ydiff;
+        
+        if(curdistance < minDist){
+            result = tmpPoi;
+            minDist = curdistance;
+        }
+        
+        
+    }
+    
+    return result;
+}
+
+
+
 -(void)createNavigationBar{
     _navigationBar = [[YTNavigationBar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 64)];
     _navigationBar.delegate = self;
@@ -707,6 +743,45 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
         }
     }
+    else if([mapView currentState] == YTMapViewDetailStateNavigating){
+        
+        if([self userOnCurdisplayedArea] && ![self userOnTargetPoiMajorArea]){
+            if([sourceModel isMemberOfClass:[YTLocalElevator class]]
+               || [sourceModel isMemberOfClass:[YTLocalEscalator class]]){
+            
+                [self showPathFromUserToPoi:poi];
+            }
+        }
+    }
+}
+
+
+-(void)showPathFromUserToPoi:(YTPoi *)poi{
+    
+    [_mapView highlightPoi:_selectedTransport animated:NO];
+    
+    [_mapView superHighlightPoi:poi animated:NO];
+    _selectedTransport = poi;
+    
+    [_mapView showPathFromCoord1:_userMinorArea.coordinate toCoord2:((id<YTPoiSource>)poi.sourceModel).coordinate forMajorArea:_curDisplayedMajorArea];
+}
+
+-(BOOL)userOnCurdisplayedArea{
+    if(_userMinorArea == nil){
+        return NO;
+    }
+    
+    BOOL onSameArea = [[_userMinorArea majorArea].identifier isEqualToString:_curDisplayedMajorArea.identifier];
+    return onSameArea;
+}
+
+-(BOOL)userOnTargetPoiMajorArea{
+    if(_userMinorArea == nil || _navigationPlan.targetPoiSource == nil){
+        return NO;
+    }
+    
+    BOOL onSameArea = [[_userMinorArea majorArea].identifier isEqualToString:[_navigationPlan targetPoiSource].majorArea.identifier];
+    return onSameArea;
 }
 
 -(BOOL)selectedOnSameGroupCommonPoi:(YTPoi *)poi{
@@ -1278,14 +1353,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     
     if([[[[merchantLocation majorArea]floor] floorName] isEqualToString:[[[_userMinorArea majorArea] floor] floorName]]){
+        
         [_mapView zoomToShowPoint1:[merchantLocation coordinate]  point2:[_userMinorArea coordinate]];
         YTPoi *poi = [merchantLocation producePoi];
 
         [_mapView superHighlightPoi:poi animated:YES];
-        //[_mapView setCenterCoordinate:CLLocationCoordinate2DMake(0, 0) animated:YES];
-        //[_mapView setZoom:0.7 animated:NO];
 
         _targetCord = [merchantLocation coordinate];
+        
+        
+        
+        
+        [_mapView showPathFromCoord1:_userCoordintate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
         
     }
     
@@ -1355,6 +1434,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView hidePoi:_selectedPoi animated:YES];
     [_mapView hidePois:_allElvatorAndEscalator animated:YES];
+    [_mapView removePath];
     [_navigationBar setHidden:false];
     
     [UIView animateWithDuration:.2 animations:^{
