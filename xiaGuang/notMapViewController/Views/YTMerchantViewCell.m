@@ -73,15 +73,16 @@
     _iconView.layer.borderWidth = 0.5;
     _iconView.layer.borderColor = [UIColor colorWithString:@"c8c8c8"].CGColor;
     
-    _line.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
-    _line.backgroundColor = [UIColor colorWithString:@"dcdcdc"];
+    _line.frame = CGRectMake(10, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame) - 20, 0.5);
+    _line.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
     
     _merchantNameLabel.text = [self.merchant merchantName];
-    [_merchantNameLabel setTextColor:[UIColor colorWithString:@"404040"]];
+    _merchantNameLabel.font = [UIFont systemFontOfSize:16];
+    [_merchantNameLabel setTextColor:[UIColor colorWithString:@"e95e37"]];
     
     _addressLable.text = [self.merchant address];
     [_addressLable setFont:[UIFont systemFontOfSize:11]];
-    [_addressLable setTextColor:[UIColor colorWithString:@"aaaaaa"]];
+    [_addressLable setTextColor:[UIColor colorWithString:@"999999"]];
     
     NSArray *subType = [self.merchant type];
     if (subType.count > 0 && subType != nil){

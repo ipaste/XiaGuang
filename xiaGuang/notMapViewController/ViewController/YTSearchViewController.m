@@ -30,12 +30,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = @"虾逛";
-    self.navigationItem.titleView = [[UIView alloc]init];
-    self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     //_tableView.tableHeaderView = [self tableHeadView];
     _tableView.delegate = self;
@@ -104,6 +98,13 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [_searchView showSearchViewWithAnimation:NO];
+    self.navigationItem.title = @"虾逛";
+    self.navigationItem.titleView = [[UIView alloc]init];
+    self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
+    self.navigationController.navigationBar.clipsToBounds = false;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

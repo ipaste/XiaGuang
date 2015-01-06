@@ -57,6 +57,9 @@
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
+    self.navigationController.navigationBar.clipsToBounds = false;
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     [AVAnalytics beginLogPageView:@"mallInfoViewController"];
 }
 
@@ -162,6 +165,7 @@
     _tableView.scrollEnabled = NO;
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
    
     _loading = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -191,7 +195,7 @@
         frame.size.height = (_hots.count * 90) + 35;
         _tableView.frame = frame;
         [_tableView reloadData];
-        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
+        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame));
     }];
     
     id<YTMall> mall = _mall;
@@ -214,6 +218,7 @@
     YTMerchantViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
         cell = [[YTMerchantViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.backgroundColor = [UIColor clearColor];
     }
     cell.merchant = _hots[indexPath.row];
     
@@ -221,15 +226,9 @@
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *background = [[UIView alloc]init];
-    background.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_scrollView.frame), 33)];
-    label.backgroundColor = [UIColor whiteColor];
-    label.textAlignment = 1;
-    label.text = @"热门品牌";
-    label.font = [UIFont systemFontOfSize:15];
-    label.textColor = [UIColor colorWithString:@"606060"];
-    
-    [background addSubview:label];
+    UIImageView *hotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 6, CGRectGetWidth(self.view.frame), 27)];
+    hotImageView.image = [UIImage imageNamed:@"title_hotbrand"];
+    [background addSubview:hotImageView];
     return background;
 }
 
@@ -243,8 +242,9 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 90;
 }
+
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 35;
+    return 34;
 }
 
 -(void)jumpToCategory:(UIButton *)sender{

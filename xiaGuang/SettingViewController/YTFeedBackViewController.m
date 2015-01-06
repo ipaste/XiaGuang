@@ -36,6 +36,13 @@
    
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.clipsToBounds = NO;
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
+}
+
 - (void)sender{
     if (!_isSend) {
         [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:@"您所填的反馈不能为空" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil]show];
