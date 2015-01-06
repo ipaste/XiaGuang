@@ -37,8 +37,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _scrollView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-    _scrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame))];
+    _scrollView.backgroundColor = [UIColor clearColor];
+    self.automaticallyAdjustsScrollViewInsets = false;
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     _searchView = [[YTSearchView alloc]initWithMall:self.mall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
@@ -80,8 +82,8 @@
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
     [button addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
 
-    [button setImage:[UIImage imageNamed:@"nav_ico_search_un"] forState:UIControlStateNormal];
-     [button setImage:[UIImage imageNamed:@"nav_ico_search_pr"] forState:UIControlStateHighlighted];
+    [button setImage:[UIImage imageNamed:@"icon_search"] forState:UIControlStateNormal];
+     [button setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
     return button;
 }
 
@@ -107,30 +109,32 @@
 
 #pragma mark View 1
 -(void)mainView{
-    UIButton *left = [[UIButton alloc]initWithFrame:CGRectMake(0, 10, 159, 44)];
-    left.backgroundColor = [UIColor whiteColor];
+    UIButton *left = [[UIButton alloc]initWithFrame:CGRectMake(8, 0, 148, 44)];
+    left.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
     [left setTitle:@"商圈位置" forState:UIControlStateNormal];
-    [left setTitleColor:[UIColor colorWithString:@"404040"] forState:UIControlStateNormal];
+    [left setTitleColor:[UIColor colorWithString:@"e5e5e5"] forState:UIControlStateNormal];
     [left setImage:[UIImage imageNamed:@"mall_img_location"] forState:UIControlStateNormal];
     [left setImage:[UIImage imageNamed:@"mall_img_location"] forState:UIControlStateHighlighted];
     [left setBackgroundImage:[UIImage imageNamed:@"shop_bg_2_pr"] forState:UIControlStateHighlighted];
     [left addTarget:self action:@selector(showMallPosition:) forControlEvents:UIControlEventTouchUpInside];
     [left.titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [left setTitleEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 0)];
+    [left.layer setCornerRadius:2.5];
+    [left setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     
-    UIButton *right = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(left.frame)+ 1, CGRectGetMinY(left.frame), CGRectGetWidth(left.frame), CGRectGetHeight(left.frame))];
-    right.backgroundColor = [UIColor whiteColor];
+    UIButton *right = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(left.frame)+ 8, CGRectGetMinY(left.frame), CGRectGetWidth(left.frame), CGRectGetHeight(left.frame))];
+    right.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
     [right setTitle:@"楼层地图" forState:UIControlStateNormal];
-    [right setTitleColor:[UIColor colorWithString:@"404040"] forState:UIControlStateNormal];
+    [right setTitleColor:[UIColor colorWithString:@"e5e5e5"] forState:UIControlStateNormal];
     [right setImage:[UIImage imageNamed:@"mall_img_floor"] forState:UIControlStateNormal];
     [right setImage:[UIImage imageNamed:@"mall_img_floor"] forState:UIControlStateHighlighted];
     [right setBackgroundImage:[UIImage imageNamed:@"shop_bg_2_pr"] forState:UIControlStateHighlighted];
     [right addTarget:self action:@selector(jumpToFloorMap:) forControlEvents:UIControlEventTouchUpInside];
     [right.titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [right setTitleEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 0)];
+    [right.layer setCornerRadius:2.5];
+    [right setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     
     UIView *categoryView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(right.frame) + 10, CGRectGetWidth(_scrollView.frame), 200)];
-    categoryView.backgroundColor = [UIColor whiteColor];
+    categoryView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _categorys = [YTCategory commonlyCategorysWithAddMore:YES];
     for (int i = 0; i < _categorys.count; i++) {
         UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 15 + i / 4  * 93, 50, 50)];
