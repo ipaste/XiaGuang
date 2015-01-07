@@ -28,6 +28,8 @@
     UIActivityIndicatorView *_loading;
     UILabel *_loadingLabel;
     UIImage *_infoBackgroundImage;
+    UIButton *_leftButton;
+    UIButton *_rightButton;
     YTMallPosistionViewController *_posistionVC;
     BOOL _isShowSearchView;
 }
@@ -41,9 +43,9 @@
     _scrollView.backgroundColor = [UIColor clearColor];
     self.automaticallyAdjustsScrollViewInsets = false;
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
-    _searchView = [[YTSearchView alloc]initWithMall:self.mall placeholder:@"商城/品牌" indent:NO];
+    _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
+    //[_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
     [self.view addSubview:_scrollView];
@@ -78,6 +80,7 @@
 #pragma mark Navigation
 -(void)setNavigation{
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButton]];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
 }
 
 
@@ -87,20 +90,38 @@
 
     [button setImage:[UIImage imageNamed:@"icon_search"] forState:UIControlStateNormal];
      [button setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
+    _rightButton = button;
+    return button;
+}
+
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    _leftButton = button;
     return button;
 }
 
 -(void)jumpToSearch:(UIButton *)sender{
-    self.navigationItem.hidesBackButton = YES;
-    self.navigationItem.titleView.hidden = YES;
+
+    self.navigationItem.title = @"";
+    _leftButton.hidden = true;
+    _rightButton.hidden = true;
     _isShowSearchView = YES;
     [_searchView showSearchViewWithAnimation:YES];
 }
 
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
+}
+
 -(void)searchCancelButtonClicked{
-    self.navigationItem.hidesBackButton = NO;
-    self.navigationItem.titleView.hidden = NO;
     _isShowSearchView = NO;
+    self.navigationItem.title = [self.mall mallName];
+    _leftButton.hidden = false;
+    _rightButton.hidden = false;
     [_searchView hideSearchViewWithAnimation:NO];
 }
 -(void)selectedUniIds:(NSArray *)uniIds{

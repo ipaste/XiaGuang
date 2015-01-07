@@ -57,7 +57,7 @@
 -(void)layoutSubviews{
     self.backgroundColor = [UIColor clearColor];
     
-    [_backButton setTitle:self.backTitle forState:UIControlStateNormal];
+    //[_backButton setTitle:self.backTitle forState:UIControlStateNormal];
     [_backButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [_backButton setTitleColor:[UIColor colorWithString:@"e65e37"] forState:UIControlStateNormal];
     [_backButton setTitleColor:[UIColor colorWithString:@"808080"] forState:UIControlStateHighlighted];

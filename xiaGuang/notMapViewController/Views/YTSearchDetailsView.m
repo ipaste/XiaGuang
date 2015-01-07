@@ -41,15 +41,15 @@
         _mall = mall;
         _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         _scrollView.delegate = self;
-        _scrollView.backgroundColor = [UIColor whiteColor];
+        _scrollView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:1.0];
         _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)+ 10);
         _scrollView.showsVerticalScrollIndicator = NO;
         [self addSubview:_scrollView];
         
         
         
-        _hotSearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(self.frame), 128)];
-        [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索" indent:25]];
+        _hotSearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(self.frame), 148)];
+        [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索" indent:20]];
         
         AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
         [query whereKeyExists:@"uniId"];
@@ -66,16 +66,19 @@
             
             _popularMerchants = [NSArray arrayWithArray:objects];
             
+            NSArray *colors = @[[UIColor colorWithString:@"ecc3c4"],[UIColor colorWithString:@"81dd90"],[UIColor colorWithString:@"e7d76a"],[UIColor colorWithString:@"73d9e8"],[UIColor colorWithString:@"ee937a"],[UIColor colorWithString:@"b89ef2"]];
             for (int i = 0 ; i < objects.count; i++) {
                 AVObject *object = objects[i];
                 id<YTMerchant> merchant = [[YTCloudMerchant alloc]initWithAVObject:object];
-                UIButton *hotButton = [[UIButton alloc]initWithFrame:CGRectMake(25  + i % 3 * 95 , 45 + i / 3 * 40, 85, 30)];
+                UIButton *hotButton = [[UIButton alloc]initWithFrame:CGRectMake(14.5  + i % 3 * 100 , 35 + i / 3 * 50, 90, 45)];
                 [hotButton setTitle:[merchant shortName] forState:UIControlStateNormal];
-                [hotButton setTitleColor:[UIColor colorWithString:@"606060"] forState:UIControlStateNormal];
-                [hotButton setBackgroundImage:[UIImage imageNamed:@"search_btn_un"] forState:UIControlStateNormal];
-                [hotButton setBackgroundImage:[UIImage imageNamed:@"search_btn_pr"] forState:UIControlStateHighlighted];
+                [hotButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [hotButton setBackgroundColor:colors[i]];
+                [hotButton.layer setCornerRadius:5];
                 [hotButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
                 [hotButton addTarget:self action:@selector(jumpToMerchant:) forControlEvents:UIControlEventTouchUpInside];
+                [hotButton.titleLabel setNumberOfLines:2];
+                [hotButton.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
                 hotButton.tag  = i;
                 [_hotSearchView addSubview:hotButton];
             }
@@ -141,7 +144,8 @@
        
             result = [db executeQuery:sql];
         }else{
-            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName like ? and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
+            result = [db executeQuery:sql];
         }
         NSMutableArray *results = [NSMutableArray array];
         NSMutableArray *uniIds = [NSMutableArray array];
@@ -206,16 +210,18 @@
         if (!historycell) {
             historycell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"historyCell"];
             historycell.backgroundColor = [UIColor clearColor];
-            historycell.textLabel.textColor = [UIColor colorWithString:@"606060"];
+            historycell.textLabel.textColor = [UIColor colorWithString:@"666666"];
             historycell.textLabel.font = [UIFont systemFontOfSize:14];
-            historycell.textLabel.frame = CGRectMake(25, 0, CGRectGetWidth(historycell.frame) - 25, HISTORYTABLECELL_HEIGHT);
+            historycell.textLabel.frame = CGRectMake(15, 0, CGRectGetWidth(historycell.frame) - 25, HISTORYTABLECELL_HEIGHT);
             historycell.selectedBackgroundView = selectedBackgroundView;
             
         }
         if (_recordObjects.count <= 0) {
+            historycell.textLabel.textColor = [UIColor colorWithString:@"999999"];
             historycell.textLabel.text = @"暂无历史";
             historycell.selectionStyle = UITableViewCellSelectionStyleNone;
         }else{
+            
             id<YTMerchantLocation> tmpMerchantInstance = _recordObjects[indexPath.row];
             historycell.textLabel.text = [tmpMerchantInstance merchantLocationName];
         }
@@ -286,7 +292,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if ([tableView isEqual:_historyTableView]) {
-        return 35;
+        return 22;
     }
     return 0;
 }
@@ -295,23 +301,31 @@
     if ([tableView isEqual:_historyTableView]) {
         UIView *background = [[UIView alloc]init];
         background.backgroundColor = [UIColor clearColor];
-        [background addSubview:[self headLabelWithText:@"搜索历史" indent:10]];
+        [background addSubview:[self headLabelWithText:@"历史纪录" indent:10]];
         return background;
     }
+    
     return nil;
 }
 -(UIView *)headLabelWithText:(NSString *)text indent:(CGFloat)indentX{
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(indentX, 0, CGRectGetWidth(_scrollView.frame) - 25, 33)];
-    label.backgroundColor = [UIColor clearColor];
-    
-    label.text = text;
-    label.font = [UIFont systemFontOfSize:13];
-    label.textColor = [UIColor colorWithString:@"e95e37"];
-    
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(label.frame), CGRectGetWidth(label.frame), 0.5)];
-    line.backgroundColor = [UIColor colorWithString:@"e95e37"];
-    [label addSubview:line];
-    return label;
+//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(indentX, 0, CGRectGetWidth(_scrollView.frame) - 25, 33)];
+//    label.backgroundColor = [UIColor clearColor];
+//    
+//    label.text = text;
+//    label.font = [UIFont systemFontOfSize:13];
+//    label.textColor = [UIColor colorWithString:@"e95e37"];
+//    
+//    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(label.frame), CGRectGetWidth(label.frame), 0.5)];
+//    line.backgroundColor = [UIColor colorWithString:@"e95e37"];
+//    [label addSubview:line];
+//    return label;
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(indentX, 0, 295, 21)];
+    if ([text isEqualToString:@"热门搜索"]) {
+        imageView.image = [UIImage imageNamed:@"title_hot"];
+    }else{
+        imageView.image = [UIImage imageNamed:@"title_history"];
+    }
+    return imageView;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{

@@ -17,6 +17,7 @@
 #define TABLEVIEW_HEAD 110.0f
 @interface YTSearchViewController ()<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
     UITableView *_tableView;
+    
     YTPageControl *_pageControl;
     YTSearchView *_searchView;
     NSArray *_categorys;
@@ -40,6 +41,7 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
     
+    
     _categorys = [YTCategory allCategorys];
     
     _isManualSwitch = YES;
@@ -47,12 +49,16 @@
     _searchView.delegate = self;
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:YES];
     
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
+    self.automaticallyAdjustsScrollViewInsets = false;
+    
 }
 -(UIView *)leftBarButtonItemCustomView{
-    UIImage *backImage = [UIImage imageNamed:@"nav_ico_back_un"];
+    UIImage *backImage = [UIImage imageNamed:@"icon_back"];
     UIButton *backButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, backImage.size.width, backImage.size.height)];
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [backButton setImage:[UIImage imageNamed:@"nav_ico_back_pr"] forState:UIControlStateHighlighted];
+    [backButton setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    [backButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
     [backButton setImage:backImage forState:UIControlStateNormal];
     return backButton;
 }
@@ -100,11 +106,17 @@
     [_searchView showSearchViewWithAnimation:NO];
     self.navigationItem.title = @"虾逛";
     self.navigationItem.titleView = [[UIView alloc]init];
-    self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    self.navigationController.navigationBar.clipsToBounds = true;
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
+    
+//    self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
+//    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
-    self.navigationController.navigationBar.clipsToBounds = false;
+//    self.navigationController.navigationBar.clipsToBounds = false;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
