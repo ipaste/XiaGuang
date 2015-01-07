@@ -54,9 +54,10 @@
         [self addSubview:accessoryImageView];
         [self addSubview:_line];
         UIView *backgroundView = [[UIView alloc]initWithFrame: CGRectMake(0, 0, CGRectGetWidth(self.frame), 60)];
-        backgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_2_pr"]];
+        backgroundView.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.06];
         
         self.selectedBackgroundView = backgroundView;
+        self.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
         
     }
     return self;
@@ -66,11 +67,11 @@
     _imageView.layer.cornerRadius = 3.0;
     _imageView.image = self.category.image;
     
-    _line.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
-    _line.backgroundColor = [UIColor colorWithString:@"dcdcdc"];
+    _line.frame = CGRectMake(15, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame) - 30, 0.5);
+    _line.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
     
     _label.text = self.category.text;
-    _label.textColor = [UIColor colorWithString:@"404040"];
+    _label.textColor = [UIColor colorWithString:@"333333"];
     _label.font = [UIFont systemFontOfSize:16];
     NSMutableArray *subCategory = [NSMutableArray arrayWithArray:self.category.subText];
     [subCategory removeObjectAtIndex:0];
@@ -79,7 +80,7 @@
         UILabel *subLabel = _subTitles[i];
         if (i < subCategory.count) {
             subLabel.font = [UIFont systemFontOfSize:12];
-            subLabel.textColor = [UIColor colorWithString:@"909090"];
+            subLabel.textColor = [UIColor colorWithString:@"999999"];
             subLabel.text = subCategory[i];
             subLabel.hidden = NO;
             CGSize textSize = [subLabel.text boundingRectWithSize:CGSizeMake(MAXFLOAT, 20) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : subLabel.font} context:nil].size;

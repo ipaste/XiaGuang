@@ -28,6 +28,7 @@
     NSString *_majorAreaIds;
     NSArray *_popularMerchants;
     NSOperationQueue *_searchOpQueue;
+    UIView *_selectView;
 }
 @end
 @implementation YTSearchDetailsView
@@ -46,7 +47,7 @@
         _scrollView.showsVerticalScrollIndicator = NO;
         [self addSubview:_scrollView];
         
-        
+        _selectView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), HISTORYTABLECELL_HEIGHT)];
         
         _hotSearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(self.frame), 148)];
         [_hotSearchView addSubview:[self headLabelWithText:@"热门搜索" indent:20]];
@@ -203,7 +204,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UIView *selectedBackgroundView = [[UIView alloc]initWithFrame:CGRectZero];
-    selectedBackgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"all_bg_8%black"]];
+    selectedBackgroundView.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.06];
     
     if ([tableView isEqual:_historyTableView]) {
         UITableViewCell *historycell = [tableView dequeueReusableCellWithIdentifier:@"historyCell"];
@@ -213,6 +214,7 @@
             historycell.textLabel.textColor = [UIColor colorWithString:@"666666"];
             historycell.textLabel.font = [UIFont systemFontOfSize:14];
             historycell.textLabel.frame = CGRectMake(15, 0, CGRectGetWidth(historycell.frame) - 25, HISTORYTABLECELL_HEIGHT);
+            selectedBackgroundView.frame = CGRectMake(0, 0, CGRectGetWidth(historycell.frame), HISTORYTABLECELL_HEIGHT);
             historycell.selectedBackgroundView = selectedBackgroundView;
             
         }
@@ -253,12 +255,14 @@
     }
     return nil;
 }
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if ([tableView isEqual:_historyTableView]) {
         if (_recordObjects.count <= 0){
             return;
         }
+        
         id<YTMerchantLocation> tmpMerchantLocation = _recordObjects[indexPath.row];
         [self.delegate selectSearchResultsWithUniIds:[self merchantsWithMerchantName:[tmpMerchantLocation merchantLocationName]]];
         
