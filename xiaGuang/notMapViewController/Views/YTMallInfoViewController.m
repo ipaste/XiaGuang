@@ -104,6 +104,10 @@
     return button;
 }
 
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
+}
+
 -(void)jumpToSearch:(UIButton *)sender{
 
     self.navigationItem.title = @"";
@@ -113,9 +117,7 @@
     [_searchView showSearchViewWithAnimation:YES];
 }
 
--(void)back:(UIButton *)sender{
-    [self.navigationController popViewControllerAnimated:true];
-}
+
 
 -(void)searchCancelButtonClicked{
     _isShowSearchView = NO;

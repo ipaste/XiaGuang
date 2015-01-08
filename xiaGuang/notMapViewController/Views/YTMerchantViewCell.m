@@ -56,7 +56,7 @@
             [subCategory addSubview:subLabel];
             [_subCategoryLabel addObject:subLabel];
         }
-        
+        self.titleColor = [UIColor colorWithString:@"e95e37"];
         
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];
@@ -78,7 +78,7 @@
     
     _merchantNameLabel.text = [self.merchant merchantName];
     _merchantNameLabel.font = [UIFont systemFontOfSize:16];
-    [_merchantNameLabel setTextColor:[UIColor colorWithString:@"e95e37"]];
+    [_merchantNameLabel setTextColor:self.titleColor];
     
     _addressLable.text = [self.merchant address];
     [_addressLable setFont:[UIFont systemFontOfSize:11]];
