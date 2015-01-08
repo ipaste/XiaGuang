@@ -479,6 +479,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         if (highlightPoi != nil) {
             [_mapView superHighlightPoi:highlightPoi animated:NO];
+            
+            
+            if([self userOnCurdisplayedArea]){
+                [self showPathFromUserToPoi:highlightPoi];
+            }
         }
     }
     
