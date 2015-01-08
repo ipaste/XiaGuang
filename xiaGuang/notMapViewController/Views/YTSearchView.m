@@ -41,6 +41,9 @@
             _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
             cancelX = CGRectGetWidth(self.frame) - 80;
         }
+        if([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
+            _searchBarWidth = _searchBarWidth - 5;
+        }
         _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(searchBarX,27, _searchBarWidth, 30)];
         _placeholder = placeholder;
         _searchBar.delegate = self;
@@ -186,6 +189,9 @@
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _searchTextField.frame;
         frame.size.width =_searchTextFieldWidth - 33;
+        if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]) {
+            frame.size.width =_searchTextFieldWidth - 38;
+        }
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         _cancelButton.hidden = NO;
