@@ -36,7 +36,7 @@
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
     
-    [[YTStaticResourceManager sharedManager] startBackgroundDownload];
+    //[[YTStaticResourceManager sharedManager] startBackgroundDownload];
    // [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     
     _timeInToBackground = 0;

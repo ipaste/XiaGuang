@@ -39,7 +39,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame))];
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) + 50, 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame) - 50)];
     _scrollView.backgroundColor = [UIColor clearColor];
     self.automaticallyAdjustsScrollViewInsets = false;
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
@@ -59,7 +59,7 @@
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
-    self.navigationController.navigationBar.clipsToBounds = false;
+    self.navigationController.navigationBar.clipsToBounds = true;
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     [AVAnalytics beginLogPageView:@"mallInfoViewController"];
@@ -133,7 +133,7 @@
 
 #pragma mark View 1
 -(void)mainView{
-    UIButton *left = [[UIButton alloc]initWithFrame:CGRectMake(8, 0, 148, 44)];
+    UIButton *left = [[UIButton alloc]initWithFrame:CGRectMake(8, CGRectGetMaxY(self.navigationController.navigationBar.frame), 148, 44)];
     left.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
     [left setTitle:@"商圈位置" forState:UIControlStateNormal];
     [left setTitleColor:[UIColor colorWithString:@"e5e5e5"] forState:UIControlStateNormal];
@@ -157,7 +157,7 @@
     [right.layer setCornerRadius:2.5];
     [right setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     
-    UIView *categoryView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(right.frame) + 10, CGRectGetWidth(_scrollView.frame), 200)];
+    UIView *categoryView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_scrollView.frame), 200)];
     categoryView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _categorys = [YTCategory commonlyCategorysWithAddMore:YES];
     for (int i = 0; i < _categorys.count; i++) {
@@ -202,8 +202,9 @@
     [_scrollView addSubview:_loadingLabel];
     [_scrollView addSubview:_loading];
     
-    [_scrollView addSubview:left];
-    [_scrollView addSubview:right];
+    [self.view addSubview:left];
+    [self.view addSubview:right];
+    
     [_scrollView addSubview:categoryView];
     [_scrollView addSubview:_tableView];
  
