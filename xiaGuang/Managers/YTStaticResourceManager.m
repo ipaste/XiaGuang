@@ -105,7 +105,7 @@
         if([key isEqualToString:@"db"]){
             
             if(![FCFileManager existsItemAtPath:CURRENT_DATA_DB_PATH]){
-                NSLog(@"%@",BUNDLE_DB_PATH);
+
                 [FCFileManager copyItemAtPath:BUNDLE_DB_PATH toPath:CURRENT_DATA_DB_PATH];
             }
             
