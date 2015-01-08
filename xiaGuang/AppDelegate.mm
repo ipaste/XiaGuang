@@ -70,7 +70,7 @@
         self.window.backgroundColor = [UIColor blackColor];
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
         [self.window makeKeyAndVisible];
-        [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
+        //[[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     }
 }
 
