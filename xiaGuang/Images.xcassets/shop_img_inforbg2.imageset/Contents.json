@@ -5,9 +5,23 @@
       "scale" : "1x"
     },
     {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "fill",
+          "width" : 1,
+          "height" : 1
+        },
+        "capInsets" : {
+          "bottom" : 5,
+          "top" : 4,
+          "right" : 5,
+          "left" : 4
+        }
+      },
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "shop_img_inforbg2@2x.png"
+      "filename" : "shop_img_inforbg2@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
