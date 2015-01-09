@@ -2,11 +2,25 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "shop_btn_nav.png"
+      "scale" : "1x"
     },
     {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "fill",
+          "width" : 8,
+          "height" : 3
+        },
+        "capInsets" : {
+          "bottom" : 41,
+          "top" : 41,
+          "right" : 43,
+          "left" : 43
+        }
+      },
       "idiom" : "universal",
+      "filename" : "shop_btn_nav@2x.png",
       "scale" : "2x"
     },
     {
