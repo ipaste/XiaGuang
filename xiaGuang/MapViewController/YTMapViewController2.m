@@ -514,7 +514,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _searchView = [[YTSearchView alloc]initWithMall:_targetMall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView addInView:self.view show:NO];
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
+    [_searchView setBackgroundImage:nil];
 }
 -(void)createCurLocationButton{
     _moveCurrentButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(18,CGRectGetMaxY(_mapView.frame) - 61, 41, 41)];
@@ -831,6 +831,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_multipleView.isShow) {
         [_multipleView hide];
     }
+    _navigationBar.hidden = true;
     [_searchView showSearchViewWithAnimation:YES];
 }
 
@@ -853,6 +854,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark YTSearchViewManager
 -(void)searchCancelButtonClicked{
+    _navigationBar.hidden = false;
     [_searchView hideSearchViewWithAnimation:YES];
     /*if(_activePoiMajorArea != nil){
         [self cancelCommonPoiState];
