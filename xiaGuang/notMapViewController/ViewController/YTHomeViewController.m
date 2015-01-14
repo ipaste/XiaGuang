@@ -233,6 +233,7 @@
     self.navigationController.navigationBar.clipsToBounds = true;
     self.navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
 }
 -(void)viewDidAppear:(BOOL)animated{

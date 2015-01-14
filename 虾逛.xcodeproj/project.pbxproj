@@ -25,8 +25,6 @@
 		AE24A83B1A02430300A0CE91 /* YTStaticResourceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8361A02430300A0CE91 /* YTStaticResourceManager.m */; };
 		AE24A83C1A02430300A0CE91 /* YTFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8381A02430300A0CE91 /* YTFileManager.m */; };
 		AE24A85F1A02430C00A0CE91 /* YTMapViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8551A02430B00A0CE91 /* YTMapViewController2.m */; };
-		AE24A8651A02431700A0CE91 /* home_bg1136@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8611A02431700A0CE91 /* home_bg1136@2x.jpg */; };
-		AE24A8661A02431700A0CE91 /* home_bg960@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8621A02431700A0CE91 /* home_bg960@2x.jpg */; };
 		AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */; };
 		AE24A8991A02432000A0CE91 /* YTCloudBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A86E1A02432000A0CE91 /* YTCloudBeacon.m */; };
 		AE24A89A1A02432000A0CE91 /* YTCloudBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8701A02432000A0CE91 /* YTCloudBlock.m */; };
@@ -245,8 +243,6 @@
 		AE24A8381A02430300A0CE91 /* YTFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTFileManager.m; sourceTree = "<group>"; };
 		AE24A8541A02430B00A0CE91 /* YTMapViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapViewController2.h; sourceTree = "<group>"; };
 		AE24A8551A02430B00A0CE91 /* YTMapViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMapViewController2.m; sourceTree = "<group>"; };
-		AE24A8611A02431700A0CE91 /* home_bg1136@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "home_bg1136@2x.jpg"; sourceTree = "<group>"; };
-		AE24A8621A02431700A0CE91 /* home_bg960@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "home_bg960@2x.jpg"; sourceTree = "<group>"; };
 		AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nav_bg_pic.jpg; sourceTree = "<group>"; };
 		AE24A86A1A02432000A0CE91 /* YTBathroom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBathroom.h; sourceTree = "<group>"; };
 		AE24A86B1A02432000A0CE91 /* YTBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeacon.h; sourceTree = "<group>"; };
@@ -750,8 +746,6 @@
 		AE24A8601A02431700A0CE91 /* pics */ = {
 			isa = PBXGroup;
 			children = (
-				AE24A8611A02431700A0CE91 /* home_bg1136@2x.jpg */,
-				AE24A8621A02431700A0CE91 /* home_bg960@2x.jpg */,
 				D992B0221A440F5300666AA0 /* img_default.jpg */,
 				AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */,
 				D9CAE85C1A52A8290053E758 /* bg_inner.jpg */,
@@ -1351,8 +1345,6 @@
 				D9D7DAF51A5E3EC600674C3A /* N_YITIAN_B1.mbtiles in Resources */,
 				D9D7DAF21A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles in Resources */,
 				AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */,
-				AE24A8661A02431700A0CE91 /* home_bg960@2x.jpg in Resources */,
-				AE24A8651A02431700A0CE91 /* home_bg1136@2x.jpg in Resources */,
 				D9D7DAEE1A5E3EC600674C3A /* N_KKMALL_L3.mbtiles in Resources */,
 				D9D7DAF91A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles in Resources */,
 			);

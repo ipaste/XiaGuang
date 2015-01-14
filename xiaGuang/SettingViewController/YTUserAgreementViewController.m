@@ -19,8 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"用户协议";
-    _scrollerView  = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-    _scrollerView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    _scrollerView  = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame))];
+    _scrollerView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     [self.view addSubview:_scrollerView];
     self.automaticallyAdjustsScrollViewInsets = NO;
     _titleLabel = [[UILabel alloc]init];
@@ -33,6 +33,9 @@
     
     _titleLabel.frame = CGRectMake(15, 25, textSize.width, textSize.height);
     _titleLabel.text = text;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
 }
 
 -(void)viewWillLayoutSubviews{
@@ -40,14 +43,21 @@
     _titleLabel.font = [UIFont systemFontOfSize:14];
     _titleLabel.numberOfLines = 0;
     _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _titleLabel.textColor = [UIColor colorWithString:@"202020"];
+    _titleLabel.textColor = [UIColor colorWithString:@"333333"];
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBar.clipsToBounds = NO;
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
+
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    return button;
+}
+
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 -(void)dealloc{

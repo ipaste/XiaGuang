@@ -18,8 +18,6 @@
 -(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber{
     self = [super init];
     if (self) {
-        
-        
         self.navigationItem.title = @"商圈位置";
         [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
@@ -70,7 +68,7 @@
     return self;
 }
 -(void)viewWillLayoutSubviews{
-    _mapImageView.center = CGPointMake(self.view.center.x, _mapImageView.center.y + CGRectGetMaxY(self.navigationController.navigationBar.frame));
+    _mapImageView.center = CGPointMake(self.view.center.x,CGRectGetMaxY(self.navigationController.navigationBar.frame ) + _mapImageView.frame.size.height / 2);
 }
 
 -(UIView *)leftBarButton{
