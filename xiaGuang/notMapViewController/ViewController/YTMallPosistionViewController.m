@@ -37,15 +37,14 @@
         
         NSURL *url = [NSURL URLWithString:urlString];
         
-        
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        
-        _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
-        
-        [self.view addSubview:_webView];
-        [_webView loadRequest:request];
-        
-        
+        if (url == nil){
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            
+            _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
+            
+            [self.view addSubview:_webView];
+            [_webView loadRequest:request];
+        }
         //add mall name to the label
         _labelView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_webView.frame), CGRectGetMaxY(self.navigationController.navigationBar.frame)+110)];
        // _labelView.backgroundColor = [UIColor darkGrayColor];

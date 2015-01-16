@@ -291,7 +291,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         FMResultSet *result = [db executeQuery:@"select * from Mall"];
         [result next];
         while([result hasAnotherRow]){
-            
             YTLocalMall *tmpMall = [[YTLocalMall alloc] initWithDBResultSet:result];
             [_malls addObject:tmpMall];
             [result next];
@@ -304,8 +303,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
-
-
 
 -(void)instantiateMenu{
     
@@ -321,7 +318,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self.view insertSubview:_toolbar belowSubview:_navigationBar];
         [self showBlur];
     }
-    
+
     if (_type == YTMapViewControllerTypeNavigation) {
         _navigationBar.titleName = @"选择商城";
         if (_bluetoothLabel == nil) {
@@ -345,7 +342,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _mallTableView.layer.masksToBounds = true;
             [_toolbar addSubview:_mallTableView];
         }
-
     }
 }
 
@@ -372,7 +368,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
-    //[self injectPoisForMajorArea:_majorArea];
     
 }
 
@@ -1131,9 +1126,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark switch floor and block delegate methods
 -(void)switchBlock:(id<YTBlock>)block{
+
     if(_switchFloorView.toggle){
         [_switchFloorView toggleFloor];
     }
+
     
     id<YTMajorArea> majorArea = [[[[block floors] firstObject] majorAreas] firstObject];
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
@@ -1626,7 +1623,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)backClicked{
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{

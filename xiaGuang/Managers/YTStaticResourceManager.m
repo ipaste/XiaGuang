@@ -100,12 +100,13 @@
 }
 
 -(void)pullInBundleDataInManifestIfNeeded{
+    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:CURRENT_MANIFEST_PATH];
     [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if([key isEqualToString:@"db"]){
             
             if(![FCFileManager existsItemAtPath:CURRENT_DATA_DB_PATH]){
-                NSLog(@"%@",BUNDLE_DB_PATH);
+
                 [FCFileManager copyItemAtPath:BUNDLE_DB_PATH toPath:CURRENT_DATA_DB_PATH];
             }
             
@@ -130,7 +131,7 @@
         }
     }];
     
-    [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:CURRENT_DIR]];
+    
     
 }
 
@@ -288,6 +289,8 @@
 
 -(void)createStagingArea{
     
+    
+    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:STAGING_DIR]];
     if([FCFileManager existsItemAtPath:STAGING_DIR]){
         [FCFileManager removeItemAtPath:STAGING_DIR];
     }
