@@ -325,8 +325,6 @@
     _status =  tmpReachability.currentReachabilityStatus;
 }
 -(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
-    
-    
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
