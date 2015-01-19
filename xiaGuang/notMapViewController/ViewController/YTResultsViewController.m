@@ -169,8 +169,10 @@
     if (!_isLoading) {
         _isLoading = YES;
         [self getMerchantsWithSkip:(int)_merchants.count numbers:10 andBlock:^(NSArray *merchants) {
-            [_merchants addObjectsFromArray:merchants];
-            [self reloadData];
+            if (merchants.count > 0) {
+                [_merchants addObjectsFromArray:merchants];
+                [self reloadData];
+            }
             [_tableView footerEndRefreshing];
             _isLoading = NO;
         }];

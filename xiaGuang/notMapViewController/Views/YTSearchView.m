@@ -199,6 +199,12 @@
     }];
 }
 
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    if (_detailsView != nil) {
+        [_detailsView searchButtonClicked];
+    }
+}
+
 -(void)searchBar:(UISearchBar *)searchBar dealWithTextChange:(NSString *)searchText{
     searchBar.text = searchText;
     if (searchText.length <= 0) {
@@ -212,7 +218,6 @@
 #pragma mark detailsView协议
 -(void)cancelSearchInput{
     [_searchBar resignFirstResponder];
-
 }
 
 

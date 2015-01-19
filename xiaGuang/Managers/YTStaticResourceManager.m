@@ -17,7 +17,6 @@
 #define LOCAL_STATIC_DATA_VERSION_KEY @"YTLocalStaticDataVersion"
 #define BACKUP_STATIC_DATA_VERSION_KEY @"YTBackupStaticDataVersion"
 
-
 #define LOCALDB_FILE    @"highGuangDB"
 #define BACKUPDB_FILE   @"highGuangDBSwap"
 
@@ -78,7 +77,6 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"%@",CURRENT_DIR);
         if(![FCFileManager existsItemAtPath:CURRENT_DIR]){
             [FCFileManager createDirectoriesForPath:CURRENT_DIR];
             [FCFileManager createDirectoriesForPath:CURRENT_DATA_DIR];
@@ -100,7 +98,6 @@
 }
 
 -(void)pullInBundleDataInManifestIfNeeded{
-    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:CURRENT_MANIFEST_PATH];
     [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if([key isEqualToString:@"db"]){
@@ -117,8 +114,6 @@
         
         else
         {
-            
-        
             NSString *fileName = key;
             NSString *targetMapPath = [NSString stringWithFormat:@"%@/%@.mbtiles",CURRENT_DATA_DIR,fileName];
             NSString *fromMapPath = [NSString stringWithFormat:@"%@/%@.mbtiles",[FCFileManager pathForMainBundleDirectory],fileName];
@@ -129,6 +124,8 @@
             }
             
         }
+        
+        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     }];
     
     
@@ -343,13 +340,16 @@
 }
 
 -(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url{
-    assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
-    NSError *error = nil;
-    BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
-    if (!success) {
-        NSLog(@"错误信息:%@",error);
+    if (url != nil){
+        assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
+        NSError *error = nil;
+        BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
+        if (!success) {
+            NSLog(@"错误信息:%@",error);
+        }
+        return success;
     }
-    return success;
+    return false;
 }
 
 

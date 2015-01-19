@@ -36,12 +36,7 @@
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
     
-    //[[YTStaticResourceManager sharedManager] startBackgroundDownload];
-   // [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
-    
     _timeInToBackground = 0;
-    
-    NSLog(@"%@",[self identifierForAdvertising]);
     
     [self youmiProcedure];
     return YES;

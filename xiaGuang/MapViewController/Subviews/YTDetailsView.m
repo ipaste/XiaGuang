@@ -21,10 +21,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-       
-        
         _merchantLogo = [[UIImageView alloc]initWithFrame:CGRectMake(15, 17.5, frame.size.height- 35, frame.size.height- 35)];
-        _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+        _merchantLogo.image = [UIImage imageNamed:@"imgshop_default"];
         _merchantLogo.backgroundColor = [UIColor whiteColor];
         
          _label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_merchantLogo.frame) + 10, 21, 160, 25)];
@@ -59,7 +57,7 @@
 }
 
 -(void)setMerchantInfo:(id<YTMerchantLocation>)merchantLocation{
-    _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+    _merchantLogo.image = [UIImage imageNamed:@"imgshop_default"];
     _merchantLogo.backgroundColor = [UIColor clearColor];
     _label.text = [merchantLocation merchantLocationName];
    
@@ -69,7 +67,7 @@
     
     [merchantLocation getCloudThumbNailWithCallBack:^(UIImage *result, NSError *error) {
         if (error) {
-            _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+            _merchantLogo.image = [UIImage imageNamed:@"imgshop_default"];
         }else{
             if (result != nil){
                 _merchantLogo.image = result;

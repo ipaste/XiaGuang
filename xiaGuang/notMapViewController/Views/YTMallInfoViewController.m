@@ -186,7 +186,7 @@
     }
     
     
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryView.frame) + 10, CGRectGetWidth(_scrollView.frame), 35) style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryView.frame) + 10, CGRectGetWidth(_scrollView.frame),  935) style:UITableViewStylePlain];
     _tableView.scrollEnabled = NO;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -211,17 +211,16 @@
     
     [_scrollView addSubview:categoryView];
     [_scrollView addSubview:_tableView];
- 
+    
+    
+    _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame));
+    
     [self getHotsBlack:^(NSArray *merchants) {
         [_loading stopAnimating];
         [_loading removeFromSuperview];
         [_loadingLabel removeFromSuperview];
         _hots = merchants;
-        CGRect frame = _tableView.frame;
-        frame.size.height = (_hots.count * 90) + 35;
-        _tableView.frame = frame;
         [_tableView reloadData];
-        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame));
     }];
     
     id<YTMall> mall = _mall;
@@ -238,7 +237,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _hots.count;
+    return 10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -247,7 +246,9 @@
         cell = [[YTMerchantViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
         cell.backgroundColor = [UIColor clearColor];
     }
-    cell.merchant = _hots[indexPath.row];
+    if (_hots.count > 0) {
+        cell.merchant = _hots[indexPath.row];
+    }
     
     return cell;
 }
@@ -323,7 +324,7 @@
             [merchants removeAllObjects];
         }
         else{
-            [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+            //[[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
             
         }
     }];
