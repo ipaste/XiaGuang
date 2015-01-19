@@ -30,17 +30,17 @@
         self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
         self.view.clipsToBounds = YES;
         
+        _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
         
         NSString * urlString = [NSString stringWithFormat:@"http://mo.amap.com/?q=%f,%f",coordinate.latitude,coordinate.longitude];
         
         urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
+        
         NSURL *url = [NSURL URLWithString:urlString];
         
-        if (url == nil){
+        if (url != nil){
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
-            
-            _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
             
             [self.view addSubview:_webView];
             [_webView loadRequest:request];

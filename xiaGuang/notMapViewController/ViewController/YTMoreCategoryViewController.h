@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "YTMall.h"
-@interface YTMoreCategoryViewController : UITableViewController
+@interface YTMoreCategoryViewController : UIViewController
 @property (weak,nonatomic) id<YTMall> mall;
 @end
