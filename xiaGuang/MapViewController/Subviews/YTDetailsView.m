@@ -21,11 +21,13 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _label = [[UILabel alloc]initWithFrame:CGRectMake(70, 5, 160, 30)];
-        _startNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - CGRectGetHeight(frame) - 15, 4, frame.size.height + 10, frame.size.height - 8)];
-        _merchantLogo = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, frame.size.height - 10, frame.size.height - 10)];
-        _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+        _merchantLogo = [[UIImageView alloc]initWithFrame:CGRectMake(15, 17.5, frame.size.height- 35, frame.size.height- 35)];
+        _merchantLogo.image = [UIImage imageNamed:@"imgshop_default"];
         _merchantLogo.backgroundColor = [UIColor whiteColor];
+        
+         _label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_merchantLogo.frame) + 10, 21, 160, 25)];
+        _startNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - (CGRectGetHeight(frame) - 29) - 18, 14.5, 51, 51)];
+        
         [self addSubview:_merchantLogo];
         [self addSubview:_startNavigationButton];
         [self addSubview:_label];
@@ -35,7 +37,7 @@
 
 -(void)layoutSubviews{
 
-    _label.font = [UIFont systemFontOfSize:18];
+    _label.font = [UIFont systemFontOfSize:16];
     _label.textColor = [UIColor whiteColor];
     
     
@@ -43,18 +45,19 @@
     _merchantLogo.layer.masksToBounds = YES;
     
     [_startNavigationButton setTitle:@"导航" forState:UIControlStateNormal];
-    [_startNavigationButton setBackgroundColor:[UIColor colorWithString:@"0084ff"]];
-    _startNavigationButton.layer.cornerRadius = (CGRectGetHeight(self.frame) - 8) / 2;
+//    [_startNavigationButton setBackgroundColor:[UIColor colorWithString:@"0084ff"]];
+//    _startNavigationButton.layer.cornerRadius = (CGRectGetHeight(self.frame) - 8) / 2;
+    [_startNavigationButton setBackgroundImage:[UIImage imageNamed:@"btn_orange"] forState:UIControlStateNormal];
     [_startNavigationButton addTarget:self action:@selector(clickStartNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [self setClipsToBounds:YES];
-    self.backgroundColor = [UIColor blackColor];
-    self.layer.cornerRadius = CGRectGetHeight(self.frame) / 2;
-    self.layer.masksToBounds = YES;
+    self.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.6];
+//    self.layer.cornerRadius = CGRectGetHeight(self.frame) / 2;
+//    self.layer.masksToBounds = YES;
 }
 
 -(void)setMerchantInfo:(id<YTMerchantLocation>)merchantLocation{
-    _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+    _merchantLogo.image = [UIImage imageNamed:@"imgshop_default"];
     _merchantLogo.backgroundColor = [UIColor clearColor];
     _label.text = [merchantLocation merchantLocationName];
    
@@ -64,7 +67,7 @@
     
     [merchantLocation getCloudThumbNailWithCallBack:^(UIImage *result, NSError *error) {
         if (error) {
-            _merchantLogo.image = [UIImage imageNamed:@"nav_ico_default"];
+            _merchantLogo.image = [UIImage imageNamed:@"imgshop_default"];
         }else{
             if (result != nil){
                 _merchantLogo.image = result;
@@ -129,10 +132,9 @@
         categoryLabel.text = type;
         categoryLabel.font = [UIFont systemFontOfSize:10];
         categoryLabel.textAlignment = 1;
-        categoryLabel.textColor = [UIColor colorWithString:@"969696"];
+        categoryLabel.textColor = [UIColor colorWithString:@"fbbb4c"];
         [categoryImageView addSubview:categoryLabel];
         beforeImageView = categoryImageView;
-    
     }
 }
 

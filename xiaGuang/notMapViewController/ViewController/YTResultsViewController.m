@@ -83,7 +83,8 @@
     [super viewDidLoad];
     
     self.navigationItem.title = @"搜索结果";
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    //self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
     
     _isFirst = YES;
     
@@ -93,7 +94,7 @@
     
     _tableView.dataSource = self;
     
-    _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
+    _tableView.backgroundColor = [UIColor clearColor];
     
     _tableView.tableFooterView = [[UIView alloc]init];
     
@@ -131,6 +132,8 @@
         }
         [self reloadData];
     }];
+    
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
 }
 
 -(void)viewWillLayoutSubviews{
@@ -149,13 +152,27 @@
     
 }
 
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    return button;
+}
+
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
+}
 
 -(void)pullToRefresh{
     if (!_isLoading) {
         _isLoading = YES;
         [self getMerchantsWithSkip:(int)_merchants.count numbers:10 andBlock:^(NSArray *merchants) {
-            [_merchants addObjectsFromArray:merchants];
-            [self reloadData];
+            if (merchants.count > 0) {
+                [_merchants addObjectsFromArray:merchants];
+                [self reloadData];
+            }
             [_tableView footerEndRefreshing];
             _isLoading = NO;
         }];
@@ -227,6 +244,8 @@
     YTMerchantViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
         cell = [[YTMerchantViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.titleColor = [UIColor colorWithString:@"333333"];
+        cell.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     }
     id <YTMerchant> merchant = _merchants[indexPath.row];
     

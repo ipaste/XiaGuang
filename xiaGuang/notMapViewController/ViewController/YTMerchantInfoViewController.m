@@ -38,15 +38,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
     UIImageView *background = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"shop_bg_map"]];
-    
-    
+    background.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame));
     [self.view addSubview:background];
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
+
     
     self.navigationItem.title = @"店铺详情";
     UIImage *merchantInfoImage = [UIImage imageNamed:@"shop_img_inforbg"];
-    _merchantInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMinY(self.view.frame), CGRectGetWidth(self.view.frame), 175 - merchantInfoImage.size.height )];
+    _merchantInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMinY(self.view.frame) + CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), 175 - merchantInfoImage.size.height )];
     _merchantInfoView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_img_inforbg2"]];
     [self.view addSubview:_merchantInfoView];
     
@@ -87,6 +89,8 @@
     
     _jumpToMapButton  = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 180, 45)];
     [_jumpToMapButton addTarget:self action:@selector(jumpToMap:) forControlEvents:UIControlEventTouchUpInside];
+    [_jumpToMapButton setImage:[UIImage imageNamed:@"shop_icon_nav"] forState:UIControlStateNormal];
+    
     [_naviView addSubview:_jumpToMapButton];
     
     [_naviView addSubview:_addressLabel];
@@ -108,20 +112,7 @@
 }
 
 -(void)viewDidLayoutSubviews{
-    CGFloat topHeight = [self.topLayoutGuide length];
-    CGRect frame = _merchantInfoView.frame;
-    frame.origin.y += topHeight;
-    _merchantInfoView.frame = frame;
-    
-    frame = _merchantInfoImageView.frame;
-    frame.origin.y += topHeight;
-    _merchantInfoImageView.frame = frame;
-    
-    frame = _naviView.frame;
-    frame.origin.y += topHeight;
-    _naviView.frame = frame;
-    
-    
+
     _merchantLogo.center = CGPointMake(self.view.center.x, _merchantLogo.center.y);
     _merchantLogo.layer.cornerRadius = CGRectGetWidth(_merchantLogo.frame) / 2;
     _merchantLogo.layer.borderWidth = 0.5;
@@ -158,21 +149,34 @@
     _addressLabel.center = CGPointMake(_naviView.center.x,0);
     _addressLabel.font = [UIFont systemFontOfSize:14];
     _addressLabel.textAlignment = 1;
-    _addressLabel.textColor = [UIColor colorWithString:@"404040"];;
+    _addressLabel.textColor = [UIColor colorWithString:@"e5e5e5"];;
     _addressLabel.text = [_merchant address];
     _addressLabel.numberOfLines = 2;
     _addressLabel.lineBreakMode = NSLineBreakByWordWrapping;
     _addressLogo.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_merchantInfoImageView.frame) + 36);
-    _addressLogo.image = [UIImage imageNamed:@"nav_ico_end_pr"];
+    _addressLogo.image = [UIImage imageNamed:@"icon_locaiton"];
     
     
     _jumpToMapButton.center = CGPointMake(_naviView.center.x, CGRectGetMaxY(_addressLabel.frame) + 15 + CGRectGetHeight(_jumpToMapButton.frame) / 2);
-    [_jumpToMapButton setBackgroundImage:[UIImage imageNamed:@"shop_btn_nav_un"] forState:UIControlStateNormal];
+    [_jumpToMapButton setBackgroundImage:[UIImage imageNamed:@"shop_btn_nav"] forState:UIControlStateNormal];
     [_jumpToMapButton setTitle:@"查看商家位置" forState:UIControlStateNormal];
     [_jumpToMapButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_jumpToMapButton setBackgroundImage:[UIImage imageNamed:@"shop_btn_nav_pr"] forState:UIControlStateHighlighted];
-    
+    [_jumpToMapButton setBackgroundImage:[UIImage imageNamed:@"shop_btn_navOn"] forState:UIControlStateHighlighted];
+    [_jumpToMapButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
     _naviView.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_addressLogo.frame) + CGRectGetHeight(_naviView.frame) / 2 + 20);
+}
+
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    return button;
+}
+
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 -(void)dealloc{

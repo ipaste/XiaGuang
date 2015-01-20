@@ -34,6 +34,7 @@
 -(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback;
 -(void)getInfoBackgroundImageWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)getMallBasicInfoWithCallBack:(void(^)(UIImage *mapImage,NSString *address,NSString *phoneNumber,NSError *error))callback;
+-(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback;
 -(void)iconsFromStartIndex:(int)start
                      toEnd:(int)end
                   callBack:(void (^)(NSArray *result,NSError *error))callback;

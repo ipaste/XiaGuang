@@ -17,7 +17,6 @@
 #define LOCAL_STATIC_DATA_VERSION_KEY @"YTLocalStaticDataVersion"
 #define BACKUP_STATIC_DATA_VERSION_KEY @"YTBackupStaticDataVersion"
 
-
 #define LOCALDB_FILE    @"highGuangDB"
 #define BACKUPDB_FILE   @"highGuangDBSwap"
 
@@ -78,7 +77,6 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"%@",CURRENT_DIR);
         if(![FCFileManager existsItemAtPath:CURRENT_DIR]){
             [FCFileManager createDirectoriesForPath:CURRENT_DIR];
             [FCFileManager createDirectoriesForPath:CURRENT_DATA_DIR];
@@ -105,7 +103,7 @@
         if([key isEqualToString:@"db"]){
             
             if(![FCFileManager existsItemAtPath:CURRENT_DATA_DB_PATH]){
-                NSLog(@"%@",BUNDLE_DB_PATH);
+
                 [FCFileManager copyItemAtPath:BUNDLE_DB_PATH toPath:CURRENT_DATA_DB_PATH];
             }
             
@@ -116,8 +114,6 @@
         
         else
         {
-            
-        
             NSString *fileName = key;
             NSString *targetMapPath = [NSString stringWithFormat:@"%@/%@.mbtiles",CURRENT_DATA_DIR,fileName];
             NSString *fromMapPath = [NSString stringWithFormat:@"%@/%@.mbtiles",[FCFileManager pathForMainBundleDirectory],fileName];
@@ -128,9 +124,11 @@
             }
             
         }
+        
+        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     }];
     
-    [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:CURRENT_DIR]];
+    
     
 }
 
@@ -288,6 +286,8 @@
 
 -(void)createStagingArea{
     
+    
+    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:STAGING_DIR]];
     if([FCFileManager existsItemAtPath:STAGING_DIR]){
         [FCFileManager removeItemAtPath:STAGING_DIR];
     }
@@ -340,13 +340,16 @@
 }
 
 -(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url{
-    assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
-    NSError *error = nil;
-    BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
-    if (!success) {
-        NSLog(@"错误信息:%@",error);
+    if (url != nil){
+        assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
+        NSError *error = nil;
+        BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
+        if (!success) {
+            NSLog(@"错误信息:%@",error);
+        }
+        return success;
     }
-    return success;
+    return false;
 }
 
 

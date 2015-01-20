@@ -62,9 +62,10 @@
         UIButton *subCategoryButton = _subCategory[i];
         subCategoryButton.hidden = NO;
         [subCategoryButton setTitle:_category.subText[i] forState:UIControlStateNormal];
-        [subCategoryButton setTitleColor:[UIColor colorWithString:@"606060"] forState:UIControlStateNormal];
-        [subCategoryButton setBackgroundImage:[UIImage imageNamed:@"search_btn_un"] forState:UIControlStateNormal];
-        [subCategoryButton setBackgroundImage:[UIImage imageNamed:@"search_btn_pr"] forState:UIControlStateHighlighted];
+        [subCategoryButton setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
+        [subCategoryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [subCategoryButton setBackgroundImage:[UIImage imageNamed:@"sort_btn"] forState:UIControlStateNormal];
+        [subCategoryButton setBackgroundImage:[UIImage imageNamed:@"sort_btnOn"] forState:UIControlStateHighlighted];
         [subCategoryButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     }
 }

@@ -26,7 +26,6 @@
         RMMBTilesSource *source = [[RMMBTilesSource alloc]initWithTileSetResource:@""];
         source.cacheable = NO;
         _internalMapView = [[RMMapView alloc] initWithFrame:CGRectMake(-CGRectGetWidth(frame) / 2, -CGRectGetHeight(frame) / 2, CGRectGetWidth(frame), CGRectGetHeight(frame)) andTilesource:source centerCoordinate:CLLocationCoordinate2DMake(0, 0) zoomLevel:2 maxZoomLevel:6 minZoomLevel:0 backgroundImage:nil];
-        _internalMapView.layer.cornerRadius = 10.0;
         _internalMapView.hideAttribution = YES;
         _internalMapView.showLogoBug = NO;
         _internalMapView.delegate = self;
@@ -124,35 +123,35 @@
 }
 
 -(void)setMapViewDetailState:(YTMapViewDetailState)detailState{
-    CGRect frame = _internalMapView.bounds;
-    if (detailState == YTMapViewDetailStateNormal) {
-        if (_detailState == YTMapViewDetailStateShowDetail) {
-            frame.size.height += 70;
-        }else if (_detailState == YTMapViewDetailStateNavigating){
-            frame = self.frame;
-            frame.origin.y += 44;
-            frame.size.height -= 44;
-            self.frame = frame;
-            
-            
-            frame = _internalMapView.bounds;
-            frame.origin.y = 0;
-            frame.size.height += 26;
-        }
-        
-    }else if (detailState == YTMapViewDetailStateShowDetail){
-        frame.size.height -= 70;
-    }else{
-        frame = self.frame;
-        frame.origin.y -= 44;
-        frame.size.height += 44;
-        self.frame = frame;
-        
-        frame = _internalMapView.bounds;
-        frame.origin.y = CGRectGetMinY(self.frame);
-        frame.size.height += 44;
-    }
-    _internalMapView.bounds = frame;
+//    CGRect frame = _internalMapView.bounds;
+//    if (detailState == YTMapViewDetailStateNormal) {
+//        if (_detailState == YTMapViewDetailStateShowDetail) {
+//            frame.size.height += 70;
+//        }else if (_detailState == YTMapViewDetailStateNavigating){
+//            frame = self.frame;
+//            frame.origin.y += 44;
+//            frame.size.height -= 44;
+//            self.frame = frame;
+//            
+//            
+//            frame = _internalMapView.bounds;
+//            frame.origin.y = 0;
+//            frame.size.height += 26;
+//        }
+//        
+//    }else if (detailState == YTMapViewDetailStateShowDetail){
+//        frame.size.height -= 70;
+//    }else{
+//        frame = self.frame;
+//        frame.origin.y -= 44;
+//        frame.size.height += 44;
+//        self.frame = frame;
+//        
+//        frame = _internalMapView.bounds;
+//        frame.origin.y = CGRectGetMinY(self.frame);
+//        frame.size.height += 44;
+//    }
+//    _internalMapView.bounds = frame;
     _detailState = detailState;
 }
 

@@ -28,6 +28,8 @@
     UIActivityIndicatorView *_loading;
     UILabel *_loadingLabel;
     UIImage *_infoBackgroundImage;
+    UIButton *_leftButton;
+    UIButton *_rightButton;
     YTMallPosistionViewController *_posistionVC;
     BOOL _isShowSearchView;
 }
@@ -37,11 +39,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _scrollView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-    _scrollView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    _searchView = [[YTSearchView alloc]initWithMall:self.mall placeholder:@"商城/品牌" indent:NO];
+
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) + 50, 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame) - 50)];
+    _scrollView.backgroundColor = [UIColor clearColor];
+    self.automaticallyAdjustsScrollViewInsets = false;
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
+
+    _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
+    //[_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
     [self.view addSubview:_scrollView];
@@ -55,6 +61,9 @@
     [super viewWillAppear:animated];
     self.navigationItem.hidesBackButton = NO;
     self.navigationItem.titleView.hidden = NO;
+    self.navigationController.navigationBar.clipsToBounds = true;
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     [AVAnalytics beginLogPageView:@"mallInfoViewController"];
 }
 
@@ -73,6 +82,7 @@
 #pragma mark Navigation
 -(void)setNavigation{
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButton]];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
 }
 
 
@@ -80,22 +90,42 @@
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
     [button addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
 
-    [button setImage:[UIImage imageNamed:@"nav_ico_search_un"] forState:UIControlStateNormal];
-     [button setImage:[UIImage imageNamed:@"nav_ico_search_pr"] forState:UIControlStateHighlighted];
+    [button setImage:[UIImage imageNamed:@"icon_search"] forState:UIControlStateNormal];
+     [button setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
+    _rightButton = button;
     return button;
 }
 
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    _leftButton = button;
+    return button;
+}
+
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
+}
+
 -(void)jumpToSearch:(UIButton *)sender{
-    self.navigationItem.hidesBackButton = YES;
-    self.navigationItem.titleView.hidden = YES;
+
+    self.navigationItem.title = @"";
+    _leftButton.hidden = true;
+    _rightButton.hidden = true;
     _isShowSearchView = YES;
     [_searchView showSearchViewWithAnimation:YES];
 }
 
+
+
 -(void)searchCancelButtonClicked{
-    self.navigationItem.hidesBackButton = NO;
-    self.navigationItem.titleView.hidden = NO;
     _isShowSearchView = NO;
+    self.navigationItem.title = [self.mall mallName];
+    _leftButton.hidden = false;
+    _rightButton.hidden = false;
     [_searchView hideSearchViewWithAnimation:NO];
 }
 -(void)selectedUniIds:(NSArray *)uniIds{
@@ -107,30 +137,32 @@
 
 #pragma mark View 1
 -(void)mainView{
-    UIButton *left = [[UIButton alloc]initWithFrame:CGRectMake(0, 10, 159, 44)];
-    left.backgroundColor = [UIColor whiteColor];
+    UIButton *left = [[UIButton alloc]initWithFrame:CGRectMake(8, CGRectGetMaxY(self.navigationController.navigationBar.frame), 148, 44)];
+    left.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
     [left setTitle:@"商圈位置" forState:UIControlStateNormal];
-    [left setTitleColor:[UIColor colorWithString:@"404040"] forState:UIControlStateNormal];
+    [left setTitleColor:[UIColor colorWithString:@"e5e5e5"] forState:UIControlStateNormal];
     [left setImage:[UIImage imageNamed:@"mall_img_location"] forState:UIControlStateNormal];
     [left setImage:[UIImage imageNamed:@"mall_img_location"] forState:UIControlStateHighlighted];
     [left setBackgroundImage:[UIImage imageNamed:@"shop_bg_2_pr"] forState:UIControlStateHighlighted];
     [left addTarget:self action:@selector(showMallPosition:) forControlEvents:UIControlEventTouchUpInside];
     [left.titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [left setTitleEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 0)];
+    [left.layer setCornerRadius:2.5];
+    [left setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     
-    UIButton *right = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(left.frame)+ 1, CGRectGetMinY(left.frame), CGRectGetWidth(left.frame), CGRectGetHeight(left.frame))];
-    right.backgroundColor = [UIColor whiteColor];
+    UIButton *right = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(left.frame)+ 8, CGRectGetMinY(left.frame), CGRectGetWidth(left.frame), CGRectGetHeight(left.frame))];
+    right.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
     [right setTitle:@"楼层地图" forState:UIControlStateNormal];
-    [right setTitleColor:[UIColor colorWithString:@"404040"] forState:UIControlStateNormal];
+    [right setTitleColor:[UIColor colorWithString:@"e5e5e5"] forState:UIControlStateNormal];
     [right setImage:[UIImage imageNamed:@"mall_img_floor"] forState:UIControlStateNormal];
     [right setImage:[UIImage imageNamed:@"mall_img_floor"] forState:UIControlStateHighlighted];
     [right setBackgroundImage:[UIImage imageNamed:@"shop_bg_2_pr"] forState:UIControlStateHighlighted];
     [right addTarget:self action:@selector(jumpToFloorMap:) forControlEvents:UIControlEventTouchUpInside];
     [right.titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [right setTitleEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 0)];
+    [right.layer setCornerRadius:2.5];
+    [right setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     
-    UIView *categoryView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(right.frame) + 10, CGRectGetWidth(_scrollView.frame), 200)];
-    categoryView.backgroundColor = [UIColor whiteColor];
+    UIView *categoryView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_scrollView.frame), 200)];
+    categoryView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _categorys = [YTCategory commonlyCategorysWithAddMore:YES];
     for (int i = 0; i < _categorys.count; i++) {
         UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 15 + i / 4  * 93, 50, 50)];
@@ -154,10 +186,11 @@
     }
     
     
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryView.frame) + 10, CGRectGetWidth(_scrollView.frame), 35) style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryView.frame) + 10, CGRectGetWidth(_scrollView.frame),  935) style:UITableViewStylePlain];
     _tableView.scrollEnabled = NO;
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
    
     _loading = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -173,21 +206,21 @@
     [_scrollView addSubview:_loadingLabel];
     [_scrollView addSubview:_loading];
     
-    [_scrollView addSubview:left];
-    [_scrollView addSubview:right];
+    [self.view addSubview:left];
+    [self.view addSubview:right];
+    
     [_scrollView addSubview:categoryView];
     [_scrollView addSubview:_tableView];
- 
+    
+    
+    _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame));
+    
     [self getHotsBlack:^(NSArray *merchants) {
         [_loading stopAnimating];
         [_loading removeFromSuperview];
         [_loadingLabel removeFromSuperview];
         _hots = merchants;
-        CGRect frame = _tableView.frame;
-        frame.size.height = (_hots.count * 90) + 35;
-        _tableView.frame = frame;
         [_tableView reloadData];
-        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame) + 70);
     }];
     
     id<YTMall> mall = _mall;
@@ -195,37 +228,35 @@
     if (mall == nil) {
         [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
     }
-    [mall getMallBasicInfoWithCallBack:^(UIImage *mapImage, NSString *address, NSString *phoneNumber, NSError *error) {
-        _posistionVC = [[YTMallPosistionViewController alloc]initWithImage:mapImage address:address phoneNumber:phoneNumber];
+    
+    [mall getMallBasicMallInfoWithCallBack:^(NSString *mallName, NSString *address, CLLocationCoordinate2D coord, NSError *error) {
+        _posistionVC = [[YTMallPosistionViewController alloc]initWithMallCoordinate:[_mall coord] address:address mallName:[_mall mallName]];
     }];
 
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _hots.count;
+    return 10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMerchantViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
         cell = [[YTMerchantViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.backgroundColor = [UIColor clearColor];
     }
-    cell.merchant = _hots[indexPath.row];
+    if (_hots.count > 0) {
+        cell.merchant = _hots[indexPath.row];
+    }
     
     return cell;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *background = [[UIView alloc]init];
-    background.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_scrollView.frame), 33)];
-    label.backgroundColor = [UIColor whiteColor];
-    label.textAlignment = 1;
-    label.text = @"热门品牌";
-    label.font = [UIFont systemFontOfSize:15];
-    label.textColor = [UIColor colorWithString:@"606060"];
-    
-    [background addSubview:label];
+    UIImageView *hotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 6, CGRectGetWidth(self.view.frame), 27)];
+    hotImageView.image = [UIImage imageNamed:@"title_hotbrand"];
+    [background addSubview:hotImageView];
     return background;
 }
 
@@ -239,8 +270,9 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 90;
 }
+
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 35;
+    return 34;
 }
 
 -(void)jumpToCategory:(UIButton *)sender{
@@ -275,10 +307,10 @@
     AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
     [query whereKeyExists:@"uniId"];
     [query whereKey:@"uniId" notEqualTo:@"0"];
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 1 * 3600;
     AVObject *mall = [AVObject objectWithoutDataWithClassName:@"Mall" objectId:[_mall identifier]];
     [query whereKey:@"mall" equalTo:mall];
+    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+    query.maxCacheAge = 1 * 3600;
     [query includeKey:@"mall,floor"];
     query.limit = 10;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -292,7 +324,7 @@
             [merchants removeAllObjects];
         }
         else{
-            [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+            //[[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
             
         }
     }];

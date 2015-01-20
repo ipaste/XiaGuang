@@ -36,12 +36,7 @@
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
     
-    [[YTStaticResourceManager sharedManager] startBackgroundDownload];
-   // [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
-    
     _timeInToBackground = 0;
-    
-    NSLog(@"%@",[self identifierForAdvertising]);
     
     [self youmiProcedure];
     return YES;
@@ -70,7 +65,7 @@
         self.window.backgroundColor = [UIColor blackColor];
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
         [self.window makeKeyAndVisible];
-        [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
+        //[[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     }
 }
 
@@ -134,6 +129,7 @@
     }];
     
 }
+
 
     
 @end

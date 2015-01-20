@@ -89,10 +89,6 @@
     [_navigationButton setTitleEdgeInsets:UIEdgeInsetsMake(50, -35, 0, 0)];
     [_navigationButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 35, 0, 0)];
     _navigationButton.layer.cornerRadius = 10;
-    
-    
-    
-    
     [_blurView addSubview:_navigationButton];
     
     
@@ -163,8 +159,6 @@
     _transitionToolbar.translucent = YES;
     _transitionToolbar.alpha = 0;
     [self.view addSubview:_transitionToolbar];
-
-    
 }
 
 
@@ -172,8 +166,6 @@
 - (void)test {
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        
         
         [UIView animateWithDuration:1
                               delay:0
@@ -228,6 +220,15 @@
     _scrollFired = NO;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.clipsToBounds = true;
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjects:@[[UIColor colorWithString:@"e65e37"],[UIFont systemFontOfSize:20]] forKeys:@[NSForegroundColorAttributeName,NSFontAttributeName]]];
+
+}
 -(void)viewDidAppear:(BOOL)animated{
     
     if(!_scrollFired){
@@ -322,22 +323,25 @@
             [_tableView reloadData];
         }];
     }
+    
+    if (tmpReachability.isReachableViaWiFi) {
+        [[YTStaticResourceManager sharedManager] startBackgroundDownload];
+        [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
+    }
     _status =  tmpReachability.currentReachabilityStatus;
 }
 -(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
-    
-    
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
     [query whereKeyExists:@"localDBId"];
     [query whereKey:@"localDBId" notEqualTo:@""];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
         if(!error && objects != nil && objects.count != 0){
             NSMutableArray *array = [NSMutableArray array];
             for (AVObject *mall in objects) {
                 YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
+                [cloudMall mallName];
                 [array addObject:cloudMall];
             }
             [_malls removeAllObjects];
@@ -424,9 +428,11 @@
         
     } 
 }
+
 -(BOOL)prefersStatusBarHidden{
     return NO;
 }
+
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }

@@ -46,13 +46,13 @@
             frame.size.height = _width_height * _items.count;
         }
     }
-    frame.size.height -= 10;
+    frame.size.height -= 18;
     [super setFrame:frame];
     
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return _width_height - 3;
+    return _width_height - 7;
 }
 
 -(void)setCurFloor:(id<YTFloor>)curFloor{
@@ -77,7 +77,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, _width_height, _width_height)];
-    [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
     [button addTarget:self action:@selector(floorButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [cell addSubview:button];
     [_buttons addObject:button];
@@ -85,6 +85,7 @@
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     id <YTFloor> floor = _items[indexPath.row] ;
     [button setTitle:[floor floorName] forState:UIControlStateNormal];
+    button.titleLabel.attributedText = [[NSAttributedString alloc]initWithString:[floor floorName]];
     if ([button.titleLabel.text isEqualToString:[self.curFloor floorName]]) {
         [self setCurButton:button];
     }
@@ -100,8 +101,22 @@
     }
 }
 -(void)setCurButton:(UIButton *)sender{
+   
     [_currentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [sender setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithAttributedString:_currentButton.titleLabel.attributedText];
+    
+    NSRange range = {0,_currentButton.titleLabel.text.length};
+    [string removeAttribute:NSUnderlineStyleAttributeName range:range];
+    _currentButton.titleLabel.attributedText = string;
+    
+    [sender setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
+    
+    string = [[NSMutableAttributedString alloc]initWithAttributedString:sender.titleLabel.attributedText];
+    NSRange titleRange = {0,sender.titleLabel.text.length};
+    
+    [string addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:titleRange];
+
+    sender.titleLabel.attributedText = string;
     _currentButton = sender;
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{

@@ -9,7 +9,7 @@
 #import "YTMapViewController2.h"
 
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
-#define HOISTING_HEIGHT 70
+#define HOISTING_HEIGHT 80
 #define ROW_HEIGHT 65
 typedef NS_ENUM(NSInteger, YTMapViewControllerType){
     YTMapViewControllerTypeNavigation = 0,
@@ -35,7 +35,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _isFirstEnter;
     BOOL _currentViewDisplay;
     BOOL _selectOnOneOfThePoi;
-    
     BOOL _shownFloorChange;
     
     YTMapViewControllerType _type;
@@ -166,7 +165,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bluetoothStateChange:) name:YTBluetoothStateHasChangedNotification object:nil];
     
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
-    background.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
+    background.image = [UIImage imageNamed:@"bg_inner.jpg"];
     [self.view addSubview:background];
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
@@ -296,7 +295,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         FMResultSet *result = [db executeQuery:@"select * from Mall"];
         [result next];
         while([result hasAnotherRow]){
-            
             YTLocalMall *tmpMall = [[YTLocalMall alloc] initWithDBResultSet:result];
             [_malls addObject:tmpMall];
             [result next];
@@ -309,8 +307,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
-
-
 
 -(void)instantiateMenu{
     
@@ -326,27 +322,30 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self.view insertSubview:_toolbar belowSubview:_navigationBar];
         [self showBlur];
     }
-    
-    if (_bluetoothLabel == nil) {
-        _bluetoothLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_toolbar.frame) - 55, CGRectGetWidth(_toolbar.frame), 55)];
-        _bluetoothLabel.font = [UIFont systemFontOfSize:15];
-        _bluetoothLabel.textColor = [UIColor colorWithString:@"999999"];
-        _bluetoothLabel.text = @"您没有打开蓝牙或不在商城范围内";
-        _bluetoothLabel.textAlignment = 1;
-        [_toolbar addSubview:_bluetoothLabel];
-    }
-    
-    if (_mallTableView == nil) {
-        _mallTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetMinY(_bluetoothLabel.frame) - CGRectGetHeight(_navigationBar.frame)) style:UITableViewStylePlain];
-        _mallTableView.backgroundColor = [UIColor clearColor];
-        _mallTableView.separatorColor = [UIColor colorWithString:@"727272"];
-        _mallTableView.delegate = self;
-        _mallTableView.dataSource = self;
-        _mallTableView.showsVerticalScrollIndicator = false;
-        _mallTableView.layer.cornerRadius = 10;
-        _mallTableView.rowHeight = ROW_HEIGHT;
-        _mallTableView.layer.masksToBounds = true;
-        [_toolbar addSubview:_mallTableView];
+
+    if (_type == YTMapViewControllerTypeNavigation) {
+        _navigationBar.titleName = @"选择商城";
+        if (_bluetoothLabel == nil) {
+            _bluetoothLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_toolbar.frame) - 55, CGRectGetWidth(_toolbar.frame), 55)];
+            _bluetoothLabel.font = [UIFont systemFontOfSize:15];
+            _bluetoothLabel.textColor = [UIColor colorWithString:@"999999"];
+            _bluetoothLabel.text = @"您没有打开蓝牙或不在商城范围内";
+            _bluetoothLabel.textAlignment = 1;
+            [_toolbar addSubview:_bluetoothLabel];
+        }
+        
+        if (_mallTableView == nil) {
+            _mallTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetMinY(_bluetoothLabel.frame) - CGRectGetHeight(_navigationBar.frame)) style:UITableViewStylePlain];
+            _mallTableView.backgroundColor = [UIColor clearColor];
+            _mallTableView.separatorColor = [UIColor colorWithString:@"727272"];
+            _mallTableView.delegate = self;
+            _mallTableView.dataSource = self;
+            _mallTableView.showsVerticalScrollIndicator = false;
+            _mallTableView.layer.cornerRadius = 10;
+            _mallTableView.rowHeight = ROW_HEIGHT;
+            _mallTableView.layer.masksToBounds = true;
+            [_toolbar addSubview:_mallTableView];
+        }
     }
 }
 
@@ -358,13 +357,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)showBlur{
     [_navigationBar changeSearchButtonWithHide:true];
-    _navigationBar.titleName = @"选择商城";
     _toolbar.alpha = 1;
     _blurMenuShown = YES;
 }
 
 -(void)createMapView{
-    _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 10)];
+    _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame))];
     _mapView.delegate = self;
     
     [self.view insertSubview:_mapView belowSubview:_navigationBar];
@@ -374,7 +372,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
     
     [_mapView setZoom:1 animated:NO];
-    //[self injectPoisForMajorArea:_majorArea];
     
 }
 
@@ -554,27 +551,26 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _searchView = [[YTSearchView alloc]initWithMall:_targetMall placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView addInView:self.view show:NO];
-    [_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
+    [_searchView setBackgroundImage:nil];
 }
 -(void)createCurLocationButton{
-    _moveCurrentButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
+    _moveCurrentButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(18,CGRectGetMaxY(_mapView.frame) - 61, 41, 41)];
     _moveCurrentButton.delegate = self;
     [self.view insertSubview:_moveCurrentButton belowSubview:_navigationBar];
-    
     
     _changeFloorIndicator = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(_moveCurrentButton.frame) ,CGRectGetMinY(_moveCurrentButton.frame) - 80 , CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
     _changeFloorIndicator.image = [UIImage imageWithImageName:@"nav_ico_ finger" andTintColor:[UIColor colorWithString:@"e95e37"]];
     _changeFloorIndicator.hidden = YES;
     [self.view insertSubview:_changeFloorIndicator belowSubview:_navigationBar];
     
-    _moveTargetButton = [[YTMoveTargetLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 10,CGRectGetMinY(_moveCurrentButton.frame), CGRectGetWidth(_moveCurrentButton.frame), CGRectGetHeight(_moveCurrentButton.frame))];
+    _moveTargetButton = [[YTMoveTargetLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 18,CGRectGetMinY(_moveCurrentButton.frame), 41, 41)];
     _moveTargetButton.hidden = YES;
     _moveTargetButton.delegate = self;
     [self.view insertSubview:_moveTargetButton belowSubview:_navigationBar];
 }
 
 -(void)createCommonPoiButton{
-    _poiButton = [[YTPoiButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 60, CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
+    _poiButton = [[YTPoiButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentButton.frame) + 18, CGRectGetMaxY(_mapView.frame) - 61, 41, 41)];
     _poiButton.delegate = self;
     [self.view insertSubview:_poiButton belowSubview:_navigationBar];
     
@@ -583,29 +579,30 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self.view insertSubview:_selectedPoiButton belowSubview:_navigationBar];
 }
 -(void)createZoomStepper{
-    _zoomStepper = [[YTZoomStepper alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_mapView.frame) - 55, CGRectGetMaxY(_mapView.frame) - 80, 45, 70)];
+    _zoomStepper = [[YTZoomStepper alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_mapView.frame) - 55, CGRectGetMaxY(_mapView.frame) - 115, 41, 95)];
     _zoomStepper.delegate = self;
     [self.view insertSubview:_zoomStepper belowSubview:_navigationBar];
 }
+
 -(void)createDetailsView{
-    _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60)];
+    _detailsView = [[YTDetailsView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 80)];
     _detailsView.hidden = YES;
+    
     _detailsView.delegate = self;
     [self.view insertSubview:_detailsView belowSubview:_navigationBar];
 }
 
 -(void)createBlockAndFloorSwitch{
+    [_switchFloorView removeFromSuperview];
+    _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 59, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
+    _switchFloorView.delegate = self;
+    [self.view insertSubview:_switchFloorView belowSubview:_navigationBar];
     
     [_switchBlockView removeFromSuperview];
-    _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 52, CGRectGetMinY(_mapView.frame) + 14) currentMajorArea:_majorArea];
+    _switchBlockView = [[YTSwitchBlockView alloc]initWithPosition:CGPointMake(CGRectGetMinX(_switchFloorView.frame) - 59, CGRectGetMinY(_mapView.frame) + 10) currentMajorArea:_majorArea];
     _switchBlockView.delegate = self;
     [self.view insertSubview:_switchBlockView belowSubview:_navigationBar];
     
-    
-    [_switchFloorView removeFromSuperview];
-    _switchFloorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 50, CGRectGetMinY(_mapView.frame) + 10) AndCurrentMajorArea:_majorArea];
-    _switchFloorView.delegate = self;
-    [self.view insertSubview:_switchFloorView belowSubview:_navigationBar];
     [self redrawBlockAndFloorSwitch];
 }
 
@@ -622,7 +619,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)createNavigationView{
-    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60)];
+    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 ,  CGRectGetWidth(_mapView.frame), 80)];
     _navigationView.hidden = YES;
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
@@ -910,6 +907,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_multipleView.isShow) {
         [_multipleView hide];
     }
+    _navigationBar.hidden = true;
     [_searchView showSearchViewWithAnimation:YES];
 }
 
@@ -932,6 +930,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark YTSearchViewManager
 -(void)searchCancelButtonClicked{
+    _navigationBar.hidden = false;
     [_searchView hideSearchViewWithAnimation:YES];
     /*if(_activePoiMajorArea != nil){
         [self cancelCommonPoiState];
@@ -1135,6 +1134,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
         _curDisplayedMajorArea = [minorArea majorArea];
         [self redrawBlockAndFloorSwitch];
+        if(_selectedPoi != nil){
+            [_mapView hidePoi:_selectedPoi animated:false];
+            [self hideCallOut];
+            
+        }
         [self handlePoiForMajorArea:_curDisplayedMajorArea];
     }
     
@@ -1203,6 +1207,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark switch floor and block delegate methods
 -(void)switchBlock:(id<YTBlock>)block{
+
+    if(_switchFloorView.toggle){
+        [_switchFloorView toggleFloor];
+    }
+
+    
     id<YTMajorArea> majorArea = [[[[block floors] firstObject] majorAreas] firstObject];
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
         if(_shownCallout && [_mapView currentState] == YTMapViewDetailStateNormal){
@@ -1259,8 +1269,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _curDisplayedMajorArea = majorArea;
         [self cancelCommonPoiState];
     }
-    
-    
     
     [self handlePoiForMajorArea:majorArea];
 }
@@ -1340,8 +1348,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
-    
-    [_navigationBar setHidden:true];
+//
+//    [_navigationBar setHidden:true];
     [_navigationView startNavigationAndSetDestination:merchantLocation];
     
     _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetPoiSource:merchantLocation];
@@ -1381,12 +1389,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _shownCallout = NO;
         _poiButton.hidden = YES;
         _moveTargetButton.hidden = NO;
-        [_navigationView.layer pop_removeAllAnimations];
-        POPSpringAnimation *animation = [POPSpringAnimation animation];
-        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
-        animation.velocity = @1000;
-        animation.springBounciness = 20;
-        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
+//        [_navigationView.layer pop_removeAllAnimations];
+//        POPSpringAnimation *animation = [POPSpringAnimation animation];
+//        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
+//        animation.velocity = @1000;
+//        animation.springBounciness = 20;
+//        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
     }];
 }
 
@@ -1398,16 +1406,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _detailsView.frame = frame;
         
         frame = _navigationView.frame;
-        frame.origin.x = 20;
+        frame.origin.x = 0;
         _navigationView.frame = frame;
-        
-        frame = _switchBlockView.frame;
-        frame.origin.y -= 44;
-        _switchBlockView.frame = frame;
-        
-        frame = _switchFloorView.frame;
-        frame.origin.y -= 44;
-        _switchFloorView.frame = frame;
+//
+//        frame = _switchBlockView.frame;
+//        frame.origin.y -= 44;
+//        _switchBlockView.frame = frame;
+//        
+//        frame = _switchFloorView.frame;
+//        frame.origin.y -= 44;
+//        _switchFloorView.frame = frame;
         
     } completion:^(BOOL finished) {
         if (copmeletion != nil && finished) {
@@ -1464,13 +1472,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y += HOISTING_HEIGHT;
         _changeFloorIndicator.frame = frame;
         
-        frame = _switchBlockView.frame;
-        frame.origin.y += 44;
-        _switchBlockView.frame = frame;
-        
-        frame = _switchFloorView.frame;
-        frame.origin.y += 44;
-        _switchFloorView.frame = frame;
+//        frame = _switchBlockView.frame;
+//        frame.origin.y += 44;
+//        _switchBlockView.frame = frame;
+//        
+//        frame = _switchFloorView.frame;
+//        frame.origin.y += 44;
+//        _switchFloorView.frame = frame;
         
         frame = _selectedPoiButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
@@ -1478,8 +1486,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         
     } completion:^(BOOL finished) {
-        _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 60);
-        _navigationView.frame = CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 70 , CGRectGetWidth(self.view.frame) - 20, 60);
+        _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 80);
+        _navigationView.frame =CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 ,  CGRectGetWidth(_mapView.frame), 80);
         _navigationView.hidden = YES;
         _selectedPoi = nil;
         _poiButton.hidden = NO;
@@ -1701,7 +1709,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)backClicked{
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{

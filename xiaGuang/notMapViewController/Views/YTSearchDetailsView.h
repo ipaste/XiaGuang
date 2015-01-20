@@ -23,4 +23,5 @@
  */
 -(id)initWithFrame:(CGRect)frame andDataSourceMall:(id<YTMall>)mall;
 -(void)searchWithKeyword:(NSString *)keyWord;
+-(void)searchButtonClicked;
 @end

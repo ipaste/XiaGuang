@@ -123,7 +123,7 @@ static YTCompletion Completion = nil;
 //        [dotLayer addAnimation:animation forKey:@"animateTransform"];
 //        
 //        [self addSublayer:dotLayer];
-        
+        self.zPosition = 10;
     }
     return self;
 }
@@ -211,7 +211,7 @@ static YTCompletion Completion = nil;
         
         CALayer *iconLayer = [CALayer layer];
         iconLayer.name = @"icon";
-        iconLayer.contents = (id)[UIImage imageNamed:@"nav_ico_default"].CGImage;
+        iconLayer.contents = (id)[UIImage imageNamed:@"imgshop_default"].CGImage;
         iconLayer.frame = CGRectMake(4, 4, 30, 30);
         iconLayer.masksToBounds = YES;
         iconLayer.cornerRadius = CGRectGetWidth(iconLayer.frame) / 2;
@@ -591,13 +591,13 @@ static YTCompletion Completion = nil;
         self.masksToBounds = NO;
         self.opacity = 0.0f;
         CALayer *car = [CALayer layer];
-        UIImage *carImage = [UIImage imageNamed:@"parking_img_car"];
+        UIImage *carImage = [UIImage imageNamed:@"parking_img_end"];
         car.contents = (id)[carImage CGImage];
         car.contentsScale = carImage.scale;
-        car.frame = CGRectMake(-(carImage.size.width / 2), -(carImage.size.height / 2), carImage.size.width, carImage.size.height);
+        car.frame = CGRectMake(-(carImage.size.width / 2),-carImage.size.height, carImage.size.width, carImage.size.height);
         [self addSublayer:car];
     }
-    self.zPosition = 10;
+    self.zPosition = 100;
     return self;
 }
 -(void)showParkingMark{

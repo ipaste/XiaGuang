@@ -40,6 +40,12 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     
 }
 
+- (CLLocationCoordinate2D)coord{
+    NSNumber *latitude = _internalObject[@"latitude"];
+    NSNumber *longitude = _internalObject[@"longitude"];
+    return CLLocationCoordinate2DMake(latitude.doubleValue, longitude.doubleValue);
+}
+
 -(NSString *)mallName{
     return _internalObject[MALL_CLASS_MALLNAME_KEY];
 }
@@ -256,7 +262,6 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 -(BOOL)checkCallBackConditions{
     if (_titleImage != nil && _background != nil) {
         _callBack(_titleImage,_background,nil);
-        _callBack = nil;
         return true;
     }else{
         return false;
@@ -300,6 +305,13 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
         }
     }];
 
+}
+
+-(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback{
+    NSString *add = _internalObject[@"address"];
+    NSString *name = _internalObject[MALL_CLASS_MALLNAME_KEY];
+    CLLocationCoordinate2D coordinate = [self coord];
+    callback(name,add,coordinate,nil);
 }
 
 -(NSString *)localDB{

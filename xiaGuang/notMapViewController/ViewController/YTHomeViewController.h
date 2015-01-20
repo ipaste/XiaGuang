@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YTSettingViewController.h"
 #import "YTSearchViewController.h"
+#import "YTStaticResourceManager.h"
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
 #import "YTMallViewController.h"

@@ -36,6 +36,7 @@
         self.selectedBackgroundView = backgroundView;
         
         _iconView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 15, MERCHANT_ICON_SIZE, MERCHANT_ICON_SIZE)];
+        _iconView.image = [UIImage imageNamed:@"imgshop_default"];
         
         _merchantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_iconView.frame) + 15.0f, CGRectGetMinY(_iconView.frame), 150, 17)];
         
@@ -56,7 +57,7 @@
             [subCategory addSubview:subLabel];
             [_subCategoryLabel addObject:subLabel];
         }
-        
+        self.titleColor = [UIColor colorWithString:@"e95e37"];
         
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];
@@ -73,17 +74,31 @@
     _iconView.layer.borderWidth = 0.5;
     _iconView.layer.borderColor = [UIColor colorWithString:@"c8c8c8"].CGColor;
     
-    _line.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
-    _line.backgroundColor = [UIColor colorWithString:@"dcdcdc"];
+    _line.frame = CGRectMake(10, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame) - 20, 0.5);
+    _line.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
     
-    _merchantNameLabel.text = [self.merchant merchantName];
-    [_merchantNameLabel setTextColor:[UIColor colorWithString:@"404040"]];
     
-    _addressLable.text = [self.merchant address];
+    _merchantNameLabel.font = [UIFont systemFontOfSize:16];
+    [_merchantNameLabel setTextColor:self.titleColor];
+    
+    
     [_addressLable setFont:[UIFont systemFontOfSize:11]];
-    [_addressLable setTextColor:[UIColor colorWithString:@"aaaaaa"]];
+    [_addressLable setTextColor:[UIColor colorWithString:@"999999"]];
     
-    NSArray *subType = [self.merchant type];
+}
+
+
+-(void)setMerchant:(id<YTMerchant>)merchant{
+    _merchantNameLabel.text = [merchant merchantName];
+    
+    _addressLable.text = [merchant address];
+    
+    _iconView.image = [UIImage imageNamed:@"imgshop_default"];
+    [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+        _iconView.image = result;
+    }];
+    
+    NSArray *subType = [merchant type];
     if (subType.count > 0 && subType != nil){
         UIImageView *beforeImageView = nil;
         for (int i = 0; i < _subCategoryImageView.count; i++) {
@@ -124,22 +139,9 @@
             imageView.hidden = YES;
             label.hidden = YES;
         }
-
+        
     }
-    
-    
-    
-    
-    
-    if (![[_merchant mercantId] isEqualToString:[_oldMerchant mercantId]]) {
-        _iconView.hidden = YES;
-        [self.merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-            _iconView.hidden = NO;
-            _iconView.image = result;
-        }];
-    }
-    _oldMerchant = _merchant;
-    
+    _merchant = merchant;
 }
 -(void)dealloc{
     NSLog(@"cell dealloc");
