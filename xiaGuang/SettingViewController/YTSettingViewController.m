@@ -38,11 +38,13 @@
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     self.automaticallyAdjustsScrollViewInsets = false;
+
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 2;
 }
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
@@ -70,17 +72,7 @@
     cell.selectedBackgroundView = selectView;
     cell.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
     cell.textLabel.textColor = [UIColor whiteColor];
-    
-    //cellAnimation
-    if (_isShowAnimation) {
-        _duration += 0.2;
-        POPBasicAnimation *showAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-        showAnimation.fromValue = [NSNumber numberWithFloat:CGRectGetWidth(tableView.frame)];
-        showAnimation.toValue = [NSNumber numberWithFloat:CGRectGetWidth(tableView.frame) / 2];
-        showAnimation.duration = _duration;
-        //showAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        [cell.layer pop_addAnimation:showAnimation forKey:@"show"];
-    }
+
     if (indexPath.section == 10) {
         cell.textLabel.text = @"邀请好友使用虾逛";
         cell.imageView.image = [UIImage imageNamed:@"icon_1"];
