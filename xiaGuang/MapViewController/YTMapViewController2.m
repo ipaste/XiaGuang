@@ -1348,8 +1348,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
-//
-//    [_navigationBar setHidden:true];
+
     [_navigationView startNavigationAndSetDestination:merchantLocation];
     
     _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetPoiSource:merchantLocation];
@@ -1374,9 +1373,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
         _targetCord = [merchantLocation coordinate];
         
-        
-        
-        
         [_mapView showPathFromCoord1:_userCoordintate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
         
     }
@@ -1389,12 +1385,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _shownCallout = NO;
         _poiButton.hidden = YES;
         _moveTargetButton.hidden = NO;
-//        [_navigationView.layer pop_removeAllAnimations];
-//        POPSpringAnimation *animation = [POPSpringAnimation animation];
-//        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
-//        animation.velocity = @1000;
-//        animation.springBounciness = 20;
-//        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
     }];
 }
 

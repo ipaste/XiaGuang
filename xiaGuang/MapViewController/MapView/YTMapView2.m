@@ -335,17 +335,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 }
 
 
--(void)showPathFromPoint1:(CGPoint)p1
-                 toPoint2:(CGPoint)p2
-             forMajorArea:(id<YTMajorArea>)majorArea{
-    
-    [_internalMapView removeAnnotation:_pathAnnotation];
-    _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
-    [_internalMapView addAnnotation:_pathAnnotation];
-    
-    
-}
-
 -(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea{
@@ -356,7 +345,10 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
     CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
     _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
-    [_internalMapView addAnnotation:_pathAnnotation];
+    
+    if(_pathAnnotation != nil){
+        [_internalMapView addAnnotation:_pathAnnotation];
+    }
     
 }
 

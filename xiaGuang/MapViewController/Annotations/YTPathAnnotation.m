@@ -18,6 +18,9 @@
     
     YTMapGraph *graph = [[YTMapGraph alloc] initWithMajorArea:majorArea mapView:mapView];
     
+    if(graph == nil)
+        return nil;
+    
     NSArray *points = [graph shortestPathWithProjectionFrom:p1 to:p2];
     
     NSMutableArray *locs = [[NSMutableArray alloc] init];
