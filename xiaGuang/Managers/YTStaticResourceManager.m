@@ -287,12 +287,12 @@
 -(void)createStagingArea{
     
     
-    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:STAGING_DIR]];
     if([FCFileManager existsItemAtPath:STAGING_DIR]){
         [FCFileManager removeItemAtPath:STAGING_DIR];
     }
     [FCFileManager createDirectoriesForPath:STAGING_DIR];
     [FCFileManager createDirectoriesForPath:STAGING_DATA_DIR];
+    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:STAGING_DIR]];
 }
 
 -(NSDictionary *)toUpdateToGetManifest1:(NSMutableDictionary *)dict1

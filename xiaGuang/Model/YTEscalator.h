@@ -20,5 +20,7 @@
 @property (nonatomic,assign) CLLocationCoordinate2D coordinate;
 @property (nonatomic,weak) id<YTMajorArea> majorArea;
 @property (nonatomic,weak) id<YTMinorArea> inMinorArea;
+@property (nonatomic,weak) id<YTMajorArea> toMajorArea;
+
 
 @end
