@@ -14,7 +14,9 @@
 
 @interface YTMajorAreaVoter : NSObject
 
-+(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons;
-+(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon;
++(id)sharedInstance;
+
+-(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons;
+-(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon;
 
 @end

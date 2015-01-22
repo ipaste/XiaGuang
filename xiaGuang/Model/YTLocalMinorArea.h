@@ -13,6 +13,7 @@
 #import "YTLocalBeacon.h"
 #import "YTLocalMajorArea.h"
 #import "YTPoi.h"
+#import "YTMajorAreaDict.h"
 @interface YTLocalMinorArea : NSObject<YTMinorArea>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;

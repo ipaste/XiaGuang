@@ -24,6 +24,7 @@
 @synthesize inMinorArea;
 @synthesize coordinate;
 @synthesize identifier;
+@synthesize type;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -92,6 +93,10 @@
 
 -(NSString *)iconName{
     return @"nav_ico_11";
+}
+
+-(YTTransportType)type{
+    return YTTransportBothWays;
 }
 
 

@@ -14,7 +14,7 @@
     NSString *_tmpEscalatorId;
     NSString *_tmpMajorAreaId;
     NSString *_tmpMinorAreaId;
-    NSString *_tmpToMajorAreaId;
+    NSString *_tmpType;
     float _tmpLatitude;
     float _tmpLongtitude;
     
@@ -27,7 +27,7 @@
 @synthesize inMinorArea;
 @synthesize coordinate;
 @synthesize identifier;
-@synthesize toMajorArea;
+@synthesize type;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -38,7 +38,7 @@
             _tmpLongtitude = [findResultSet doubleForColumn:@"longtitude"];
             _tmpMinorAreaId = [findResultSet stringForColumn:@"minorAreaId"];
             _tmpMajorAreaId = [findResultSet stringForColumn:@"majorAreaId"];
-            _tmpToMajorAreaId = [findResultSet stringForColumn:@"toMajorAreaId"];
+            _tmpType = [findResultSet stringForColumn:@"type"];
         }
     }
     return self;
@@ -99,19 +99,16 @@
     return @"nav_ico_10";
 }
 
--(id<YTMajorArea>)toMajorArea{
-    if(_tmpToMajorArea == nil){
-        
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-        if([db open]){
-            
-            FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpToMajorAreaId];
-            [result next];
-            
-            _tmpToMajorArea = [[YTLocalMajorArea alloc] initWithDBResultSet:result];
-        }
+
+-(YTTransportType)type{
+    if([_tmpType isEqualToString:@"u"]){
+        return YTTransportUpward;
     }
-    return _tmpToMajorArea;
+    else if ([_tmpType isEqualToString:@"d"]){
+        return YTTransportDownward;
+    }
+    
+    return YTTransportBothWays;
 }
 
 

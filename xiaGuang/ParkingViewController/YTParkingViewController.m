@@ -14,6 +14,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 };
 
 @implementation YTParkingViewController{
+    
+    YTMajorAreaVoter *_voter;
     id<YTMinorArea> _userMinorArea;
     id<YTMajorArea> _currenDisplayMajorArea;
     YTMapView2 *_mapView;
@@ -77,6 +79,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    _voter = [YTMajorAreaVoter sharedInstance];
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     [_beaconManager startRangingBeacons];
@@ -657,7 +660,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         return;
     }
     
-    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:beacons];
     
     ESTBeacon *bestGuessBeacon = [self topBeaconWithInMajorAreaId:votedMajorAreaId inBeacons:beacons];
     if(bestGuessBeacon == nil){

@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 @interface YTMapViewController2 (){
+    YTMajorAreaVoter *_voter;
+    
     id<YTMajorArea> _majorArea;
     YTBeaconManager *_beaconManager;
     YTBluetoothManager *_bluetoothManager;
@@ -167,6 +169,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
     background.image = [UIImage imageNamed:@"bg_inner.jpg"];
     [self.view addSubview:background];
+    
+    _voter = [YTMajorAreaVoter sharedInstance];
+    
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     
@@ -446,15 +451,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView addPois:pois];
     
-    /*
-    NSArray *minors = [majorArea minorAreas];
-    NSMutableArray *minorsArray = [NSMutableArray array];
-    for(YTLocalMinorArea *minor in minors){
-        YTMinorAreaPoi *tmpMinorPoi = [minor producePoi];
-        [minorsArray addObject:tmpMinorPoi];
-    }
-    [_mapView addPois:minorsArray];
-    _beaconsPoi = [minorsArray copy];*/
     
     
     if(highlightPoi != nil && !_navigationView.isNavigating){
@@ -465,9 +461,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_navigationView.isNavigating){
         if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]] && [[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
             
-            
-            [_mapView highlightPois:_allElvatorAndEscalator animated:YES];
-            YTPoi *closestTransport = [self closestTransportToCoordinate:_userMinorArea.coordinate];
+            NSArray *transportsToHighlight = [self filteredTransportFrom: _curDisplayedMajorArea toArea:_navigationPlan.targetPoiSource.majorArea];
+            [_mapView highlightPois:transportsToHighlight animated:YES];
+            YTPoi *closestTransport = [self closestTransportToCoordinate:_userMinorArea.coordinate
+                                                                 inArray:transportsToHighlight];
             [self showPathFromUserToPoi:closestTransport];
         
         }else{
@@ -491,14 +488,43 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
 }
 
--(YTPoi *)closestTransportToCoordinate:(CLLocationCoordinate2D)toCoord{
+-(NSArray *)filteredTransportFrom:(id<YTMajorArea>)fromArea
+                           toArea:(id<YTMajorArea>)toArea{
+    
+    BOOL upward = fromArea.rank < toArea.rank;
+    NSMutableArray *result = [NSMutableArray new];
+    
+    for(YTPoi *tmpTransport in _allElvatorAndEscalator){
+        
+        id<YTPoiSource> tmpelevator = tmpTransport.sourceModel;
+        if(upward){
+            if(((id<YTTransport>)tmpelevator).type == YTTransportUpward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
+                
+                [result addObject:tmpTransport];
+            }
+        }
+        else{
+            if(((id<YTTransport>)tmpelevator).type == YTTransportDownward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
+                
+                [result addObject:tmpTransport];
+            }
+        }
+        
+    }
+    
+    return result;
+    
+}
+
+-(YTPoi *)closestTransportToCoordinate:(CLLocationCoordinate2D)toCoord
+                               inArray:(NSArray *)array{
     
     CGPoint toPoint = [YTCanonicalCoordinate mapToCanonicalCoordinate:toCoord mapView:_mapView.map];
     YTPoi *result;
     double minDist = MAXFLOAT;
     
     
-    for(YTPoi *tmpPoi in _allElvatorAndEscalator){
+    for(YTPoi *tmpPoi in array){
         
         id<YTPoiSource> tmpelevator = tmpPoi.sourceModel;
         CGPoint tmpPoint = [YTCanonicalCoordinate mapToCanonicalCoordinate:tmpelevator.coordinate mapView:_mapView.map];
@@ -1041,7 +1067,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView setScore:[beacon.distance doubleValue] forMinorAreaPoi:relatedBeacon];
     }*/
     
-    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:beacons];
     if(_lastMajorAreaId != nil){
         if(![votedMajorAreaId isEqualToString:_lastMajorAreaId]){
             NSString *tmp = [votedMajorAreaId copy];
@@ -1129,6 +1155,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     //当检测到换了一个mall
     if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
+        
+        if(_navigationView.isNavigating){
+            return;
+        }
+        
         [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
         _shownFloorChange = NO;
         [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
@@ -1796,7 +1827,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _targetMall = aMall;
     [_mapView setMapOffset:[_targetMall offset]];
     [self createSearchView];
-}
+}   
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){

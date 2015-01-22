@@ -11,8 +11,9 @@
 #import "YTMajorArea.h"
 #import "YTMinorArea.h"
 #import "YTPoiSource.h"
+#import "YTTransport.h"
 
-@protocol YTElevator <NSObject,YTPoiSource>
+@protocol YTElevator <NSObject,YTPoiSource,YTTransport>
 
 
 @property (nonatomic,weak) NSString *identifier;
