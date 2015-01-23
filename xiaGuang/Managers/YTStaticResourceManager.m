@@ -120,7 +120,7 @@
             if(![FCFileManager existsItemAtPath:targetMapPath]){
                 
                 [FCFileManager copyItemAtPath:fromMapPath toPath:targetMapPath];
-            
+                [FCFileManager removeItemAtPath:fromMapPath];
             }
             
         }
@@ -128,16 +128,13 @@
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     }];
     
-    
-    
 }
-
 
 
 - (void)startBackgroundDownload {
     if (_timer == nil) {
         // check every hour
-        _timer = [NSTimer scheduledTimerWithTimeInterval:10*60
+        _timer = [NSTimer scheduledTimerWithTimeInterval:60
                                                   target:self
                                                 selector:@selector(checkAndDownloadData:)
                                                 userInfo:nil
@@ -152,10 +149,26 @@
     }
 }
 
-
+- (void)restartCopyTheFile{
+    if(![FCFileManager existsItemAtPath:CURRENT_DIR]){
+        [FCFileManager createDirectoriesForPath:CURRENT_DIR];
+        [FCFileManager createDirectoriesForPath:CURRENT_DATA_DIR];
+    }
+    
+    if(![FCFileManager existsItemAtPath:CURRENT_MANIFEST_PATH]){
+        
+        [FCFileManager copyItemAtPath:BUNDLE_MANIFEST_PATH toPath:CURRENT_MANIFEST_PATH];
+    }
+    
+    [self pullInBundleDataInManifestIfNeeded];
+    
+    _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
+    
+    [_db open];
+}
 
 - (void)checkAndSwitchToNewStaticData {
-        
+    
         if(![FCFileManager existsItemAtPath:STAGING_UPDATE_TABLE]){
             return;
         }
@@ -286,13 +299,12 @@
 
 -(void)createStagingArea{
     
-    
-    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:STAGING_DIR]];
     if([FCFileManager existsItemAtPath:STAGING_DIR]){
         [FCFileManager removeItemAtPath:STAGING_DIR];
     }
     [FCFileManager createDirectoriesForPath:STAGING_DIR];
     [FCFileManager createDirectoriesForPath:STAGING_DATA_DIR];
+    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:STAGING_DIR]];
 }
 
 -(NSDictionary *)toUpdateToGetManifest1:(NSMutableDictionary *)dict1

@@ -56,8 +56,8 @@
         
         _notNetWordButton = [[UIButton alloc]initWithFrame:CGRectMake(0, HOTSEARCH_HEIGTH / 2 - 15, CGRectGetWidth(self.frame), 30)];
         [_notNetWordButton addTarget:self action:@selector(refreshHotSearch) forControlEvents:UIControlEventTouchUpInside];
-        [_notNetWordButton setTitle:@"网络状态差，点击即可刷新" forState:UIControlStateNormal];
-        [_notNetWordButton setTitleColor:[UIColor colorWithString:@"ffffff"] forState:UIControlStateNormal];
+        [_notNetWordButton setTitle:@"连接网络，点击刷新" forState:UIControlStateNormal];
+        [_notNetWordButton setTitleColor:[UIColor colorWithString:@"999999"] forState:UIControlStateNormal];
         _notNetWordButton.hidden = true;
         [_hotSearchView addSubview:_notNetWordButton];
         [self getHotSearch];

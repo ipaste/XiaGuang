@@ -243,7 +243,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _firstLabel.textColor = [UIColor colorWithString:@"cccccc"];
     _firstLabel.font = [UIFont systemFontOfSize:14];
     
-    _firstSubLable.textColor = [UIColor whiteColor];
+    _firstSubLable.textColor = [UIColor colorWithString:@"f3b64b"];
     _firstSubLable.font = [UIFont systemFontOfSize:15];
     
     _secondLable.textColor = _firstLabel.textColor;

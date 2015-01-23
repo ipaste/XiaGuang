@@ -7,6 +7,7 @@
 //
 
 #import "YTHomeViewController.h"
+#import "AppDelegate.h"
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define BLUR_HEIGHT 174
 
@@ -30,7 +31,7 @@
     NSMutableArray *_cells;
     NetworkStatus _status;
     
-    
+    YTStaticResourceManager *_resourceManager;
     UIToolbar *_transitionToolbar;
 }
 @end
@@ -40,9 +41,6 @@
     self = [super init];
     if (self) {
         _malls = [NSMutableArray array];
-        Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
-        [reachability startNotifier];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
 }
@@ -60,9 +58,11 @@
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
+
+    
     
     _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
-    _tableView.delegate = self;
+    _tableView.delegate = self; 
     _tableView.rowHeight = 130;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
@@ -109,7 +109,6 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
-    
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg"].CGImage;
     
     _latest = false;
@@ -124,6 +123,15 @@
                 _latest = true;
             }
         }
+        
+       
+        _resourceManager = [YTStaticResourceManager sharedManager];
+        Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
+        [reachability startNotifier];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+        
+        [self firstStartSettingTheProgram];
+      
     });
 
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
@@ -256,7 +264,7 @@
     CGPoint p = _tableView.contentOffset;
     p.y = p.y + STEP_LENGTH;
     
-    NSLog(@"about to scroll up to point: %f",p.y);
+   // NSLog(@"about to scroll up to point: %f",p.y);
     _tableView.contentOffset = p;
 }
 
@@ -295,7 +303,7 @@
     YTMallCell *cell = _cells[indexPath.row];
     id<YTMall> mall = _malls[indexPath.row%_malls.count];
     
-    NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
+    //NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
     if([mall isMemberOfClass:[YTCloudMall class]]){
         cell.mall = mall;
     }
@@ -328,8 +336,8 @@
     }
     
     if (tmpReachability.isReachableViaWiFi) {
-        [[YTStaticResourceManager sharedManager] startBackgroundDownload];
-        [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
+        [_resourceManager startBackgroundDownload];
+        [_resourceManager checkAndSwitchToNewStaticData];
     }
     _status =  tmpReachability.currentReachabilityStatus;
 }
@@ -403,7 +411,6 @@
             controller = _mapViewController;
         }
         [AVAnalytics event:@"导航"];
-        //controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     }else{
         controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
@@ -436,6 +443,24 @@
     return NO;
 }
 
+-(void)firstStartSettingTheProgram{
+    static NSString * firstKey = @"Program";
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![[userDefaults valueForKey:firstKey] isEqualToValue:@1]) {
+        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+        if ([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:@"current"]]) {
+            [fileManager removeItemAtPath:path error:nil];
+            [_resourceManager restartCopyTheFile];
+        }
+        [userDefaults setValue:@0 forKey:firstKey];
+    }
+    
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
