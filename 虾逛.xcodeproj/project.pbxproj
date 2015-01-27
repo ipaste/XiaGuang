@@ -195,7 +195,7 @@
 		D9D7DAF71A5E3EC600674C3A /* N_YITIAN_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */; };
 		D9D7DAF81A5E3EC600674C3A /* N_YITIAN_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */; };
 		D9D7DAF91A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */; };
-		D9D7DAFA1A5E3EC600674C3A /* N_YIYIAN_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD51A5E3EC600674C3A /* N_YIYIAN_L1.mbtiles */; };
+		D9F699361A775D6D004432D8 /* N_YITIAN_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -561,7 +561,7 @@
 		D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L2.mbtiles; sourceTree = "<group>"; };
 		D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L3.mbtiles; sourceTree = "<group>"; };
 		D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_PARK_3.mbtiles; sourceTree = "<group>"; };
-		D9D7DAD51A5E3EC600674C3A /* N_YIYIAN_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YIYIAN_L1.mbtiles; sourceTree = "<group>"; };
+		D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L1.mbtiles; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -700,7 +700,7 @@
 				D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */,
 				D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */,
 				D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */,
-				D9D7DAD51A5E3EC600674C3A /* N_YIYIAN_L1.mbtiles */,
+				D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1334,13 +1334,13 @@
 				D9D7DADB1A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles in Resources */,
 				D9D7DAF01A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles in Resources */,
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
-				D9D7DAFA1A5E3EC600674C3A /* N_YIYIAN_L1.mbtiles in Resources */,
 				D9CAE85D1A52A8290053E758 /* bg_inner.jpg in Resources */,
 				D9D7DAE41A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles in Resources */,
 				D9D7DAD71A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles in Resources */,
 				D9D7DAEC1A5E3EC600674C3A /* N_KKMALL_L1.mbtiles in Resources */,
 				D9D7DAD61A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles in Resources */,
 				D9D7DADD1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles in Resources */,
+				D9F699361A775D6D004432D8 /* N_YITIAN_L1.mbtiles in Resources */,
 				D9D7DAF81A5E3EC600674C3A /* N_YITIAN_L3.mbtiles in Resources */,
 				D9D7DAE91A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */,
 				D9D7DAE61A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles in Resources */,
