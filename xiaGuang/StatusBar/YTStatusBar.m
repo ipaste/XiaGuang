@@ -11,6 +11,7 @@
 #define STATUS_WIDTH 100
 @implementation YTStatusBar{
     YTStatusViewController *_rootVC;
+    NSTimer *_timer;
 }
 
 +(instancetype)defaultStatusBar{
@@ -45,8 +46,8 @@
             
         case YTStatusBarTypeDone:
             [_rootVC changeMessage:@"更新完成"];
-            [NSTimer timerWithTimeInterval:1 target:self selector:@selector(hideStatusBar:) userInfo:nil repeats:NO];
-            break;
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hideStatusBar:) userInfo:nil repeats:false];
+            return;
     }
     
     [UIView animateWithDuration:.5 animations:^{

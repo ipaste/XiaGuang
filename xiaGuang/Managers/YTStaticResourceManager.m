@@ -134,7 +134,7 @@
 - (void)startBackgroundDownload {
     if (_timer == nil) {
         // check every hour
-        _timer = [NSTimer scheduledTimerWithTimeInterval:60
+        _timer = [NSTimer scheduledTimerWithTimeInterval:10 * 60
                                                   target:self
                                                 selector:@selector(checkAndDownloadData:)
                                                 userInfo:nil
@@ -165,6 +165,7 @@
     _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
     
     [_db open];
+    
 }
 
 - (void)checkAndSwitchToNewStaticData {

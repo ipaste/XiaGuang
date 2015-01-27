@@ -99,7 +99,7 @@
 }
 
 -(void)startDownloadingMapsInTable:(NSDictionary *)table{
-    [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDownloadMessage];
+    
     NSMutableArray *queries = [NSMutableArray array];
     
     for(NSString *key in table.allKeys){
@@ -116,6 +116,9 @@
         //handle it here
         return;
     }
+    
+    [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDownloadMessage];
+    
     AVQuery *or = [AVQuery orQueryWithSubqueries:queries];
     [or findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *err) {
         if(err != nil){
@@ -152,10 +155,11 @@
                     if([FCFileManager existsItemAtPath:STAGING_FAIL_TABLE]){
                         [self removeFailRecordForKey:tmp[@"mapName"]];
                     }
-                    [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDone];
+                   
                 }
             }];
         }
+         [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDone];
     }];
 }
 

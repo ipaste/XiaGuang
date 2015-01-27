@@ -833,9 +833,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     minute = (int)time % 3600 / 60;
     
     if (hours == 0) {
-        timeFormat = [NSString stringWithFormat:@"%d分",minute];
+        timeFormat = [NSString stringWithFormat:@"%d分钟",minute];
     }else{
-        timeFormat = [NSString stringWithFormat:@"%d时%d分",hours,minute];
+        timeFormat = [NSString stringWithFormat:@"%d小时%d分钟",hours,minute];
     }
     
     return timeFormat;
@@ -844,7 +844,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(NSString *)chargeWithTime:(NSTimeInterval)time{
     int hours = 0;
     int charge = 0;
-    int minute = (int)time % 3600 / 60;
+    int minute = (int)time % 3600;
     BOOL free = NO;
     
     NSString *mallID = [[[[[_tmpMarker
