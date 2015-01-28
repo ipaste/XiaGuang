@@ -447,13 +447,12 @@
     static NSString * firstKey = @"Program";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![[userDefaults valueForKey:firstKey] isEqualToValue:@1]) {
+    if ([[userDefaults valueForKey:firstKey] isEqualToValue:@1]) {
         NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
         if ([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:@"current"]]) {
             [fileManager removeItemAtPath:path error:nil];
             [_resourceManager restartCopyTheFile];
         }
-        [userDefaults setValue:@0 forKey:firstKey];
     }
     
 }

@@ -77,7 +77,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     
-    [[NSUserDefaults standardUserDefaults]setValue:@1 forKey:@"Program"];
+    [[NSUserDefaults standardUserDefaults]setValue:@0 forKey:@"Program"];
 }
 
 - (NSString *)identifierForAdvertising
