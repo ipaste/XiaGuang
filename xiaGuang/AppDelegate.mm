@@ -93,7 +93,7 @@
 -(void)youmiProcedure{
     
     NSString *idfa = [self identifierForAdvertising];
-    
+
     AVQuery *query = [AVQuery queryWithClassName:@"YoumiRecord"];
     [query whereKey:@"ifa" equalTo:idfa];
     [query whereKey:@"sent" equalTo:@NO];

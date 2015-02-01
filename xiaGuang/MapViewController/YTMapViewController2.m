@@ -465,9 +465,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             [_mapView highlightPois:transportsToHighlight animated:YES];
             YTPoi *closestTransport = [self closestTransportToCoordinate:_userMinorArea.coordinate
                                                                  inArray:transportsToHighlight];
-            [self showPathFromUserToPoi:closestTransport];
+            _targetCord = ((id<YTPoiSource>) closestTransport.sourceModel).coordinate;
         
         }else{
+            _targetCord = _navigationPlan.targetPoiSource.coordinate;
             [_mapView hidePois:_allElvatorAndEscalator animated:NO];
         }
         
@@ -790,8 +791,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView superHighlightPoi:poi animated:NO];
     _selectedTransport = poi;
-    
-    [_mapView showPathFromCoord1:_userMinorArea.coordinate toCoord2:((id<YTPoiSource>)poi.sourceModel).coordinate forMajorArea:_curDisplayedMajorArea];
+    _targetCord = ((id<YTPoiSource>)poi.sourceModel).coordinate;
 }
 
 -(BOOL)userOnCurdisplayedArea{
@@ -1115,6 +1115,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
         else
         {
+            if(_navigationView.isNavigating){
+                [_mapView showPathFromCoord1:coordinate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
+            }
             [_mapView setUserCoordinate:_userCoordintate];
         }
     }
@@ -1195,6 +1198,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 animation.repeatCount = 5;
                 [_changeFloorIndicator.layer addAnimation:animation forKey:@"animation"];
                 _shownFloorChange = YES;
+                
             }
         }
         else{
@@ -1204,6 +1208,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView removeUserLocation];
         //[_beaconManager removeListener:_locator];
         //_locator = nil;
+        [_mapView removePath];
         _shownUser = NO;
         
     }else{
