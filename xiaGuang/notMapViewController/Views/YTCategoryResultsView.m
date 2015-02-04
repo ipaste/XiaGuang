@@ -29,6 +29,10 @@
     if (self) {
         _mall = mall;
         
+        if (mall != nil) {
+            _mallUniId = [mall localDB];
+        }
+        
         _categoryCount = [NSMutableArray array];
         
         [self setKey:key subKey:subKey];
@@ -176,7 +180,10 @@
                         }
                         
                     }else{//全部楼层
-                        _mallUniId = [_mall localDB];
+                        if (_mallUniId == nil) {
+                            _mallUniId = [_mall localDB];
+                        }
+                        
                         if (key == nil) {
                             _floorUniId = nil;
                             tmpKey = @"全部楼层";

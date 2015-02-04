@@ -25,7 +25,7 @@
     if (self) {
         CGFloat height = CGRectGetHeight(self.frame) - TopHeight;
         
-        _backButton = [[UIButton alloc]initWithFrame:CGRectMake(15, TopHeight, 100,  height)];
+        _backButton = [[UIButton alloc]initWithFrame:CGRectMake(0, TopHeight, 100,  height)];
         [_backButton addTarget:self action:@selector(clickToBackButtonWithDown) forControlEvents:UIControlEventTouchDown];
         [_backButton addTarget:self action:@selector(clickToBackButtonWithUpInside) forControlEvents:UIControlEventTouchUpInside];
         
@@ -39,8 +39,7 @@
         [self addSubview:_titleLabel];
         
         _defaultBackImage = [UIImage imageWithImageName:@"nav_ico_back_un" andTintColor:[UIColor colorWithString:@"e65e37"]];
-        
-        
+    
         _backImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 0, _defaultBackImage.size.width, _defaultBackImage.size.height)];
         _backImageView.image = _defaultBackImage;
         [self addSubview:_backImageView];
