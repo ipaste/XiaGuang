@@ -292,25 +292,12 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-
-    /*YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    
-    if (!cell) {
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
-        //cell.mall = mall;
-    }*/
-    
     YTMallCell *cell = _cells[indexPath.row];
     id<YTMall> mall = _malls[indexPath.row%_malls.count];
-    
-    //NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
     if([mall isMemberOfClass:[YTCloudMall class]]){
         cell.mall = mall;
     }
-    
-    //NSLog(@"cell for row at index: %d, setting it to display mall pics of %@",indexPath.row, [mall mallName]);
     return cell;
-    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -319,6 +306,7 @@
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
         mallInfoVC.mall = _malls[indexPath.row % _malls.count];
+        mallInfoVC.isPreferential = cell.isPreferential;
         [self.navigationController pushViewController:mallInfoVC animated:true];
     }
 }

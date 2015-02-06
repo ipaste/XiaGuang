@@ -11,4 +11,5 @@
 @interface YTMallCell : UITableViewCell<UIScrollViewDelegate>
 @property (weak,nonatomic) id <YTMall> mall;
 @property (nonatomic,readonly) BOOL isFetch;
+@property (readonly,nonatomic) BOOL isPreferential;
 @end

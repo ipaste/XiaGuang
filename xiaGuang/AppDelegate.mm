@@ -111,7 +111,7 @@
                 if(decoded != nil && ![decoded isEqualToString:@""]){
                     
                     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
                     [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                         NSLog(@"JSON: %@", responseObject);
                         object[@"sent"] = @YES;

@@ -195,6 +195,8 @@
 		D9D7DAF71A5E3EC600674C3A /* N_YITIAN_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */; };
 		D9D7DAF81A5E3EC600674C3A /* N_YITIAN_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */; };
 		D9D7DAF91A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */; };
+		D9EEAB071A834DA50000D35D /* YTPreferentialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */; };
+		D9EEAB0A1A834DD50000D35D /* YTPreferential.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EEAB091A834DD50000D35D /* YTPreferential.m */; };
 		D9F699361A775D6D004432D8 /* N_YITIAN_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */; };
 /* End PBXBuildFile section */
 
@@ -561,6 +563,10 @@
 		D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L2.mbtiles; sourceTree = "<group>"; };
 		D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L3.mbtiles; sourceTree = "<group>"; };
 		D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_PARK_3.mbtiles; sourceTree = "<group>"; };
+		D9EEAB051A834DA50000D35D /* YTPreferentialCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPreferentialCell.h; sourceTree = "<group>"; };
+		D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPreferentialCell.m; sourceTree = "<group>"; };
+		D9EEAB081A834DD50000D35D /* YTPreferential.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPreferential.h; sourceTree = "<group>"; };
+		D9EEAB091A834DD50000D35D /* YTPreferential.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPreferential.m; sourceTree = "<group>"; };
 		D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L1.mbtiles; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -833,6 +839,8 @@
 				AE630BD71A3EC43800A562AA /* YTDoor.h */,
 				AE630BD81A3EC4A100A562AA /* YTLocalDoor.h */,
 				AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */,
+				D9EEAB081A834DD50000D35D /* YTPreferential.h */,
+				D9EEAB091A834DD50000D35D /* YTPreferential.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1133,6 +1141,8 @@
 				D95B15561A078403002077AD /* YTMallPositionView.m */,
 				D925EDDE1A2D7ECD00F7FCD3 /* YTLoadingView.h */,
 				D925EDDF1A2D7ECD00F7FCD3 /* YTLoadingView.m */,
+				D9EEAB051A834DA50000D35D /* YTPreferentialCell.h */,
+				D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1435,6 +1445,7 @@
 				AE24A8AA1A02432100A0CE91 /* YTLocalMinorArea.m in Sources */,
 				AE859E271A0CC2D00044074F /* YTServiceStationAnnotation.m in Sources */,
 				AE24A8A61A02432100A0CE91 /* YTLocalFloor.m in Sources */,
+				D9EEAB071A834DA50000D35D /* YTPreferentialCell.m in Sources */,
 				78ADBEAB1A09EAC3000688E3 /* YTNaiveStepDetector.m in Sources */,
 				D94C27AA1A02639F009FF2F3 /* YTBathroomAnnotation.m in Sources */,
 				D94C28361A0263CF009FF2F3 /* MJRefreshHeaderView.m in Sources */,
@@ -1449,6 +1460,7 @@
 				78ADBEBE1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m in Sources */,
 				D94C28061A0263C6009FF2F3 /* YTCategoryResultsTableView.m in Sources */,
 				D94C27B91A02639F009FF2F3 /* YTMoveCurrentLocationButton.m in Sources */,
+				D9EEAB0A1A834DD50000D35D /* YTPreferential.m in Sources */,
 				D94C27FE1A0263C6009FF2F3 /* YTHomeViewController.m in Sources */,
 				AE24A89F1A02432000A0CE91 /* YTCloudMerchant.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.mm in Sources */,

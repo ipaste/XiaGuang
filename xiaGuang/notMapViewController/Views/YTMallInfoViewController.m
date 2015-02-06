@@ -30,8 +30,10 @@
     UIImage *_infoBackgroundImage;
     UIButton *_leftButton;
     UIButton *_rightButton;
+    UIView *_preferentialView;
     YTMallPosistionViewController *_posistionVC;
     BOOL _isShowSearchView;
+    NSArray *_preferentials;
 }
 @end
 
@@ -47,7 +49,6 @@
 
     _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
-    //[_searchView setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar"]];
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
     [self.view addSubview:_scrollView];
@@ -184,9 +185,71 @@
         categoryLabel.font = [UIFont systemFontOfSize:14];
         [categoryView addSubview:categoryLabel];
     }
+    CGFloat offSetY = CGRectGetMaxY(categoryView.frame);
+    //优惠信息块
+    if (self.isPreferential){
+        _preferentialView = [[UIView alloc]initWithFrame:CGRectMake(0, offSetY + 10, CGRectGetWidth(_scrollView.frame), 165)];
+        _preferentialView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+        
+        UIImage *titleImage = [UIImage imageNamed:@"title_disco"];
+        UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, titleImage.size.width, titleImage.size.height)];
+        titleImageView.image = titleImage;
+        titleImageView.tag = 10;
+        [_preferentialView addSubview:titleImageView];
+        
+        UIButton *more = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_scrollView.frame) - 100, 0, 100, 35)];
+        [more setTitle:@"更多" forState:UIControlStateNormal];
+        [more setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
+        [more.titleLabel setFont:[UIFont systemFontOfSize:13]];
+        [more setImage:[UIImage imageNamed:@"icon_arrow_orange"] forState:UIControlStateNormal];
+        [more setImageEdgeInsets:UIEdgeInsetsMake(0, 66, 0, 0)];
+        [_preferentialView addSubview:more];
+        
+        NSInteger count = 3;
+        CGFloat oneCentenX = (CGRectGetWidth(_scrollView.frame) / count) / 2 - 30;
+        CGFloat oneWidth = CGRectGetWidth(_scrollView.frame) / count;
+        for (NSInteger  i = 0;i < count; i++){
+            UIImageView *iconView = [[UIImageView alloc]initWithFrame:CGRectMake(oneCentenX + i * (60 + oneCentenX * 2), CGRectGetMaxY(titleImageView.frame) + 13.5, 60, 60)];
+            iconView.layer.cornerRadius = CGRectGetWidth(iconView.frame) / 2;
+            iconView.layer.masksToBounds = true;
+            iconView.tag = i;
+            iconView.image = [UIImage imageNamed:@"imgshop_default"];
+            
+            UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(iconView.frame) + oneCentenX, CGRectGetMaxY(titleImageView.frame) + 12, 0.5, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame) - 24)];
+            lineView.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
+            
+            UILabel *merchantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(12 +  i * oneWidth, CGRectGetMaxY(iconView.frame) + 10, oneWidth - 24, 15)];
+            merchantNameLabel.text = @"敬请期待";
+            merchantNameLabel.textColor = [UIColor colorWithString:@"333333"];
+            merchantNameLabel.textAlignment = 1;
+            merchantNameLabel.tag = i;
+            merchantNameLabel.font = [UIFont systemFontOfSize:13];
+            
+            UILabel *preferentialLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(merchantNameLabel.frame), CGRectGetMaxY(merchantNameLabel.frame) + 5, CGRectGetWidth(merchantNameLabel.frame), CGRectGetHeight(merchantNameLabel.frame))];
+            preferentialLabel.textColor = [UIColor colorWithString:@"e95e37"];
+            preferentialLabel.textAlignment = 1;
+            preferentialLabel.font = [UIFont systemFontOfSize:13];
+            preferentialLabel.text = @"暂无优惠";
+            preferentialLabel.tag = i + 3;
+            
+            UIButton *preferentialButton = [[UIButton alloc]initWithFrame:CGRectMake(i * oneWidth, CGRectGetMaxY(titleImageView.frame), oneWidth, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame))];
+            preferentialButton.tag = i;
+            [preferentialButton addTarget:self action:@selector(clickPreferential:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [_preferentialView addSubview:iconView];
+            
+            [_preferentialView addSubview:lineView];
+            
+            [_preferentialView addSubview:merchantNameLabel];
+            
+            [_preferentialView addSubview:preferentialLabel];
+            
+            [_preferentialView addSubview:preferentialButton];
+        }
+        offSetY = CGRectGetMaxY(_preferentialView.frame);
+    }
     
-    
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryView.frame) + 10, CGRectGetWidth(_scrollView.frame),  935) style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, offSetY + 10, CGRectGetWidth(_scrollView.frame),  935) style:UITableViewStylePlain];
     _tableView.scrollEnabled = NO;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -211,6 +274,7 @@
     
     [_scrollView addSubview:categoryView];
     [_scrollView addSubview:_tableView];
+    [_scrollView addSubview:_preferentialView];
     
     
     _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame));
@@ -222,6 +286,13 @@
         _hots = merchants;
         [_tableView reloadData];
     }];
+
+    
+    [self getPreferential:^(NSArray *preferentials) {
+        
+        [self reloadPreferentialWithPreferentials:preferentials];
+        _preferentials = preferentials;
+    }];
     
     id<YTMall> mall = _mall;
     
@@ -232,7 +303,7 @@
     [mall getMallBasicMallInfoWithCallBack:^(NSString *mallName, NSString *address, CLLocationCoordinate2D coord, NSError *error) {
         _posistionVC = [[YTMallPosistionViewController alloc]initWithMallCoordinate:[_mall coord] address:address mallName:[_mall mallName]];
     }];
-
+    
 }
 
 
@@ -254,17 +325,21 @@
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *background = [[UIView alloc]init];
-    UIImageView *hotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 6, CGRectGetWidth(self.view.frame), 27)];
-    hotImageView.image = [UIImage imageNamed:@"title_hotbrand"];
+    UIImage *hotImage = [UIImage imageNamed:@"title_hotbrand"];
+    UIImageView *hotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, hotImage.size.width, 27)];
+    hotImageView.image = hotImage;
     [background addSubview:hotImageView];
     return background;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMerchantViewCell *cell = (YTMerchantViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    if (cell.merchant){
     YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:cell.merchant];
     [self.navigationController pushViewController:merchantInfoVC animated:YES];
     cell.selected = NO;
+    }
+    [tableView deselectRowAtIndexPath:indexPath animated:false];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -272,7 +347,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 34;
+    return 36;
 }
 
 -(void)jumpToCategory:(UIButton *)sender{
@@ -324,13 +399,27 @@
             [merchants removeAllObjects];
         }
         else{
-            //[[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
-            
+           // error 
         }
     }];
     
 }
 
+-(void)getPreferential:(void (^)(NSArray *preferentials))black{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    AVObject *cloudMall = [((YTCloudMall *)_mall) getCloudObj];
+    [query whereKey:@"mall" equalTo:cloudMall];
+    [query includeKey:@"merchant"];
+    query.limit = 3;
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableArray *preferentials = [NSMutableArray array];
+        for (AVObject *object in objects) {
+            YTPreferential *preferential = [[YTPreferential alloc]initWithCloudObject:object];
+            [preferentials addObject:preferential];
+        }
+        black(preferentials);
+    }];
+}
 
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
@@ -341,6 +430,37 @@
     [AVAnalytics event:@"showMallmap"];
     if (_posistionVC){
         [self.navigationController pushViewController:_posistionVC animated:YES];
+    }
+}
+
+-(void)clickPreferential:(UIButton *)sender{
+    if (_preferentials.count <= 0) return;
+    if (sender.tag > _preferentials.count - 1 ) return;
+
+    YTPreferential *preferential = _preferentials[sender.tag];
+    YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:preferential.merchant];
+    [self.navigationController pushViewController:merchantInfoVC animated:YES];
+}
+
+-(void)reloadPreferentialWithPreferentials:(NSArray *)preferentials{
+    for (YTPreferential *preferential in preferentials){
+        NSInteger index =  [preferentials indexOfObject:preferential];
+        for (UIView *view in _preferentialView.subviews) {
+            if (view.tag == 10) continue;
+            if ([view isMemberOfClass:[UIImageView class]] && view.tag == index) {
+                [preferential.merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+                    ((UIImageView *)view).image = result;
+                }];
+            }
+            if ([view isMemberOfClass:[UILabel class]]) {
+                UILabel *label = (UILabel *)view;
+                if (view.tag == index) {
+                   label.text = [preferential.merchant merchantName];
+                }else if(view.tag == index + 3){
+                    label.text = [preferential preferentialInfo];
+                }
+            }
+        }
     }
 }
 

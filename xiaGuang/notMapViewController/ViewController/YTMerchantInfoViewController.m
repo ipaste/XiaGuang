@@ -11,18 +11,20 @@
 #import "YTCloudMerchant.h"
 #import "YTLocalMerchantInstance.h"
 #import "YTMapViewController2.h"
-@interface YTMerchantInfoViewController (){
+#import "YTPreferentialCell.h"
+@interface YTMerchantInfoViewController ()<UITableViewDataSource,UITableViewDelegate>{
     id<YTMerchant> _merchant;
     UIImageView *_merchantLogo;
     UILabel *_merchantName;
     UIButton *_category;
     UIButton *_subCategory;
     UILabel *_addressLabel;
-    UIImageView *_addressLogo;
-    UIView *_naviView;
     UIButton *_jumpToMapButton;
-    UIImageView *_merchantInfoImageView;
     UIView *_merchantInfoView;
+    UILabel *_promptLabel;
+    UITableView *_discountTableView;
+    UIView *_discountHeadView;
+    NSArray *_preferentials;
 }
 @end
 
@@ -40,21 +42,15 @@
     [super viewDidLoad];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
-    UIImageView *background = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"shop_bg_map"]];
-    background.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame));
-    [self.view addSubview:background];
+
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
 
-    
     self.navigationItem.title = @"店铺详情";
     UIImage *merchantInfoImage = [UIImage imageNamed:@"shop_img_inforbg"];
     _merchantInfoView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMinY(self.view.frame) + CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), 175 - merchantInfoImage.size.height )];
     _merchantInfoView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_img_inforbg2"]];
     [self.view addSubview:_merchantInfoView];
     
-    _merchantInfoImageView = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_merchantInfoView.frame), CGRectGetMaxY(_merchantInfoView.frame), merchantInfoImage.size.width, merchantInfoImage.size.height)];
-    _merchantInfoImageView.image = merchantInfoImage;
-    [self.view addSubview:_merchantInfoImageView];
     
     _merchantLogo = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, 60, 60)];
     [_merchantInfoView addSubview:_merchantLogo];
@@ -68,34 +64,58 @@
     
     _subCategory = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetMinY(_category.frame), CGRectGetWidth(_category.frame),     CGRectGetHeight(_category.frame))];
     [_merchantInfoView addSubview:_subCategory];
-    
-    CGFloat height = CGRectGetHeight([UIScreen mainScreen].bounds);
-    if (height < 568) {
-        height = 50;
-    }else{
-        height = 80;
-    }
-    
-    _naviView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_merchantInfoImageView.frame) + height, CGRectGetWidth(self.view.frame), 92)];
-    [self.view addSubview:_naviView];
+
     
     CGSize textSize = [[_merchant address] boundingRectWithSize:CGSizeMake(200, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size;
     _addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, textSize.width,textSize.height)];
-
     
-    _addressLogo = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    [self.view addSubview:_addressLogo];
-    
-    
-    _jumpToMapButton  = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 180, 45)];
+    _jumpToMapButton  = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame) - 36, 40)];
     [_jumpToMapButton addTarget:self action:@selector(jumpToMap:) forControlEvents:UIControlEventTouchUpInside];
     [_jumpToMapButton setImage:[UIImage imageNamed:@"shop_icon_nav"] forState:UIControlStateNormal];
     
-    [_naviView addSubview:_jumpToMapButton];
+    [_merchantInfoView addSubview:_jumpToMapButton];
     
-    [_naviView addSubview:_addressLabel];
+    [_merchantInfoView addSubview:_addressLabel];
     
-
+    
+    //优惠专区
+    [_merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+        if (isExistence){
+            _discountHeadView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 30)];
+            _discountHeadView.backgroundColor = _merchantInfoView.backgroundColor;
+            UIImage *image = [UIImage imageNamed:@"title_disco_inner"];
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
+            imageView.frame = CGRectMake(15, 6, image.size.width, image.size.height);
+            [_discountHeadView addSubview:imageView];
+            [self.view addSubview:_discountHeadView];
+            
+            _discountTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 20)];
+            _discountTableView.rowHeight = 95;
+            _discountTableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_img_inforbg2"]];
+            _discountTableView.delegate = self;
+            _discountTableView.dataSource = self;
+            [self.view addSubview:_discountTableView];
+            
+            [((YTCloudMerchant *)_merchant) merchantWithPreferentials:^(NSArray *preferentials, NSError *error) {
+                _preferentials = preferentials;
+                [_discountTableView reloadData];
+            }];
+            
+        }else{
+            UIImageView *background = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"shop_bg_map"]];
+            background.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame));
+            [self.view insertSubview:background atIndex:0];
+            
+            _promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,CGRectGetMaxY(_merchantInfoView.frame), CGRectGetWidth(self.view.frame), 20)];
+            _promptLabel.text = @"亲,暂时没有优惠信息";
+            _promptLabel.textAlignment = 1;
+            _promptLabel.font = [UIFont systemFontOfSize:18];
+            _promptLabel.textColor = [UIColor whiteColor];
+            [self.view addSubview:_promptLabel];
+        }
+    }];
+    
+    
 }
 
 -(void)jumpToMap:(id)button{
@@ -112,7 +132,6 @@
 }
 
 -(void)viewDidLayoutSubviews{
-
     _merchantLogo.center = CGPointMake(self.view.center.x, _merchantLogo.center.y);
     _merchantLogo.layer.cornerRadius = CGRectGetWidth(_merchantLogo.frame) / 2;
     _merchantLogo.layer.borderWidth = 0.5;
@@ -146,24 +165,68 @@
     _subCategory.userInteractionEnabled = NO;
     
     
-    _addressLabel.center = CGPointMake(_naviView.center.x,0);
-    _addressLabel.font = [UIFont systemFontOfSize:14];
+    _addressLabel.center = CGPointMake(CGRectGetWidth(self.view.frame) / 2,CGRectGetMaxY(_category.frame) + CGRectGetHeight(_addressLabel.frame));
+    _addressLabel.font = [UIFont systemFontOfSize:12];
     _addressLabel.textAlignment = 1;
-    _addressLabel.textColor = [UIColor colorWithString:@"e5e5e5"];;
+    _addressLabel.textColor = [UIColor colorWithString:@"999999"];;
     _addressLabel.text = [_merchant address];
     _addressLabel.numberOfLines = 2;
     _addressLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _addressLogo.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_merchantInfoImageView.frame) + 36);
-    _addressLogo.image = [UIImage imageNamed:@"icon_locaiton"];
     
     
-    _jumpToMapButton.center = CGPointMake(_naviView.center.x, CGRectGetMaxY(_addressLabel.frame) + 15 + CGRectGetHeight(_jumpToMapButton.frame) / 2);
+    _jumpToMapButton.center = CGPointMake(CGRectGetWidth(self.view.frame) / 2, CGRectGetMaxY(_addressLabel.frame) + 15 + CGRectGetHeight(_jumpToMapButton.frame) / 2);
     [_jumpToMapButton setBackgroundImage:[UIImage imageNamed:@"shop_btn_nav"] forState:UIControlStateNormal];
     [_jumpToMapButton setTitle:@"查看商家位置" forState:UIControlStateNormal];
     [_jumpToMapButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_jumpToMapButton setBackgroundImage:[UIImage imageNamed:@"shop_btn_navOn"] forState:UIControlStateHighlighted];
     [_jumpToMapButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
-    _naviView.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_addressLogo.frame) + CGRectGetHeight(_naviView.frame) / 2 + 20);
+    [_jumpToMapButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
+    
+    
+    CGRect frame = _merchantInfoView.frame;
+    frame.size.height = CGRectGetMaxY(_jumpToMapButton.frame) + 19;
+    _merchantInfoView.frame = frame;
+ 
+    
+    CGFloat height = CGRectGetHeight([UIScreen mainScreen].bounds);
+    if (height < 568) {
+        height = 90;
+    }else{
+        height = 108;
+    }
+    
+    frame = _promptLabel.frame;
+    frame.origin.y = height + CGRectGetMaxY(_merchantInfoView.frame);
+    _promptLabel.frame = frame;
+    
+    frame = _discountHeadView.frame;
+    frame.origin.y = CGRectGetMaxY(_merchantInfoView.frame) + 10;
+    _discountHeadView.frame = frame;
+    
+    frame = _discountTableView.frame;
+    frame.origin.y = CGRectGetMaxY(_discountHeadView.frame);
+    frame.size.height = CGRectGetHeight(self.view.frame) - frame.origin.y;
+    _discountTableView.frame = frame;
+    
+    
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _preferentials.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    YTPreferentialCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (!cell) {
+        cell = [[YTPreferentialCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.backgroundColor = [UIColor clearColor];
+    }
+    cell.preferential = _preferentials[indexPath.row];
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:false];
 }
 
 -(UIView *)leftBarButton{
@@ -178,6 +241,7 @@
 -(void)back:(UIButton *)sender{
     [self.navigationController popViewControllerAnimated:true];
 }
+
 
 -(void)dealloc{
     NSLog(@"商铺主页销毁");

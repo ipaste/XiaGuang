@@ -341,8 +341,21 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 -(CGFloat)offset{
     return [self getLocalCopy].offset;
 }
+
 -(AVObject *)getCloudObj{
     return _internalObject;
 }
+-(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    [query whereKey:@"mall" equalTo:_internalObject];
+    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
+        if (number > 0) {
+            callBack(true);
+        }else{
+            callBack(false);
+        }
+    }];
+}
+
 
 @end

@@ -15,6 +15,7 @@
     UIView *_line;
     UILabel *_merchantNameLabel;
     UILabel *_addressLable;
+    UIImageView *_preferentialImageView;
     NSMutableArray *_subCategoryImageView;
     NSMutableArray *_subCategoryLabel;
     id<YTMerchant> _oldMerchant;
@@ -59,10 +60,16 @@
         }
         self.titleColor = [UIColor colorWithString:@"e95e37"];
         
+        UIImage *preferentialImage = [UIImage imageNamed:@"flag"];
+        _preferentialImageView = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - preferentialImage.size.width, 0, preferentialImage.size.width, preferentialImage.size.height)];
+        _preferentialImageView.image = preferentialImage;
+        _preferentialImageView.hidden = true;
+        
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];
         [self addSubview:_addressLable];
         [self addSubview:_line];
+        [self addSubview:_preferentialImageView];
         
     }
     return self;
@@ -84,11 +91,14 @@
     
     [_addressLable setFont:[UIFont systemFontOfSize:11]];
     [_addressLable setTextColor:[UIColor colorWithString:@"999999"]];
-    
 }
 
 
 -(void)setMerchant:(id<YTMerchant>)merchant{
+    [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+        _preferentialImageView.hidden = !isExistence;
+    }];
+
     _merchantNameLabel.text = [merchant merchantName];
     
     _addressLable.text = [merchant address];
@@ -142,6 +152,10 @@
         
     }
     _merchant = merchant;
+}
+
+-(void)setIsShowMark:(BOOL)isShowMark{
+    _preferentialImageView.hidden = !isShowMark;
 }
 -(void)dealloc{
     NSLog(@"cell dealloc");
