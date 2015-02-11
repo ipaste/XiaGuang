@@ -7,16 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTPanel.h"
 #import "YTSettingViewController.h"
 #import "YTSearchViewController.h"
+#import "YTStaticResourceManager.h"
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
 #import "YTMallViewController.h"
+#import "Reachability.h"
 #import "YTParkingViewController.h"
 #import "YTBluetoothManager.h"
+#import "FXBlurView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-@interface YTHomeViewController : UIViewController<YTPanelDelegate,YTBeaconManagerDelegate>
+#import "BBTableView.h"
+@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate>
 
 
 @end

@@ -17,8 +17,6 @@
 #define MALL_CLASS_BACKGROUND_KEY @"MallBackground"
 #define MALL_CLASS_INFO_KEY @"MallInfoBackground"
 #define MALL_CLASS_INFOIMAGE_KEY @"mallInfoTitleImage"
-#define MALL_CLASS_LONGITUDE_KEY @"longitude"
-#define MALL_CLASS_LATITUDE_KEY @"latitude"
 
 @interface YTCloudMall : NSObject<YTMall>
 

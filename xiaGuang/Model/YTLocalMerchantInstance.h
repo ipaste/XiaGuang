@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTLocalMall.h"
 #import "YTMerchantLocation.h"
 #import <AVOSCloud/AVOSCloud.h>
+#import "YTLocalDoor.h"
+#define CLOUD_MERCHANT_CLASS_NAME @"Merchant"
 @interface YTLocalMerchantInstance : NSObject<YTMerchantLocation>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;

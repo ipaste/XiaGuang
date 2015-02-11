@@ -10,15 +10,18 @@
 #import "YTCloudMerchant.h"
 #define MALL_CLASS_NAME @"Mall"
 #define MALL_CLASS_MALLNAME_KEY @"name"
-
+typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
 @implementation YTCloudMall{
     AVObject *_internalObject;
+    UIImage *_titleImage;
+    UIImage *_background;
     NSMutableArray *_blocks;
     NSMutableArray *_merchantLocs;
     NSMutableArray *_merchants;
     NSMutableArray *_resultArray;
     NSMutableArray *_resultMerchants;
     YTLocalMall *_tmpLocalMall;
+    YTGetTitleImageAndBackgroundImageCallBack _callBack;
 }
 
 @synthesize mallName;
@@ -26,7 +29,7 @@
 @synthesize blocks;
 @synthesize merchants;
 
--(id) initWithAVObject:(AVObject *)object{
+-(id)initWithAVObject:(AVObject *)object{
     
     self = [super init];
     if(self){
@@ -35,6 +38,12 @@
     }
     return self;
     
+}
+
+- (CLLocationCoordinate2D)coord{
+    NSNumber *latitude = _internalObject[@"latitude"];
+    NSNumber *longitude = _internalObject[@"longitude"];
+    return CLLocationCoordinate2DMake(latitude.doubleValue, longitude.doubleValue);
 }
 
 -(NSString *)mallName{
@@ -47,7 +56,6 @@
 
 -(NSArray *)blocks{
     if(_blocks == nil){
-        
         _blocks = [[NSMutableArray alloc] init];
         
         AVQuery *query = [[AVQuery alloc] initWithClassName:@"Block"];
@@ -94,14 +102,15 @@
         callback(mallImage,nil);
     }];
 }
+
 -(UIImage *)logo{
     AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
     return [UIImage imageWithData:[file getData]];
 }
+
 -(NSArray *)merchants{
     if(_merchants == nil){
         _merchants = [[NSMutableArray alloc] init];
-        
         AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANT_CLASS_NAME];
         query.maxCacheAge = 24 * 3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
@@ -116,29 +125,6 @@
     }
     
     return [_merchants copy];
-}
-//-(NSArray *)merchantLocations{
-//    if(_merchantLocs == nil){
-//        
-//        _merchantLocs = [[NSMutableArray alloc] init];
-//        
-//        AVQuery *query = [[AVQuery alloc] initWithClassName:MERCHANTLOCATION_CLASS_NAME];
-//        query.maxCacheAge = 24 * 3600;
-//        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-//        
-//        [query whereKey:MERCHANTLOCATION_CLASS_MALL_KEY equalTo:_internalObject];
-//        [query includeKey:@"mall,majorArea,floor,inMinorArea"];
-//        NSArray *result = [query findObjects];
-//        for(AVObject *tempAVObject in result){
-//            YTCloudMerchant *merchat = [[YTCloudMerchant alloc]initWithAVObject:tempAVObject];
-//            [_merchantLocs addObject:merchat];
-//        }
-//    }
-//    
-//    return _merchantLocs;
-//}
--(CLLocationCoordinate2D)coord{
-    return CLLocationCoordinate2DMake([_internalObject[MALL_CLASS_LATITUDE_KEY] floatValue], [_internalObject[MALL_CLASS_LONGITUDE_KEY] floatValue]);
 }
 
 -(UIImage *)infoBackground{
@@ -234,7 +220,53 @@
         
     }
 }
+-(void)getMallImgBackground:(void (^)(UIImage *result,NSError* error))callback{
+    AVFile *file = _internalObject[@"mall_img_background"];
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if (!error) {
+            UIImage *mallImage = [UIImage imageWithData:data];
+            callback(mallImage,nil);
+        }else{
+             callback(nil,error);
+        }
+    }];
+}
 
+-(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
+    _callBack = callback;
+    if (![self checkCallBackConditions]) {
+        if (_titleImage == nil) {
+            [_internalObject[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                if (error) {
+                    callback(nil,nil,error);
+                    return ;
+                }
+                _titleImage = [UIImage imageWithData:data];
+                [self checkCallBackConditions];
+            }];
+        }
+        
+        if (_background == nil) {
+            [_internalObject[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                if (error) {
+                    callback(nil,nil,error);
+                    return ;
+                }
+                _background = [UIImage imageWithData:data];
+                [self checkCallBackConditions];
+            }];
+        }
+    }
+}
+
+-(BOOL)checkCallBackConditions{
+    if (_titleImage != nil && _background != nil) {
+        _callBack(_titleImage,_background,nil);
+        return true;
+    }else{
+        return false;
+    }
+}
 
 -(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback{
     AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];
@@ -274,23 +306,28 @@
     }];
 
 }
--(NSString *)localDB{
-    if (_internalObject[@"localDBId"]) {
-        return nil;
-    }
-    return @"";
+
+-(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback{
+    NSString *add = _internalObject[@"address"];
+    NSString *name = _internalObject[MALL_CLASS_MALLNAME_KEY];
+    CLLocationCoordinate2D coordinate = [self coord];
+    callback(name,add,coordinate,nil);
 }
+
+-(NSString *)localDB{
+    return _internalObject[@"localDBId"];
+}
+
 -(YTLocalMall *)getLocalCopy{
-    
     if(_tmpLocalMall == nil){
-        NSString *localDBId = _internalObject[@"localDBId"];
-        if (localDBId == nil || localDBId.length <= 0) {
+        NSString *uniId = _internalObject[@"localDBId"];
+        if (uniId == nil || uniId.length <= 0) {
             return nil;
         }
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
-            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",localDBId];
+            FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",uniId];
             [result next];
             
             _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
@@ -301,8 +338,24 @@
     
 }
 
+-(CGFloat)offset{
+    return [self getLocalCopy].offset;
+}
+
 -(AVObject *)getCloudObj{
     return _internalObject;
 }
+-(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    [query whereKey:@"mall" equalTo:_internalObject];
+    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
+        if (number > 0) {
+            callBack(true);
+        }else{
+            callBack(false);
+        }
+    }];
+}
+
 
 @end

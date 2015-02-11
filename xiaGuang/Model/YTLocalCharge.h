@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FMResultSet.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 
 @interface YTLocalCharge : NSObject
 @property (assign,nonatomic) NSInteger A;
 @property (assign,nonatomic) NSInteger K;
 @property (assign,nonatomic) NSInteger P;
 @property (assign,nonatomic) NSInteger Max;
-
+@property (assign,nonatomic) NSInteger freeTime;
 -(id)initWithMallID:(NSString *)mallID;
 @end

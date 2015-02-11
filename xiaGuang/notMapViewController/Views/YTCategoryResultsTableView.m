@@ -7,11 +7,7 @@
 //
 
 #import "YTCategoryResultsTableView.h"
-#import <AVQuery.h>
-#import "YTCategory.h"
-#import "YTCloudMall.h"
-#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#import "YTSelectCategoryViewCell.h"
+
 @interface YTCategoryResultsTableView ()<UITableViewDelegate,UITableViewDataSource>{
     UITableView *_categoryView;
     UITableView *_subcategoryView;
@@ -25,6 +21,8 @@
     NSMutableArray *_mallObjects;
     NSMutableArray *_floorObjects;
     NSMutableArray *_allMall;
+    NSMutableArray *_mallNames;
+    NSMutableArray *_floorNames;
     NSArray *_subObjects;
     NSString *_Key;
     id<YTMall> _mall;
@@ -48,14 +46,13 @@
         self.backgroundColor = [UIColor clearColor];
         self.hidden = YES;
         _allMall = [NSMutableArray array];
-        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            for (AVObject *object in objects) {
-                YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:object];
-                [_allMall addObject:mall];
-            }
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMResultSet *result = [db executeQuery:@"select * from Mall"];
+        while ([result next]) {
+            YTLocalMall *tmpMall = [[YTLocalMall alloc]initWithDBResultSet:result];
+            [_allMall addObject:tmpMall];
             
-        }];
+        }
     }
     return self;
 }
@@ -108,19 +105,25 @@
         _subcategoryView.delegate = nil;
         _subcategoryView.dataSource = nil;
         _floorObjects = [NSMutableArray array];
-        [_floorObjects addObject:@"全部楼层"];
-        
+        _floorNames = [NSMutableArray array];
+        [_floorNames addObject:@"全部楼层"];
+        [_floorObjects addObject:[NSNull null]];
         for (id<YTMall> mall in _allMall) {
+            
             if ([[mall mallName] isEqualToString:mallName]) {
                 
                 for(id<YTBlock> block in [mall blocks]){
                     
                     for (id<YTFloor> floor in [block floors]) {
-                        [_floorObjects addObject:[floor floorName]];
+                        [_floorNames addObject:[floor floorName]];
+                        [_floorObjects addObject:floor];
                     }
                 }
 
             }
+             
+            
+            
         }
         height = 44 * _floorObjects.count > 274 ? 274:44 * _floorObjects.count;
         _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
@@ -139,10 +142,13 @@
         _floorView.delegate = nil;
         _floorView.dataSource = nil;
         _mallObjects = [NSMutableArray array];
+        _mallNames = [NSMutableArray array];
         for (id <YTMall> mall in _allMall) {
-            [_mallObjects addObject:[mall mallName]];
+            [_mallNames addObject:[mall mallName]];
+            [_mallObjects addObject:mall];
         }
-        [_mallObjects insertObject:@"全部商圈" atIndex:0];
+        [_mallNames insertObject:@"全部商圈" atIndex:0];
+        [_mallObjects insertObject:[NSNull null] atIndex:0];
         height = 44 * _mallObjects.count > 274 ? 274:44 * _mallObjects.count;
         _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 44 * _mallObjects.count);
         [_mallView reloadData];
@@ -221,7 +227,7 @@
             cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         }
         
-        cell.textLabel.text = _mallObjects[indexPath.row];
+        cell.textLabel.text = _mallNames[indexPath.row];
         if ([cell.textLabel.text isEqualToString:_Key]) {
             cell.textLabel.textColor = [UIColor colorWithString:@"e95e37"];
             _curMallCell = cell;
@@ -241,7 +247,7 @@
             cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         }
         
-        cell.textLabel.text = _floorObjects[indexPath.row];
+        cell.textLabel.text = _floorNames[indexPath.row];
         if ([cell.textLabel.text isEqualToString:_Key]) {
             cell.textLabel.textColor = [UIColor colorWithString:@"e95e37"];
             _curFloorCell = cell;
@@ -285,7 +291,13 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         cell.textLabel.textColor = [UIColor colorWithString:@"e95e37"];
         _curMallCell = cell;
-        [self.delegate selectKey:cell.textLabel.text];
+        
+        NSString *localDBId = nil;
+        id<YTMall> tmpMall = _mallObjects[indexPath.row];
+        if (![tmpMall isMemberOfClass:[NSNull class]]) {
+            localDBId = [tmpMall identifier];
+        }
+        [self.delegate selectKey:localDBId];
     }
     
     if ([tableView isEqual:_floorView]) {
@@ -293,7 +305,12 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         cell.textLabel.textColor = [UIColor colorWithString:@"e95e37"];
         _curFloorCell = cell;
-        [self.delegate selectKey:cell.textLabel.text ];
+        NSString *floorUniId = nil;
+        id<YTFloor> tmpFloor = _floorObjects[indexPath.row];
+        if (![tmpFloor isMemberOfClass:[NSNull class]]) {
+           floorUniId = [tmpFloor uniId];
+        }
+        [self.delegate selectKey:floorUniId];
     }
 }
 

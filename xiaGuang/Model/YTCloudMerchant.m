@@ -9,11 +9,13 @@
 #import "YTCloudMerchant.h"
 #import <AVFile.h>
 #import "YTCloudMall.h"
-
+#import "YTPreferential.h"
 @interface YTCloudMerchant(){
     AVObject *_object;
     
     YTLocalMerchantInstance *_tmpMerchantInstance;
+    
+    UIImage *_icon;
 }
 @end
 @implementation YTCloudMerchant
@@ -35,6 +37,9 @@
 
 -(NSArray *)type{
     NSString *type = _object[MERCHANT_CLASS_TYPE_KEY];
+    if (type.length <= 0 || type == nil) {
+        return nil;
+    }
     NSMutableArray *types = [NSMutableArray arrayWithArray:[type componentsSeparatedByString:@" "]];
     if ([[types lastObject] isEqualToString:@""]) {
         [types removeLastObject];
@@ -67,34 +72,72 @@
     return floor;
 }
 -(void)getThumbNailWithCallBack:(void (^)(UIImage *result,NSError *error))callback{
-    
-    AVFile *file = _object[MERCHANT_CLASS_ICON_KEY];
-    if (file != nil) {
-        [file getThumbnail:YES width:200 height:200 withBlock:callback];
+    if (_icon == nil) {
+        AVFile *file = _object[MERCHANT_CLASS_ICON_KEY];
+        [file getThumbnail:true width:200 height:200 withBlock:^(UIImage *image, NSError *error) {
+            if (image != nil) {
+                _icon = image;
+                callback(_icon,nil);
+            }else{
+                callback(nil,error);
+            }
+        }];
     }else{
-        callback(nil,nil);
+        callback(_icon,nil);
     }
 
 }
 
 -(YTLocalMerchantInstance *)getLocalMerchantInstance{
-    if(_object[@"localDBId"] == nil || [_object[@"localDBId"] isEqualToString:@""]){
+    NSString *uniId = _object[@"uniId"];
+    if ([uniId isEqualToString:@"0"] || uniId == nil) {
         return nil;
     }
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
-            FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceId = ?",_object[@"localDBId"]];
+            FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",_object[@"uniId"]];
             [result next];
             
             _tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
         }
     }
     return _tmpMerchantInstance;
-    
 }
 
+-(NSString *)uniId{
+    return _object[@"uniId"];
+}
+
+-(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    [query whereKey:@"merchant" equalTo:_object];
+    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
+        if (number > 0) {
+            callBack(true);
+        }else{
+            callBack(false);
+        }
+    }];
+}
+
+-(void)merchantWithPreferentials:(void (^)(NSArray *, NSError *))callBack{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    [query whereKey:@"merchant" equalTo:_object];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableArray *preferentials = [NSMutableArray array];
+        for (AVObject *object in objects) {
+            YTPreferential *preferential = [[YTPreferential alloc]initWithCloudObject:object];
+            [preferentials addObject:preferential];
+        }
+        if (error) {
+            preferentials = nil;
+        }
+        callBack(preferentials,error);
+    }];
+
+}
 @end

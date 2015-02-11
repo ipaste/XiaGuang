@@ -11,8 +11,9 @@
 #import "YTCategory.h"
 #import "YTResultsViewController.h"
 #import "YTMoreCategoryViewCell.h"
-@interface YTMoreCategoryViewController (){
+@interface YTMoreCategoryViewController ()<UITableViewDataSource,UITableViewDelegate>{
     NSArray *_categorys;
+    UITableView *_tableView;
 }
 @end
 
@@ -20,13 +21,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"all_bg_navbar-1"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.automaticallyAdjustsScrollViewInsets = false;
     self.navigationItem.title = @"更多分类";
     
-    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
-    self.tableView.showsVerticalScrollIndicator = NO;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView = [[UITableView alloc]init];
+     _tableView.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame));
+    _tableView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+    _tableView.showsVerticalScrollIndicator = NO;
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    
     
     _categorys = [YTCategory allCategorys];
     
@@ -68,6 +78,18 @@
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
 
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    return button;
+}
+
+-(void)back:(UIButton *)sender{
+    [self.navigationController popViewControllerAnimated:true];
+}
 -(void)dealloc{
     NSLog(@"YTMoreCategory页面销毁");
 }

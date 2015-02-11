@@ -14,6 +14,7 @@
     NSString *_tmpFloorId;
     NSString *_tmpName;
     NSString *_tmpIsParking;
+    NSString *_tmpUnId;
     NSMutableArray *_tmpMinorAreas;
     
     NSMutableArray *_tmpMerchantAreas;
@@ -49,6 +50,7 @@
             _tmpFloorId = [findResultSet stringForColumn:@"floorId"];
             _tmpName = [findResultSet stringForColumn:@"majorAreaName"];
             _tmpIsParking = [findResultSet stringForColumn:@"isParking"];
+            _tmpUnId = [findResultSet stringForColumnIndex:@"unId"];
             _tmpWorldToMapRatio = [findResultSet doubleForColumn:@"worldToMapDistRatio"];
         }
     }
@@ -63,7 +65,7 @@
 -(NSArray *)elevators{
     if(_tmpElevators == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Elevator where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpElevators = [[NSMutableArray alloc] init];
@@ -81,7 +83,7 @@
 -(NSArray *)bathrooms{
     if(_tmpBathrooms == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Bathroom where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpBathrooms = [[NSMutableArray alloc] init];
@@ -99,7 +101,7 @@
 -(NSArray *)exits{
     if(_tmpExits == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Exit where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpExits = [[NSMutableArray alloc] init];
@@ -119,8 +121,9 @@
     
     if(_tmpMerchantAreas == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
-        FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where latitude is not null and  majorAreaId = ?",_tmpMajorAreaId];
+
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where latitude is not null and majorAreaId = ? and uniId != 0 ",_tmpMajorAreaId];
         
         _tmpMerchantAreas = [[NSMutableArray alloc] init];
         
@@ -137,7 +140,7 @@
 -(NSArray *)minorAreas{
     if(_tmpMinorAreas == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from MinorArea where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpMinorAreas = [[NSMutableArray alloc] init];
@@ -155,7 +158,7 @@
 -(NSArray *)escalators{
     if(_tmpEscalators == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Escalator where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpEscalators = [[NSMutableArray alloc] init];
@@ -173,7 +176,7 @@
 -(NSArray *)serviceStations{
     if(_tmpServiceStations == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from ServiceStation where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpServiceStations = [[NSMutableArray alloc] init];
@@ -195,7 +198,7 @@
 -(id<YTFloor>)floor{
     if(_tmpFloor == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Floor where floorId = ?",_tmpFloorId];
@@ -211,6 +214,9 @@
     return [_tmpIsParking boolValue];
 }
 
+-(NSString *)uniId{
+    return _tmpUnId;
+}
 
 -(double)worldToMapRatio {
     return _tmpWorldToMapRatio;

@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 #import "YTMall.h"
 #import "YTLocalFloor.h"
+@class YTCloudMall;
 @interface YTLocalMall : NSObject<YTMall>
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet;
-
 @end

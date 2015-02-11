@@ -17,7 +17,9 @@
 @property (weak,nonatomic) id<YTNavigationBarDelegate> delegate;
 @property (weak,nonatomic) NSString *backTitle;
 @property (weak,nonatomic) NSString *titleName;
+@property (weak,nonatomic) UIColor *tintColor;
 -(void)changeSearchButton;
-
+-(void)changeSearchButtonWithHide:(BOOL)hide;
 -(void)changeBackButton;
+-(void)changeBackButtonWithHide:(BOOL)hide;
 @end

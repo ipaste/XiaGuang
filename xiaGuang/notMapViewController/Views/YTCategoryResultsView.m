@@ -16,6 +16,8 @@
     NSMutableArray *_categoryCount;
     UIButton *_curSelectButton;
     UIButton *_mallButton;
+    NSString *_mallUniId;
+    NSString *_floorUniId;
     YTCategoryResultsTableView *_categoryResltsTableView;
     NSString *_buttonName;
 }
@@ -26,9 +28,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         _mall = mall;
-    
+        
+        if (mall != nil) {
+            _mallUniId = [mall localDB];
+        }
+        
         _categoryCount = [NSMutableArray array];
-       
+        
         [self setKey:key subKey:subKey];
         
         NSArray *buttonNames = nil;
@@ -94,13 +100,16 @@
         [button setBackgroundImage:[UIImage imageNamed:@"type_img_tab_pr"] forState:UIControlStateHighlighted];
         [button setImage:[UIImage imageNamed:@"type_img_arrow1"] forState:UIControlStateNormal];
         [button setImage:[UIImage imageRotateOneHundredAndEightyDegreesWithImageName:@"type_img_arrow1"] forState:UIControlStateDisabled];
-        [button setImageEdgeInsets:UIEdgeInsetsMake(0,CGRectGetWidth(button.frame) - 17 , 0, 0)];
+        [button setImageEdgeInsets:UIEdgeInsetsMake(0,CGRectGetWidth(button.frame) - 49 , 0, 0)];
         [button setTitleColor:[UIColor colorWithString:@"606060"] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateDisabled];
         [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
         [button addTarget:self action:@selector(clickToCategory:) forControlEvents:UIControlEventTouchUpInside];
     }
     
 }
+
+
 
 -(void)clickToCategory:(UIButton *)sender{
     _curSelectButton.enabled = YES;
@@ -136,27 +145,69 @@
 
 -(void)selectKey:(NSString *)key{
     [self hideCategoryReslts];
-    [_curSelectButton setTitle:key forState:UIControlStateDisabled];
-    [_curSelectButton setTitle:key forState:UIControlStateNormal];
+    NSString *tmpKey = key;
     NSString *category = nil;
     NSString *subCategory = nil;
-    NSString *mallName = nil;
-    NSString *floorName = nil;
+    
     for (UIButton *tempButton in _categoryCount) {
         switch (tempButton.tag) {
             case 0:
+                if ([tempButton isEqual:_curSelectButton]) {
+                    [_curSelectButton setTitle:key forState:UIControlStateDisabled];
+                    [_curSelectButton setTitle:key forState:UIControlStateNormal];
+                }
                 category = [[tempButton.titleLabel.text componentsSeparatedByString:@"-"] lastObject];
                 subCategory = [[tempButton.titleLabel.text componentsSeparatedByString:@"-"] firstObject];
+                
                 break;
             case 1:
-                if (_mallButton != nil) {
-                    mallName = _mallButton.titleLabel.text;
-                }else{
-                    floorName = tempButton.titleLabel.text;
+            {
+                if ([_curSelectButton isEqual:tempButton]) {
+                    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+                    
+                    if (!_mall){//全部商场
+                        if (key == nil) {
+                            _mallUniId = nil;
+                            _floorUniId = nil;
+                            tmpKey = @"全部商圈";
+                        }else{
+                            FMResultSet *results = [db executeQuery:@"select * from Mall where mallId = ?",key];
+                            [results next];
+                            YTLocalMall *tmpMall = [[YTLocalMall alloc]initWithDBResultSet:results];
+                            _mallUniId = [tmpMall identifier];
+                            _floorUniId = nil;
+                            tmpKey = [tmpMall mallName];
+                        }
+                        
+                    }else{//全部楼层
+                        if (_mallUniId == nil) {
+                            _mallUniId = [_mall localDB];
+                        }
+                        
+                        if (key == nil) {
+                            _floorUniId = nil;
+                            tmpKey = @"全部楼层";
+                        }else{
+                            
+                            FMResultSet *results = [db executeQuery:@"select * from Floor where uniId = ? and mallId = ?",key,_mallUniId];
+                            [results next];
+                            YTLocalFloor *tmpFloor = [[YTLocalFloor alloc]initWithDBResultSet:results];
+                            _floorUniId = [tmpFloor uniId];
+                            tmpKey = [tmpFloor floorName];
+                        }
+                    }
+                    
+                    [_curSelectButton setTitle:tmpKey forState:UIControlStateDisabled];
+                    [_curSelectButton setTitle:tmpKey forState:UIControlStateNormal];
                 }
+                
+            }
+                
                 break;
         }
     }
+    
+    
     if ([category isEqualToString:@"全部分类"]) {
         category = @"全部";
         subCategory = @"全部";
@@ -164,17 +215,10 @@
     if ([subCategory isEqualToString:@"全部"]) {
         subCategory = @"全部";
     }
-    if ([mallName isEqualToString:@"全部商圈"]) {
-        mallName = @"全部";
-    }
     
-    if ([floorName isEqualToString:@"全部楼层"]) {
-        floorName = @"全部";
-    }
-    if (mallName == nil) {
-        mallName = [_mall mallName];
-    }
-    [self.delegate searchKeyForCategoryTitle:category subCategoryTitle:subCategory mallName:mallName floor:floorName];
+    
+    [self.delegate searchKeyForCategoryTitle:category subCategoryTitle:subCategory mallUniId:_mallUniId floorUniId:_floorUniId];
+    
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

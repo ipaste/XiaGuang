@@ -18,7 +18,6 @@
 
 -(void)mallInfoTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
 -(void)mallBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
--(void)getIconsWithCallBack:(void (^)(NSArray *result,NSError* error))callback;
 
 @property (readonly,nonatomic) UIImage *mallInfoImage;
 @property (readonly,nonatomic) UIImage *mallBackgroundImage;

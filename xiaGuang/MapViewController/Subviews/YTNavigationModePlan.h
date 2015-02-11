@@ -16,11 +16,13 @@
 
 @property (nonatomic,weak) id<YTPoiSource> targetPoiSource;
 @property (nonatomic,weak) id<YTMajorArea> displayMajorArea;
+@property (nonatomic) double distanceToTarget;
 @property (nonatomic,weak) id<YTMinorArea> userMinorArea;
 
 -(id)initWithTargetPoiSource:(id<YTPoiSource>)poiSource;
 -(void)updateWithCurrentUserMinorArea:(id<YTMinorArea>)userMinor
-                andDisplayedMajorArea:(id<YTMajorArea>)displayMajorArea;
+                     distanceToTarget:(double)distance
+                andDisplayedMajorArea:(id<YTMajorArea>)curDisplayMajorArea;
 -(YTNavigationInstruction *)getInstruction;
 
 @end

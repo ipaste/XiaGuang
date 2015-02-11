@@ -15,6 +15,7 @@
 #define MERCHANT_CLASS_NAME @"Merchant"
 #define MERCHANT_CLASS_MALL_KEY @"mall"
 #define MERCHANT_CLASS_NAME_KEY @"name"
+#define MERCHANT_CLASS_UNIID_KEY @"uniId"
 #define MERCHANT_CLASS_SHORTNAME_KEY @"shortName"
 #define MERCHANT_CLASS_ADDRESS_KEY @"address"
 #define MERCHANT_CLASS_TYPE_KEY @"type"
@@ -23,8 +24,7 @@
 
 
 @interface YTCloudMerchant : NSObject<YTMerchant>
-
 -(id)initWithAVObject:(AVObject *)object;
 -(YTLocalMerchantInstance *)getLocalMerchantInstance;
-
+- (void)merchantWithPreferentials:(void(^)(NSArray *preferentials,NSError *error))callBack;
 @end

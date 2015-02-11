@@ -24,7 +24,7 @@
         
         tmpBeacon = readbeacons[i];
         
-        //NSLog(@"beacon no %d: distance:%f from majorArea:%@",i, [tmpBeacon.distance doubleValue], [[self getMajorArea:tmpBeacon] identifier]);
+        NSLog(@"beacon no %d: major:%@ minor:%@ distance:%f from majorArea:%@",i,tmpBeacon.major,tmpBeacon.minor, [tmpBeacon.distance doubleValue], [[self getMajorArea:tmpBeacon] identifier]);
         
         if([tmpBeacon.distance doubleValue]<0){
             continue;
@@ -57,7 +57,9 @@
         }
         
     }];
-    
+    if(strongestMajorAreaId == nil){
+        NSLog(@"oops");
+    }
     NSLog(@"strongestMajorAreaId is %@",strongestMajorAreaId);
     return strongestMajorAreaId;
 
@@ -65,7 +67,7 @@
 
 +(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTDBManager sharedManager].db;
+    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

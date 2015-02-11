@@ -44,7 +44,7 @@
 -(id<YTMajorArea>)majorArea{
     if(_tmpMajorArea == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpMajorAreaId];
@@ -60,7 +60,7 @@
     
     if(_tmpMinorArea == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MinorArea where minorAreaId = ?",_tmpMinorAreaId];

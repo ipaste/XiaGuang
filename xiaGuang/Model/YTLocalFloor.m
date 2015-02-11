@@ -13,7 +13,7 @@
     NSString *_tmpBlockId;
     int _tmpFloorWeight;
     NSString *_tmpFloorName;
-    
+    NSString *_tmpUniId;
     NSMutableArray *_tmpMajorAreas;
     id<YTBlock> _tmpBlock;
     
@@ -32,7 +32,7 @@
             _tmpBlockId = [findResultSet stringForColumn:@"blockId"];
             _tmpFloorWeight = [findResultSet intForColumn:@"weight"];
             _tmpFloorName = [findResultSet stringForColumn:@"floorName"];
-            
+            _tmpUniId = [findResultSet stringForColumn:@"uniId"];
         }
     }
     return self;
@@ -55,7 +55,7 @@
 -(id<YTBlock>)block{
     if(_tmpBlock == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Block where blockId = ?",_tmpBlockId];
@@ -70,7 +70,7 @@
 -(NSArray *)majorAreas{
     if(_tmpMajorAreas == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from MajorArea where floorId = ?",_tmpFloorId];
         
         _tmpMajorAreas = [[NSMutableArray alloc] init];
@@ -85,5 +85,7 @@
     return _tmpMajorAreas;
 }
 
-
+-(NSString *)uniId{
+    return _tmpUniId;
+}
 @end

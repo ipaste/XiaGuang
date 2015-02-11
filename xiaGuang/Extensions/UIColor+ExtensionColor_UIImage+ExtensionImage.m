@@ -11,6 +11,10 @@
 @implementation UIColor (YTColor)
 + (UIColor *)colorWithString:(NSString *)colorString
 {
+    return [self colorWithString:colorString alpha:1.0];
+}
++ (UIColor *)colorWithString:(NSString *)colorString alpha:(CGFloat)alpha
+{
     if (colorString == nil || colorString.length < 6) {
         return nil;
     }
@@ -28,7 +32,7 @@
     range.location = 5;
     [[NSScanner scannerWithString:[colorString substringWithRange:range]] scanHexInt:&blue];
     
-    return [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:1.0];
+    return [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha];
 }
 @end
 

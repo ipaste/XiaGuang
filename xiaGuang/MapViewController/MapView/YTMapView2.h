@@ -17,6 +17,9 @@
 #import "YTMerchantAnnotation.h"
 #import "YTUserAnnotation.h"
 #import "RMMapView+RMMapViewTileSourceHelpers.h"
+#import "YTMinorAreaPoi.h"
+#import "RMMarker+RMMarker_YTExtension.h"
+#import "YTCanonicalCoordinate.h"
 
 typedef enum : NSUInteger {
     YTMapViewDetailStateNormal = 0,
@@ -53,6 +56,7 @@ typedef enum : NSUInteger {
 -(void)zoomOut;
 -(void)setCenterCoordinate:(CLLocationCoordinate2D)coordinate animated:(BOOL)animated;
 -(void)zoomToShowPoint1:(CLLocationCoordinate2D)point1 point2:(CLLocationCoordinate2D)point2;
+-(void)setMapOffset:(CGFloat)offset;
 
 #pragma mark Map data manipulation
 
@@ -70,12 +74,19 @@ typedef enum : NSUInteger {
 #pragma mark Annotation animations
 -(void)highlightPois:(NSArray *)pois animated:(BOOL)animated;
 -(void)highlightPoi:(YTPoi *)poi animated:(BOOL)animated;
--(void)superHighlightPoi:(YTPoi *)poi;
+-(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated;
+
+-(void)setScore:(double)score
+forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 
 #pragma mark 导航相关的state
 -(YTMapViewDetailState)currentState;
 -(void)setMapViewDetailState:(YTMapViewDetailState)detailState;
+
+
+-(double)canonicalDistanceFromCoordinate1:(CLLocationCoordinate2D)coordinate1
+                            toCoordinate2:(CLLocationCoordinate2D)coordinate2;
 
 @end

@@ -25,8 +25,8 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(4, 4, CGRectGetWidth(self.frame) - 8, CGRectGetHeight(self.frame) - 8)];
-        _defaultImage = [UIImage imageNamed:@"parking_ico_car_un"];
+        _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
+        _defaultImage = [UIImage imageNamed:@"parking_ico_car"];
         _backgroundImageView.image = _defaultImage;
         [self addSubview:_backgroundImageView];
         [self addTarget:self action:@selector(pressTheButton) forControlEvents:UIControlEventTouchDown];
@@ -36,14 +36,13 @@
 }
 
 -(void)layoutSubviews{
-    self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     self.layer.cornerRadius = CGRectGetWidth(self.frame) / 2;
     [self.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [self setTitleColor:[UIColor colorWithString:@"ff4200"] forState:UIControlStateNormal];
 }
 
 -(void)pressTheButton{
-    _backgroundImageView.image = [UIImage imageNamed:@"parking_ico_car_pr"];
+    _backgroundImageView.image = [UIImage imageNamed:@"parking_ico_carOn"];
 }
 
 -(void)letTheButton{

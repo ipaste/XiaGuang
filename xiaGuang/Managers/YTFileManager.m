@@ -28,6 +28,7 @@
     }
     return self;
 }
+
 -(BOOL)fileExistsWithFileName:(NSString *)name{
     NSString *path  = [_path stringByAppendingPathComponent:name];
     if ([[NSFileManager defaultManager]fileExistsAtPath:path]) {
@@ -35,10 +36,12 @@
     }
     return NO;
 }
+
 -(id)readDataWithFileName:(NSString *)name{
      NSString *path  = [_path stringByAppendingPathComponent:name];
     return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 }
+
 -(BOOL)saveWithData:(id<NSCoding>)data andCreateFileName:(NSString *)name{
     if (data == nil || name == nil ) {
         return NO;
@@ -46,8 +49,19 @@
     NSString *path  = [_path stringByAppendingPathComponent:name];
     [NSKeyedArchiver archiveRootObject:data toFile:path];
     if ([[NSFileManager defaultManager]fileExistsAtPath:path]) {
+        [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:path]];
         return YES;
     }
     return NO;
+}
+
+-(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url{
+    assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);
+    NSError *error = nil;
+    BOOL success = [url setResourceValue:[NSNumber numberWithBool:true] forKey:NSURLIsExcludedFromBackupKey error:&error];
+    if (!success) {
+        NSLog(@"错误信息:%@",error);
+    }
+    return success;
 }
 @end

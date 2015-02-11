@@ -15,6 +15,7 @@
     NSMutableArray *_mallObjects;
     NSMutableArray *_bundleObjects;
     YTUserDefaults *_userDefaults;
+    YTLoadingView *_loadingView;
     float _num;
     BOOL _isLoadingDone;
 }
@@ -34,18 +35,34 @@
         [self.view addSubview:_tableView];
         
         _userDefaults = [YTUserDefaults standardUserDefaults];
-       
+        _bundleObjects = [NSMutableArray array];
+        _mallObjects = [NSMutableArray array];
+        
+        
+        
     }
     return self;
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    _loadingView = [[YTLoadingView alloc]initWithPosistion:CGPointMake(0, 64)];
+    [self.view addSubview:_loadingView];
     [self loadTableView];
     
 }
 
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [AVAnalytics beginLogPageView:@"mallViewController"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [AVAnalytics endLogPageView:@"mallViewController"];
+}
 
 -(void)viewWillLayoutSubviews{
     CGFloat topHeight = [self.topLayoutGuide length];
@@ -57,34 +74,43 @@
 
 
 -(void)loadTableView{
-    
-        _mallObjects = [NSMutableArray array];
-        _bundleObjects = [NSMutableArray array];
-        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-//        [query whereKeyExists:@"localDBId"];
-//        [query whereKey:@"localDBId" notEqualTo:@""];
-        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-        query.maxCacheAge = 2*3600;
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                for (AVObject *mallObject in objects) {
-                    YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
-                    [_mallObjects addObject:mall];
-                    YTMallMerchantBundle *tmpBundle = [[YTMallMerchantBundle alloc] initWithMall:mall];
-                    [_bundleObjects addObject:tmpBundle];
-                }
-                if ([_userDefaults existenceOfTheKey:MALL_SORT]) {
-                    
-                }
-                
-                [_tableView reloadData];
-            }else{
-                //获取失败
-                NSLog(@"无网络");
-                [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+    [_loadingView start];
+    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+    query.maxCacheAge = 2*3600;
+    [query whereKeyExists:@"localDBId"];
+    [query includeKey:@"mallNameLogo"];
+    [query whereKey:@"localDBId" notEqualTo:@""];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *tmpMallObjects = [NSMutableArray array];
+            for (AVObject *mallObject in objects) {
+                YTCloudMall *mall = [[YTCloudMall alloc]initWithAVObject:mallObject];
+                [tmpMallObjects addObject:mall];
             }
             
-        }];
+            if ([_userDefaults existenceOfTheKey:MALL_SORT]) {
+                [_mallObjects addObjectsFromArray:[self mallCenterSortFromObjects:tmpMallObjects]];
+            }else{
+                NSMutableDictionary *tmpMutableDict = [NSMutableDictionary dictionary];
+                for (YTCloudMall *tmpMall in tmpMallObjects) {
+                    [tmpMutableDict setValue:@"0" forKey:[tmpMall mallName]];
+                    YTMallMerchantBundle *merchantBundle = [[YTMallMerchantBundle alloc]initWithMall:tmpMall];
+                    [_bundleObjects addObject:merchantBundle];
+                    [_mallObjects addObject:tmpMall];
+                }
+                [_userDefaults setDictionary:tmpMutableDict forKey:MALL_SORT];
+            }
+            
+            [_tableView reloadData];
+            
+        }else{
+            //获取失败
+            NSLog(@"无网络");
+            [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+        }
+        [_loadingView stop];
+    }];
 }
 
 
@@ -112,7 +138,7 @@
     if (!cell) {
         cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-    cell.mallMerchantBundle = _bundleObjects[indexPath.section];
+    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -133,11 +159,41 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    id<YTMall> tmpMall = _mallObjects[indexPath.section];
+    
+    
+    NSMutableDictionary *tmpDict = [NSMutableDictionary dictionaryWithDictionary:[_userDefaults dictionaryWithKey:MALL_SORT]];
+    
+    
+    [tmpDict setValue:[NSString stringWithFormat:@"%d",[[tmpDict valueForKey:[tmpMall mallName]]intValue] + 1] forKey:[tmpMall mallName]];
+    
+    
+    [_userDefaults setDictionary:tmpDict forKey:MALL_SORT];
+    
     YTMallInfoViewController * mallVC = [[YTMallInfoViewController alloc]init];
-    mallVC.mall = _mallObjects[indexPath.section];
+    mallVC.mall = tmpMall;
     [self.navigationController pushViewController:mallVC animated:YES];
 }
 
+-(NSArray *)mallCenterSortFromObjects:(NSArray *)objects{
+    NSMutableArray *malls = [NSMutableArray array];
+    NSDictionary *tmpDictionary = [_userDefaults dictionaryWithKey:MALL_SORT];
+    NSArray *result = [tmpDictionary keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [obj2 compare:obj1 options:NSNumericSearch];
+    }];
+    for (NSString *mallName in result) {
+        for (id<YTMall> tmpMall in objects) {
+            if ([[tmpMall mallName] isEqualToString:mallName]) {
+                [malls addObject:tmpMall];
+                YTMallMerchantBundle *tmpMerchantBundle = [[YTMallMerchantBundle alloc]initWithMall:tmpMall];
+                [_bundleObjects addObject:tmpMerchantBundle];
+                
+            }
+        }
+    }
+    return malls;
+}
 
 -(void)dealloc{
     NSLog(@"mallViewController Dealloc");

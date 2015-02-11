@@ -12,14 +12,13 @@
 #import "ESTBeaconRegion.h"
 #import "YTMall.h"
 #import "ESTBeacon+YTExtension.h"
-#import "YTDBManager.h"
+#import "YTStaticResourceManager.h"
 
 @class YTBeaconManager;
 
 @protocol YTBeaconManagerDelegate <NSObject>
 @required
--(void)primaryBeaconShiftedTo:(ESTBeacon *)beacon;
-
+-(void)rangedBeacons:(NSArray *)beacons;
 -(void)noBeaconsFound;
 
 @end
@@ -44,10 +43,6 @@
 +(id)sharedBeaconManager;
 
 -(NSNumber *) computedDistanceForBeacon:(ESTBeacon *)beacon;
-
-//-(NSArray *)activeBeacons;
--(ESTBeacon *)currentClosest;
-
 
 -(BOOL) isBeaconInRange:(ESTBeacon *)beacon;
 

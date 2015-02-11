@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 @interface UIColor (YTColor)
 + (UIColor *)colorWithString:(NSString *)string;
++ (UIColor *)colorWithString:(NSString *)colorString alpha:(CGFloat)alpha;
 @end
 
 

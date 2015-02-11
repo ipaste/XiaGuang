@@ -7,12 +7,18 @@
 //
 
 #import "YTLocalMall.h"
+#import "YTCloudMall.h"
 
+typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
+    CGFloat _offset;
     NSMutableArray *_tmpBlocks;
     NSMutableArray *_tmpMerchantInstance;
+    UIImage *_titleImage;
+    UIImage *_background;
+    YTGetTitleImageAndBackgroundImageCallBack _callBack;
 }
 
 @synthesize mallName;
@@ -26,10 +32,10 @@
         if(self){
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
+            _offset = [findResultSet doubleForColumn:@"offset"];
         }
     }
     return self;
-    
 }
 
 -(NSString *)mallName{
@@ -44,7 +50,7 @@
     
     if(_tmpBlocks == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from Block where mallId = ?",_tmpMallId];
         
         _tmpBlocks = [[NSMutableArray alloc] init];
@@ -63,7 +69,7 @@
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTDBManager sharedManager].db;
+        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where mallId = ?",_tmpMallId];
         
         _tmpMerchantInstance = [[NSMutableArray alloc] init];
@@ -74,8 +80,50 @@
         }
         
     }
-    
     return _tmpMerchantInstance;
 }
 
+-(CGFloat)offset{
+    return _offset;
+}
+
+
+-(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
+    _callBack = callback;
+    if (![self checkCallBackConditions]) {
+        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+        [query whereKey:@"localDBId" equalTo:[self identifier]];
+        [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+            if (_titleImage == nil) {
+                [object[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    if (error) {
+                        callback(nil,nil,error);
+                        return ;
+                    }
+                    _titleImage = [UIImage imageWithData:data];
+                    [self checkCallBackConditions];
+                }];
+            }
+            if (_background == nil) {
+                [object[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    if (error) {
+                        callback(nil,nil,error);
+                        return ;
+                    }
+                    _background = [UIImage imageWithData:data];
+                    [self checkCallBackConditions];
+                }];
+            }
+        }];
+    }
+}
+-(BOOL)checkCallBackConditions{
+    if (_titleImage != nil && _background != nil) {
+        _callBack(_titleImage,_background,nil);
+        _callBack = nil;
+        return true;
+    }else{
+        return false;
+    }
+}
 @end

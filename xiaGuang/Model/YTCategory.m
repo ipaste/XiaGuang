@@ -12,11 +12,11 @@
 +(NSArray*)commonlyCategorysWithAddMore:(BOOL)isMore{
     YTCategory *food = [[YTCategory alloc]init];
     food.text = @"美食";
-    food.subText = @[@"全部",@"中餐",@"西餐",@"日式",@"韩式",@"快餐",@"其它"];
+    food.subText = @[@"全部",@"中餐",@"西餐",@"日式",@"韩式",@"快餐"];
     food.image = [UIImage imageNamed:@"nav_ico_1"];
     food.smallImage = [UIImage imageNamed:@"nav_ico_1small"];
-    food.tintColor = [UIColor colorWithString:@"ff992b"];
-    food.titleColor = food.tintColor;
+    food.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    food.titleColor = [UIColor colorWithString:@"666666"];
     
     
     YTCategory *clothing = [[YTCategory alloc]init];
@@ -24,49 +24,49 @@
     clothing.subText = @[@"全部",@"女装",@"男装",@"童装",@"内衣",@"运动"];
     clothing.image = [UIImage imageNamed:@"nav_ico_2"];
     clothing.smallImage = [UIImage imageNamed:@"nav_ico_2small"];
-    clothing.tintColor = [UIColor colorWithString:@"0bd48b"];
-    clothing.titleColor = [UIColor colorWithString:@"00c57d"];
+    clothing.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    clothing.titleColor = [UIColor colorWithString:@"666666"];
     
     YTCategory *entertainment = [[YTCategory alloc]init];
     entertainment.text = @"娱乐";
-    entertainment.subText = @[@"全部",@"电影",@"KTV",@"酒吧",@"其他"];
+    entertainment.subText = @[@"全部",@"电影",@"KTV",@"酒吧"];
     entertainment.image = [UIImage imageNamed:@"nav_ico_3"];
     entertainment.smallImage = [UIImage imageNamed:@"nav_ico_3small"];
-    entertainment.tintColor = [UIColor colorWithString:@"ff694c"];
-    entertainment.titleColor = [UIColor colorWithString:@"f65738"];
+    entertainment.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    entertainment.titleColor = [UIColor colorWithString:@"666666"];
     
     YTCategory *dessert = [[YTCategory alloc]init];
     dessert.text = @"甜品";
     dessert.subText = @[@"全部",@"饮品",@"甜点",@"面包",@"雪糕"];
     dessert.image = [UIImage imageNamed:@"nav_ico_4"];
     dessert.smallImage = [UIImage imageNamed:@"nav_ico_4small"];
-    dessert.tintColor = [UIColor colorWithString:@"26cdeb"];
-    dessert.titleColor = [UIColor colorWithString:@"17c1e0"];
+    dessert.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    dessert.titleColor = [UIColor colorWithString:@"666666"];
     
     YTCategory *goods = [[YTCategory alloc]init];
     goods.text = @"精品";
-    goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜",@"其他"];
+    goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜"];
     goods.image = [UIImage imageNamed:@"nav_ico_6"];
     goods.smallImage = [UIImage imageNamed:@"nav_ico_6small"];
-    goods.tintColor = [UIColor colorWithString:@"51afff"];
-    goods.titleColor = [UIColor colorWithString:@"40aaf7"];
+    goods.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    goods.titleColor = [UIColor colorWithString:@"666666"];
     
     YTCategory *beauty = [[YTCategory alloc]init];
     beauty.text = @"丽人";
     beauty.subText =  @[@"全部",@"彩妆",@"美体",@"美容",@"美甲",@"美发"];
     beauty.image = [UIImage imageNamed:@"nav_ico_5"];
     beauty.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
-    beauty.tintColor = [UIColor colorWithString:@"f24682"];
-    beauty.titleColor = [UIColor colorWithString:@"f9568f"];
+    beauty.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    beauty.titleColor = [UIColor colorWithString:@"666666"];
     
     
     YTCategory *children = [[YTCategory alloc]init];
     children.text = @"亲子";
-    children.subText =  @[@"全部",@"玩具",@"孕婴",@"童装",@"童鞋",@"其他"];
+    children.subText =  @[@"全部",@"玩具",@"孕婴",@"童装",@"童鞋"];
     children.image = [UIImage imageNamed:@"nav_ico_7"];
     children.smallImage = [UIImage imageNamed:@"nav_ico_7small"];
-    children.tintColor = [UIColor colorWithString:@"10c7d3"];
-    children.titleColor = [UIColor colorWithString:@"10c7d3"];
+    children.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    children.titleColor = [UIColor colorWithString:@"666666"];
     
     
 
@@ -93,11 +93,11 @@
     
     YTCategory *digital = [[YTCategory alloc]init];
     digital.text = @"数码";
-    digital.subText =  @[@"全部",@"手机",@"电脑",@"影音",@"家电",@"其他"];
+    digital.subText =  @[@"全部",@"手机",@"电脑",@"影音",@"家电"];
     digital.image = [UIImage imageNamed:@"nav_ico_14"];
     digital.smallImage = [UIImage imageNamed:@"nav_ico_14small"];
-    digital.tintColor = [UIColor colorWithString:@"4a8bc7"];
-    digital.titleColor = [UIColor colorWithString:@"4b80c8"];
+    digital.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    digital.titleColor = [UIColor colorWithString:@"666666"];
     [allCategorys addObject:digital];
     
     YTCategory *shoeAndBag = [[YTCategory alloc]init];
@@ -105,8 +105,8 @@
     shoeAndBag.subText =  @[@"全部",@"女鞋",@"男鞋",@"童鞋",@"包包",@"旅行箱"];
     shoeAndBag.image = [UIImage imageNamed:@"nav_ico_15"];
     shoeAndBag.smallImage = [UIImage imageNamed:@"nav_ico_15small"];
-    shoeAndBag.tintColor = [UIColor colorWithString:@"e94956"];
-    shoeAndBag.titleColor = [UIColor colorWithString:@"ff4665"];
+    shoeAndBag.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    shoeAndBag.titleColor = [UIColor colorWithString:@"666666"];
     [allCategorys addObject:shoeAndBag];
     
     
@@ -115,8 +115,8 @@
     life.subText =  @[@"全部",@"家具",@"摄影",@"花草",@"医药",@"百货"];
     life.image = [UIImage imageNamed:@"nav_ico_16"];
     life.smallImage = [UIImage imageNamed:@"nav_ico_16small"];
-    life.tintColor = [UIColor colorWithString:@"90bc0c"];
-    life.titleColor = [UIColor colorWithString:@"779b0d"];
+    life.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    life.titleColor = [UIColor colorWithString:@"666666"];
     [allCategorys addObject:life];
     
     
@@ -125,8 +125,8 @@
     movement.subText =  @[@"全部",@"健身",@"运动用品"];
     movement.image = [UIImage imageNamed:@"nav_ico_17"];
     movement.smallImage = [UIImage imageNamed:@"nav_ico_17small"];
-    movement.tintColor = [UIColor colorWithString:@"fe6941"];
-    movement.titleColor = [UIColor colorWithString:@"fe6941"];
+    movement.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    movement.titleColor = [UIColor colorWithString:@"666666"];
     [allCategorys addObject:movement];
 
     return [allCategorys copy];
