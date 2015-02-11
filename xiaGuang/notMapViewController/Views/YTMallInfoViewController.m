@@ -203,6 +203,7 @@
         [more.titleLabel setFont:[UIFont systemFontOfSize:13]];
         [more setImage:[UIImage imageNamed:@"icon_arrow_orange"] forState:UIControlStateNormal];
         [more setImageEdgeInsets:UIEdgeInsetsMake(0, 66, 0, 0)];
+        [more addTarget:self action:@selector(preferentialMore:) forControlEvents:UIControlEventTouchUpInside];
         [_preferentialView addSubview:more];
         
         NSInteger count = 3;
@@ -462,6 +463,11 @@
             }
         }
     }
+}
+
+-(void)preferentialMore:(UIButton *)sender{
+    YTResultsViewController *resultVC = [[YTResultsViewController alloc]initWithPreferntialInMall:_mall];
+    [self.navigationController pushViewController:resultVC animated:true];
 }
 
 -(void)dealloc{
