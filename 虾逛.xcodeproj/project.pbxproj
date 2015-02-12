@@ -154,6 +154,12 @@
 		D95B15571A078403002077AD /* YTMallPositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15561A078403002077AD /* YTMallPositionView.m */; };
 		D96030171A70D1C500B6DA80 /* YTStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D96030161A70D1C500B6DA80 /* YTStatusBar.m */; };
 		D992B0231A440F5300666AA0 /* img_default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D992B0221A440F5300666AA0 /* img_default.jpg */; };
+		D99EC7C31A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7BE1A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles */; };
+		D99EC7C41A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7BF1A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles */; };
+		D99EC7C51A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7C01A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles */; };
+		D99EC7C61A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7C11A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles */; };
+		D99EC7C71A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7C21A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles */; };
+		D99EC7CA1A8C617A00CD52DB /* YTChineseTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */; };
 		D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */; };
 		D9AE507B1A0B4F160080CF21 /* YTBeaconPosistionPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */; };
 		D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */; };
@@ -518,6 +524,13 @@
 		D96030151A70D1C500B6DA80 /* YTStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStatusBar.h; sourceTree = "<group>"; };
 		D96030161A70D1C500B6DA80 /* YTStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStatusBar.m; sourceTree = "<group>"; };
 		D992B0221A440F5300666AA0 /* img_default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_default.jpg; sourceTree = "<group>"; };
+		D99EC7BE1A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_B1.mbtiles; sourceTree = "<group>"; };
+		D99EC7BF1A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L1.mbtiles; sourceTree = "<group>"; };
+		D99EC7C01A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L2.mbtiles; sourceTree = "<group>"; };
+		D99EC7C11A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L3.mbtiles; sourceTree = "<group>"; };
+		D99EC7C21A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_SHENGUOTOU_PARK-2.mbtiles"; sourceTree = "<group>"; };
+		D99EC7C81A8C617A00CD52DB /* YTChineseTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTChineseTool.h; sourceTree = "<group>"; };
+		D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTChineseTool.m; sourceTree = "<group>"; };
 		D9AE50711A0A1F280080CF21 /* YTMallPosistionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPosistionViewController.h; sourceTree = "<group>"; };
 		D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPosistionViewController.m; sourceTree = "<group>"; };
 		D9AE50791A0B4F160080CF21 /* YTBeaconPosistionPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTBeaconPosistionPoi.h; path = pois/YTBeaconPosistionPoi.h; sourceTree = "<group>"; };
@@ -678,6 +691,11 @@
 				D9D7DAB61A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles */,
 				D9D7DAB71A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles */,
 				D9D7DAB81A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles */,
+				D99EC7BE1A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles */,
+				D99EC7BF1A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles */,
+				D99EC7C01A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles */,
+				D99EC7C11A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles */,
+				D99EC7C21A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles */,
 				D9D7DAB91A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles */,
 				D9D7DABA1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles */,
 				D9D7DABB1A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles */,
@@ -841,6 +859,8 @@
 				AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */,
 				D9EEAB081A834DD50000D35D /* YTPreferential.h */,
 				D9EEAB091A834DD50000D35D /* YTPreferential.m */,
+				D99EC7C81A8C617A00CD52DB /* YTChineseTool.h */,
+				D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1332,12 +1352,14 @@
 				D9D7DAE21A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */,
 				D9D7DAF71A5E3EC600674C3A /* N_YITIAN_L2.mbtiles in Resources */,
 				D9D7DAD81A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles in Resources */,
+				D99EC7C41A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles in Resources */,
 				D9D7DAE71A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles in Resources */,
 				D9D7DADA1A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles in Resources */,
 				D9D7DAE51A5E3EC600674C3A /* N_JINGJIBAINA_B1.mbtiles in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
 				D9D7DAE31A5E3EC600674C3A /* N_HUANLEHAIAN_PARK.mbtiles in Resources */,
 				D9D7DAED1A5E3EC600674C3A /* N_KKMALL_L2.mbtiles in Resources */,
+				D99EC7C31A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles in Resources */,
 				D9D7DAF31A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles in Resources */,
 				D9D7DAE01A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles in Resources */,
 				D9D7DAEB1A5E3EC600674C3A /* N_KKMALL_B1.mbtiles in Resources */,
@@ -1355,15 +1377,18 @@
 				D9D7DAE91A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */,
 				D9D7DAE61A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles in Resources */,
 				D9D7DAE81A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles in Resources */,
+				D99EC7C51A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles in Resources */,
 				D9D7DAEF1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles in Resources */,
 				D9D7DAF61A5E3EC600674C3A /* N_YITIAN_B2.mbtiles in Resources */,
 				D9D7DADF1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles in Resources */,
 				D9D7DADC1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */,
 				D9D7DAF11A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles in Resources */,
+				D99EC7C61A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
 				D9D7DAEA1A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles in Resources */,
 				D9D7DAD91A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles in Resources */,
 				D9D7DAF41A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles in Resources */,
+				D99EC7C71A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */,
 				D9D7DADE1A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles in Resources */,
 				D9D7DAF51A5E3EC600674C3A /* N_YITIAN_B1.mbtiles in Resources */,
 				D9D7DAF21A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles in Resources */,
@@ -1472,6 +1497,7 @@
 				D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */,
 				AE859E1D1A0CBC9D0044074F /* YTEscalatorAnnotation.m in Sources */,
 				D925EDE01A2D7ECD00F7FCD3 /* YTLoadingView.m in Sources */,
+				D99EC7CA1A8C617A00CD52DB /* YTChineseTool.m in Sources */,
 				D94C27C51A02639F009FF2F3 /* YTZoomStepper.m in Sources */,
 				D94C28391A0263CF009FF2F3 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */,
 				AE24A83B1A02430300A0CE91 /* YTStaticResourceManager.m in Sources */,
