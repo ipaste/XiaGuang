@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>version</key>
-	<integer>6</integer>
+	<integer>7</integer>
 	<key>db</key>
-	<integer>9</integer>
+	<integer>10</integer>
 	<key>N_COCOPARK_B1</key>
 	<integer>0</integer>
 	<key>N_COCOPARK_L1</key>
@@ -79,6 +79,16 @@
 	<key>N_YITIAN_PARK_3</key>
 	<integer>0</integer>
 	<key>N_YITIAN_L1</key>
+	<integer>0</integer>
+	<key>N_SHENGUOTOU_L1</key>
+	<integer>0</integer>
+	<key>N_SHENGUOTOU_L2</key>
+	<integer>0</integer>
+	<key>N_SHENGUOTOU_L3</key>
+	<integer>0</integer>
+	<key>N_SHENGUOTOU_B1</key>
+	<integer>0</integer>
+	<key>N_SHENGUOTOU_PARK-2</key>
 	<integer>0</integer>
 </dict>
 </plist>

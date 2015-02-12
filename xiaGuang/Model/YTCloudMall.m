@@ -166,8 +166,6 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
                 count++;
             }
             
-            
-            
         }];
         
     }
