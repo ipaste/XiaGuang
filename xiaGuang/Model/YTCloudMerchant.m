@@ -115,6 +115,7 @@
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
     AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
     [query whereKey:@"merchant" equalTo:_object];
+    [query whereKey:@"swicth" equalTo:@YES];
     [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
         if (number > 0) {
             callBack(true);
