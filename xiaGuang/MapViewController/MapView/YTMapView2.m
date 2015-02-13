@@ -342,6 +342,7 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     if(_pathAnnotation != nil){
         [_internalMapView removeAnnotation:_pathAnnotation];
     }
+    
     CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
     CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
     _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];

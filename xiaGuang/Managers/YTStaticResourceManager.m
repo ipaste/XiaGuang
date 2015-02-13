@@ -125,7 +125,7 @@
             
         }
         
-        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:@"no!!!"]];
+        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     }];
     
     

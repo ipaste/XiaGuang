@@ -52,7 +52,13 @@
     RMShape *shape = [[RMShape alloc] initWithView:self.mapView];
     
     shape.lineColor = [UIColor orangeColor];
-    shape.lineWidth = 2.0;
+    shape.lineWidth = 3.0;
+    
+    /*
+    shape.enableShadow = YES;
+    shape.shadowColor = [[UIColor blackColor] CGColor];
+    shape.shadowOpacity = 0.7;
+    */
     
     for (CLLocation *location in (NSArray *)self.userInfo)
         [shape addLineToCoordinate:location.coordinate];
