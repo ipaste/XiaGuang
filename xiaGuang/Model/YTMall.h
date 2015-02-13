@@ -27,6 +27,7 @@
 @property(nonatomic)CGFloat offset;
 @property(nonatomic)CLLocationCoordinate2D coord;
 
+
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback;
 
 -(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
@@ -41,4 +42,6 @@
 -(void)iconsFromStartIndex:(int)start
                 fetchCount:(int)numberOfIcons
                   callBack:(void (^)(NSArray *result,NSArray *merchants,NSError *error))callback;
+
+-(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL isExistence))callBack;
 @end

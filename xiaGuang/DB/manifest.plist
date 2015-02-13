@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>version</key>
-	<integer>5</integer>
+	<integer>6</integer>
 	<key>db</key>
-	<integer>0</integer>
+	<integer>9</integer>
 	<key>N_COCOPARK_B1</key>
 	<integer>0</integer>
 	<key>N_COCOPARK_L1</key>
@@ -78,7 +78,7 @@
 	<integer>0</integer>
 	<key>N_YITIAN_PARK_3</key>
 	<integer>0</integer>
-	<key>N_YIYIAN_L1</key>
+	<key>N_YITIAN_L1</key>
 	<integer>0</integer>
 </dict>
 </plist>

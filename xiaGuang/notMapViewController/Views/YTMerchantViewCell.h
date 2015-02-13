@@ -11,4 +11,5 @@
 @interface YTMerchantViewCell : UITableViewCell
 @property (strong,nonatomic) id<YTMerchant> merchant;
 @property (strong,nonatomic) UIColor *titleColor;
+@property (nonatomic) BOOL isShowMark;
 @end

@@ -12,7 +12,7 @@
 +(NSArray*)commonlyCategorysWithAddMore:(BOOL)isMore{
     YTCategory *food = [[YTCategory alloc]init];
     food.text = @"美食";
-    food.subText = @[@"全部",@"中餐",@"西餐",@"日式",@"韩式",@"快餐",@"其它"];
+    food.subText = @[@"全部",@"中餐",@"西餐",@"日式",@"韩式",@"快餐"];
     food.image = [UIImage imageNamed:@"nav_ico_1"];
     food.smallImage = [UIImage imageNamed:@"nav_ico_1small"];
     food.tintColor = [UIColor colorWithString:@"b2b2b2"];
@@ -29,7 +29,7 @@
     
     YTCategory *entertainment = [[YTCategory alloc]init];
     entertainment.text = @"娱乐";
-    entertainment.subText = @[@"全部",@"电影",@"KTV",@"酒吧",@"其他"];
+    entertainment.subText = @[@"全部",@"电影",@"KTV",@"酒吧"];
     entertainment.image = [UIImage imageNamed:@"nav_ico_3"];
     entertainment.smallImage = [UIImage imageNamed:@"nav_ico_3small"];
     entertainment.tintColor = [UIColor colorWithString:@"b2b2b2"];
@@ -45,7 +45,7 @@
     
     YTCategory *goods = [[YTCategory alloc]init];
     goods.text = @"精品";
-    goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜",@"其他"];
+    goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜"];
     goods.image = [UIImage imageNamed:@"nav_ico_6"];
     goods.smallImage = [UIImage imageNamed:@"nav_ico_6small"];
     goods.tintColor = [UIColor colorWithString:@"b2b2b2"];
@@ -62,7 +62,7 @@
     
     YTCategory *children = [[YTCategory alloc]init];
     children.text = @"亲子";
-    children.subText =  @[@"全部",@"玩具",@"孕婴",@"童装",@"童鞋",@"其他"];
+    children.subText =  @[@"全部",@"玩具",@"孕婴",@"童装",@"童鞋"];
     children.image = [UIImage imageNamed:@"nav_ico_7"];
     children.smallImage = [UIImage imageNamed:@"nav_ico_7small"];
     children.tintColor = [UIColor colorWithString:@"b2b2b2"];
@@ -93,7 +93,7 @@
     
     YTCategory *digital = [[YTCategory alloc]init];
     digital.text = @"数码";
-    digital.subText =  @[@"全部",@"手机",@"电脑",@"影音",@"家电",@"其他"];
+    digital.subText =  @[@"全部",@"手机",@"电脑",@"影音",@"家电"];
     digital.image = [UIImage imageNamed:@"nav_ico_14"];
     digital.smallImage = [UIImage imageNamed:@"nav_ico_14small"];
     digital.tintColor = [UIColor colorWithString:@"b2b2b2"];

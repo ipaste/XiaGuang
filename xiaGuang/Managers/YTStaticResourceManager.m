@@ -120,7 +120,7 @@
             if(![FCFileManager existsItemAtPath:targetMapPath]){
                 
                 [FCFileManager copyItemAtPath:fromMapPath toPath:targetMapPath];
-            
+                [FCFileManager removeItemAtPath:fromMapPath];
             }
             
         }
@@ -128,16 +128,13 @@
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     }];
     
-    
-    
 }
-
 
 
 - (void)startBackgroundDownload {
     if (_timer == nil) {
         // check every hour
-        _timer = [NSTimer scheduledTimerWithTimeInterval:10*60
+        _timer = [NSTimer scheduledTimerWithTimeInterval:10 * 60
                                                   target:self
                                                 selector:@selector(checkAndDownloadData:)
                                                 userInfo:nil
@@ -152,10 +149,27 @@
     }
 }
 
-
+- (void)restartCopyTheFile{
+    if(![FCFileManager existsItemAtPath:CURRENT_DIR]){
+        [FCFileManager createDirectoriesForPath:CURRENT_DIR];
+        [FCFileManager createDirectoriesForPath:CURRENT_DATA_DIR];
+    }
+    
+    if(![FCFileManager existsItemAtPath:CURRENT_MANIFEST_PATH]){
+        
+        [FCFileManager copyItemAtPath:BUNDLE_MANIFEST_PATH toPath:CURRENT_MANIFEST_PATH];
+    }
+    
+    [self pullInBundleDataInManifestIfNeeded];
+    
+    _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
+    
+    [_db open];
+    
+}
 
 - (void)checkAndSwitchToNewStaticData {
-        
+    
         if(![FCFileManager existsItemAtPath:STAGING_UPDATE_TABLE]){
             return;
         }
@@ -237,6 +251,11 @@
     
     int localVersion = [dict[@"version"] intValue];
     
+    
+    
+    
+    
+    
     AVQuery *query = [AVQuery queryWithClassName:@"StaticData"];
     [query orderByDescending:AVOS_STATIC_VERSION_KEY];
     query.limit = 1;
@@ -285,7 +304,6 @@
 
 
 -(void)createStagingArea{
-    
     
     if([FCFileManager existsItemAtPath:STAGING_DIR]){
         [FCFileManager removeItemAtPath:STAGING_DIR];

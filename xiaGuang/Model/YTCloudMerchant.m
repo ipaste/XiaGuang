@@ -9,11 +9,13 @@
 #import "YTCloudMerchant.h"
 #import <AVFile.h>
 #import "YTCloudMall.h"
-
+#import "YTPreferential.h"
 @interface YTCloudMerchant(){
     AVObject *_object;
     
     YTLocalMerchantInstance *_tmpMerchantInstance;
+    
+    UIImage *_icon;
 }
 @end
 @implementation YTCloudMerchant
@@ -70,12 +72,18 @@
     return floor;
 }
 -(void)getThumbNailWithCallBack:(void (^)(UIImage *result,NSError *error))callback{
-    
-    AVFile *file = _object[MERCHANT_CLASS_ICON_KEY];
-    if (file != nil) {
-        [file getThumbnail:YES width:200 height:200 withBlock:callback];
+    if (_icon == nil) {
+        AVFile *file = _object[MERCHANT_CLASS_ICON_KEY];
+        [file getThumbnail:true width:200 height:200 withBlock:^(UIImage *image, NSError *error) {
+            if (image != nil) {
+                _icon = image;
+                callback(_icon,nil);
+            }else{
+                callback(nil,error);
+            }
+        }];
     }else{
-        callback(nil,nil);
+        callback(_icon,nil);
     }
 
 }
@@ -98,9 +106,38 @@
         }
     }
     return _tmpMerchantInstance;
-    
 }
--(NSString *)localDBId{
-    return _object[@"localDBId"];
+
+-(NSString *)uniId{
+    return _object[@"uniId"];
+}
+
+-(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    [query whereKey:@"merchant" equalTo:_object];
+    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
+        if (number > 0) {
+            callBack(true);
+        }else{
+            callBack(false);
+        }
+    }];
+}
+
+-(void)merchantWithPreferentials:(void (^)(NSArray *, NSError *))callBack{
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    [query whereKey:@"merchant" equalTo:_object];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableArray *preferentials = [NSMutableArray array];
+        for (AVObject *object in objects) {
+            YTPreferential *preferential = [[YTPreferential alloc]initWithCloudObject:object];
+            [preferentials addObject:preferential];
+        }
+        if (error) {
+            preferentials = nil;
+        }
+        callBack(preferentials,error);
+    }];
+
 }
 @end

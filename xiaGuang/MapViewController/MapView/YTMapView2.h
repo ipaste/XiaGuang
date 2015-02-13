@@ -21,7 +21,7 @@
 #import "RMMarker+RMMarker_YTExtension.h"
 #import "YTCanonicalCoordinate.h"
 #import "YTMapGraph.h"
-#import "YTPathAnnotation.h"
+#import "YTPathAnnotation.h"    
 
 typedef enum : NSUInteger {
     YTMapViewDetailStateNormal = 0,

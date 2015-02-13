@@ -17,12 +17,13 @@
 @property (weak,nonatomic) NSString *address;
 @property (weak,nonatomic) NSArray *type;
 @property (weak,nonatomic) UIImage *icon;
-@property (weak,nonatomic) NSString *localDBId;
+@property (weak,nonatomic) NSString *uniId;
 @property (weak,nonatomic) id<YTFloor> floor;
 @property (strong,nonatomic) id<YTMall> mall;
 
--(void)getThumbNailWithCallBack:(void (^)(UIImage *result,NSError *error))callback;
 
+-(void)getThumbNailWithCallBack:(void (^)(UIImage *result,NSError *error))callback;
+-(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL isExistence))callBack;
 -(id)copy;
 
 @end

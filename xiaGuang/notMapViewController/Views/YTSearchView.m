@@ -10,6 +10,7 @@
 #import "YTSearchDetailsView.h"
 #import <AVOSCloud/AVOSCloud.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "AppDelegate.h"
 @interface YTSearchView()<UISearchBarDelegate,YTSearchDetailsDelegate>{
     id<YTMall> _mall;
     UISearchBar *_searchBar;
@@ -121,7 +122,7 @@
     frame.origin.y = CGRectGetMaxY(self.frame) + 20;
     frame.size.height = CGRectGetHeight([UIScreen mainScreen].bounds) - frame.origin.y;
     
-    UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
+    UIWindow *window = [(AppDelegate *)[[UIApplication sharedApplication]delegate]window];
     frame.origin.x = 0;
     [self searchDetailsViewInitWithFrame:frame addInView:window];
     if (show) {

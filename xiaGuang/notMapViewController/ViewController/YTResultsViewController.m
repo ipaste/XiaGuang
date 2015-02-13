@@ -13,10 +13,16 @@
 #import "YTCloudMerchant.h"
 #import "YTCloudMall.h"
 #import "YTCategoryResultsView.h"
+#import "YTPreferential.h"
 #import "YTCategory.h"
 #import "MJRefresh.h"
 #import "YTMerchantInfoViewController.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+
+typedef NS_ENUM(NSUInteger, YTResultsType) {
+    YTResultsTypePreferential,
+    YTResultsTypeResults
+};
 @interface YTResultsViewController ()<UITableViewDelegate,UITableViewDataSource,YTCategoryResultsDelegete>{
     NSString *_category;
     NSString *_subCategory;
@@ -33,10 +39,21 @@
     BOOL _isFirst;
     UITableView *_tableView;
     YTCategoryResultsView *_categoryResultsView;
+    YTResultsType _type;
 }
 @end
 
 @implementation YTResultsViewController
+
+-(instancetype)initWithPreferntialInMall:(id <YTMall>)mall{
+    self = [super init];
+    if (self) {
+        _mallUniId = [mall localDB];
+        _type = YTResultsTypePreferential;
+    }
+    return self;
+}
+
 -(id)initWithSearchInMall:(id<YTMall>)mall andResutsKey:(NSString *)key{
     return [self initWithSearchInMall:mall andResutsKey:key andSubKey:nil];
 }
@@ -63,6 +80,7 @@
         if(_mall){
             _mallUniId = [mall localDB];
         }
+        _type = YTResultsTypeResults;
         
     }
     return self;
@@ -74,6 +92,7 @@
         _mall = mall;
         _mallUniId = [mall localDB];
         _ids = ids;
+        _type = YTResultsTypeResults;
     }
     return self;
 }
@@ -81,8 +100,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.navigationItem.title = @"搜索结果";
+    if (_type == YTResultsTypePreferential) {
+        self.navigationItem.title = @"更多优惠";
+    }else{
+        self.navigationItem.title = @"搜索结果";
+    }
+   
     //self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
     
@@ -181,54 +204,76 @@
 
 -(void)getMerchantsWithSkip:(int)skip numbers:(int)number andBlock:(void (^)(NSArray *merchants))block{
     NSMutableArray *merchants = [NSMutableArray array];
-    AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
-    [query orderByAscending:@"name"];
-    [query includeKey:@"mall,floor"];
-    query.limit = number;
-    query.skip = skip;
-    if (_isCategory) {
-        if (_subCategory != nil) {
-            [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_subCategory];
-        }else{
-            if (_category != nil){
-                [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
+    if (_type == YTResultsTypeResults) {
+        AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
+        [query orderByAscending:@"name"];
+        [query includeKey:@"mall,floor"];
+        query.limit = number;
+        query.skip = skip;
+        if (_isCategory) {
+            if (_subCategory != nil) {
+                [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_subCategory];
+            }else{
+                if (_category != nil){
+                    [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
+                }
             }
+        }else{
+            if (_ids.count <= 0 || _ids == nil) {
+                block(nil);
+                return;
+            }
+            [query whereKey:MERCHANT_CLASS_UNIID_KEY containedIn:_ids];
         }
+        
+        if (_floorUniId != nil) {
+            AVQuery *floorObject = [AVQuery queryWithClassName:@"Floor"];
+            [floorObject whereKey:@"uniId" equalTo:_floorUniId];
+            [query whereKey:@"floor" matchesQuery:floorObject];
+        }
+        
+        if (_mallUniId != nil) {
+            AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
+            [mallObject whereKey:@"localDBId" equalTo:_mallUniId];
+            [query whereKey:@"mall" matchesQuery:mallObject];
+        }
+        
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            if(error){
+                block(nil);
+                return;
+            }
+            
+            for (AVObject *merchantObject in objects) {
+                YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
+                [merchants addObject:merchant];
+            }
+            
+            block(merchants);
+            return ;
+        }];
     }else{
-        if (_ids.count <= 0 || _ids == nil) {
-            block(nil);
-            return;
-        }
-        [query whereKey:MERCHANT_CLASS_UNIID_KEY containedIn:_ids];
-    }
-    
-    if (_floorUniId != nil) {
-        AVQuery *floorObject = [AVQuery queryWithClassName:@"Floor"];
-        [floorObject whereKey:@"uniId" equalTo:_floorUniId];
-        [query whereKey:@"floor" matchesQuery:floorObject];
-    }
-    
-    if (_mallUniId != nil) {
+        AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+        [query includeKey:@"merchant"];
+        query.limit = number;
+        query.skip = skip;
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
         [mallObject whereKey:@"localDBId" equalTo:_mallUniId];
         [query whereKey:@"mall" matchesQuery:mallObject];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (error) {
+                block(nil);
+            }else{
+                for (AVObject *preferential in objects) {
+                    YTPreferential *tmpPreferential = [[YTPreferential alloc]initWithCloudObject:preferential];
+                    [merchants addObject:tmpPreferential.merchant];
+                }
+                block(merchants);
+            }
+        }];
+        
     }
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
-        if(error){
-            block(nil);
-            return;
-        }
-        
-        for (AVObject *merchantObject in objects) {
-            YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
-            [merchants addObject:merchant];
-        }
-        
-        block(merchants);
-        return ;
-    }];
 }
 
 #pragma mark - Table view data source
@@ -247,6 +292,7 @@
         cell.titleColor = [UIColor colorWithString:@"333333"];
         cell.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     }
+    
     id <YTMerchant> merchant = _merchants[indexPath.row];
     
     cell.merchant = merchant;

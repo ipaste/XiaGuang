@@ -27,6 +27,9 @@
             found = YES;
             //[self moveTileSourceAtIndex:i toIndex:[tileSources count]-1];
             [self showTileSourceAtIndex:i];
+            
+            self.maxZoom = tileSource.maxZoom;
+            
             break;
         }
     }
@@ -45,24 +48,14 @@
             return;
         }
         source.cacheable = NO;
-
+        
         [self addTileSource:source];
         
         [self showTileSourceAtIndex:self.tileSources.count-1];
         
+        self.maxZoom = source.maxZoom;
+        
     }
-    /*
-    
-    for(int j = 0; j<self.tileSources.count-1; j++){
-        [[self.tileSources objectAtIndex:j] setOpaque:YES];
-    }
-    
-    RMMBTilesSource *curTileSource = [self.tileSources objectAtIndex:self.tileSources.count-1];
-    
-    [curTileSource setOpaque:NO];*/
-                                      
-    NSString *first = [(RMMBTilesSource *)[self.tileSources objectAtIndex:self.tileSources.count-1] shortName];
-    NSLog(@"special: mapname is %@",first);
     
     
 }

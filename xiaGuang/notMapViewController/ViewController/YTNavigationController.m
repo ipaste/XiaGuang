@@ -10,9 +10,6 @@
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 @implementation YTNavigationController{
     YTHomeViewController *_homeVC;
-    UIViewController *_displayController;
-    UIImageView *_backgroundView;
-    BOOL _isReGet;
 }
 
 -(instancetype)initWithCreateHomeViewController{
@@ -20,7 +17,7 @@
     self = [super initWithRootViewController:_homeVC];
     if (self) {
         self.delegate = self;
-        _isReGet = YES;
+        self.navigationBar.barStyle = UIBarStyleBlack;
     }
     return self;
 }

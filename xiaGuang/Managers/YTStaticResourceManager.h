@@ -21,4 +21,6 @@
 
 - (void)checkAndSwitchToNewStaticData;
 
+- (void)restartCopyTheFile;
+
 @end

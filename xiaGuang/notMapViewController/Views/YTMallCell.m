@@ -13,6 +13,7 @@
     UIImageView *_mallBackgroundView;
     UIImageView *_titleImageView;
     UIImageView *_cellBackground;
+    UIImageView *_discoImageView;
     BOOL _isFetch;
 }
 @end
@@ -21,8 +22,6 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        
         _mallBackgroundView = [[UIImageView alloc]init];
         _mallBackgroundView.frame = CGRectMake(10, 4, 300, 123);
         _titleImageView = [[UIImageView alloc]init];
@@ -35,9 +34,16 @@
         _cellBackground.image = [UIImage imageNamed:@"bg_box"];
         
         _cellBackground.frame = CGRectMake(0, 0, 320, 130);
+        
+        _discoImageView = [[UIImageView alloc]init];
+        _discoImageView.image = [UIImage imageNamed:@"ico_disco"];
+        _discoImageView.frame = CGRectMake(CGRectGetMaxX(_mallBackgroundView.frame) - 65, 10, 65, 21);
+        _discoImageView.hidden = true;
+        
         [self addSubview:_mallBackgroundView];
         [self addSubview:_titleImageView];
         [self addSubview:_cellBackground];
+        [self addSubview:_discoImageView];
     }
     
     return self;
@@ -59,10 +65,13 @@
 
 
 -(void)setMall:(id<YTMall>)mall{
-    
     _mallBackgroundView.image = nil;
     _titleImageView.image = nil;
     _isFetch = false;
+    [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+       _discoImageView.hidden = !isExistence;
+    }];
+
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
 
         if (!error) {
@@ -78,6 +87,10 @@
 }
 -(BOOL)isFetch{
     return _isFetch;
+}
+
+-(BOOL)isPreferential{
+    return !_discoImageView.hidden;
 }
 
 @end

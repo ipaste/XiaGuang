@@ -24,8 +24,7 @@
 
 
 @interface YTCloudMerchant : NSObject<YTMerchant>
-
 -(id)initWithAVObject:(AVObject *)object;
 -(YTLocalMerchantInstance *)getLocalMerchantInstance;
-
+- (void)merchantWithPreferentials:(void(^)(NSArray *preferentials,NSError *error))callBack;
 @end
