@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import <CoreLocation/CoreLocation.h>
+
 @interface YTMallPosistionViewController : UIViewController
--(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber;
+//-(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber;
+
+-(instancetype)initWithMallCoordinate:(CLLocationCoordinate2D )coordinate address:(NSString *)address mallName:(NSString *)mallName;
+
 @end

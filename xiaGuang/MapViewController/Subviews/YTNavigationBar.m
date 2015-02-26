@@ -25,7 +25,7 @@
     if (self) {
         CGFloat height = CGRectGetHeight(self.frame) - TopHeight;
         
-        _backButton = [[UIButton alloc]initWithFrame:CGRectMake(15, TopHeight, 100,  height)];
+        _backButton = [[UIButton alloc]initWithFrame:CGRectMake(0, TopHeight, 100,  height)];
         [_backButton addTarget:self action:@selector(clickToBackButtonWithDown) forControlEvents:UIControlEventTouchDown];
         [_backButton addTarget:self action:@selector(clickToBackButtonWithUpInside) forControlEvents:UIControlEventTouchUpInside];
         
@@ -33,18 +33,18 @@
         [_searchButton addTarget:self action:@selector(clickToSearchButtonWithDown) forControlEvents:UIControlEventTouchDown];
         [_searchButton addTarget:self action:@selector(clickToSearchButtonWithUpInside) forControlEvents:UIControlEventTouchUpInside];
         _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, TopHeight,CGRectGetWidth(self.frame), height)];
-        _titleLabel.text = @"地图导航";
+        _titleLabel.text = @"地图导航"; 
         [self addSubview:_backButton];
         [self addSubview:_searchButton];
         [self addSubview:_titleLabel];
         
-        _defaultBackImage = [UIImage imageNamed:@"nav_ico_back_un"];
-        
+        _defaultBackImage = [UIImage imageWithImageName:@"nav_ico_back_un" andTintColor:[UIColor colorWithString:@"e65e37"]];
+    
         _backImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 0, _defaultBackImage.size.width, _defaultBackImage.size.height)];
         _backImageView.image = _defaultBackImage;
         [self addSubview:_backImageView];
         
-        _defaultSearchImage = [UIImage imageNamed:@"nav_ico_search_un"];
+        _defaultSearchImage = [UIImage imageNamed:@"icon_search"];
         _searchImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, _defaultSearchImage.size.width, _defaultSearchImage.size.height)];
         _searchImageView.image = _defaultSearchImage;
         [_searchButton addSubview:_searchImageView];
@@ -56,8 +56,9 @@
 -(void)layoutSubviews{
     self.backgroundColor = [UIColor clearColor];
     
-    [_backButton setTitle:self.backTitle forState:UIControlStateNormal];
+    //[_backButton setTitle:self.backTitle forState:UIControlStateNormal];
     [_backButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [_backButton setTitleColor:[UIColor colorWithString:@"e65e37"] forState:UIControlStateNormal];
     [_backButton setTitleColor:[UIColor colorWithString:@"808080"] forState:UIControlStateHighlighted];
     [_backButton setTitleEdgeInsets:UIEdgeInsetsMake(0, CGRectGetWidth(_backImageView.frame) + 5, 0, 0)];
     [_backButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
@@ -65,7 +66,7 @@
     
     _titleLabel.backgroundColor = [UIColor clearColor];
     
-    _titleLabel.textColor = [UIColor whiteColor];
+    _titleLabel.textColor = [UIColor colorWithString:@"e65e37"];
     _titleLabel.textAlignment = 1;
     _titleLabel.font = [UIFont systemFontOfSize:17];
     
@@ -104,7 +105,7 @@
     }
 }
 -(void)clickToSearchButtonWithDown{
-    _searchImageView.image = [UIImage imageNamed:@"nav_ico_search_pr"];
+    _searchImageView.image = [UIImage imageNamed:@"icon_searchOn"];
 }
 
 -(void)clickToSearchButtonWithUpInside{
@@ -112,6 +113,6 @@
     if ([self.delegate respondsToSelector:@selector(searchButtonClicked)]) {
         [self.delegate searchButtonClicked];
     }
-    
 }
+
 @end

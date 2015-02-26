@@ -29,6 +29,10 @@
     if (self) {
         _mall = mall;
         
+        if (mall != nil) {
+            _mallUniId = [mall localDB];
+        }
+        
         _categoryCount = [NSMutableArray array];
         
         [self setKey:key subKey:subKey];
@@ -96,13 +100,16 @@
         [button setBackgroundImage:[UIImage imageNamed:@"type_img_tab_pr"] forState:UIControlStateHighlighted];
         [button setImage:[UIImage imageNamed:@"type_img_arrow1"] forState:UIControlStateNormal];
         [button setImage:[UIImage imageRotateOneHundredAndEightyDegreesWithImageName:@"type_img_arrow1"] forState:UIControlStateDisabled];
-        [button setImageEdgeInsets:UIEdgeInsetsMake(0,CGRectGetWidth(button.frame) - 17 , 0, 0)];
+        [button setImageEdgeInsets:UIEdgeInsetsMake(0,CGRectGetWidth(button.frame) - 49 , 0, 0)];
         [button setTitleColor:[UIColor colorWithString:@"606060"] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateDisabled];
         [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
         [button addTarget:self action:@selector(clickToCategory:) forControlEvents:UIControlEventTouchUpInside];
     }
     
 }
+
+
 
 -(void)clickToCategory:(UIButton *)sender{
     _curSelectButton.enabled = YES;
@@ -173,7 +180,10 @@
                         }
                         
                     }else{//全部楼层
-                        _mallUniId = [_mall localDB];
+                        if (_mallUniId == nil) {
+                            _mallUniId = [_mall localDB];
+                        }
+                        
                         if (key == nil) {
                             _floorUniId = nil;
                             tmpKey = @"全部楼层";

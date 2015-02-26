@@ -32,15 +32,15 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _label = [[UILabel alloc]initWithFrame:CGRectMake(0, 5, 200, 30)];
-        _subLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_label.frame) + 22, CGRectGetMaxY(_label.frame), 200, 20)];
+        _label = [[UILabel alloc]initWithFrame:CGRectMake(15, 21, 200, 14)];
+        _subLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_label.frame) + 22, CGRectGetMaxY(_label.frame) + 8, 200, 16)];
         
-        _icon = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_label.frame), CGRectGetMaxY(_label.frame), 20, 20)];
+        _icon = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_label.frame), CGRectGetMaxY(_label.frame) + 8, 16, 16)];
         
         
-        _stopNavigation = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - 85, 4, 75, 57)];
+        _stopNavigation = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - 69, 14.5, 51, 51)];
         
-        _switchButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_stopNavigation.frame) - CGRectGetWidth(_stopNavigation.frame) - 5, CGRectGetMinY(_stopNavigation.frame), CGRectGetWidth(_stopNavigation.frame), CGRectGetHeight(_stopNavigation.frame))];
+        _switchButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_stopNavigation.frame) - CGRectGetWidth(_stopNavigation.frame) - 18, CGRectGetMinY(_stopNavigation.frame), CGRectGetWidth(_stopNavigation.frame), CGRectGetHeight(_stopNavigation.frame))];
         _messageBox = [[YTMessageBox alloc]initWithTitle:@"导航进行中..." Message:@"确定退出导航"];
         _messageBox.delegate = self;
         [self addSubview:_icon];
@@ -56,26 +56,30 @@
 -(void)layoutSubviews{
     
     _label.font = [UIFont systemFontOfSize:14];
-    _label.textColor = TEXTCOLOR_AND_ARROWCOLOR;
+    _label.textColor = [UIColor colorWithString:@"f3b64b"];
     _label.text = [NSString stringWithFormat:@"终点:%@",_poiSource.name];
     
     
-    _subLabel.font = [UIFont systemFontOfSize:17];
+    _subLabel.font = [UIFont systemFontOfSize:16];
     _subLabel.textColor = [UIColor whiteColor];
     
     
     [_stopNavigation setTitle:@"结束" forState:UIControlStateNormal];
-    [_stopNavigation setBackgroundColor:[UIColor colorWithString:@"464646"]];
-    _stopNavigation.layer.cornerRadius = CGRectGetHeight(_stopNavigation.frame) / 2;
-    _stopNavigation.layer.borderWidth = 5;
+//    [_stopNavigation setBackgroundColor:[UIColor colorWithString:@"464646"]];
+//    _stopNavigation.layer.cornerRadius = CGRectGetHeight(_stopNavigation.frame) / 2;
+//    _stopNavigation.layer.borderWidth = 5;
+    [_stopNavigation setBackgroundImage:[UIImage imageNamed:@"btn_gray"] forState:UIControlStateNormal];
     [_stopNavigation addTarget:self action:@selector(clickStopNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
     
     
     [_switchButton setTitle:@"切换" forState:UIControlStateNormal];
-    [_switchButton setBackgroundColor:[UIColor colorWithString:@"0084ff"]];
-    _switchButton.layer.borderWidth = _stopNavigation.layer.borderWidth;
-    _switchButton.layer.cornerRadius = (CGRectGetHeight(self.frame) - 8) / 2;
+//    [_switchButton setBackgroundColor:[UIColor colorWithString:@"0084ff"]];
+//    _switchButton.layer.borderWidth = _stopNavigation.layer.borderWidth;
+//    _switchButton.layer.cornerRadius = (CGRectGetHeight(self.frame) - 8) / 2;
+    [_switchButton setBackgroundImage:[UIImage imageNamed:@"btn_orange"] forState:UIControlStateNormal];
     [_switchButton addTarget:self action:@selector(jumToBeacon:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.6];
     
 }
 

@@ -10,6 +10,8 @@
 #import "YTMall.h"
 #import "YTMallPositionView.h"
 #import "YTMallPosistionViewController.h"
+#import "YTPreferential.h"
 @interface YTMallInfoViewController : UIViewController
 @property (weak,nonatomic) id<YTMall> mall;
+@property (nonatomic) BOOL isPreferential;
 @end

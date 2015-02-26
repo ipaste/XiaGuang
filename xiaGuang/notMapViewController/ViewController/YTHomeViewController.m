@@ -7,6 +7,7 @@
 //
 
 #import "YTHomeViewController.h"
+#import "AppDelegate.h"
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define BLUR_HEIGHT 174
 
@@ -30,7 +31,7 @@
     NSMutableArray *_cells;
     NetworkStatus _status;
     
-    
+    YTStaticResourceManager *_resourceManager;
     UIToolbar *_transitionToolbar;
 }
 @end
@@ -40,9 +41,6 @@
     self = [super init];
     if (self) {
         _malls = [NSMutableArray array];
-        Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
-        [reachability startNotifier];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
 }
@@ -60,9 +58,11 @@
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
+
+    
     
     _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
-    _tableView.delegate = self;
+    _tableView.delegate = self; 
     _tableView.rowHeight = 130;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
@@ -89,10 +89,6 @@
     [_navigationButton setTitleEdgeInsets:UIEdgeInsetsMake(50, -35, 0, 0)];
     [_navigationButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 35, 0, 0)];
     _navigationButton.layer.cornerRadius = 10;
-    
-    
-    
-    
     [_blurView addSubview:_navigationButton];
     
     
@@ -113,18 +109,29 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
-    
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg"].CGImage;
+    
+    _latest = false;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *url = [[NSURL alloc]initWithString:@"http://itunes.apple.com/cn/lookup?id=922405498"];
         NSData *jsonData = [NSData dataWithContentsOfURL:url];
         if(jsonData != nil){
             NSString *cloudVersion = [[[[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil] valueForKey:@"results"] valueForKey:@"version"] firstObject];
             NSString *localVersion = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleShortVersionString"];
-            if (cloudVersion != localVersion){
-                _latest = false;
+            if (cloudVersion > localVersion){
+                _latest = true;
             }
         }
+        
+       
+        _resourceManager = [YTStaticResourceManager sharedManager];
+        Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
+        [reachability startNotifier];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+        
+        [self firstStartSettingTheProgram];
+      
     });
 
     FMDatabase *database = [YTStaticResourceManager sharedManager].db;
@@ -163,8 +170,6 @@
     _transitionToolbar.translucent = YES;
     _transitionToolbar.alpha = 0;
     [self.view addSubview:_transitionToolbar];
-
-    
 }
 
 
@@ -172,8 +177,6 @@
 - (void)test {
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        
         
         [UIView animateWithDuration:1
                               delay:0
@@ -228,6 +231,15 @@
     _scrollFired = NO;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.clipsToBounds = true;
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjects:@[[UIColor colorWithString:@"e65e37"],[UIFont systemFontOfSize:20]] forKeys:@[NSForegroundColorAttributeName,NSFontAttributeName]]];
+
+}
 -(void)viewDidAppear:(BOOL)animated{
     
     if(!_scrollFired){
@@ -252,7 +264,7 @@
     CGPoint p = _tableView.contentOffset;
     p.y = p.y + STEP_LENGTH;
     
-    NSLog(@"about to scroll up to point: %f",p.y);
+   // NSLog(@"about to scroll up to point: %f",p.y);
     _tableView.contentOffset = p;
 }
 
@@ -280,25 +292,12 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-
-    /*YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    
-    if (!cell) {
-        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
-        //cell.mall = mall;
-    }*/
-    
     YTMallCell *cell = _cells[indexPath.row];
     id<YTMall> mall = _malls[indexPath.row%_malls.count];
-    
-    NSLog(@"setting %@ for cell index:%ld",mall.mallName,(long)indexPath.row);
     if([mall isMemberOfClass:[YTCloudMall class]]){
         cell.mall = mall;
     }
-    
-    //NSLog(@"cell for row at index: %d, setting it to display mall pics of %@",indexPath.row, [mall mallName]);
     return cell;
-    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -307,6 +306,7 @@
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
         mallInfoVC.mall = _malls[indexPath.row % _malls.count];
+        mallInfoVC.isPreferential = cell.isPreferential;
         [self.navigationController pushViewController:mallInfoVC animated:true];
     }
 }
@@ -322,22 +322,25 @@
             [_tableView reloadData];
         }];
     }
+    
+    if (tmpReachability.isReachableViaWiFi) {
+        [_resourceManager startBackgroundDownload];
+        [_resourceManager checkAndSwitchToNewStaticData];
+    }
     _status =  tmpReachability.currentReachabilityStatus;
 }
 -(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
-    
-    
     AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
     [query whereKeyExists:@"localDBId"];
     [query whereKey:@"localDBId" notEqualTo:@""];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
         if(!error && objects != nil && objects.count != 0){
             NSMutableArray *array = [NSMutableArray array];
             for (AVObject *mall in objects) {
                 YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
+                [cloudMall mallName];
                 [array addObject:cloudMall];
             }
             [_malls removeAllObjects];
@@ -396,7 +399,6 @@
             controller = _mapViewController;
         }
         [AVAnalytics event:@"导航"];
-        //controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     }else{
         controller = [[YTParkingViewController alloc]initWithMinorArea:_recordMinorArea];
@@ -424,8 +426,27 @@
         
     } 
 }
+
 -(BOOL)prefersStatusBarHidden{
     return NO;
+}
+
+-(void)firstStartSettingTheProgram{
+    static NSString * firstKey = @"Program";
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([[userDefaults valueForKey:firstKey] isEqualToValue:@1]) {
+        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+        if ([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:@"current"]]) {
+            [fileManager removeItemAtPath:path error:nil];
+            [_resourceManager restartCopyTheFile];
+        }
+    }
+    
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];

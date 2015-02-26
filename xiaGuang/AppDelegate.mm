@@ -29,19 +29,17 @@
     [AVOSCloud setApplicationId:@"p8eq0otfz420q56dsn8s1yp8dp82vopaikc05q5h349nd87w" clientKey:@"kzx1ajhbxkno0v564rcremcz18ub0xh2upbjabbg5lruwkqg"];
     
     [AVAnalytics setChannel:@""];
+    
+    self.statusBar = [YTStatusBar defaultStatusBar];
+    [self.statusBar makeKeyAndVisible];
+    
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
     self.window.backgroundColor = [UIColor blackColor];
-    [[YTBeaconManager sharedBeaconManager] startRangingBeacons];
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
-    
-    [[YTStaticResourceManager sharedManager] startBackgroundDownload];
-   // [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
-    
+   
     _timeInToBackground = 0;
-    
-    NSLog(@"%@",[self identifierForAdvertising]);
     
     [self youmiProcedure];
     return YES;
@@ -56,21 +54,18 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     _timeInToBackground = [[NSDate date] timeIntervalSinceReferenceDate];
-    //[[YTBeaconManager sharedBeaconManager] stopRanging];
     
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
-    [[YTBeaconManager sharedBeaconManager] startRangingBeacons];
-    if (now - _timeInToBackground >= 10*60) { // 30 minutes wait
+    if (now - _timeInToBackground >= 10 * 60) { // 30 minutes wait
         self.window = [[UIWindow alloc]init];
         self.window.frame = [UIScreen mainScreen].bounds;
         self.window.backgroundColor = [UIColor blackColor];
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
         [self.window makeKeyAndVisible];
-        [[YTStaticResourceManager sharedManager] checkAndSwitchToNewStaticData];
     }
 }
 
@@ -81,6 +76,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    [[NSUserDefaults standardUserDefaults]setValue:@0 forKey:@"Program"];
 }
 
 - (NSString *)identifierForAdvertising
@@ -98,13 +95,14 @@
 -(void)youmiProcedure{
     
     NSString *idfa = [self identifierForAdvertising];
-    
+    if(idfa == nil){
+        return;
+    }
     AVQuery *query = [AVQuery queryWithClassName:@"YoumiRecord"];
     [query whereKey:@"ifa" equalTo:idfa];
     [query whereKey:@"sent" equalTo:@NO];
     [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         if(!error){
-            
             NSString *url = object[@"callback"];
             if(url != nil && ![url isEqualToString:@""]){
                 
@@ -113,7 +111,7 @@
                 if(decoded != nil && ![decoded isEqualToString:@""]){
                     
                     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
                     [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                         NSLog(@"JSON: %@", responseObject);
                         object[@"sent"] = @YES;
@@ -129,11 +127,11 @@
                 }
             }
             
-            
         }
     }];
     
 }
+
 
 
     

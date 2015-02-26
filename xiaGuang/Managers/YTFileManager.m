@@ -47,9 +47,9 @@
         return NO;
     }
     NSString *path  = [_path stringByAppendingPathComponent:name];
-    [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:path]];
     [NSKeyedArchiver archiveRootObject:data toFile:path];
     if ([[NSFileManager defaultManager]fileExistsAtPath:path]) {
+        [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:path]];
         return YES;
     }
     return NO;

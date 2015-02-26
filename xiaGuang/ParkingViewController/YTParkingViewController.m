@@ -161,19 +161,17 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             }
         }];
     }else{
-        
         [self dismissViewControllerAnimated:YES completion:nil];
     }
     
 }
 #pragma mark mapView
 -(void)createMapView{
-    _mapView = [[YTMapView2 alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(self.view.bounds) - 20, CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame) - 70)];
+    _mapView = [[YTMapView2 alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame))];
     _mapView.delegate = self;
     //[_mapView displayMapNamed:@"haianchengparking1"];
     if(_userMinorArea != nil){
         [self displayMapWithMajorArea:[_userMinorArea majorArea]];
-        
     }
     else{
         [self displayMapWithMajorArea:[self getDefaultMajorArea]];
@@ -210,7 +208,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 #pragma mark zoomStepper
 -(void)createZoomStepper{
-    _zoomStepper = [[YTZoomStepper alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_mapView.frame) - 55, CGRectGetMaxY(_mapView.frame) - 80, 45, 70)];
+    _zoomStepper = [[YTZoomStepper alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_mapView.frame) - 55, CGRectGetMaxY(_mapView.frame) - 80 - 110, 41, 95)];
     
     _zoomStepper.delegate = self;
     
@@ -226,47 +224,44 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)createMarkView{
-    _beforeMarkView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_mapView.frame) + 10, CGRectGetWidth(_mapView.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(_mapView.frame) - 20)];
+    _beforeMarkView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_mapView.frame) - 80, CGRectGetWidth(_mapView.frame), 80)];
+    _beforeMarkView.backgroundColor = [UIColor colorWithString:@"000000" alpha:0.6];
     [self.view addSubview:_beforeMarkView];
     
-    _firstLabel =[[UILabel alloc]initWithFrame:CGRectMake(5, 10, 70, 14)];
+    _firstLabel =[[UILabel alloc]initWithFrame:CGRectMake(18, 21, 70, 14)];
     [_beforeMarkView addSubview:_firstLabel];
     
-    _firstSubLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_firstLabel.frame), CGRectGetMinY(_firstLabel.frame), 100, 14)];
+    _firstSubLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_firstLabel.frame), CGRectGetMinY(_firstLabel.frame) , 100, 14)];
     [_beforeMarkView addSubview:_firstSubLable];
     
-    _secondLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_firstLabel.frame), CGRectGetMaxY(_firstLabel.frame) + 5, CGRectGetWidth(_firstLabel.frame), CGRectGetHeight(_firstLabel.frame))];
+    _secondLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_firstLabel.frame), CGRectGetMaxY(_firstLabel.frame) + 13, CGRectGetWidth(_firstLabel.frame), CGRectGetHeight(_firstLabel.frame))];
     [_beforeMarkView addSubview:_secondLable];
     
     _secondSubLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_secondLable.frame), CGRectGetMinY(_secondLable.frame), CGRectGetWidth(_secondLable.frame), CGRectGetHeight(_secondLable.frame))];
     [_beforeMarkView addSubview:_secondSubLabel];
     
-    _firstLabel.textColor = [UIColor colorWithString:@"969696"];
+    _firstLabel.textColor = [UIColor colorWithString:@"cccccc"];
     _firstLabel.font = [UIFont systemFontOfSize:14];
     
-    _firstSubLable.textColor = [UIColor whiteColor];
-    _firstSubLable.font = _firstLabel.font;
+    _firstSubLable.textColor = [UIColor colorWithString:@"f3b64b"];
+    _firstSubLable.font = [UIFont systemFontOfSize:15];
     
     _secondLable.textColor = _firstLabel.textColor;
     _secondLable.font  = _firstLabel.font;
     
-    _secondSubLabel.textColor = [UIColor colorWithString:@"e95e37"];
+    _secondSubLabel.textColor = [UIColor colorWithString:@"f3b64b"];
     _secondSubLabel.font = _firstLabel.font;
     
-    _cancelMarkedButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_beforeMarkView.frame) - 75, 0, 75, 57)];
-    _cancelMarkedButton.layer.cornerRadius = CGRectGetHeight(_cancelMarkedButton.frame) / 2;
+    _cancelMarkedButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_mapView.frame) - 68, 15, 50, 50)];
     [_cancelMarkedButton setTitle:@"取消" forState:UIControlStateNormal];
-    [_cancelMarkedButton setBackgroundColor:[UIColor colorWithString:@"464646"]];
-    _cancelMarkedButton.layer.borderWidth = 5;
+    [_cancelMarkedButton setBackgroundImage:[UIImage imageNamed:@"btn_gray"] forState:UIControlStateNormal];
     [_cancelMarkedButton addTarget:self action:@selector(clickcancelMarkedButton:) forControlEvents:UIControlEventTouchUpInside];
     [_beforeMarkView addSubview:_cancelMarkedButton];
     
-    _starNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_cancelMarkedButton.frame) - CGRectGetWidth(_cancelMarkedButton.frame) - 5,0,CGRectGetWidth(_cancelMarkedButton.frame), CGRectGetHeight(_cancelMarkedButton.frame))];
+    _starNavigationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_cancelMarkedButton.frame) - CGRectGetWidth(_cancelMarkedButton.frame) - 18,15,CGRectGetWidth(_cancelMarkedButton.frame), CGRectGetHeight(_cancelMarkedButton.frame))];
     
     [_starNavigationButton setTitle:@"导航" forState:UIControlStateNormal];
-    [_starNavigationButton setBackgroundColor:[UIColor colorWithString:@"0084ff"]];
-    _starNavigationButton.layer.borderWidth = _cancelMarkedButton.layer.borderWidth;
-    _starNavigationButton.layer.cornerRadius = CGRectGetHeight(_starNavigationButton.frame) / 2;
+    [_starNavigationButton setBackgroundImage:[UIImage imageNamed:@"btn_orange"] forState:UIControlStateNormal];
     [_starNavigationButton addTarget:self action:@selector(clickStarNavigationButton:) forControlEvents:UIControlEventTouchUpInside];
     [_beforeMarkView addSubview:_starNavigationButton];
     
@@ -274,7 +269,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
 }
 -(void)createShadeView{
-    _shadeView = [[UIView alloc]initWithFrame:CGRectMake(0,0, CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame))];
+    _shadeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame))];
     _shadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     [self.view addSubview:_shadeView];
 }
@@ -304,25 +299,25 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _navigationView.frame;
-        frame.origin.x = 15;
+        frame.origin.x = 0;
         _navigationView.frame = frame;
         
         _beforeMarkView.alpha = 0;
     } completion:^(BOOL finished) {
-        [_navigationView.layer pop_removeAllAnimations];
-        POPSpringAnimation *animation = [POPSpringAnimation animation];
-        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
-        animation.velocity = @1000;
-        animation.springBounciness = 20;
-        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
+//        [_navigationView.layer pop_removeAllAnimations];
+//        POPSpringAnimation *animation = [POPSpringAnimation animation];
+//        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
+//        animation.velocity = @1000;
+//        animation.springBounciness = 20;
+//        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
     }];
     
 }
 #pragma mark parkingButton
 -(void)createParkingButton{
-    _parkingImageUnable = [UIImage imageNamed:@"parking_img_mark_unable"];
-    _parkingImagePr = [UIImage imageNamed:@"parking_img_mark_pr"];
-    _parkingImageUn = [UIImage imageNamed:@"parking_img_mark_un"];
+    _parkingImageUnable = [UIImage imageNamed:@"parking_img_markUnable"];
+    _parkingImagePr = [UIImage imageNamed:@"parking_img_mark_On"];
+    _parkingImageUn = [UIImage imageNamed:@"parking_img_mark"];
     
     _parkingView = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, _parkingImageUn.size.width, _parkingImageUn.size.height)];
     [_parkingView setTitle:@"标记车位" forState:UIControlStateNormal];
@@ -376,7 +371,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 #pragma mark navigationView
 -(void)createNavigationView{
-    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 65 , CGRectGetWidth(self.view.frame) - 20, 60)];
+    _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 , CGRectGetWidth(self.view.frame), 80)];
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
     _navigationView.hidden = YES;
@@ -405,11 +400,11 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 #pragma mark currentParking
 -(void)createFunctionButton{
-    _moveCurrentLocationButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
+    _moveCurrentLocationButton = [[YTMoveCurrentLocationButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_mapView.frame) + 10,CGRectGetMaxY(_mapView.frame) - 80 - 55, 40, 40)];
     _moveCurrentLocationButton.delegate = self;
     [self.view addSubview:_moveCurrentLocationButton];
     
-    _currentParkingButton = [[YTCurrentParkingButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10,CGRectGetMaxY(_mapView.frame) - 50, 40, 40)];
+    _currentParkingButton = [[YTCurrentParkingButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_moveCurrentLocationButton.frame) + 10,CGRectGetMaxY(_mapView.frame) - 80 - 55, 40, 40)];
     _currentParkingButton.delegate = self;
     [self.view addSubview:_currentParkingButton];
 }
@@ -838,9 +833,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     minute = (int)time % 3600 / 60;
     
     if (hours == 0) {
-        timeFormat = [NSString stringWithFormat:@"%d分",minute];
+        timeFormat = [NSString stringWithFormat:@"%d分钟",minute];
     }else{
-        timeFormat = [NSString stringWithFormat:@"%d时%d分",hours,minute];
+        timeFormat = [NSString stringWithFormat:@"%d小时%d分钟",hours,minute];
     }
     
     return timeFormat;
@@ -849,7 +844,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(NSString *)chargeWithTime:(NSTimeInterval)time{
     int hours = 0;
     int charge = 0;
-    int minute = (int)time % 3600 / 60;
+    int minute = (int)time % 3600;
     BOOL free = NO;
     
     NSString *mallID = [[[[[_tmpMarker

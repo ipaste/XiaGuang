@@ -10,6 +10,7 @@
 #import "YTSearchDetailsView.h"
 #import <AVOSCloud/AVOSCloud.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "AppDelegate.h"
 @interface YTSearchView()<UISearchBarDelegate,YTSearchDetailsDelegate>{
     id<YTMall> _mall;
     UISearchBar *_searchBar;
@@ -34,12 +35,15 @@
     if (self) {
         CGFloat searchBarX = 5;
         _searchBarWidth =  CGRectGetWidth(self.frame) - 10;
-        CGFloat cancelX = CGRectGetWidth(self.frame)- 45;
+        CGFloat cancelX = CGRectGetWidth(self.frame) - 40;
         if (indent) {
             _isIndent = indent;
             searchBarX = -10;
             _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
-            cancelX = CGRectGetWidth(self.frame)- 85;
+            cancelX = CGRectGetWidth(self.frame) - 80;
+        }
+        if([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
+            _searchBarWidth = _searchBarWidth - 5;
         }
         _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(searchBarX,27, _searchBarWidth, 30)];
         _placeholder = placeholder;
@@ -48,7 +52,7 @@
         
         _searchTextField = [self getTextFieldFromSearchBar:_searchBar];
         _searchTextField.leftViewMode = UITextFieldViewModeAlways;
-        UIImage *leftImage = [UIImage imageNamed:@"nav_ico_search_un"];
+        UIImage *leftImage = [UIImage imageNamed:@"icon_search"];
         _searchLeftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, leftImage.size.width,  leftImage.size.height)];
         _searchLeftImageView.image = leftImage;
         [self addSubview:_searchBar];
@@ -72,22 +76,23 @@
 -(void)layoutSubviews{
     //searchaBar
     _searchTextField.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.2];
-    _searchTextField.layer.cornerRadius = CGRectGetHeight(_searchBar.frame) / 2;
+    _searchTextField.layer.cornerRadius = 5;
+    
     _searchTextField.layer.masksToBounds = YES;
     _searchTextField.clearButtonMode = UITextFieldViewModeNever;
     _searchTextField.font = [UIFont systemFontOfSize:14];
     _searchTextField.textColor = [UIColor whiteColor];
-    _searchTextField.attributedPlaceholder = [[NSAttributedString alloc]initWithString:_placeholder attributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],NSFontAttributeName : [UIFont systemFontOfSize:14]}];
+    _searchTextField.attributedPlaceholder = [[NSAttributedString alloc]initWithString:_placeholder attributes:@{NSForegroundColorAttributeName : [UIColor colorWithString:@"e65e37"],NSFontAttributeName : [UIFont systemFontOfSize:13]}];
     _searchTextField.leftView = _searchLeftImageView;
-    _searchTextField.tintColor = [UIColor whiteColor];
+    _searchTextField.tintColor = [UIColor colorWithString:@"e65e37"];
     
     
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];
     if (_isIndent){
-        _searchClearButton.frame = CGRectMake(210 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+        _searchClearButton.frame = CGRectMake(225 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }else{
-        _searchClearButton.frame = CGRectMake(239 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+        _searchClearButton.frame = CGRectMake(254 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     }
     
     
@@ -97,7 +102,8 @@
     [_cancelButton setCenter:CGPointMake(_cancelButton.center.x, _searchBar.center.y)];
     [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
     [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-    [_cancelButton setTitleColor:[UIColor colorWithString:@"fac890"] forState:UIControlStateHighlighted];
+    [_cancelButton setTitleColor:[UIColor colorWithString:@"e65e37"] forState:UIControlStateNormal];
+    [_cancelButton setTitleColor:[UIColor colorWithString:@"ffffff"] forState:UIControlStateHighlighted];
     
     
 }
@@ -116,7 +122,7 @@
     frame.origin.y = CGRectGetMaxY(self.frame) + 20;
     frame.size.height = CGRectGetHeight([UIScreen mainScreen].bounds) - frame.origin.y;
     
-    UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
+    UIWindow *window = [(AppDelegate *)[[UIApplication sharedApplication]delegate]window];
     frame.origin.x = 0;
     [self searchDetailsViewInitWithFrame:frame addInView:window];
     if (show) {
@@ -183,12 +189,21 @@
     }
     [UIView animateWithDuration:.2 animations:^{
         CGRect frame = _searchTextField.frame;
-        frame.size.width =_searchTextFieldWidth - 43;
+        frame.size.width =_searchTextFieldWidth - 33;
+        if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]) {
+            frame.size.width =_searchTextFieldWidth - 38;
+        }
         _searchTextField.frame = frame;
     } completion:^(BOOL finished) {
         _cancelButton.hidden = NO;
         
     }];
+}
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    if (_detailsView != nil) {
+        [_detailsView searchButtonClicked];
+    }
 }
 
 -(void)searchBar:(UISearchBar *)searchBar dealWithTextChange:(NSString *)searchText{
@@ -204,7 +219,6 @@
 #pragma mark detailsView协议
 -(void)cancelSearchInput{
     [_searchBar resignFirstResponder];
-
 }
 
 

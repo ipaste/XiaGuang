@@ -7,178 +7,117 @@
 //
 
 #import "YTSwitchBlockView.h"
-#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#define HEIGHT 32
-@interface YTSwitchBlockView(){
-    CGFloat _textLenght;
-    NSArray *_blocks;
+#import "YTBlockView.h"
+#define WIDTH_AND_HEIGHT 41
+#define BUTTON_PADDING 4
+@interface YTSwitchBlockView()<YTBlockViewDelegate>{
+    id<YTMajorArea> _majorArea;
     UIButton *_blockButton;
-    UIScrollView * _scrollView;
-    UIView *_verticalLine;
-    CGFloat _scrollViewWidth;
-    CGPoint _selfPosition;
-    NSMutableArray *_blockButtons;
+    UIImageView *_backgroundView;
+    YTBlockView *_blockView;
+    id<YTBlock> _block;
 }
 @end
 
 @implementation YTSwitchBlockView
+
 -(instancetype)initWithPosition:(CGPoint)position currentMajorArea:(id <YTMajorArea>)majorArea{
-    _selfPosition = position;
-    CGFloat width = HEIGHT;
-    NSString *blockName = [[[majorArea floor] block] blockName];
-    _textLenght = [blockName boundingRectWithSize:CGSizeMake(320, HEIGHT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
-    width += 10;
-    width += 5;
-    width += _textLenght ;
-    self = [super initWithFrame:CGRectMake(position.x - _textLenght - 10, position.y, width, HEIGHT)];
+    self = [super initWithFrame:CGRectMake(position.x,position.y, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
     if (self) {
-        _blockButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - _textLenght - 37, 0, _textLenght, HEIGHT)];
-       [_blockButton setTitle:[[[majorArea floor] block] blockName] forState:UIControlStateNormal];
-        [_blockButton addTarget:self action:@selector(switchBlock:) forControlEvents:UIControlEventTouchUpInside];
+        _majorArea = majorArea;
+        _block = [[majorArea floor] block];
+        
+        _backgroundView = [[UIImageView alloc]initWithFrame:self.bounds];
+        _backgroundView.image = [UIImage imageNamed:@"btbg_blockOn"];
+        [self addSubview:_backgroundView];
+        _blockButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
+        _blockView = [[YTBlockView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_blockButton.frame), CGRectGetMinY(_blockButton.frame), WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[[_majorArea floor]block] mall] blocks]];
+        _blockView.alpha = 0;
+        [_blockButton setTitle:[[[_majorArea floor]block] blockName] forState:UIControlStateNormal];
+        _blockView.blockDelegate = self;
+        _blockView.curBlock = [[_majorArea floor] block];
+        [self addSubview:_blockView];
         [self addSubview:_blockButton];
         
-        _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 0, HEIGHT)];
-        [self addSubview:_scrollView];
-        
-        _verticalLine = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_blockButton.frame) - 10, 10, 1, 12)];
-        _verticalLine.backgroundColor = [UIColor colorWithString:@"c8c8c8"];
-        [self addSubview:_verticalLine];
-        
-        _blocks = [[[[majorArea floor] block] mall] blocks];
-        _blockButtons = [NSMutableArray array];
-        for (int i = 0 ; i < _blocks.count; i++) {
-            id<YTBlock> block = _blocks[i];
-            CGFloat width = [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width;
-            UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * (width + 10), 0,width , HEIGHT)];
-            [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
-            blockButton.tag = i;
-            [_blockButtons addObject:blockButton];
-            [_scrollView addSubview:blockButton];
-        }
+        [_blockButton setBackgroundImage:[UIImage imageNamed:@"btbg_block"] forState:UIControlStateNormal];
     }
     return self;
 }
 
 -(void)redrawWithMajorArea:(id<YTMajorArea>)majorArea{
-    CGFloat width = HEIGHT;
-    NSString *blockName = [[[majorArea floor] block] blockName];
-    _textLenght = [blockName boundingRectWithSize:CGSizeMake(320, HEIGHT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.width;
-    width += 10;
-    width += 5;
-    width += _textLenght ;
-    self.frame = CGRectMake(_selfPosition.x - _textLenght - 10, _selfPosition.y, width, HEIGHT);
-    [_blockButton removeFromSuperview];
-    [_scrollView removeFromSuperview];
-    [_verticalLine removeFromSuperview];
     
+    _majorArea = majorArea;
     
-    _blockButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - _textLenght - 37, 0, _textLenght, HEIGHT)];
-    [_blockButton setTitle:[[[majorArea floor] block] blockName] forState:UIControlStateNormal];
+    _block = [[majorArea floor] block];
     
-    [_blockButton addTarget:self action:@selector(switchBlock:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_blockButton];
+    //[_floorButton removeFromSuperview];
+    [_blockView removeFromSuperview];
     
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 0, HEIGHT)];
-    [self addSubview:_scrollView];
+    //_floorButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT)];
     
-    _verticalLine = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_blockButton.frame) - 10, 10, 1, 12)];
-    _verticalLine.backgroundColor = [UIColor colorWithString:@"c8c8c8"];
-    [self addSubview:_verticalLine];
-    
-    _blocks = [[[[majorArea floor] block] mall] blocks];
-    _blockButtons = [NSMutableArray array];
+    _blockView = [[YTBlockView alloc]initWithFrame:CGRectMake(CGRectGetMinX(_blockButton.frame), CGRectGetMinY(_blockButton.frame) + 5, WIDTH_AND_HEIGHT,WIDTH_AND_HEIGHT) andItem:[[[[_majorArea floor]block] mall] blocks]];
+    _blockView.alpha = 0;
+    [_blockButton setTitle:[[[_majorArea floor]block] blockName] forState:UIControlStateNormal];
+    _blockView.blockDelegate = self;
+    _blockView.curBlock = [[_majorArea floor] block];
+    [self addSubview:_blockView];
+}
 
-    for (int i = 0 ; i < _blocks.count; i++) {
-        id<YTBlock> block = _blocks[i];
-        CGFloat width = [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width;
-        UIButton *blockButton = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * (width + 10), 0,width , HEIGHT)];
-        [blockButton addTarget:self action:@selector(clickBlockButton:) forControlEvents:UIControlEventTouchUpInside];
-        blockButton.tag = i;
-        [_blockButtons addObject:blockButton];
-        [_scrollView addSubview:blockButton];
+-(void)layoutSubviews{
+    [_blockButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_blockButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [_blockButton addTarget:self action:@selector(toggleBlockControl:) forControlEvents:UIControlEventTouchDown];
+    
+    _backgroundView.frame = self.bounds;
+    // self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+    self.layer.cornerRadius = WIDTH_AND_HEIGHT / 2;
+    self.layer.masksToBounds = YES;
+}
+
+-(void)toggleBlockView{
+    
+    [self toggleBlockControl:_blockButton];
+}
+
+-(void)toggleBlockControl:(UIButton *)sender{
+    if (self.toggle) {
+        self.toggle = NO;
+        _blockButton.alpha = 1;
+        _blockView.alpha = 0;
+        [UIView animateWithDuration:.2 animations:^{
+            CGRect frame = self.frame;
+            frame.size.height = WIDTH_AND_HEIGHT;
+            self.frame = frame;
+        }];
+    }else{
+        self.toggle = YES;
+        _blockButton.alpha = 0;
+        _blockView.alpha = 1;
+        [UIView animateWithDuration:.2 animations:^{
+            NSArray *blockItem = [[[[_majorArea floor] block]mall] blocks];
+            CGRect frame = self.frame;
+            if (blockItem.count < 3) {
+                frame.size.height = blockItem.count * WIDTH_AND_HEIGHT;
+            }else{
+                frame.size.height = 3.3 * WIDTH_AND_HEIGHT;
+            }
+            self.frame = frame;
+            
+        }];
     }
+}
 
+-(void)blockView:(YTBlockView *)blockView clickButtonAtBlock:(id<YTBlock>)block{
+    [self toggleBlockControl:_blockButton];
+    [self promptBlockChange:block];
+    [self.delegate switchBlock:block];
 }
 
 -(void)promptBlockChange:(id<YTBlock>)block{
-    [_blockButton setTitle:[block blockName] forState:UIControlStateNormal];
+    
+    [_blockButton  setTitle:[block blockName] forState:UIControlStateNormal];
+    _blockView.curBlock = block;
 }
 
 
--(void)layoutSubviews{
-    [_blockButton setTitleColor:[UIColor colorWithString:@"202020"] forState:UIControlStateNormal];
-    [_blockButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
-    
-    CGFloat width = 0;
-    for (int i = 0 ; i < _blocks.count; i++) {
-        UIColor *color = [UIColor colorWithString:@"202020"];
-        id<YTBlock> block = _blocks[i];
-        UIButton *blockButton = _blockButtons[i];
-        [blockButton setTitle:[block blockName] forState:UIControlStateNormal];
-        
-        if ([[block blockName] isEqualToString:_blockButton.titleLabel.text]) {
-            color = [UIColor colorWithString:@"e95e37"];
-        }
-        [blockButton setTitleColor:color forState:UIControlStateNormal];
-        [blockButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
-        
-        if (i <= 3) {
-           width += [[block blockName] boundingRectWithSize:CGSizeMake(300, 40) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} context:nil].size.width + 10;
-        }
-    }
-    _scrollViewWidth = width;
-    
-    _verticalLine.frame = CGRectMake(CGRectGetMinX(_blockButton.frame) - 10, 10, 1, 12);
-    
-    
-    self.backgroundColor = [UIColor whiteColor];
-    self.layer.cornerRadius = HEIGHT / 2;
-    self.layer.borderColor = [UIColor colorWithString:@"c8c8c8"].CGColor;
-    self.layer.borderWidth = 1;
-    self.layer.masksToBounds = YES;
-}
--(void)toggleBlockView{
-    [self switchBlock:_blockButton];
-}
--(void)switchBlock:(UIButton *)sender{
-    [UIView animateWithDuration:.2 animations:^{
-        CGRect frame = CGRectZero;
-        if (!_toggle) {
-            _toggle = true;
-            frame = self.frame;
-            frame.size.width += _scrollViewWidth + 10;
-            frame.origin.x -= _scrollViewWidth + 10;
-            self.frame = frame;
-            
-            frame = _scrollView.frame;
-            frame.size.width = _scrollViewWidth;
-            _scrollView.frame = frame;
-        }else{
-            _toggle = false;
-            frame = self.frame;
-            frame.size.width -= _scrollViewWidth + 10;
-            frame.origin.x += _scrollViewWidth + 10;
-            self.frame = frame;
-            
-            frame = _scrollView.frame;
-            frame.size.width = 0;
-            _scrollView.frame = frame;
-        }
-        frame = _blockButton.frame;
-        frame.origin.x = CGRectGetWidth(self.frame) - _textLenght - 37;
-        _blockButton.frame = frame;
-    
-    } completion:^(BOOL finished) {
-        
-    }];
-    
-}
--(void)clickBlockButton:(UIButton *)sender{
-    id<YTBlock> block = _blocks[sender.tag];
-    [_blockButton setTitle:sender.titleLabel.text forState:UIControlStateNormal];
-    [self switchBlock:_blockButton];
-    if ([self.delegate respondsToSelector:@selector(switchBlock:)]) {
-        [self.delegate switchBlock:block];
-    }
-}
 @end
