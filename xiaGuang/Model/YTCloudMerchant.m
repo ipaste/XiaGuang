@@ -128,6 +128,7 @@
 -(void)merchantWithPreferentials:(void (^)(NSArray *, NSError *))callBack{
     AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
     [query whereKey:@"merchant" equalTo:_object];
+    [query whereKey:@"switch" equalTo:@YES];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableArray *preferentials = [NSMutableArray array];
         for (AVObject *object in objects) {
