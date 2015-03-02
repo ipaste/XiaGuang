@@ -19,6 +19,30 @@
 		78ADBEBE1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEBB1A09EBB5000688E3 /* YTKalmanFilteredPositionBot.m */; };
 		78ADBEC21A09EE45000688E3 /* YTBeaconBasedLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */; };
 		78B69AF51A4290D100BEB31C /* YTMapGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B69AF41A4290D100BEB31C /* YTMapGraph.m */; };
+		AE2162401AA447C700A70D62 /* N_HUANLEHAIAN_PARK.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21623F1AA447C700A70D62 /* N_HUANLEHAIAN_PARK.csv */; };
+		AE2162421AA447D000A70D62 /* N_HUANLEHAIAN_PARK.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162411AA447D000A70D62 /* N_HUANLEHAIAN_PARK.csv */; };
+		AE2162591AA447F500A70D62 /* N_HUANLEHAIAN_PARK.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162431AA447F500A70D62 /* N_HUANLEHAIAN_PARK.csv */; };
+		AE21625A1AA447F500A70D62 /* N_HUANLEHAIAN.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162441AA447F500A70D62 /* N_HUANLEHAIAN.csv */; };
+		AE21625B1AA447F500A70D62 /* N_JINGJIBAINA_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162451AA447F500A70D62 /* N_JINGJIBAINA_B1.csv */; };
+		AE21625C1AA447F500A70D62 /* N_JINGJIBAINA_B1H.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162461AA447F500A70D62 /* N_JINGJIBAINA_B1H.csv */; };
+		AE21625D1AA447F500A70D62 /* N_JINGJIBAINA_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162471AA447F500A70D62 /* N_JINGJIBAINA_L1.csv */; };
+		AE21625E1AA447F500A70D62 /* N_JINGJIBAINA_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162481AA447F500A70D62 /* N_JINGJIBAINA_L2.csv */; };
+		AE21625F1AA447F500A70D62 /* N_JINGJIBAINA_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162491AA447F500A70D62 /* N_JINGJIBAINA_L3.csv */; };
+		AE2162601AA447F500A70D62 /* N_JINGJIBAINA_park.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21624A1AA447F500A70D62 /* N_JINGJIBAINA_park.csv */; };
+		AE2162611AA447F500A70D62 /* N_KKMALL_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21624B1AA447F500A70D62 /* N_KKMALL_B1.csv */; };
+		AE2162621AA447F500A70D62 /* N_KKMALL_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21624C1AA447F500A70D62 /* N_KKMALL_L2.csv */; };
+		AE2162631AA447F500A70D62 /* N_KKMALL_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21624D1AA447F500A70D62 /* N_KKMALL_L3.csv */; };
+		AE2162641AA447F500A70D62 /* N_KKMALL_L4.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21624E1AA447F500A70D62 /* N_KKMALL_L4.csv */; };
+		AE2162651AA447F500A70D62 /* N_KKMALL_PARK-2.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21624F1AA447F500A70D62 /* N_KKMALL_PARK-2.csv */; };
+		AE2162661AA447F500A70D62 /* N_KKMALL_PARK-3.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162501AA447F500A70D62 /* N_KKMALL_PARK-3.csv */; };
+		AE2162671AA447F500A70D62 /* N_KKMALL_PARKB1J.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162511AA447F500A70D62 /* N_KKMALL_PARKB1J.csv */; };
+		AE2162681AA447F500A70D62 /* N_KKMALL_PARKL2J.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162521AA447F500A70D62 /* N_KKMALL_PARKL2J.csv */; };
+		AE2162691AA447F500A70D62 /* N_KKMALL_PARKL3J.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162531AA447F500A70D62 /* N_KKMALL_PARKL3J.csv */; };
+		AE21626A1AA447F500A70D62 /* N_YITIAN_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162541AA447F500A70D62 /* N_YITIAN_B1.csv */; };
+		AE21626B1AA447F500A70D62 /* N_YITIAN_B2.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162551AA447F500A70D62 /* N_YITIAN_B2.csv */; };
+		AE21626C1AA447F500A70D62 /* N_YITIAN_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162561AA447F500A70D62 /* N_YITIAN_L1.csv */; };
+		AE21626D1AA447F500A70D62 /* N_YITIAN_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162571AA447F500A70D62 /* N_YITIAN_L2.csv */; };
+		AE21626E1AA447F500A70D62 /* N_YITIAN_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162581AA447F500A70D62 /* N_YITIAN_L3.csv */; };
 		AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8091A0242F200A0CE91 /* highGuangDB */; };
 		AE24A8391A02430300A0CE91 /* YTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8321A02430300A0CE91 /* YTBeaconManager.m */; };
 		AE24A83A1A02430300A0CE91 /* YTBluetoothManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8341A02430300A0CE91 /* YTBluetoothManager.m */; };
@@ -259,6 +283,30 @@
 		78ADBEC11A09EE45000688E3 /* YTBeaconBasedLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconBasedLocator.m; sourceTree = "<group>"; };
 		78B69AF31A4290D100BEB31C /* YTMapGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapGraph.h; sourceTree = "<group>"; };
 		78B69AF41A4290D100BEB31C /* YTMapGraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMapGraph.m; sourceTree = "<group>"; };
+		AE21623F1AA447C700A70D62 /* N_HUANLEHAIAN_PARK.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN_PARK.csv; sourceTree = "<group>"; };
+		AE2162411AA447D000A70D62 /* N_HUANLEHAIAN_PARK.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN_PARK.csv; sourceTree = "<group>"; };
+		AE2162431AA447F500A70D62 /* N_HUANLEHAIAN_PARK.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN_PARK.csv; sourceTree = "<group>"; };
+		AE2162441AA447F500A70D62 /* N_HUANLEHAIAN.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN.csv; sourceTree = "<group>"; };
+		AE2162451AA447F500A70D62 /* N_JINGJIBAINA_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_B1.csv; sourceTree = "<group>"; };
+		AE2162461AA447F500A70D62 /* N_JINGJIBAINA_B1H.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_B1H.csv; sourceTree = "<group>"; };
+		AE2162471AA447F500A70D62 /* N_JINGJIBAINA_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L1.csv; sourceTree = "<group>"; };
+		AE2162481AA447F500A70D62 /* N_JINGJIBAINA_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L2.csv; sourceTree = "<group>"; };
+		AE2162491AA447F500A70D62 /* N_JINGJIBAINA_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L3.csv; sourceTree = "<group>"; };
+		AE21624A1AA447F500A70D62 /* N_JINGJIBAINA_park.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_park.csv; sourceTree = "<group>"; };
+		AE21624B1AA447F500A70D62 /* N_KKMALL_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_B1.csv; sourceTree = "<group>"; };
+		AE21624C1AA447F500A70D62 /* N_KKMALL_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L2.csv; sourceTree = "<group>"; };
+		AE21624D1AA447F500A70D62 /* N_KKMALL_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L3.csv; sourceTree = "<group>"; };
+		AE21624E1AA447F500A70D62 /* N_KKMALL_L4.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L4.csv; sourceTree = "<group>"; };
+		AE21624F1AA447F500A70D62 /* N_KKMALL_PARK-2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "N_KKMALL_PARK-2.csv"; sourceTree = "<group>"; };
+		AE2162501AA447F500A70D62 /* N_KKMALL_PARK-3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "N_KKMALL_PARK-3.csv"; sourceTree = "<group>"; };
+		AE2162511AA447F500A70D62 /* N_KKMALL_PARKB1J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKB1J.csv; sourceTree = "<group>"; };
+		AE2162521AA447F500A70D62 /* N_KKMALL_PARKL2J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKL2J.csv; sourceTree = "<group>"; };
+		AE2162531AA447F500A70D62 /* N_KKMALL_PARKL3J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKL3J.csv; sourceTree = "<group>"; };
+		AE2162541AA447F500A70D62 /* N_YITIAN_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_B1.csv; sourceTree = "<group>"; };
+		AE2162551AA447F500A70D62 /* N_YITIAN_B2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_B2.csv; sourceTree = "<group>"; };
+		AE2162561AA447F500A70D62 /* N_YITIAN_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L1.csv; sourceTree = "<group>"; };
+		AE2162571AA447F500A70D62 /* N_YITIAN_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L2.csv; sourceTree = "<group>"; };
+		AE2162581AA447F500A70D62 /* N_YITIAN_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L3.csv; sourceTree = "<group>"; };
 		AE24A8091A0242F200A0CE91 /* highGuangDB */ = {isa = PBXFileReference; lastKnownFileType = file; path = highGuangDB; sourceTree = "<group>"; };
 		AE24A8311A02430300A0CE91 /* YTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeaconManager.h; sourceTree = "<group>"; };
 		AE24A8321A02430300A0CE91 /* YTBeaconManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconManager.m; sourceTree = "<group>"; };
@@ -945,6 +993,30 @@
 		AEC57D951A8DD6D6009ADFA3 /* path */ = {
 			isa = PBXGroup;
 			children = (
+				AE2162431AA447F500A70D62 /* N_HUANLEHAIAN_PARK.csv */,
+				AE2162441AA447F500A70D62 /* N_HUANLEHAIAN.csv */,
+				AE2162451AA447F500A70D62 /* N_JINGJIBAINA_B1.csv */,
+				AE2162461AA447F500A70D62 /* N_JINGJIBAINA_B1H.csv */,
+				AE2162471AA447F500A70D62 /* N_JINGJIBAINA_L1.csv */,
+				AE2162481AA447F500A70D62 /* N_JINGJIBAINA_L2.csv */,
+				AE2162491AA447F500A70D62 /* N_JINGJIBAINA_L3.csv */,
+				AE21624A1AA447F500A70D62 /* N_JINGJIBAINA_park.csv */,
+				AE21624B1AA447F500A70D62 /* N_KKMALL_B1.csv */,
+				AE21624C1AA447F500A70D62 /* N_KKMALL_L2.csv */,
+				AE21624D1AA447F500A70D62 /* N_KKMALL_L3.csv */,
+				AE21624E1AA447F500A70D62 /* N_KKMALL_L4.csv */,
+				AE21624F1AA447F500A70D62 /* N_KKMALL_PARK-2.csv */,
+				AE2162501AA447F500A70D62 /* N_KKMALL_PARK-3.csv */,
+				AE2162511AA447F500A70D62 /* N_KKMALL_PARKB1J.csv */,
+				AE2162521AA447F500A70D62 /* N_KKMALL_PARKL2J.csv */,
+				AE2162531AA447F500A70D62 /* N_KKMALL_PARKL3J.csv */,
+				AE2162541AA447F500A70D62 /* N_YITIAN_B1.csv */,
+				AE2162551AA447F500A70D62 /* N_YITIAN_B2.csv */,
+				AE2162561AA447F500A70D62 /* N_YITIAN_L1.csv */,
+				AE2162571AA447F500A70D62 /* N_YITIAN_L2.csv */,
+				AE2162581AA447F500A70D62 /* N_YITIAN_L3.csv */,
+				AE2162411AA447D000A70D62 /* N_HUANLEHAIAN_PARK.csv */,
+				AE21623F1AA447C700A70D62 /* N_HUANLEHAIAN_PARK.csv */,
 				AEC57D961A8DD6EB009ADFA3 /* N_HUANLEHAIAN_PARK.csv */,
 				AEC57D971A8DD6EB009ADFA3 /* N_HUANLEHAIAN.csv */,
 				AEC57D981A8DD6EB009ADFA3 /* N_JINGJIBAINA_B1.csv */,
@@ -1415,11 +1487,13 @@
 				AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */,
 				D9D7DAE11A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-1.mbtiles in Resources */,
 				AEC57DB21A8DD6EB009ADFA3 /* N_JINGJIBAINA_L3.csv in Resources */,
+				AE21625E1AA447F500A70D62 /* N_JINGJIBAINA_L2.csv in Resources */,
 				AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */,
 				D9D7DAE21A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */,
 				D9D7DAF71A5E3EC600674C3A /* N_YITIAN_L2.mbtiles in Resources */,
 				AEC57DB71A8DD6EB009ADFA3 /* N_KKMALL_L4.csv in Resources */,
 				D9D7DAD81A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles in Resources */,
+				AE2162611AA447F500A70D62 /* N_KKMALL_B1.csv in Resources */,
 				AEC57DB61A8DD6EB009ADFA3 /* N_KKMALL_L3.csv in Resources */,
 				D9D7DAE71A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles in Resources */,
 				D9D7DADA1A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles in Resources */,
@@ -1430,23 +1504,33 @@
 				D9D7DAED1A5E3EC600674C3A /* N_KKMALL_L2.mbtiles in Resources */,
 				AEC57DBB1A8DD6EB009ADFA3 /* N_KKMALL_PARKL2J.csv in Resources */,
 				D9D7DAF31A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles in Resources */,
+				AE21625B1AA447F500A70D62 /* N_JINGJIBAINA_B1.csv in Resources */,
 				D9D7DAE01A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles in Resources */,
+				AE2162401AA447C700A70D62 /* N_HUANLEHAIAN_PARK.csv in Resources */,
+				AE21626A1AA447F500A70D62 /* N_YITIAN_B1.csv in Resources */,
 				D9D7DAEB1A5E3EC600674C3A /* N_KKMALL_B1.mbtiles in Resources */,
 				D9D7DADB1A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles in Resources */,
 				D9D7DAF01A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles in Resources */,
 				AEC57DBE1A8DD6EB009ADFA3 /* N_YITIAN_B2.csv in Resources */,
+				AE21626C1AA447F500A70D62 /* N_YITIAN_L1.csv in Resources */,
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
 				AEC57DB01A8DD6EB009ADFA3 /* N_JINGJIBAINA_L1.csv in Resources */,
 				AEC57DAE1A8DD6EB009ADFA3 /* N_JINGJIBAINA_B1.csv in Resources */,
+				AE21625C1AA447F500A70D62 /* N_JINGJIBAINA_B1H.csv in Resources */,
+				AE21625F1AA447F500A70D62 /* N_JINGJIBAINA_L3.csv in Resources */,
 				D9CAE85D1A52A8290053E758 /* bg_inner.jpg in Resources */,
+				AE21625D1AA447F500A70D62 /* N_JINGJIBAINA_L1.csv in Resources */,
 				AEC57DAC1A8DD6EB009ADFA3 /* N_HUANLEHAIAN_PARK.csv in Resources */,
+				AE2162681AA447F500A70D62 /* N_KKMALL_PARKL2J.csv in Resources */,
 				D9D7DAE41A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles in Resources */,
 				D9D7DAD71A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles in Resources */,
 				D9D7DAEC1A5E3EC600674C3A /* N_KKMALL_L1.mbtiles in Resources */,
 				D9D7DAD61A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles in Resources */,
 				D9D7DADD1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles in Resources */,
 				D9F699361A775D6D004432D8 /* N_YITIAN_L1.mbtiles in Resources */,
+				AE21626D1AA447F500A70D62 /* N_YITIAN_L2.csv in Resources */,
 				D9D7DAF81A5E3EC600674C3A /* N_YITIAN_L3.mbtiles in Resources */,
+				AE2162641AA447F500A70D62 /* N_KKMALL_L4.csv in Resources */,
 				AEC57DBA1A8DD6EB009ADFA3 /* N_KKMALL_PARKB1J.csv in Resources */,
 				D9D7DAE91A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */,
 				D9D7DAE61A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles in Resources */,
@@ -1458,13 +1542,21 @@
 				D9D7DADF1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles in Resources */,
 				D9D7DADC1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */,
 				AEC57DB31A8DD6EB009ADFA3 /* N_JINGJIBAINA_park.csv in Resources */,
+				AE2162601AA447F500A70D62 /* N_JINGJIBAINA_park.csv in Resources */,
+				AE2162661AA447F500A70D62 /* N_KKMALL_PARK-3.csv in Resources */,
+				AE2162671AA447F500A70D62 /* N_KKMALL_PARKB1J.csv in Resources */,
 				D9D7DAF11A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
 				D9D7DAEA1A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles in Resources */,
+				AE21626B1AA447F500A70D62 /* N_YITIAN_B2.csv in Resources */,
+				AE21626E1AA447F500A70D62 /* N_YITIAN_L3.csv in Resources */,
 				AEC57DB11A8DD6EB009ADFA3 /* N_JINGJIBAINA_L2.csv in Resources */,
 				AEC57DBF1A8DD6EB009ADFA3 /* N_YITIAN_L1.csv in Resources */,
 				D9D7DAD91A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles in Resources */,
+				AE21625A1AA447F500A70D62 /* N_HUANLEHAIAN.csv in Resources */,
+				AE2162591AA447F500A70D62 /* N_HUANLEHAIAN_PARK.csv in Resources */,
 				AEC57DB51A8DD6EB009ADFA3 /* N_KKMALL_L2.csv in Resources */,
+				AE2162631AA447F500A70D62 /* N_KKMALL_L3.csv in Resources */,
 				AEC57DAF1A8DD6EB009ADFA3 /* N_JINGJIBAINA_B1H.csv in Resources */,
 				D9D7DAF41A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles in Resources */,
 				AEC57DBD1A8DD6EB009ADFA3 /* N_YITIAN_B1.csv in Resources */,
@@ -1474,9 +1566,13 @@
 				AEC57DC11A8DD6EB009ADFA3 /* N_YITIAN_L3.csv in Resources */,
 				D9D7DAF21A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles in Resources */,
 				AEC57DB91A8DD6EB009ADFA3 /* N_KKMALL_PARK-3.csv in Resources */,
+				AE2162621AA447F500A70D62 /* N_KKMALL_L2.csv in Resources */,
 				AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */,
 				AEC57DC01A8DD6EB009ADFA3 /* N_YITIAN_L2.csv in Resources */,
+				AE2162691AA447F500A70D62 /* N_KKMALL_PARKL3J.csv in Resources */,
+				AE2162421AA447D000A70D62 /* N_HUANLEHAIAN_PARK.csv in Resources */,
 				D9D7DAEE1A5E3EC600674C3A /* N_KKMALL_L3.mbtiles in Resources */,
+				AE2162651AA447F500A70D62 /* N_KKMALL_PARK-2.csv in Resources */,
 				D9D7DAF91A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
