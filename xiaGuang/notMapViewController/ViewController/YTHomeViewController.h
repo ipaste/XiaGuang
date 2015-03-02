@@ -16,7 +16,6 @@
 #import "Reachability.h"
 #import "YTParkingViewController.h"
 #import "YTBluetoothManager.h"
-#import "FXBlurView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "BBTableView.h"
 @interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate>
