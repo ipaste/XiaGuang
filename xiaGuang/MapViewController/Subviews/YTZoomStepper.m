@@ -25,7 +25,7 @@
         _increasing = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), 41)];
         [self addSubview:_increasing];
        
-        _diminishing = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(frame) / 2, CGRectGetWidth(_increasing.frame), 41)];
+        _diminishing = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(frame) / 2 + 2.5, CGRectGetWidth(_increasing.frame), 41)];
         [self addSubview:_diminishing];
         
         _centerBorder = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(frame) / 2, CGRectGetWidth(frame), BORDERWIDTH)];

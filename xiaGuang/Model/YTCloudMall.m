@@ -348,6 +348,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
     AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
     [query whereKey:@"mall" equalTo:_internalObject];
+    [query whereKey:@"switch" equalTo:@YES];
     [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
         if (number > 0) {
             callBack(true);
