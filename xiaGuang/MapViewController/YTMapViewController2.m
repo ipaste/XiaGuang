@@ -469,6 +469,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         }else{
             _targetCord = _navigationPlan.targetPoiSource.coordinate;
+            [self setTargetCordToDoorCoordIfPossible:_navigationPlan.targetPoiSource];
+            
             [_mapView hidePois:_allElvatorAndEscalator animated:NO];
         }
         
@@ -488,6 +490,18 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
+
+-(void)setTargetCordToDoorCoordIfPossible:(id<YTPoiSource>)merchantInstance{
+    
+    
+    if([merchantInstance isKindOfClass:[YTLocalMerchantInstance class]]){
+        NSArray *doors = ((YTLocalMerchantInstance *)merchantInstance).doors;
+        if(doors != nil && doors.count > 0){
+            _targetCord = ((id<YTDoor>)doors[0]).coordinate;
+        }
+    }
+}
+
 
 -(NSArray *)filteredTransportFrom:(id<YTMajorArea>)fromArea
                            toArea:(id<YTMajorArea>)toArea{
@@ -792,6 +806,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_mapView superHighlightPoi:poi animated:NO];
     _selectedTransport = poi;
     _targetCord = ((id<YTPoiSource>)poi.sourceModel).coordinate;
+    
+    [self setTargetCordToDoorCoordIfPossible:((id<YTPoiSource>)poi.sourceModel)];
 }
 
 -(BOOL)userOnCurdisplayedArea{
@@ -1408,6 +1424,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView superHighlightPoi:poi animated:YES];
 
         _targetCord = [merchantLocation coordinate];
+        [self setTargetCordToDoorCoordIfPossible:merchantLocation];
+        
         
         [_mapView showPathFromCoord1:_userCoordintate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
         
