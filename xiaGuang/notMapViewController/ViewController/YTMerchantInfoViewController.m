@@ -22,6 +22,7 @@
     UIButton *_jumpToMapButton;
     UIView *_merchantInfoView;
     UILabel *_promptLabel;
+    UIImageView *_promptBackground;
     UITableView *_discountTableView;
     UIView *_discountHeadView;
     UITableView *_otherDiscountTableView;
@@ -102,7 +103,7 @@
     _discountTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 20)];
     _discountTableView.rowHeight = 95;
     _discountTableView.scrollEnabled = false;
-    _discountHeadView.hidden = true;
+    _discountTableView.hidden = true;
     _discountTableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_img_inforbg2"]];
     _discountTableView.delegate = self;
     _discountTableView.dataSource = self;
@@ -128,10 +129,7 @@
     _otherDiscountTableView.dataSource = self;
     [_scrollView addSubview:_otherDiscountTableView];
     
-    UIImageView *background = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"shop_bg_map"]];
-    background.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame));
-    background.hidden = true;
-    [_scrollView insertSubview:background atIndex:0];
+   
     
     _promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,CGRectGetMaxY(_merchantInfoView.frame), CGRectGetWidth(self.view.frame), 20)];
     _promptLabel.text = @"亲,暂时没有优惠信息";
@@ -141,16 +139,15 @@
     _promptLabel.textColor = [UIColor whiteColor];
     [_scrollView addSubview:_promptLabel];
     
+    _promptBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"shop_bg_map"]];
+    _promptBackground.frame = CGRectMake(0,0, CGRectGetWidth(self.view.frame), CGRectGetHeight(_scrollView.frame));
+    _promptBackground.hidden = true;
+    [_scrollView insertSubview:_promptBackground atIndex:0];
+    
     
     //优惠专区
     [_merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         if (isExistence){
-            _discountHeadView.hidden = false;
-            _discountTableView.hidden = false;
-            
-            _otherDiscountTableView.hidden = false;
-            _otherDiscountHeadView.hidden = false;
-            
             [((YTCloudMerchant *)_merchant)  getSolePreferentials:^(NSArray *preferentials, NSError *error) {
                 _preferentials = preferentials;
                 CGRect frame = _discountTableView.frame;
@@ -171,12 +168,9 @@
             }];
         }else{
             _promptLabel.hidden = false;
-            UIView *background =  [self.view.subviews objectAtIndex:0];
-            background.hidden = false;
+            _promptBackground.hidden = false;
         }
     }];
-    
-    
 }
 
 -(void)jumpToMap:(id)button{
@@ -321,21 +315,47 @@
 
 - (void)reloadUI{
     CGRect frame = _otherDiscountHeadView.frame;
-    frame.origin.y = CGRectGetMaxY(_discountTableView.frame) + 12;
+    if (_preferentials.count <= 0 ) {
+        _discountHeadView.hidden = true;
+        _discountTableView.hidden = true;
+        frame.origin.y = CGRectGetMinY(_discountHeadView.frame);
+    }else{
+        _discountHeadView.hidden = false;
+        _discountTableView.hidden = false;
+        frame.origin.y = CGRectGetMaxY(_discountTableView.frame) + 12;
+    }
     _otherDiscountHeadView.frame = frame;
     
     frame = _otherDiscountTableView.frame;
     frame.origin.y = CGRectGetMaxY(_otherDiscountHeadView.frame);
     _otherDiscountTableView.frame = frame;
     
-    _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, CGRectGetMaxY(_otherDiscountTableView.frame));
+    
+    if (_otherPreferentials.count <= 0) {
+        _otherDiscountHeadView.hidden = true;
+        _otherDiscountTableView.hidden = true;
+        _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, CGRectGetMaxY(_discountTableView.frame));
+    }else{
+        _otherDiscountHeadView.hidden = false;
+        _otherDiscountTableView.hidden = false;
+        _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, CGRectGetMaxY(_otherDiscountTableView.frame));
+    }
+    
+    if (_preferentials.count > 0 && CGRectGetMaxY(_discountTableView.frame) < CGRectGetHeight(self.view.frame) && _otherPreferentials.count <= 0) {
+        CGRect frame = _discountTableView.frame;
+        frame.size.height = CGRectGetHeight(_scrollView.frame) - CGRectGetMaxY(_merchantInfoView.frame) - 10;
+        _discountTableView.frame = frame;
+    }else if (_otherPreferentials.count > 0 && _preferentials.count <= 0 && CGRectGetMaxY(_otherDiscountTableView.frame) < CGRectGetHeight(self.view.frame)){
+        CGRect frame = _otherDiscountTableView.frame;
+        frame.size.height = CGRectGetHeight(_scrollView.frame) - CGRectGetMaxY(_merchantInfoView.frame) - 10;
+        _otherDiscountTableView.frame = frame;
+    }
+   
 }
 
 -(void)dealloc{
     NSLog(@"商铺主页销毁");
 }
-
-
 
 
 @end

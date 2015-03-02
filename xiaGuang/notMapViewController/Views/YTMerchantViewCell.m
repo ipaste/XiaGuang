@@ -113,20 +113,29 @@
     
     
     [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-        _preferentialImageView.hidden = !isExistence;
+        //_preferentialImageView.hidden = !isExistence;
         YTCloudMerchant *cloudMerchant = (YTCloudMerchant *)merchant;
         if (cloudMerchant.isSole) {
+            _soleImageView.hidden = false;
             CGRect frame = _soleImageView.frame;
             frame.origin = CGPointMake(CGRectGetMaxX(_merchantNameLabel.frame) + 10, CGRectGetMinY(_merchantNameLabel.frame));
             _soleImageView.frame = frame;
-        }else if (cloudMerchant.isOther){
+        }else{
+            _soleImageView.hidden = true;
+        }
+        if (cloudMerchant.isOther){
+            _otherImageView.hidden = false;
             if (cloudMerchant.isSole){
                 CGRect frame = _otherImageView.frame;
                 frame.origin = CGPointMake(CGRectGetMaxX(_soleImageView.frame) + 5, CGRectGetMinY(_otherImageView.frame));
                 _otherImageView.frame = frame;
             }else{
-                
+                CGRect frame = _otherImageView.frame;
+                frame.origin = CGPointMake(CGRectGetMaxX(_merchantNameLabel.frame) + 10, CGRectGetMinY(_merchantNameLabel.frame));
+                _otherImageView.frame = frame;
             }
+        }else{
+            _otherImageView.hidden = true;
         }
     }];
     
@@ -184,7 +193,7 @@
 }
 
 -(void)setIsShowMark:(BOOL)isShowMark{
-    _preferentialImageView.hidden = !isShowMark;
+   // _preferentialImageView.hidden = !isShowMark;
 }
 
 

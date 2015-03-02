@@ -99,22 +99,22 @@
         
         _majorAreaIds = [self getMajorAreaId:_mall];
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-            _pinyingSearchSource = [NSMutableArray array];
-            if (_majorAreaIds != nil){
-                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance where majorArea in ? ",_majorAreaIds];
-                while ([results next]) {
-                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
-                }
-            }else{
-                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance"];
-                while ([results next]) {
-                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
-                }
-            }
-            
-        });
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+//            _pinyingSearchSource = [NSMutableArray array];
+//            if (_majorAreaIds != nil){
+//                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance where majo rArea in ? ",_majorAreaIds];
+//                while ([results next]) {
+//                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
+//                }
+//            }else{
+//                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance"];
+//                while ([results next]) {
+//                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
+//                }
+//            }
+//            
+//        });
         
     }
     return self;
