@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTMall.h"
+#import "YTCloudMall.h"
 @interface YTMallCell : UITableViewCell<UIScrollViewDelegate>
 @property (weak,nonatomic) id <YTMall> mall;
-@property (nonatomic,readonly) BOOL isFetch;
-@property (readonly,nonatomic) BOOL isPreferential;
+@property (readonly, nonatomic) BOOL isFetch;
+@property (nonatomic) BOOL isPreferential;
 @end

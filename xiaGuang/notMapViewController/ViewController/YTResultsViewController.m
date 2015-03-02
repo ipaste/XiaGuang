@@ -267,7 +267,9 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             }else{
                 for (AVObject *preferential in objects) {
                     YTPreferential *tmpPreferential = [[YTPreferential alloc]initWithCloudObject:preferential];
-                    [merchants addObject:tmpPreferential.merchant];
+                    [tmpPreferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
+                       [merchants addObject:merchant];
+                    }];
                 }
                 block(merchants);
             }

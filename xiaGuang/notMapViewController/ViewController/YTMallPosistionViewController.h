@@ -10,7 +10,7 @@
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface YTMallPosistionViewController : UIViewController
+@interface YTMallPosistionViewController : UIViewController<UIWebViewDelegate>
 //-(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber;
 
 -(instancetype)initWithMallCoordinate:(CLLocationCoordinate2D )coordinate address:(NSString *)address mallName:(NSString *)mallName;

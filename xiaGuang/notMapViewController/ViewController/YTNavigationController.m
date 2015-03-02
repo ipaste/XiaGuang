@@ -16,6 +16,7 @@
     _homeVC = [[YTHomeViewController alloc]init];
     self = [super initWithRootViewController:_homeVC];
     if (self) {
+        
         self.delegate = self;
         self.navigationBar.barStyle = UIBarStyleBlack;
     }

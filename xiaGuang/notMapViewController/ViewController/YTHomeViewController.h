@@ -20,6 +20,5 @@
 #import "BBTableView.h"
 @interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate>
 
-
 @end
 

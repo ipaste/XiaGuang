@@ -11,6 +11,7 @@
 #define MALL_CLASS_NAME @"Mall"
 #define MALL_CLASS_MALLNAME_KEY @"name"
 typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
+typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 @implementation YTCloudMall{
     AVObject *_internalObject;
     UIImage *_titleImage;
@@ -21,7 +22,11 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     NSMutableArray *_resultArray;
     NSMutableArray *_resultMerchants;
     YTLocalMall *_tmpLocalMall;
+    DPRequest *_request;
     YTGetTitleImageAndBackgroundImageCallBack _callBack;
+    YTExistenceOfPreferentialInformationCallBack _existenceCallBack;
+    BOOL _isExistence;
+    BOOL _isSearchCloud;
 }
 
 @synthesize mallName;
@@ -34,7 +39,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     self = [super init];
     if(self){
         _internalObject = object;
-        
+        _isSearchCloud = true;
     }
     return self;
     
@@ -165,7 +170,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             if (result == nil) {
                 count++;
             }
-            
+
         }];
         
     }
@@ -343,17 +348,49 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 -(AVObject *)getCloudObj{
     return _internalObject;
 }
+
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
-    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
-    [query whereKey:@"mall" equalTo:_internalObject];
-    [query whereKey:@"switch" equalTo:@YES];
-    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
-        if (number > 0) {
-            callBack(true);
-        }else{
-            callBack(false);
-        }
-    }];
+
+    if (_internalObject == nil) {
+        return;
+    }
+    if (_isSearchCloud) {
+        _isSearchCloud = false;
+        AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+        [query whereKey:@"mall" equalTo:_internalObject];
+        [query whereKey:@"switch" equalTo:@YES];
+        [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
+            if (number > 0) {
+                _isExistence = true;
+                callBack(true);
+                return ;
+            }else{
+                _existenceCallBack = callBack;
+                NSNumber *latitude = [NSNumber numberWithDouble:[self coord].latitude];
+                NSNumber *longitude = [NSNumber numberWithDouble:[self coord].longitude];
+                NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[@"深圳",latitude,longitude,@"100",@"1"] forKeys:@[@"city",@"latitude",@"longitude",@"radius",@"limit"]];
+                _request = [DPRequest requestWithURL:@"http://api.dianping.com/v1/deal/find_deals" params:params delegate:self];
+                [_request connect];
+            }
+        }];
+    }else{
+        callBack(_isExistence);
+    }
+}
+
+- (void)request:(DPRequest *)request didFinishLoadingWithResult:(id)result{
+    if ([result[@"count"]  isEqual: @1]) {
+        _isExistence = true;
+    }else{
+        _isExistence = false;
+    }
+    result = nil;
+    if (_existenceCallBack != nil) {
+        _existenceCallBack(_isExistence);
+        _existenceCallBack = nil;
+    }
+    
+
 }
 
 

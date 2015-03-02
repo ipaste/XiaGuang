@@ -126,11 +126,10 @@
         _searchResultstableView.hidden = YES;
         _scrollView.hidden = NO;
         return;
+    }else{
+        _scrollView.hidden = YES;
+        _searchResultstableView.hidden = NO;
     }
-    
-    _scrollView.hidden = YES;
-    _searchResultstableView.hidden = NO;
-    
     
     NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:^{
     

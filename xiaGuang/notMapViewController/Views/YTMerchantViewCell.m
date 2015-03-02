@@ -16,6 +16,8 @@
     UILabel *_merchantNameLabel;
     UILabel *_addressLable;
     UIImageView *_preferentialImageView;
+    UIImageView *_soleImageView;
+    UIImageView *_otherImageView;
     NSMutableArray *_subCategoryImageView;
     NSMutableArray *_subCategoryLabel;
     id<YTMerchant> _oldMerchant;
@@ -65,11 +67,19 @@
         _preferentialImageView.image = preferentialImage;
         _preferentialImageView.hidden = true;
         
+        
+        _otherImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ico_tuan"]];
+        
+        _soleImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ico_du"]];
+        
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];
         [self addSubview:_addressLable];
         [self addSubview:_line];
         [self addSubview:_preferentialImageView];
+        [self addSubview:_otherImageView];
+        [self addSubview:_soleImageView];
+        
         
     }
     return self;
@@ -95,11 +105,30 @@
 
 
 -(void)setMerchant:(id<YTMerchant>)merchant{
+    _merchantNameLabel.text = [merchant merchantName];
+    CGSize size = [_merchantNameLabel.text boundingRectWithSize:_merchantNameLabel.frame.size options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
+    CGRect frame = _merchantNameLabel.frame;
+    frame.size.width = size.width;
+    _merchantNameLabel.frame = frame;
+    
+    
     [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         _preferentialImageView.hidden = !isExistence;
+        YTCloudMerchant *cloudMerchant = (YTCloudMerchant *)merchant;
+        if (cloudMerchant.isSole) {
+            CGRect frame = _soleImageView.frame;
+            frame.origin = CGPointMake(CGRectGetMaxX(_merchantNameLabel.frame) + 10, CGRectGetMinY(_merchantNameLabel.frame));
+            _soleImageView.frame = frame;
+        }else if (cloudMerchant.isOther){
+            if (cloudMerchant.isSole){
+                CGRect frame = _otherImageView.frame;
+                frame.origin = CGPointMake(CGRectGetMaxX(_soleImageView.frame) + 5, CGRectGetMinY(_otherImageView.frame));
+                _otherImageView.frame = frame;
+            }else{
+                
+            }
+        }
     }];
-
-    _merchantNameLabel.text = [merchant merchantName];
     
     _addressLable.text = [merchant address];
     
@@ -157,8 +186,6 @@
 -(void)setIsShowMark:(BOOL)isShowMark{
     _preferentialImageView.hidden = !isShowMark;
 }
--(void)dealloc{
-    NSLog(@"cell dealloc");
-}
+
 
 @end

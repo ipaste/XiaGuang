@@ -57,8 +57,6 @@
     _mallBackgroundView.layer.cornerRadius = 8;
     _mallBackgroundView.layer.masksToBounds = true;
     self.backgroundColor = [UIColor clearColor];
-    
-    
 }
 
 
@@ -68,10 +66,7 @@
     _mallBackgroundView.image = nil;
     _titleImageView.image = nil;
     _isFetch = false;
-    [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-       _discoImageView.hidden = !isExistence;
-    }];
-
+    
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
 
         if (!error) {
@@ -89,8 +84,8 @@
     return _isFetch;
 }
 
--(BOOL)isPreferential{
-    return !_discoImageView.hidden;
+-(void)setIsPreferential:(BOOL)isPreferential{
+    _discoImageView.hidden = !isPreferential;
+    _isPreferential = isPreferential;
 }
-
 @end

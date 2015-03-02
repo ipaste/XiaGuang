@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)viewDidLoad{
-    
+    [super viewDidLoad];
     UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
     backgroundView.image = [UIImage imageNamed:@"nav_bg_pic.jpg"];
     [self.view addSubview:backgroundView];

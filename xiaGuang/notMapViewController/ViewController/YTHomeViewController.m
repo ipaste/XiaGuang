@@ -226,9 +226,11 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     _shouldScroll = NO;
     [_tableView.layer removeAllAnimations];
     _scrollFired = NO;
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -241,7 +243,7 @@
 
 }
 -(void)viewDidAppear:(BOOL)animated{
-    
+    [super viewDidAppear:animated];
     if(!_scrollFired){
         [self test];
         _scrollFired = YES;
@@ -296,6 +298,9 @@
     id<YTMall> mall = _malls[indexPath.row%_malls.count];
     if([mall isMemberOfClass:[YTCloudMall class]]){
         cell.mall = mall;
+        [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+            cell.isPreferential = isExistence;
+        }];
     }
     return cell;
 }
@@ -341,6 +346,7 @@
             for (AVObject *mall in objects) {
                 YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
                 [cloudMall mallName];
+                
                 [array addObject:cloudMall];
             }
             [_malls removeAllObjects];

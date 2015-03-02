@@ -196,6 +196,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     _currentViewDisplay = NO;
     [self cancelCommonPoiState];
     _viewDidAppear = NO;

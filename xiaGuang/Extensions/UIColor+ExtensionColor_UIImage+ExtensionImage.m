@@ -86,11 +86,7 @@
     
     return scaledImage;
 }
-+ (UIImage *)imageFromImage:(UIImage *)image rect:(CGRect)rect{
-    CGImageRef sourceImageRef = [image CGImage];
-    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
-    return [UIImage imageWithCGImage:newImageRef];
-}
+
 
 
 

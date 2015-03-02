@@ -18,6 +18,7 @@
 #import "YTResultsViewController.h"
 #import "YTCloudMall.h"
 #import "YTMapViewController2.h"
+typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 @interface YTMallInfoViewController ()<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
     YTSearchView *_searchView;
     UIImageView *_searchBackgroundView;
@@ -32,6 +33,7 @@
     UIButton *_rightButton;
     UIView *_preferentialView;
     YTMallPosistionViewController *_posistionVC;
+    YTPreferentialsCallBack _callBack;
     BOOL _isShowSearchView;
     NSArray *_preferentials;
 }
@@ -78,14 +80,15 @@
     if (_isShowSearchView) {
         [_searchView hideSearchViewWithAnimation:NO];
     }
-
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[NSURLCache sharedURLCache]removeAllCachedResponses];
+    });
 }
 #pragma mark Navigation
 -(void)setNavigation{
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButton]];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
 }
-
 
 -(UIView *)rightBarButton{
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
@@ -216,6 +219,10 @@
             iconView.tag = i;
             iconView.image = [UIImage imageNamed:@"imgshop_default"];
             
+            UIImageView *markImageView = [[UIImageView alloc]initWithFrame:CGRectMake((i + 1) * oneWidth - 30, CGRectGetMaxY(titleImageView.frame), 30, 30)];
+            markImageView.tag = i + 3;
+            markImageView.image = [UIImage imageNamed:@"flag_du"];
+            
             UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(iconView.frame) + oneCentenX, CGRectGetMaxY(titleImageView.frame) + 12, 0.5, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame) - 24)];
             lineView.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
             
@@ -238,6 +245,8 @@
             [preferentialButton addTarget:self action:@selector(clickPreferential:) forControlEvents:UIControlEventTouchUpInside];
             
             [_preferentialView addSubview:iconView];
+            
+            [_preferentialView addSubview:markImageView];
             
             [_preferentialView addSubview:lineView];
             
@@ -290,7 +299,6 @@
 
     
     [self getPreferential:^(NSArray *preferentials) {
-        
         [self reloadPreferentialWithPreferentials:preferentials];
         _preferentials = preferentials;
     }];
@@ -410,6 +418,7 @@
     AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
     AVObject *cloudMall = [((YTCloudMall *)_mall) getCloudObj];
     [query whereKey:@"mall" equalTo:cloudMall];
+    [query whereKey:@"switch" equalTo:@YES];
     [query includeKey:@"merchant"];
     query.limit = 3;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -418,8 +427,32 @@
             YTPreferential *preferential = [[YTPreferential alloc]initWithCloudObject:object];
             [preferentials addObject:preferential];
         }
-        black(preferentials);
+        NSNumber *lack = [NSNumber numberWithInt:3 - preferentials.count];
+        if (lack != 0) {
+            _callBack = black;
+            NSNumber *latitude = [NSNumber numberWithDouble:[self.mall coord].latitude];
+            NSNumber *longitude = [NSNumber numberWithDouble:[self.mall coord].longitude];
+            NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[@"深圳",latitude,longitude,@"100",lack] forKeys:@[@"city",@"latitude",@"longitude",@"radius",@"limit"]];
+            DPRequest *request = [DPRequest requestWithURL:@"http://api.dianping.com/v1/deal/find_deals" params:params delegate:self];
+            request.object = preferentials;
+            [request connect];
+            
+        }else{
+            black(preferentials);
+        }
+        
     }];
+}
+
+-(void)request:(DPRequest *)request didFinishLoadingWithResult:(id)result{
+    NSMutableArray *preferentials = [NSMutableArray arrayWithArray:request.object];
+    for (NSDictionary *dictionary in result[@"deals"]) {
+        YTPreferential *preferential = [[YTPreferential alloc]initWithDaZhongDianPing:dictionary];
+        [preferentials addObject:preferential];
+    }
+    
+    _callBack(preferentials.copy);
+    _callBack = nil;
 }
 
 
@@ -436,11 +469,16 @@
 
 -(void)clickPreferential:(UIButton *)sender{
     if (_preferentials.count <= 0) return;
-    if (sender.tag > _preferentials.count - 1 ) return;
+    if (sender.tag > _preferentials.count - 1) return;
 
     YTPreferential *preferential = _preferentials[sender.tag];
-    YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:preferential.merchant];
-    [self.navigationController pushViewController:merchantInfoVC animated:YES];
+    [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
+        if (merchant == nil){
+            return ;
+        }
+        YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
+        [self.navigationController pushViewController:merchantInfoVC animated:YES];
+    }];
 }
 
 -(void)reloadPreferentialWithPreferentials:(NSArray *)preferentials{
@@ -448,15 +486,28 @@
         NSInteger index =  [preferentials indexOfObject:preferential];
         for (UIView *view in _preferentialView.subviews) {
             if (view.tag == 10) continue;
-            if ([view isMemberOfClass:[UIImageView class]] && view.tag == index) {
-                [preferential.merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-                    ((UIImageView *)view).image = result;
-                }];
+            if ([view isMemberOfClass:[UIImageView class]]) {
+                if  (view.tag == index){
+                    [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
+                        [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+                            ((UIImageView *)view).image = result;
+                        }];
+                    }];
+                }else if (view.tag == index + 3){
+                    if (preferential.type == YTPreferentialTypeSole) {
+                        ((UIImageView *)view).image = [UIImage imageNamed:@"flag_du"];
+                    }else{
+                        ((UIImageView *)view).image = [UIImage imageNamed:@"flag_tuan"];
+                    }
+                }
+    
             }
             if ([view isMemberOfClass:[UILabel class]]) {
                 UILabel *label = (UILabel *)view;
                 if (view.tag == index) {
-                   label.text = [preferential.merchant merchantName];
+                    [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
+                        label.text = [merchant merchantName];
+                    }];
                 }else if(view.tag == index + 3){
                     label.text = [preferential preferentialInfo];
                 }
@@ -472,10 +523,7 @@
 
 -(void)dealloc{
     [_searchView removeFromSuperview];
-    if (_posistionVC) {
-        [_posistionVC removeFromParentViewController];
-        _posistionVC = nil;
-    }
+    _posistionVC = nil;
     NSLog(@"mallInfoDealloc");}
 
 @end

@@ -11,7 +11,9 @@
 #import "YTMallPositionView.h"
 #import "YTMallPosistionViewController.h"
 #import "YTPreferential.h"
-@interface YTMallInfoViewController : UIViewController
+#import "DPAPI.h"
+
+@interface YTMallInfoViewController : UIViewController<DPRequestDelegate>
 @property (weak,nonatomic) id<YTMall> mall;
 @property (nonatomic) BOOL isPreferential;
 @end

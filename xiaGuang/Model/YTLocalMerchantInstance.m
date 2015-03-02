@@ -62,14 +62,10 @@
             _tmpMerchantInstanceName = [findResultSet stringForColumn:@"merchantInstanceName"];
             _tmpLatitude = [findResultSet doubleForColumn:@"latitude"];
             _tmpLongtitude = [findResultSet doubleForColumn:@"longtitude"];
-            _tmpMinorAreaId = [findResultSet stringForColumn:@"minorAreaId"];
             _tmpMerchantInstanceName = [findResultSet stringForColumn:@"merchantInstanceName"];
             _tmpMajorAreaId = [findResultSet stringForColumn:@"majorAreaId"];
             _tmpFloorId = [findResultSet stringForColumn:@"floorId"];
             _tmpAddress = [findResultSet stringForColumn:@"address"];
-            _tmpDisplayLevel = [findResultSet doubleForColumn:@"displayLevel"];
-            _tmpLableHeight = [findResultSet doubleForColumn:@"labelHeight"];
-            _tmpLableWidth = [findResultSet doubleForColumn:@"labelWidth"];
             _tmpUniId = [findResultSet stringForColumn:@"uniId"];
             
         }
