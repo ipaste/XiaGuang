@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     YTResultsTypePreferential,
     YTResultsTypeResults
 };
-@interface YTResultsViewController ()<UITableViewDelegate,UITableViewDataSource,YTCategoryResultsDelegete>{
+@interface YTResultsViewController ()<UITableViewDelegate,UITableViewDataSource,YTCategoryResultsDelegete,DPRequestDelegate>{
     NSString *_category;
     NSString *_subCategory;
     NSString *_merchantName;
@@ -111,6 +111,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     
     _isFirst = YES;
     
+    self.automaticallyAdjustsScrollViewInsets = false;
+    
     _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
     
     _tableView.delegate = self;
@@ -137,10 +139,12 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     _notLabel.hidden = YES;
     [_tableView addSubview:_notLabel];
     
-    _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
-    _categoryResultsView.delegate = self;
-    [self.view addSubview:_categoryResultsView];
-    
+    if (_type != YTResultsTypePreferential){
+        _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
+        _categoryResultsView.delegate = self;
+        [self.view addSubview:_categoryResultsView];
+        
+    }
     
     [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
         if (merchants != nil) {
@@ -162,16 +166,24 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
 -(void)viewWillLayoutSubviews{
     CGFloat topHeight = [self.topLayoutGuide length];
     
-    CGRect frame = _tableView.frame;
-    frame.origin.y = topHeight + 40;
-    frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 40;
-    _tableView.frame = frame;
     
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    if (_type != YTResultsTypePreferential) {
+        CGRect frame = _tableView.frame;
+        frame.origin.y = topHeight + 40;
+        frame.size.height = CGRectGetHeight(self.view.frame) - topHeight - 40;
+        _tableView.frame = frame;
+        
+        frame = _categoryResultsView.frame;
+        frame.origin.y = topHeight;
+        _categoryResultsView.frame = frame;
+    }else{
     
-    frame = _categoryResultsView.frame;
-    frame.origin.y = topHeight;
-    _categoryResultsView.frame = frame;
+        CGRect frame = _tableView.frame;
+        frame.origin.y = topHeight;
+        frame.size.height = frame.size.height - topHeight;
+        _tableView.frame = frame;
+    }
+    
     
 }
 
@@ -261,6 +273,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
         [mallObject whereKey:@"localDBId" equalTo:_mallUniId];
         [query whereKey:@"mall" matchesQuery:mallObject];
+        [query whereKey:@"switch" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (error) {
                 block(nil);
@@ -271,7 +284,13 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                        [merchants addObject:merchant];
                     }];
                 }
-                block(merchants);
+                
+                DPRequest *request = [DPRequest requestWithURL:@"" params:@{} delegate:self];
+                [request connectWithCallBack:^(id result) {
+                    
+                    block(merchants);
+                }];
+                
             }
         }];
         

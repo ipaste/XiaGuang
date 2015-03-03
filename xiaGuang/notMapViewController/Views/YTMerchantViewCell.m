@@ -69,8 +69,10 @@
         
         
         _otherImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ico_tuan"]];
+        _otherImageView.hidden = true;
         
         _soleImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ico_du"]];
+        _soleImageView.hidden = true;
         
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];

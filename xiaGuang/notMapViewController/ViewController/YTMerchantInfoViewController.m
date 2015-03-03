@@ -347,7 +347,7 @@
         _discountTableView.frame = frame;
     }else if (_otherPreferentials.count > 0 && _preferentials.count <= 0 && CGRectGetMaxY(_otherDiscountTableView.frame) < CGRectGetHeight(self.view.frame)){
         CGRect frame = _otherDiscountTableView.frame;
-        frame.size.height = CGRectGetHeight(_scrollView.frame) - CGRectGetMaxY(_merchantInfoView.frame) - 10;
+        frame.size.height = CGRectGetHeight(_scrollView.frame) - CGRectGetMaxY(_merchantInfoView.frame);
         _otherDiscountTableView.frame = frame;
     }
    
