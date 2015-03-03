@@ -41,6 +41,7 @@
 		AE21629B1AA44B7C00A70D62 /* N_YITIAN_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162851AA44B7C00A70D62 /* N_YITIAN_L1.csv */; };
 		AE21629C1AA44B7C00A70D62 /* N_YITIAN_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162861AA44B7C00A70D62 /* N_YITIAN_L2.csv */; };
 		AE21629D1AA44B7C00A70D62 /* N_YITIAN_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE2162871AA44B7C00A70D62 /* N_YITIAN_L3.csv */; };
+		AE21629F1AA5733300A70D62 /* N_KKMALL_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = AE21629E1AA5733300A70D62 /* N_KKMALL_L1.csv */; };
 		AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8091A0242F200A0CE91 /* highGuangDB */; };
 		AE24A8391A02430300A0CE91 /* YTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8321A02430300A0CE91 /* YTBeaconManager.m */; };
 		AE24A83A1A02430300A0CE91 /* YTBluetoothManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8341A02430300A0CE91 /* YTBluetoothManager.m */; };
@@ -281,6 +282,7 @@
 		AE2162851AA44B7C00A70D62 /* N_YITIAN_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L1.csv; sourceTree = "<group>"; };
 		AE2162861AA44B7C00A70D62 /* N_YITIAN_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L2.csv; sourceTree = "<group>"; };
 		AE2162871AA44B7C00A70D62 /* N_YITIAN_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L3.csv; sourceTree = "<group>"; };
+		AE21629E1AA5733300A70D62 /* N_KKMALL_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L1.csv; sourceTree = "<group>"; };
 		AE24A8091A0242F200A0CE91 /* highGuangDB */ = {isa = PBXFileReference; lastKnownFileType = file; path = highGuangDB; sourceTree = "<group>"; };
 		AE24A8311A02430300A0CE91 /* YTBeaconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBeaconManager.h; sourceTree = "<group>"; };
 		AE24A8321A02430300A0CE91 /* YTBeaconManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconManager.m; sourceTree = "<group>"; };
@@ -721,6 +723,7 @@
 		AE2162711AA44B7C00A70D62 /* Path */ = {
 			isa = PBXGroup;
 			children = (
+				AE21629E1AA5733300A70D62 /* N_KKMALL_L1.csv */,
 				AE2162721AA44B7C00A70D62 /* N_HUANLEHAIAN.csv */,
 				AE2162731AA44B7C00A70D62 /* N_HUANLEHAIAN_PARK.csv */,
 				AE2162741AA44B7C00A70D62 /* N_JINGJIBAINA_B1.csv */,
@@ -1453,6 +1456,7 @@
 				D9D7DAE61A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles in Resources */,
 				AE2162901AA44B7C00A70D62 /* N_KKMALL_B1.csv in Resources */,
 				D9D7DAE81A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles in Resources */,
+				AE21629F1AA5733300A70D62 /* N_KKMALL_L1.csv in Resources */,
 				AE2162941AA44B7C00A70D62 /* N_KKMALL_PARK-2.csv in Resources */,
 				D9D7DAEF1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles in Resources */,
 				D9D7DAF61A5E3EC600674C3A /* N_YITIAN_B2.mbtiles in Resources */,
