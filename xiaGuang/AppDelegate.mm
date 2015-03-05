@@ -107,7 +107,6 @@
                 NSString *decoded = [url stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 
                 if(decoded != nil && ![decoded isEqualToString:@""]){
-                    
                     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
                     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
                     [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

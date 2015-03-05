@@ -310,7 +310,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     YTMerchantViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
         cell = [[YTMerchantViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-        cell.titleColor = [UIColor colorWithString:@"333333"];
+        
         cell.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     }
     

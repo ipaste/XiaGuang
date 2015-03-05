@@ -50,7 +50,6 @@
         _estimoteBeaconManager = [[ESTBeaconManager alloc] init];
         _estimoteBeaconManager.delegate = self;
         
-        
         _lostDict = [[NSDictionary alloc] init];
         _distanceDict = [[NSDictionary alloc] init];
         /*
@@ -72,7 +71,6 @@
         
         _listeners = [NSHashTable weakObjectsHashTable];
     }
-    
     return self;
 }
 

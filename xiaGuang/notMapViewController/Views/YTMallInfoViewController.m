@@ -324,6 +324,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
     YTMerchantViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
         cell = [[YTMerchantViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.titleColor = [UIColor colorWithString:@"333333"];
         cell.backgroundColor = [UIColor clearColor];
     }
     if (_hots.count > 0) {
