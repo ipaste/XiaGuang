@@ -13,10 +13,11 @@
 #import "YTDistanceData.h"
 #import "YTPositionBot.h"
 #import "YTDistanceBoundingBox.h"
+#import "YTDeadReckoning.h"
 
 #import "YTStaticResourceManager.h"
 
-@interface YTBeaconBasedLocator() {
+@interface YTBeaconBasedLocator() <YTDeadReckoningDelegate> {
     RMMapView *_mapView;
     YTBeaconManager *_beaconManager;
     id<YTMajorArea> _majorArea;
@@ -29,6 +30,8 @@
     YTDistanceBoundingBox *_boundingBox;
     
     dispatch_queue_t _queue;
+    
+    YTDeadReckoning *_inertia;
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons;
@@ -62,6 +65,9 @@
                                                             majorArea:_majorArea];
         
         _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
+        
+        _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
+        _inertia.delegate = self;
 
     }
     return self;
@@ -85,9 +91,6 @@
         
         double end = 0.0;
         
-        end = [[NSDate date] timeIntervalSinceReferenceDate];
-        NSLog(@"newton:%f",start-end);
-        
         if (pos == nil) {
             return;
         }
@@ -96,23 +99,17 @@
         
         position = [_kalmanFilterBot reportSample:position];
         
-        end = [[NSDate date] timeIntervalSinceReferenceDate];
-        NSLog(@"kalman:%f",start-end);
-        
         position = [_boundingBox updateAndGetCurrentPoint:position];
         
-        end = [[NSDate date] timeIntervalSinceReferenceDate];
-        NSLog(@"update:%f",start-end);
-        
-        CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
-                                                                             mapView:_mapView];
-        
-        end =[[NSDate date] timeIntervalSinceReferenceDate];
-        NSLog(@"elapsed:%f",start-end);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
-        });
+        _inertia.startPoint = position;
+    });
+}
+
+-(void)positionUpdating:(CGPoint )position {
+    CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
+                                                                         mapView:_mapView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
     });
 }
 
@@ -145,7 +142,7 @@
             
             
             if ([r2 next]) {
-            
+                
                 NSString *majorAreaId = [r2 stringForColumn:@"majorAreaId"];
                 
                 if(![majorAreaId isEqualToString:_majorArea.identifier]){

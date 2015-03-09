@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4BBE78B237D5A241D65373FE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DCAE2C2A48A5B340C97B34E /* libPods.a */; };
+		787DBB201AA43022006E5D85 /* YTDeadReckoning.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DBB1E1AA43022006E5D85 /* YTDeadReckoning.m */; };
 		78ADBEA41A09EA89000688E3 /* YTMatrixToolBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEA31A09EA89000688E3 /* YTMatrixToolBox.m */; };
 		78ADBEAA1A09EAC3000688E3 /* YTMotionDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEA71A09EAC3000688E3 /* YTMotionDetector.m */; };
 		78ADBEAB1A09EAC3000688E3 /* YTNaiveStepDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEA91A09EAC3000688E3 /* YTNaiveStepDetector.m */; };
@@ -213,6 +214,8 @@
 /* Begin PBXFileReference section */
 		580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		6DCAE2C2A48A5B340C97B34E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		787DBB1E1AA43022006E5D85 /* YTDeadReckoning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTDeadReckoning.m; sourceTree = "<group>"; };
+		787DBB1F1AA43022006E5D85 /* YTDeadReckoning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTDeadReckoning.h; sourceTree = "<group>"; };
 		78ADBEA21A09EA89000688E3 /* YTMatrixToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMatrixToolBox.h; sourceTree = "<group>"; };
 		78ADBEA31A09EA89000688E3 /* YTMatrixToolBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMatrixToolBox.m; sourceTree = "<group>"; };
 		78ADBEA61A09EAC3000688E3 /* YTMotionDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMotionDetector.h; sourceTree = "<group>"; };
@@ -347,7 +350,7 @@
 		D925EDDF1A2D7ECD00F7FCD3 /* YTLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLoadingView.m; sourceTree = "<group>"; };
 		D925EDE11A2D893500F7FCD3 /* YTMultipleMerchantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMultipleMerchantView.h; sourceTree = "<group>"; };
 		D925EDE21A2D893500F7FCD3 /* YTMultipleMerchantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMultipleMerchantView.m; sourceTree = "<group>"; };
-		D93CE4B419FA5825004128FD /* 虾逛.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾逛.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93CE4B419FA5825004128FD /* xiaGuang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xiaGuang.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93CE4B819FA5825004128FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D93CE4B919FA5825004128FD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D93CE4BB19FA5825004128FD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -590,9 +593,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		787DBB1D1AA42FD0006E5D85 /* Inertia */ = {
+			isa = PBXGroup;
+			children = (
+				787DBB1E1AA43022006E5D85 /* YTDeadReckoning.m */,
+				787DBB1F1AA43022006E5D85 /* YTDeadReckoning.h */,
+			);
+			name = Inertia;
+			sourceTree = "<group>";
+		};
 		78ADBEA01A09EA67000688E3 /* Positioning */ = {
 			isa = PBXGroup;
 			children = (
+				787DBB1D1AA42FD0006E5D85 /* Inertia */,
 				78ADBEBF1A09ECC5000688E3 /* Algorithm */,
 				78ADBEB21A09EB66000688E3 /* CanonicalCoordinate */,
 				78ADBEA51A09EAAB000688E3 /* Motion */,
@@ -910,7 +923,7 @@
 		D93CE4B519FA5825004128FD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D93CE4B419FA5825004128FD /* 虾逛.app */,
+				D93CE4B419FA5825004128FD /* xiaGuang.app */,
 				D93CE4CD19FA5825004128FD /* 虾逛Tests.xctest */,
 			);
 			name = Products;
@@ -1260,7 +1273,7 @@
 			);
 			name = "虾逛";
 			productName = xiaGuang;
-			productReference = D93CE4B419FA5825004128FD /* 虾逛.app */;
+			productReference = D93CE4B419FA5825004128FD /* xiaGuang.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D93CE4CC19FA5825004128FD /* 虾逛Tests */ = {
@@ -1523,6 +1536,7 @@
 				D94C27FF1A0263C6009FF2F3 /* YTInvitationViewController.m in Sources */,
 				D94C27C41A02639F009FF2F3 /* YTSwitchFloorView.m in Sources */,
 				AE24A8A11A02432000A0CE91 /* YTCloudMinorArea.m in Sources */,
+				787DBB201AA43022006E5D85 /* YTDeadReckoning.m in Sources */,
 				78ADBEB51A09EB78000688E3 /* YTCanonicalCoordinate.m in Sources */,
 				D94C28011A0263C6009FF2F3 /* YTMerchantInfoViewController.m in Sources */,
 				D925EDE31A2D893500F7FCD3 /* YTMultipleMerchantView.m in Sources */,
@@ -1682,7 +1696,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
-				PRODUCT_NAME = "虾逛";
+				PRODUCT_NAME = xiaGuang;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1710,7 +1724,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
-				PRODUCT_NAME = "虾逛";
+				PRODUCT_NAME = xiaGuang;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
