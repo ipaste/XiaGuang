@@ -16,7 +16,10 @@
             fromPoint1:(CGPoint)p1
               toPoint2:(CGPoint)p2{
     
-    YTMapGraph *graph = [[YTMapGraph alloc] initWithMajorArea:majorArea mapView:mapView];
+    YTMapGraph *graph = [[YTMapGraphDict sharedInstance] getGraphFromMajorArea:majorArea usingMapview:mapView];
+    
+    
+    
     
     if(graph == nil)
         return nil;

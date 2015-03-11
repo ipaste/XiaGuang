@@ -10,6 +10,7 @@
 #import "YTAnnotation.h"
 #import "YTMapGraph.h"
 #import "YTCanonicalCoordinate.h"
+#import "YTMapGraphDict.h"
 @interface YTPathAnnotation : YTAnnotation
 
 -(id)initWithMapView:(RMMapView *)mapView

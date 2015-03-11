@@ -465,6 +465,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             [_mapView highlightPois:transportsToHighlight animated:YES];
             YTPoi *closestTransport = [self closestTransportToCoordinate:_userMinorArea.coordinate
                                                                  inArray:transportsToHighlight];
+            
+            highlightPoi = closestTransport;
+            
             _targetCord = ((id<YTPoiSource>) closestTransport.sourceModel).coordinate;
         
         }else{
@@ -479,6 +482,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
             
             if([self userOnCurdisplayedArea]){
+                
+                
                 [self showPathFromUserToPoi:highlightPoi];
             }
         }
@@ -808,6 +813,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _targetCord = ((id<YTPoiSource>)poi.sourceModel).coordinate;
     
     [self setTargetCordToDoorCoordIfPossible:((id<YTPoiSource>)poi.sourceModel)];
+    
+    
+    if( _userCoordintate.latitude != -888){
+        [_mapView showPathFromCoord1:_targetCord toCoord2:_userCoordintate forMajorArea:_curDisplayedMajorArea];
+    }
+    else{
+        [_mapView showPathFromCoord1:_targetCord toCoord2:_userMinorArea.coordinate forMajorArea:_curDisplayedMajorArea];
+    }
+    
 }
 
 -(BOOL)userOnCurdisplayedArea{
@@ -1132,7 +1146,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         else
         {
             if(_navigationView.isNavigating){
-                [_mapView showPathFromCoord1:coordinate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
+                
             }
             [_mapView setUserCoordinate:_userCoordintate];
         }
@@ -1426,7 +1440,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _targetCord = [merchantLocation coordinate];
         [self setTargetCordToDoorCoordIfPossible:merchantLocation];
         
-        
+        //show path after navigation is activated
         [_mapView showPathFromCoord1:_userCoordintate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
         
     }
