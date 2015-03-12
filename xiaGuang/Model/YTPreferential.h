@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, YTPreferentialType) {
 @property (readonly ,nonatomic) NSNumber *favorablePrice;
 @property (readonly ,nonatomic) NSString *time;
 @property (readonly ,nonatomic) YTPreferentialType type;
+@property (readonly ,nonatomic) NSURL *url;
 
 
 - (instancetype)initWithCloudObject:(AVObject *)object;

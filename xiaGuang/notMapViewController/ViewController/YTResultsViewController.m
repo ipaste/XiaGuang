@@ -40,6 +40,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     UITableView *_tableView;
     YTCategoryResultsView *_categoryResultsView;
     YTResultsType _type;
+    NSInteger _dealCount;
 }
 @end
 
@@ -111,6 +112,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     
     _isFirst = YES;
     
+    _dealCount = 0;
+    
     self.automaticallyAdjustsScrollViewInsets = false;
     
     _tableView = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
@@ -161,12 +164,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     }];
     
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
-}
-
--(void)viewWillLayoutSubviews{
-    CGFloat topHeight = [self.topLayoutGuide length];
     
-    
+    CGFloat topHeight = CGRectGetMaxY(self.navigationController.navigationBar.frame);
     if (_type != YTResultsTypePreferential) {
         CGRect frame = _tableView.frame;
         frame.origin.y = topHeight + 40;
@@ -177,14 +176,12 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         frame.origin.y = topHeight;
         _categoryResultsView.frame = frame;
     }else{
-    
+        
         CGRect frame = _tableView.frame;
         frame.origin.y = topHeight;
         frame.size.height = frame.size.height - topHeight;
         _tableView.frame = frame;
     }
-    
-    
 }
 
 -(UIView *)leftBarButton{
@@ -284,13 +281,21 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                        [merchants addObject:merchant];
                     }];
                 }
-                
-                DPRequest *request = [DPRequest requestWithURL:@"" params:@{} delegate:self];
-                [request connectWithCallBack:^(id result) {
-                    
-                    block(merchants);
-                }];
-                
+                if(merchants.count < number){
+                    AVQuery *merchantQuery = [AVQuery queryWithClassName:@"Merchant"];
+                    [merchantQuery whereKey:@"has_deal" equalTo:@YES];
+                    [merchantQuery whereKey:@"mall" matchesQuery:mallObject];
+                    merchantQuery.limit = number - merchants.count;
+                    merchantQuery.skip = _dealCount;
+                    [merchantQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                        for (AVObject *object in objects) {
+                            YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:object];
+                            [merchants addObject:merchant];
+                        }
+                        _dealCount = _dealCount + (number - merchants.count);
+                        block(merchants);
+                    }];
+                }
             }
         }];
         
@@ -360,7 +365,6 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMerchantViewCell *cell = (YTMerchantViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.selected = NO;
-    
     id<YTMerchant> merchant = _merchants[indexPath.row];
     YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
     [self.navigationController pushViewController:merchantInfoVC animated:YES];

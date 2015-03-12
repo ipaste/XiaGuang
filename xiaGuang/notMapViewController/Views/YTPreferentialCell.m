@@ -96,7 +96,12 @@
         _textLabel.text = preferential.preferentialInfo;
         _originalPriceLabel.text = preferential.originalPrice.stringValue;
         _favorablePriceLabel.text = [preferential.favorablePrice.stringValue  stringByAppendingString:@"元"];
-        _timeLabel.text = [NSString stringWithFormat:@"活动时间: %@",preferential.time];
+        if (preferential.time != nil) {
+            _timeLabel.text = [NSString stringWithFormat:@"活动时间: %@",preferential.time];
+        }else{
+            _timeLabel.text = [NSString stringWithFormat:@"活动时间: 无期限"];
+        }
+        
     }else{
         _imageView.image = [UIImage imageNamed:@"imgshop_default"];
         _textLabel.text = @"走过路过不要错过";

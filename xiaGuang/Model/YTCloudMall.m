@@ -350,32 +350,18 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
-
-    if (_internalObject == nil) {
-        return;
-    }
-    if (_isSearchCloud) {
-        _isSearchCloud = false;
-        AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
-        [query whereKey:@"mall" equalTo:_internalObject];
-        [query whereKey:@"switch" equalTo:@YES];
-        [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
-            if (number > 0) {
-                _isExistence = true;
-                callBack(true);
-                return ;
-            }else{
-                _existenceCallBack = callBack;
-                NSNumber *latitude = [NSNumber numberWithDouble:[self coord].latitude];
-                NSNumber *longitude = [NSNumber numberWithDouble:[self coord].longitude];
-                NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[@"深圳",latitude,longitude,@"100",@"1"] forKeys:@[@"city",@"latitude",@"longitude",@"radius",@"limit"]];
-                _request = [DPRequest requestWithURL:@"http://api.dianping.com/v1/deal/find_deals" params:params delegate:self];
-                [_request connect];
-            }
-        }];
-    }else{
-        callBack(_isExistence);
-    }
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:@"http://xiaguang.avosapps.com/existence_PreferentialInformation" parameters:@{@"objectId":_internalObject.objectId} success:^(NSURLSessionDataTask *task, id responseObject) {
+        
+        if ([responseObject[@"exidtence"] isEqualToNumber:@1]) {
+            callBack(true);
+        }else{
+            NSLog(@"false");
+            callBack(false);
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        callBack(false);
+    }];
 }
 
 - (void)request:(DPRequest *)request didFinishLoadingWithResult:(id)result{

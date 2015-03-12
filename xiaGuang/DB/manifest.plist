@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>version</key>
-	<integer>7</integer>
+	<integer>8</integer>
 	<key>db</key>
 	<integer>10</integer>
 	<key>N_COCOPARK_B1</key>
@@ -15,35 +15,35 @@
 	<key>N_COCOPARK_L3</key>
 	<integer>0</integer>
 	<key>N_HAIANCHENG_EASTL1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_HAIANCHENG_EASTL2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_HAIANCHENG_EASTPARK-1</key>
 	<integer>0</integer>
 	<key>N_HAIANCHENG_EASTPARK-2</key>
 	<integer>0</integer>
 	<key>N_HAIANCHENG_WESTL1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_HAIANCHENG_WESTL2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_HAIANCHENG_WESTL3</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_HAIANCHENG_WESTPARK-1</key>
 	<integer>0</integer>
 	<key>N_HAIANCHENG_WESTPARK-2</key>
 	<integer>0</integer>
 	<key>N_HUANLEHAIAN</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_HUANLEHAIAN_PARK</key>
 	<integer>0</integer>
 	<key>N_JINGJIBAINA_B1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_JINGJIBAINA_L1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_JINGJIBAINA_L2</key>
 	<integer>0</integer>
 	<key>N_JINGJIBAINA_L3</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_JINGJIBAINA_PARKB1</key>
 	<integer>0</integer>
 	<key>N_JINGJIBAINA_PARKB1H</key>
@@ -69,17 +69,17 @@
 	<key>N_KKMALL_PARKL3J</key>
 	<integer>0</integer>
 	<key>N_YITIAN_B1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_YITIAN_B2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_YITIAN_L2</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_YITIAN_L3</key>
 	<integer>0</integer>
 	<key>N_YITIAN_PARK_3</key>
 	<integer>0</integer>
 	<key>N_YITIAN_L1</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>N_SHENGUOTOU_L1</key>
 	<integer>0</integer>
 	<key>N_SHENGUOTOU_L2</key>

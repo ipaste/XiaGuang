@@ -123,8 +123,7 @@
                 _latest = true;
             }
         }
-        
-       
+    
         _resourceManager = [YTStaticResourceManager sharedManager];
         Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
         [reachability startNotifier];
@@ -441,15 +440,18 @@
     static NSString * firstKey = @"Program";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([userDefaults valueForKey:firstKey] == nil) {
-        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
-        if ([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:@"current"]]) {
+   
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+    NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
+    NSDictionary *mainfest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
+    
+    NSDictionary *tmpMainfest = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"]];
+    if (mainfest != nil && tmpMainfest != nil){
+        if ([fileManager fileExistsAtPath:currentPath] && tmpMainfest[@"version"] >= mainfest[@"version"]) {
             [fileManager removeItemAtPath:path error:nil];
             [_resourceManager restartCopyTheFile];
         }
-        [[NSUserDefaults standardUserDefaults]setValue:@1 forKey:firstKey];
     }
-    
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{

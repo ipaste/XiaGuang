@@ -103,6 +103,7 @@
     _discountTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 20)];
     _discountTableView.rowHeight = 95;
     _discountTableView.scrollEnabled = false;
+    _discountTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _discountTableView.hidden = true;
     _discountTableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_img_inforbg2"]];
     _discountTableView.delegate = self;
@@ -124,6 +125,7 @@
     _otherDiscountTableView.hidden = true;
     _otherDiscountTableView.scrollEnabled = false;
     _otherDiscountTableView.rowHeight = 95;
+    _otherDiscountTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _otherDiscountTableView.backgroundColor = _discountTableView.backgroundColor;
     _otherDiscountTableView.delegate = self;
     _otherDiscountTableView.dataSource = self;
@@ -288,9 +290,12 @@
     if ([tableView isEqual:_otherDiscountTableView]){
         cell.preferential = _otherPreferentials[indexPath.row];
         cell.style = YTPreferentialCellStyleOther;
+       
+        cell.selectionStyle = cell.preferential.url == nil ? UITableViewCellSelectionStyleNone:UITableViewCellSelectionStyleDefault;
     }else{
         cell.preferential = _preferentials[indexPath.row];
         cell.style = YTPreferentialCellStyleSole;
+        cell.selectionStyle = cell.preferential.url == nil ? UITableViewCellSelectionStyleNone:UITableViewCellSelectionStyleDefault;
     }
     
     return cell;
@@ -298,6 +303,14 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:false];
+    if ([tableView isEqual:_otherDiscountTableView]) {
+        YTPreferential *preferential = _otherPreferentials[indexPath.row];
+        if (preferential.url != nil) {
+            YTH5ViewController *VC = [[YTH5ViewController alloc]initWithH5_url:preferential.url];
+            [self.navigationController pushViewController:VC animated:true];
+        }
+    }
+    
 }
 
 -(UIView *)leftBarButton{

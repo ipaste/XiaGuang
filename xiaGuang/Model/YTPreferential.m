@@ -63,13 +63,19 @@
 }
 
 - (NSString *)time{
-    return @"fuck - fucking";
+    NSDate *startDate = _object[@"startDate"];
+    NSDate *endDate = _object[@"endDate"];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"yyyy.MM.dd"];
+    if (startDate == nil || endDate == nil) {
+        return nil;
+    }
+    return [NSString stringWithFormat:@"%@ - %@",[dateFormatter stringFromDate:startDate],[dateFormatter stringFromDate:endDate]];
 }
 
 - (NSNumber *)originalPrice{
     //原价
     if (_source == YTPreferentialTypeOther) {
-        NSLog(@"原价 : %@",_dzdpDictionary[@"list_price"]);
         return _dzdpDictionary[@"list_price"];
     }
     return _object[PREFERENTIAL_KEY_ORIGINALPRICE];
@@ -78,7 +84,6 @@
 -(NSNumber *)favorablePrice{
     //优惠价
     if (_source == YTPreferentialTypeOther) {
-        NSLog(@"优惠价: %@",_dzdpDictionary[@"current_price"]);
         return _dzdpDictionary[@"current_price"];
     }
     return _object[PREFERENTIAL_KEY_FAVORABLEPRICE];
@@ -86,6 +91,13 @@
 
 -(YTPreferentialType)type{
     return _source;
+}
+
+-(NSURL *)url{
+    if (_source == YTPreferentialTypeOther) {
+        return [NSURL URLWithString:_dzdpDictionary[@"deal_h5_url"]];
+    }
+    return nil;
 }
 
 - (void)getMerchantInstanceWithCallBack:(void (^)(YTCloudMerchant * merchant))callBack{
