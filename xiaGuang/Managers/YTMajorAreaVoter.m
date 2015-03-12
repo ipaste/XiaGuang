@@ -8,9 +8,33 @@
 
 #import "YTMajorAreaVoter.h"
 
-@implementation YTMajorAreaVoter
+@implementation YTMajorAreaVoter{
+    NSMutableDictionary *_majorAreaDict;
+    NSMutableDictionary *_beaconDict;
+}
 
-+(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons{
++(id)sharedInstance{
+    static YTMajorAreaVoter *sharedInstance = nil;
+    if (!sharedInstance)
+    {
+        
+        sharedInstance = [[YTMajorAreaVoter alloc] init];
+    }
+    return sharedInstance;
+}
+
+-(id)init{
+    self = [super init];
+    if(self){
+        
+        _majorAreaDict = [NSMutableDictionary new];
+        _beaconDict = [NSMutableDictionary new];
+        
+    }
+    return self;
+}
+
+-(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons{
     
     NSArray *readbeacons = beacons;
     int analyzeTotal = MIN(10,readbeacons.count);
@@ -23,8 +47,6 @@
     for(int i = 0; i<analyzeTotal; i++){
         
         tmpBeacon = readbeacons[i];
-        
-        NSLog(@"beacon no %d: major:%@ minor:%@ distance:%f from majorArea:%@",i,tmpBeacon.major,tmpBeacon.minor, [tmpBeacon.distance doubleValue], [[self getMajorArea:tmpBeacon] identifier]);
         
         if([tmpBeacon.distance doubleValue]<0){
             continue;
@@ -65,16 +87,30 @@
 
 }
 
-+(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon{
+-(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon{
+    
+    NSString *key = [self keyFromBeacon:beacon];
+    YTLocalMajorArea *resultArea = [_majorAreaDict objectForKey:key];
+    
+    if(resultArea != nil){
+        return resultArea;
+    }
     
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     [db open];
+    
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
     YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
     
     YTLocalMajorArea * majorArea = [[localBeacon minorArea] majorArea];
+    [_majorAreaDict setObject:majorArea forKey:key];
     return majorArea;
+}
+
+
+-(NSString *)keyFromBeacon:(ESTBeacon *)beacon{
+    return [NSString stringWithFormat:@"%@-%@",beacon.major,beacon.minor];
 }
 
 

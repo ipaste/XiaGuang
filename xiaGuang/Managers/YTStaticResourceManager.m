@@ -251,6 +251,11 @@
     
     int localVersion = [dict[@"version"] intValue];
     
+    
+    
+    
+    
+    
     AVQuery *query = [AVQuery queryWithClassName:@"StaticData"];
     [query orderByDescending:AVOS_STATIC_VERSION_KEY];
     query.limit = 1;

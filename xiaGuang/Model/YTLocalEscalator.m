@@ -14,17 +14,20 @@
     NSString *_tmpEscalatorId;
     NSString *_tmpMajorAreaId;
     NSString *_tmpMinorAreaId;
+    NSString *_tmpType;
     float _tmpLatitude;
     float _tmpLongtitude;
     
     id<YTMajorArea> _tmpMajorArea;
     id<YTMinorArea> _tmpMinorArea;
+    id<YTMajorArea> _tmpToMajorArea;
 }
 
 @synthesize majorArea;
 @synthesize inMinorArea;
 @synthesize coordinate;
 @synthesize identifier;
+@synthesize type;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -35,6 +38,7 @@
             _tmpLongtitude = [findResultSet doubleForColumn:@"longtitude"];
             _tmpMinorAreaId = [findResultSet stringForColumn:@"minorAreaId"];
             _tmpMajorAreaId = [findResultSet stringForColumn:@"majorAreaId"];
+            _tmpType = [findResultSet stringForColumn:@"type"];
         }
     }
     return self;
@@ -93,6 +97,18 @@
 
 -(NSString *)iconName{
     return @"nav_ico_10";
+}
+
+
+-(YTTransportType)type{
+    if([_tmpType isEqualToString:@"u"]){
+        return YTTransportUpward;
+    }
+    else if ([_tmpType isEqualToString:@"d"]){
+        return YTTransportDownward;
+    }
+    
+    return YTTransportBothWays;
 }
 
 

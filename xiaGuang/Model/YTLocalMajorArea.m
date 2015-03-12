@@ -27,6 +27,7 @@
     id<YTFloor> _tmpFloor;
     
     double _tmpWorldToMapRatio;
+    int _tmpRank;
 }
 
 @synthesize mapName;
@@ -40,6 +41,7 @@
 @synthesize serviceStations;
 @synthesize exits;
 @synthesize isParking;
+@synthesize rank;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -52,6 +54,7 @@
             _tmpIsParking = [findResultSet stringForColumn:@"isParking"];
             _tmpUnId = [findResultSet stringForColumnIndex:@"unId"];
             _tmpWorldToMapRatio = [findResultSet doubleForColumn:@"worldToMapDistRatio"];
+            _tmpRank = [findResultSet intForColumn:@"rank"];
         }
     }
     return self;

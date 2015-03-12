@@ -17,7 +17,7 @@
     RMMapView *_mapView;
 }
 
-- (void)loadPESGraph:(NSString *)fileName;
+- (BOOL)loadPESGraph:(NSString *)fileName;
 
 - (CGPoint)projectPoint:(CGPoint)point
                  toNode:(PESGraphNode *)node1
@@ -33,15 +33,20 @@
     if (self) {
         _graph = [[PESGraph alloc] init];
         _mapView = mapView;
-        [self loadPESGraph:majorArea.mapName];
+        if([self loadPESGraph:majorArea.mapName]){
+            return self;
+        }
+        else{
+            return nil;
+        }
     }
     return self;   
 }
 
-- (void)loadPESGraph:(NSString *)fileName {
+- (BOOL)loadPESGraph:(NSString *)fileName {
     NSString *file = [[NSBundle mainBundle] pathForResource:fileName ofType:@"csv"];
     if (file == nil) {
-        return;
+        return NO;
     }
     
     NSString *content = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
@@ -82,6 +87,8 @@
         
         [_graph addBiDirectionalEdge:edge fromNode:node1 toNode:node2];
     }
+    
+    return YES;
 }
 
 

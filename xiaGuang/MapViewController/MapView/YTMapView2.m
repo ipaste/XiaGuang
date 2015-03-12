@@ -15,6 +15,7 @@
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
     CGFloat _offset;
+    YTPathAnnotation *_pathAnnotation;
 }
 
 #pragma mark init
@@ -244,11 +245,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
     
-    if([annotation.annotationType isEqualToString:@"user"]){
-        NSLog(@"user annotation layer");
-        NSLog(@"coordinate:%f, %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
-    }
-    
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;
 }
@@ -336,6 +332,31 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     
     return sqrt(xdiff*xdiff+ydiff*ydiff);
     
+}
+
+
+-(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
+                 toCoord2:(CLLocationCoordinate2D)c2
+             forMajorArea:(id<YTMajorArea>)majorArea{
+    
+    if(_pathAnnotation != nil){
+        [_internalMapView removeAnnotation:_pathAnnotation];
+    }
+    
+    CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
+    CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
+    _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
+    
+    if(_pathAnnotation != nil){
+        [_internalMapView addAnnotation:_pathAnnotation];
+    }
+    
+}
+
+-(void)removePath{
+    if(_pathAnnotation != nil){
+        [_internalMapView removeAnnotation:_pathAnnotation];
+    }
 }
 
 @end
