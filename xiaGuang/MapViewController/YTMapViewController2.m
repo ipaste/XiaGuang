@@ -177,6 +177,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     
+    
     [self createNavigationBar];
     [self createMapView];
     [self setTargetMall:[[[_majorArea floor] block]mall]];
@@ -1867,6 +1868,16 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _targetMall = aMall;
     [_mapView setMapOffset:[_targetMall offset]];
     [self createSearchView];
+    
+    if ([aMall isMemberOfClass:[YTCloudMall class]]) {
+        _mapView.isShowPath = [aMall isShowPath];
+    }else{
+        
+    }
+    
+    
+
+
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{

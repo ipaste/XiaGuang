@@ -43,7 +43,7 @@
         [query whereKey:FLOOR_CLASS_BLOCK_KEY equalTo:_internalObject];
         query.maxCacheAge = 24*3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-        
+          
         [query includeKey:@"block,merchant,majorArea.floor,inMinorArea"];
         NSArray *queryResult = [query findObjects];
         

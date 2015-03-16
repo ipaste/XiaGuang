@@ -45,6 +45,10 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     
 }
 
+- (BOOL)isShowPath{
+    return _internalObject[@"pathSwitch"];
+}
+
 - (CLLocationCoordinate2D)coord{
     NSNumber *latitude = _internalObject[@"latitude"];
     NSNumber *longitude = _internalObject[@"longitude"];
@@ -77,41 +81,8 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     
     return _blocks;
 }
--(UIImage *)background{
-    AVFile *file = _internalObject[MALL_CLASS_BACKGROUND_KEY];
-    return [UIImage imageWithData:[file getData]];
-}
 
--(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_BACKGROUND_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
--(void)getInfoBackgroundImageWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_INFO_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
 
--(UIImage *)logo{
-    AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
-    return [UIImage imageWithData:[file getData]];
-}
 
 -(NSArray *)merchants{
     if(_merchants == nil){
@@ -132,10 +103,6 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     return [_merchants copy];
 }
 
--(UIImage *)infoBackground{
-    AVFile *file = _internalObject[MALL_CLASS_INFO_KEY];
-    return [UIImage imageWithData:[file getData]];
-}
 
 -(void)iconsFromStartIndex:(int)start
                      toEnd:(int)end
@@ -239,7 +206,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     _callBack = callback;
     if (![self checkCallBackConditions]) {
         if (_titleImage == nil) {
-            [_internalObject[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            [_internalObject[MALL_CLASS_BIGTITLE_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                 if (error) {
                     callback(nil,nil,error);
                     return ;
@@ -250,7 +217,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
         }
         
         if (_background == nil) {
-            [_internalObject[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            [_internalObject[MALL_CLASS_BIGBACKGROUND_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                 if (error) {
                     callback(nil,nil,error);
                     return ;
@@ -271,32 +238,6 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     }
 }
 
--(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
-
--(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
 -(void)getMallBasicInfoWithCallBack:(void(^)(UIImage *mapImage,NSString *address,NSString *phoneNumber,NSError *error))callback{
     NSString *address = _internalObject[@"address"];
     NSString *phoneNumber = _internalObject[@"phoneNumber"];
@@ -352,11 +293,9 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager GET:@"http://xiaguang.avosapps.com/existence_PreferentialInformation" parameters:@{@"objectId":_internalObject.objectId} success:^(NSURLSessionDataTask *task, id responseObject) {
-        
         if ([responseObject[@"exidtence"] isEqualToNumber:@1]) {
             callBack(true);
         }else{
-            NSLog(@"false");
             callBack(false);
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {

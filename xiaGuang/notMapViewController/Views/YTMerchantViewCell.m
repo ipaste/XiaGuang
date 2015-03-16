@@ -100,7 +100,6 @@
     _merchantNameLabel.font = [UIFont systemFontOfSize:16];
     [_merchantNameLabel setTextColor:self.titleColor];
     
-    
     [_addressLable setFont:[UIFont systemFontOfSize:11]];
     [_addressLable setTextColor:[UIColor colorWithString:@"999999"]];
 }
@@ -108,9 +107,14 @@
 
 -(void)setMerchant:(id<YTMerchant>)merchant{
     _merchantNameLabel.text = [merchant merchantName];
-    CGSize size = [_merchantNameLabel.text boundingRectWithSize:_merchantNameLabel.frame.size options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
+    CGSize size = [[merchant merchantName] boundingRectWithSize:CGSizeMake(MAXFLOAT, CGRectGetHeight(_merchantNameLabel.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
+    
     CGRect frame = _merchantNameLabel.frame;
-    frame.size.width = size.width;
+    if (size.width > 1) {
+        frame.size.width = size.width;
+    }else{
+        frame.size.width = 150;
+    }
     _merchantNameLabel.frame = frame;
     
     

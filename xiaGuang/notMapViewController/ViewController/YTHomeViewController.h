@@ -12,13 +12,14 @@
 #import "YTStaticResourceManager.h"
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
-#import "YTMallViewController.h"
 #import "Reachability.h"
+#import "YTMallCell.h"
 #import "YTParkingViewController.h"
 #import "YTBluetoothManager.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "BBTableView.h"
-@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate>
+#import "YTMallDict.h"
+@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>
 
 @end
 

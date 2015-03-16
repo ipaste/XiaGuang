@@ -405,12 +405,14 @@
     [query whereKey:@"uniId" notEqualTo:@""];
     if (_mall) {
         AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
-        [mallQuery whereKey:@"name" equalTo:[_mall mallName]];
+        if ([_mall isMemberOfClass:[YTLocalMall class]]){
+            [mallQuery whereKey:@"localDBId" equalTo:[_mall identifier]];
+        }else{
+            [mallQuery whereKey:@"localDBId" equalTo:[_mall localDB]];
+        }
         [query whereKey:@"mall" matchesQuery:mallQuery];
     }
-    
     query.limit = 6;
-    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (objects.count > 0) {
             _popularMerchants = [NSArray arrayWithArray:objects];

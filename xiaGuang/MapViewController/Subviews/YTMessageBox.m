@@ -44,14 +44,14 @@ typedef void(^YTMessageBoxCallBack)(NSInteger tag);
     _backgroundView.image = [UIImage imageNamed:@"nav_bg_pop"];
     [self addSubview:_backgroundView];
     
-    _titleLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, CGRectGetWidth(_backgroundView.frame), 20)];
+    _titleLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, CGRectGetWidth(_backgroundView.frame), 20)];
     _titleLable.text = title;
     _titleLable.textAlignment = 1;
     _titleLable.font = [UIFont systemFontOfSize:17];
     _titleLable.textColor = [UIColor colorWithString:@"e95e37"];
     [_backgroundView addSubview:_titleLable];
     
-    _messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_titleLable.frame) + 8, CGRectGetWidth(_titleLable.frame) - 20, CGRectGetHeight(_titleLable.frame) * 2)];
+    _messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_titleLable.frame) + 10, CGRectGetWidth(_titleLable.frame) - 20, CGRectGetHeight(_titleLable.frame) * 2)];
     _messageLabel.text = message;
     _messageLabel.numberOfLines = 2;
     _messageLabel.lineBreakMode = 0;
@@ -84,12 +84,19 @@ typedef void(^YTMessageBoxCallBack)(NSInteger tag);
     
     
 }
+
+-(void)setMessageColor:(UIColor *)messageColor{
+    _messageLabel.textColor = messageColor;
+    _messageColor = messageColor;
+}
 -(void)show{
     [_window addSubview:self];
 }
+
 -(void)callBack:(void(^)(NSInteger tag))callBack{
     tmpCallBack = callBack;
 }
+
 -(void)clickToButton:(UIButton *)sender{
     if ([self.delegate respondsToSelector:@selector(clickToButtonAtTag:)]) {
         [self.delegate clickToButtonAtTag:sender.tag];

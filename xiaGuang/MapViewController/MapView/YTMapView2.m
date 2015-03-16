@@ -33,6 +33,7 @@
         _annotationSource = [[YTAnnotationSource alloc] init];
         [self addSubview:_internalMapView];
         _map = _internalMapView;
+        _isShowPath = true;
     }
     return self;
 }
@@ -339,24 +340,35 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea{
     
-    if(_pathAnnotation != nil){
-        [_internalMapView removeAnnotation:_pathAnnotation];
+    if (self.isShowPath) {
+        if(_pathAnnotation != nil){
+            [_internalMapView removeAnnotation:_pathAnnotation];
+        }
+        
+        CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
+        CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
+        _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
+        
+        if(_pathAnnotation != nil){
+            [_internalMapView addAnnotation:_pathAnnotation];
+        }
     }
-    
-    CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
-    CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
-    _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
-    
-    if(_pathAnnotation != nil){
-        [_internalMapView addAnnotation:_pathAnnotation];
-    }
-    
 }
 
 -(void)removePath{
     if(_pathAnnotation != nil){
         [_internalMapView removeAnnotation:_pathAnnotation];
+        _pathAnnotation = nil;
     }
+}
+
+-(void)setIsShowPath:(BOOL)isShowPath{
+    if (!isShowPath) {
+        if (_pathAnnotation != nil) {
+            [self removePath];
+        }
+    }
+    _isShowPath = isShowPath;
 }
 
 @end

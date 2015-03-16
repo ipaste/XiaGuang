@@ -50,6 +50,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic,weak) id<YTMapViewDelegate> delegate;
 @property (nonatomic,readonly) RMMapView *map;
+@property (nonatomic) BOOL isShowPath;
 
 
 #pragma mark Map Annimations

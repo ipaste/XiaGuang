@@ -83,6 +83,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return _tmpMerchantInstance;
 }
 
+
 -(CGFloat)offset{
     return _offset;
 }

@@ -38,7 +38,6 @@
     
     if(resultArea == nil){
         
-        
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         if([db open]){
             

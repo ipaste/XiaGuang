@@ -16,6 +16,8 @@
 @end
 @interface YTMessageBox : UIView
 @property(weak,nonatomic)id<YTMessageBoxDelegate> delegate;
+@property(strong ,nonatomic)UIColor *messageColor;
+
 -(id)initWithTitle:(NSString *)title Message:(NSString *)message;
 -(id)initWithTitle:(NSString *)title Message:(NSString *)message cancelButtonTitle:(NSString *)buttonTitle;
 -(void)show;

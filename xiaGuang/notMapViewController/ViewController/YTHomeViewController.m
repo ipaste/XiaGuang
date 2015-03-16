@@ -33,6 +33,9 @@
     
     YTStaticResourceManager *_resourceManager;
     UIToolbar *_transitionToolbar;
+    
+    YTMallDict *_mallDict;
+    CLLocationManager *_manager;
 }
 @end
 
@@ -41,6 +44,7 @@
     self = [super init];
     if (self) {
         _malls = [NSMutableArray array];
+         _cells = [NSMutableArray new];
     }
     return self;
 }
@@ -58,7 +62,10 @@
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
-
+    
+    _manager = [[CLLocationManager alloc]init];
+    _manager.delegate = self;
+    [_manager startUpdatingLocation];
     
     
     _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
@@ -133,29 +140,17 @@
       
     });
 
-    FMDatabase *database = [YTStaticResourceManager sharedManager].db;
-    FMResultSet *result = [database executeQuery:@"select * from Mall"];
-    _cells = [NSMutableArray new];
-    
-    int i = 0;
-    while ([result next]) {
-        YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
-        [_malls addObject:mall];
+    _mallDict = [YTMallDict sharedInstance];
+    [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
+        _malls = malls.copy;
+        for(int j = 0; j<_malls.count*3; j++){
         
-    }
-    for(int j = 0; j<_malls.count*3; j++){
-        YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-        [_cells addObject:cell1];
-    }
-    
-    
-    [_tableView reloadData];
-    
-    [self changeLocalMallVariableCloudMall:^{
+            YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+            cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+            [_cells addObject:cell1];
+        }
         [_tableView reloadData];
     }];
-    
     
     if(!_scrollFired){
         [self test];
@@ -172,6 +167,45 @@
 }
 
 
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    [_manager stopUpdatingLocation];
+    _manager.delegate = nil;
+    NSNumber *latitude;
+    NSNumber *longitude;
+    for (CLLocation *location in locations) {
+        longitude = [NSNumber numberWithDouble:location.coordinate.longitude];
+        latitude = [NSNumber numberWithDouble:location.coordinate.latitude];
+        if(longitude != nil && latitude != nil){
+            break;
+        }
+    }
+    if (latitude != nil && longitude != nil){
+        AFHTTPSessionManager *httpManager = [AFHTTPSessionManager manager];
+        [httpManager GET:@"http://xiaguang.avosapps.com/near_mall" parameters:@{@"latitude":latitude,@"longitude":longitude,@"maxMallId":_mallDict.localMallMaxId} success:^(NSURLSessionDataTask *task, id responseObject) {
+            if (responseObject != nil){
+                if ([responseObject[@"status"] isEqualToString:@"OK"]) {
+                    NSString *mallName = responseObject[@"mallName"];
+                    NSString *mallId = responseObject[@"nearMallId"];
+                    NSString *mallLocalDBId = responseObject[@"mallLocalDBId"];
+                    
+                    YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您正处于%@,需要切换至%@吗？",mallName,mallName]];
+                    messageBox.messageColor = [UIColor colorWithString:@"e95e37"];
+                    [messageBox show];
+                    [messageBox callBack:^(NSInteger tag) {
+                        if (tag == 1){
+                            
+                        }
+                    }];
+                    
+                }
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            
+        }];
+        
+    }
+  
+}
 
 - (void)test {
     
@@ -254,13 +288,6 @@
     }];
 }
 
-
-/*
- 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    [self test];
-}*/
-
 -(void)scrollDown{
     CGPoint p = _tableView.contentOffset;
     p.y = p.y + STEP_LENGTH;
@@ -317,13 +344,12 @@
 
 -(void)reachabilityChanged:(NSNotification *)notification{
     Reachability *tmpReachability = notification.object;
-    if (_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) {
-        [self changeLocalMallVariableCloudMall:^{
-            [_tableView reloadData];
-        }];
-    }else if(tmpReachability.currentReachabilityStatus != NotReachable){
-        [self changeLocalMallVariableCloudMall:^{
-            [_tableView reloadData];
+    if ((_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) || tmpReachability.currentReachabilityStatus != NotReachable) {
+        [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
+            if (malls.count != 0 && malls != nil) {
+                _malls = malls.copy;
+                [_tableView reloadData];
+            }
         }];
     }
     
@@ -334,30 +360,6 @@
     _status =  tmpReachability.currentReachabilityStatus;
 }
 
--(void)changeLocalMallVariableCloudMall:(void(^)())callBack{
-    AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 60 * 60;
-    [query whereKeyExists:@"localDBId"];
-    [query whereKey:@"localDBId" notEqualTo:@""];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(!error && objects != nil && objects.count != 0){
-            NSMutableArray *array = [NSMutableArray array];
-            for (AVObject *mall in objects) {
-                YTCloudMall *cloudMall = [[YTCloudMall alloc]initWithAVObject:mall];
-                [cloudMall mallName];
-                
-                [array addObject:cloudMall];
-            }
-            [_malls removeAllObjects];
-            _malls = nil;
-            _malls = array;
-            if (callBack != nil) {
-                callBack();
-            }
-        }
-    }];
-}
 -(void)rangedBeacons:(NSArray *)beacons{
     if(beacons.count > 0){
         _recordMinorArea = [self getMinorArea:beacons[0]];

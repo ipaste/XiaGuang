@@ -216,6 +216,9 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     if (_type == YTResultsTypeResults) {
         AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
         [query orderByAscending:@"name"];
+        AVQuery *mallquery = [AVQuery queryWithClassName:@"Mall"];
+        [mallquery whereKey:@"localDBId" equalTo:_mallUniId];
+        [query whereKey:@"mall" matchesQuery:mallquery];
         [query includeKey:@"mall,floor"];
         query.limit = number;
         query.skip = skip;
