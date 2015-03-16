@@ -30,7 +30,8 @@
 
 - (id)initWithMapView:(RMMapView *)mapView
         beaconManager:(YTBeaconManager *)beaconManager
-            majorArea:(id<YTMajorArea>)majorArea;
+            majorArea:(id<YTMajorArea>)majorArea
+            mapOffset:(double)offset;
 
 
 - (void)start;

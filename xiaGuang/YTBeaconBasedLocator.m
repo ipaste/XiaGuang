@@ -44,7 +44,8 @@
 
 - (id)initWithMapView:(RMMapView *)mapView
         beaconManager:(YTBeaconManager *)beaconManager
-            majorArea:(id<YTMajorArea>)majorArea {
+            majorArea:(id<YTMajorArea>)majorArea
+            mapOffset:(double)offset{
     self = [super init];
     if (self) {
         _mapView = mapView;
@@ -68,6 +69,7 @@
         
         _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
         _inertia.mapMeterPerPixel = 1;
+        _inertia.mapNorthOffset = offset;
         _inertia.delegate = self;
 
     }

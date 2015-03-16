@@ -1806,7 +1806,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_beaconManager removeListener:_locator];
     
-    _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
+    _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea mapOffset:[_targetMall offset]];
+   
     
     [_locator start];
     [_beaconManager addListener:_locator];
