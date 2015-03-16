@@ -78,9 +78,10 @@
     
     for (int i=0; i<particleNum; i++) {
         
-        _stepLens[i] = [YTCanonicalCoordinate worldToCanonicalDistance:stepLen + arc4random()/RAND_MAX
+        double step = [YTCanonicalCoordinate worldToCanonicalDistance:stepLen + arc4random()/RAND_MAX
                                                                mapView:_mapView
                                                              majorArea:_majorArea];
+        _stepLens[i] = step;
         
         _particleWeight[i] = 1.0/particleNum;
         

@@ -24,8 +24,6 @@
         
         tmpBeacon = readbeacons[i];
         
-        NSLog(@"beacon no %d: major:%@ minor:%@ distance:%f from majorArea:%@",i,tmpBeacon.major,tmpBeacon.minor, [tmpBeacon.distance doubleValue], [[self getMajorArea:tmpBeacon] identifier]);
-        
         if([tmpBeacon.distance doubleValue]<0){
             continue;
         }
@@ -60,7 +58,6 @@
     if(strongestMajorAreaId == nil){
         NSLog(@"oops");
     }
-    NSLog(@"strongestMajorAreaId is %@",strongestMajorAreaId);
     return strongestMajorAreaId;
 
 }

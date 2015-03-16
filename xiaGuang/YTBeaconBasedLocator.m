@@ -67,6 +67,7 @@
         _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
         
         _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
+        _inertia.mapMeterPerPixel = 1;
         _inertia.delegate = self;
 
     }
@@ -75,6 +76,7 @@
 
 - (void)start {
     [_kalmanFilterBot start];
+    [_inertia startSensorReading];
 }
 
 -(void)YTBeaconManager:(YTBeaconManager *)manager
@@ -106,11 +108,14 @@
 }
 
 -(void)positionUpdating:(CGPoint )position {
-    CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
+    NSLog(@"======= %f %f", position.x, position.y);
+    if (position.x != -INFINITY && position.y != INFINITY) {
+        CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
                                                                          mapView:_mapView];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
-    });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
+        });
+    }
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons {
