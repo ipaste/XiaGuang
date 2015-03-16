@@ -82,7 +82,6 @@
     if(strongestMajorAreaId == nil){
         NSLog(@"oops");
     }
-    NSLog(@"strongestMajorAreaId is %@",strongestMajorAreaId);
     return strongestMajorAreaId;
 
 }
