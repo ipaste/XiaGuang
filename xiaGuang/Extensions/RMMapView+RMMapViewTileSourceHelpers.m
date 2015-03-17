@@ -54,7 +54,7 @@
         [self showTileSourceAtIndex:self.tileSources.count-1];
         
         self.maxZoom = source.maxZoom;
-        
+        self.zoom = 0;
     }
     
     

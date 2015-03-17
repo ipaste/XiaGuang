@@ -22,7 +22,6 @@
 -(id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if(self){
-        
         RMMBTilesSource *source = [[RMMBTilesSource alloc]initWithTileSetResource:@""];
         source.cacheable = NO;
         _internalMapView = [[RMMapView alloc] initWithFrame:CGRectMake(-CGRectGetWidth(frame) / 2, -CGRectGetHeight(frame) / 2, CGRectGetWidth(frame), CGRectGetHeight(frame)) andTilesource:source centerCoordinate:CLLocationCoordinate2DMake(0, 0) zoomLevel:2 maxZoomLevel:3 minZoomLevel:0 backgroundImage:nil];
