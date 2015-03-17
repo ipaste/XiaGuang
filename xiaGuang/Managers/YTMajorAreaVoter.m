@@ -72,7 +72,7 @@
     [scoreboard enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         
         double curScore =[(NSNumber *)obj doubleValue];
-        NSLog(@"id:%@ score:%f",key, curScore);
+    
         if(curScore > strongScore){
             strongScore = curScore;
             strongestMajorAreaId = key;

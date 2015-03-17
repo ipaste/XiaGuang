@@ -969,11 +969,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_selectedPoi != nil){
         _navigationView.hidden = YES;
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
     if(_type != YTMapViewControllerTypeNavigation){
         [_beaconManager removeListener:_locator];
         _locator = nil;
     }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 #pragma mark YTSearchViewManager
@@ -1036,8 +1037,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)selectToMerchantInstance:(id<YTMerchantLocation>)merchantInstance{
-    
-    
     
     id<YTMajorArea> tmpMajorArea = [merchantInstance majorArea];
     
@@ -1875,10 +1874,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }else{
         
     }
-    
-    
-
-
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{

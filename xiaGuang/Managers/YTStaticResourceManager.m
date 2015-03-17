@@ -124,7 +124,7 @@
             }
             
         }
-        
+     
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:CURRENT_DIR]];
     }];
     
@@ -150,22 +150,19 @@
 }
 
 - (void)restartCopyTheFile{
-    if(![FCFileManager existsItemAtPath:CURRENT_DIR]){
-        [FCFileManager createDirectoriesForPath:CURRENT_DIR];
-        [FCFileManager createDirectoriesForPath:CURRENT_DATA_DIR];
-    }
-    
-    if(![FCFileManager existsItemAtPath:CURRENT_MANIFEST_PATH]){
-        
-        [FCFileManager copyItemAtPath:BUNDLE_MANIFEST_PATH toPath:CURRENT_MANIFEST_PATH];
-    }
+    [FCFileManager removeItemAtPath:CURRENT_DIR];
+
+    [FCFileManager createDirectoriesForPath:CURRENT_DIR];
+    [FCFileManager createDirectoriesForPath:CURRENT_DATA_DIR];
+    [FCFileManager copyItemAtPath:BUNDLE_MANIFEST_PATH toPath:CURRENT_MANIFEST_PATH];
+
     
     [self pullInBundleDataInManifestIfNeeded];
     
     _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
     
     [_db open];
-    
+
 }
 
 - (void)checkAndSwitchToNewStaticData {

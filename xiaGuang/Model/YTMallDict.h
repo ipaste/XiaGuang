@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, YTMallClass) {
 // 将任意类型的mall转换成云商城对象以及本地商城对象
 - (id<YTMall>)changeMallObject:(id<YTMall>)mall resultType:(YTMallClass)mallClass;
 
+- (id<YTMall>)getMallFromIdentifier:(NSString *)identifier;
+
 // 获得一个Mall的首层
 - (YTLocalFloor *)firstFloorFromMallLocalId:(NSString *)localDBId;
 @end

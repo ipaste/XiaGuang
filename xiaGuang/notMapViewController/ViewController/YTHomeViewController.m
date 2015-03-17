@@ -63,6 +63,10 @@
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
     
+   
+    
+
+    
     _manager = [[CLLocationManager alloc]init];
     _manager.delegate = self;
     [_manager startUpdatingLocation];
@@ -132,12 +136,11 @@
         }
     
         _resourceManager = [YTStaticResourceManager sharedManager];
-        Reachability * reachability = [Reachability reachabilityWithHostname:@"cn.avoscloud.com"];
+         [self firstStartSettingTheProgram];
+        Reachability * reachability = [Reachability reachabilityWithHostname:@"www.xiashopping.com"];
         [reachability startNotifier];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-        
-        [self firstStartSettingTheProgram];
-      
+    
     });
 
     _mallDict = [YTMallDict sharedInstance];
@@ -187,16 +190,27 @@
                     NSString *mallName = responseObject[@"mallName"];
                     NSString *mallId = responseObject[@"nearMallId"];
                     NSString *mallLocalDBId = responseObject[@"mallLocalDBId"];
-                    
-                    YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您正处于%@,需要切换至%@吗？",mallName,mallName]];
-                    messageBox.messageColor = [UIColor colorWithString:@"e95e37"];
-                    [messageBox show];
-                    [messageBox callBack:^(NSInteger tag) {
-                        if (tag == 1){
-                            
-                        }
-                    }];
-                    
+                    float distance = ((NSString *)responseObject[@"distance"]).floatValue;
+                    if (distance < 1000) {
+                        YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您正处于%@,需要切换至%@吗？",mallName,mallName]];
+                        messageBox.messageColor = [UIColor colorWithString:@"e95e37"];
+                        [messageBox show];
+                        [messageBox callBack:^(NSInteger tag) {
+                            if (tag == 1){
+                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                    id<YTFloor> floor = [_mallDict firstFloorFromMallLocalId:mallLocalDBId];
+                                    id<YTMall> mall = [_mallDict getMallFromIdentifier:mallId];
+                                    YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
+                                    YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
+                                    mallInfoVC.mall = mall;
+                                    [self.navigationController pushViewController:mallInfoVC animated:false];
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [mallInfoVC presentViewController:mapVC animated:false completion:nil];
+                                    });
+                                });
+                            }
+                        }];
+                    }
                 }
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
@@ -206,7 +220,6 @@
     }
   
 }
-
 - (void)test {
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -243,7 +256,6 @@
 
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
     if(!decelerate && !_shouldScroll){
         _shouldScroll = YES;
         [self test];
@@ -291,8 +303,6 @@
 -(void)scrollDown{
     CGPoint p = _tableView.contentOffset;
     p.y = p.y + STEP_LENGTH;
-    
-   // NSLog(@"about to scroll up to point: %f",p.y);
     _tableView.contentOffset = p;
 }
 
@@ -337,7 +347,6 @@
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
         mallInfoVC.mall = _malls[indexPath.row % _malls.count];
-        mallInfoVC.isPreferential = cell.isPreferential;
         [self.navigationController pushViewController:mallInfoVC animated:true];
     }
 }
@@ -440,19 +449,20 @@
 }
 
 -(void)firstStartSettingTheProgram{
-    static NSString * firstKey = @"Program";
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-   
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
-    NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
-    NSDictionary *mainfest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
-    
-    NSDictionary *tmpMainfest = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"]];
-    if (mainfest != nil && tmpMainfest != nil){
-        if ([fileManager fileExistsAtPath:currentPath] && tmpMainfest[@"version"] >= mainfest[@"version"]) {
-            [fileManager removeItemAtPath:path error:nil];
-            [_resourceManager restartCopyTheFile];
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    if ([userDefault valueForKey:@"first"] == nil || false) {
+        [userDefault setValue:@YES forKey:@"first"];
+        [userDefault synchronize];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+        NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
+        NSDictionary *mainfest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
+        
+        NSDictionary *tmpMainfest = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"]];
+        if (mainfest != nil && tmpMainfest != nil){
+            if ([fileManager fileExistsAtPath:currentPath] && tmpMainfest[@"version"] >= mainfest[@"version"]) {
+                [_resourceManager restartCopyTheFile];
+            }
         }
     }
 }
@@ -460,6 +470,7 @@
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
 }
+
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }

@@ -904,7 +904,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     if(_locator == nil){
         [_beaconManager removeListener:_locator];
-        _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
+        _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea mapOffset:[[[[[_userMinorArea majorArea] floor] block] mall] offset]];
         [_locator start];
         _locator.delegate = self;
         [_beaconManager addListener:_locator];
@@ -915,7 +915,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     if(![[aMajorArea identifier] isEqualToString:[_locatorMajorArea identifier]]){
         [_beaconManager removeListener:_locator];
-        _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
+        _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea mapOffset:[[[[[_userMinorArea majorArea] floor] block] mall] offset]];
         [_locator start];
         _locator.delegate = self;
         [_beaconManager addListener:_locator];

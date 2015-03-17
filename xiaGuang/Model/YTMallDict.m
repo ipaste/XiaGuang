@@ -118,6 +118,23 @@
     }
 }
 
+- (id<YTMall>)getMallFromIdentifier:(NSString *)identifier{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
+    if (identifier.length < 24) {
+        //返回本地数据
+        if (_localMalls == nil) {
+            return nil;
+        }
+        return [_localMalls filteredArrayUsingPredicate:predicate][0];
+    }else{
+        //返回云端数据
+        if (_cloudMalls == nil) {
+            return nil;
+        }
+        return [_cloudMalls filteredArrayUsingPredicate:predicate][0];
+    }
+}
+
 - (YTLocalFloor *)firstFloorFromMallLocalId:(NSString *)localDBId{
     FMDatabase *db = [YTStaticResourceManager sharedManager].db;
     NSString *sql = [NSString stringWithFormat:@"select * from Floor where floorName = \"L1\" and mallId = %@",localDBId];

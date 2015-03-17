@@ -24,7 +24,7 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Override point for customization after application launch.
     [AVOSCloud setApplicationId:@"p8eq0otfz420q56dsn8s1yp8dp82vopaikc05q5h349nd87w" clientKey:@"kzx1ajhbxkno0v564rcremcz18ub0xh2upbjabbg5lruwkqg"];
     
@@ -41,7 +41,12 @@
    
     _timeInToBackground = 0;
     
-    [self youmiProcedure];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       [self youmiProcedure];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+        });
+    });
     return YES;
 }
 
@@ -105,14 +110,11 @@
         if(!error){
             NSString *url = object[@"callback"];
             if(url != nil && ![url isEqualToString:@""]){
-                
                 NSString *decoded = [url stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                
                 if(decoded != nil && ![decoded isEqualToString:@""]){
                     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
                     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
                     [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        NSLog(@"JSON: %@", responseObject);
                         object[@"sent"] = @YES;
                         [object saveEventually];
                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
