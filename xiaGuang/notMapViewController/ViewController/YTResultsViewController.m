@@ -16,6 +16,7 @@
 #import "YTPreferential.h"
 #import "YTCategory.h"
 #import "MJRefresh.h"
+#import "YTMallDict.h"
 #import "YTMerchantInfoViewController.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     YTCategoryResultsView *_categoryResultsView;
     YTResultsType _type;
     NSInteger _dealCount;
+    YTMallDict *_mallDict;
 }
 @end
 
@@ -109,6 +111,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
    
     //self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_bg_1"]];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
+    
+    _mallDict = [YTMallDict sharedInstance];
     
     _isFirst = YES;
     
@@ -217,11 +221,14 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
         [query orderByAscending:@"name"];
         [query includeKey:@"mall,floor"];
+         AVQuery *mallquery = [AVQuery queryWithClassName:@"Mall"];
         if (_mall) {
             AVQuery *mallquery = [AVQuery queryWithClassName:@"Mall"];
             [mallquery whereKey:MALL_CLASS_LOCALID equalTo:_mallUniId];
-            [query whereKey:@"mall" matchesQuery:mallquery];
+        }else{
+            [mallquery whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
         }
+        [query whereKey:@"mall" matchesQuery:mallquery];
         query.limit = number;
         query.skip = skip;
         if (_isCategory) {

@@ -16,7 +16,7 @@
 #import "YTMerchantViewCell.h"
 #import "YTMerchantInfoViewController.h"
 #import "YTResultsViewController.h"
-#import "YTCloudMall.h"
+#import "YTMallDict.h"
 #import "YTMapViewController2.h"
 typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 @interface YTMallInfoViewController ()<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
@@ -34,6 +34,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
     UIView *_preferentialView;
     YTMallPosistionViewController *_posistionVC;
     YTPreferentialsCallBack _callBack;
+    YTMallDict *_mallDict;
     BOOL _isShowSearchView;
     NSArray *_preferentials;
 }
@@ -43,13 +44,12 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) + 50, 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame) - 50)];
     _scrollView.backgroundColor = [UIColor clearColor];
     self.automaticallyAdjustsScrollViewInsets = false;
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
-
-    _searchView = [[YTSearchView alloc]initWithMall:[(YTCloudMall *)self.mall getLocalCopy] placeholder:@"商城/品牌" indent:NO];
+    _mallDict = [YTMallDict sharedInstance];
+    _searchView = [[YTSearchView alloc]initWithMall:[_mallDict changeMallObject:self.mall resultType:YTMallClassLocal] placeholder:@"商城/品牌" indent:NO];
     _searchView.delegate = self;
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
@@ -189,76 +189,6 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
         [categoryView addSubview:categoryLabel];
     }
     CGFloat offSetY = CGRectGetMaxY(categoryView.frame);
-    //优惠信息块
-    if (self.isPreferential){
-        _preferentialView = [[UIView alloc]initWithFrame:CGRectMake(0, offSetY + 10, CGRectGetWidth(_scrollView.frame), 165)];
-        _preferentialView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
-        
-        UIImage *titleImage = [UIImage imageNamed:@"title_disco"];
-        UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, titleImage.size.width, titleImage.size.height)];
-        titleImageView.image = titleImage;
-        titleImageView.tag = 10;
-        [_preferentialView addSubview:titleImageView];
-        
-        UIButton *more = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_scrollView.frame) - 100, 0, 100, 35)];
-        [more setTitle:@"更多" forState:UIControlStateNormal];
-        [more setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
-        [more.titleLabel setFont:[UIFont systemFontOfSize:13]];
-        [more setImage:[UIImage imageNamed:@"icon_arrow_orange"] forState:UIControlStateNormal];
-        [more setImageEdgeInsets:UIEdgeInsetsMake(0, 66, 0, 0)];
-        [more addTarget:self action:@selector(preferentialMore:) forControlEvents:UIControlEventTouchUpInside];
-        [_preferentialView addSubview:more];
-        
-        NSInteger count = 3;
-        CGFloat oneCentenX = (CGRectGetWidth(_scrollView.frame) / count) / 2 - 30;
-        CGFloat oneWidth = CGRectGetWidth(_scrollView.frame) / count;
-        for (NSInteger  i = 0;i < count; i++){
-            UIImageView *iconView = [[UIImageView alloc]initWithFrame:CGRectMake(oneCentenX + i * (60 + oneCentenX * 2), CGRectGetMaxY(titleImageView.frame) + 13.5, 60, 60)];
-            iconView.layer.cornerRadius = CGRectGetWidth(iconView.frame) / 2;
-            iconView.layer.masksToBounds = true;
-            iconView.tag = i;
-            iconView.image = [UIImage imageNamed:@"imgshop_default"];
-            
-            UIImageView *markImageView = [[UIImageView alloc]initWithFrame:CGRectMake((i + 1) * oneWidth - 30, CGRectGetMaxY(titleImageView.frame), 30, 30)];
-            markImageView.tag = i + 3;
-            markImageView.image = [UIImage imageNamed:@"flag_du"];
-            
-            UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(iconView.frame) + oneCentenX, CGRectGetMaxY(titleImageView.frame) + 12, 0.5, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame) - 24)];
-            lineView.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
-            
-            UILabel *merchantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(12 +  i * oneWidth, CGRectGetMaxY(iconView.frame) + 10, oneWidth - 24, 15)];
-            merchantNameLabel.text = @"敬请期待";
-            merchantNameLabel.textColor = [UIColor colorWithString:@"333333"];
-            merchantNameLabel.textAlignment = 1;
-            merchantNameLabel.tag = i;
-            merchantNameLabel.font = [UIFont systemFontOfSize:13];
-            
-            UILabel *preferentialLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(merchantNameLabel.frame), CGRectGetMaxY(merchantNameLabel.frame) + 5, CGRectGetWidth(merchantNameLabel.frame), CGRectGetHeight(merchantNameLabel.frame))];
-            preferentialLabel.textColor = [UIColor colorWithString:@"e95e37"];
-            preferentialLabel.textAlignment = 1;
-            preferentialLabel.font = [UIFont systemFontOfSize:13];
-            preferentialLabel.text = @"暂无优惠";
-            preferentialLabel.tag = i + 3;
-            
-            UIButton *preferentialButton = [[UIButton alloc]initWithFrame:CGRectMake(i * oneWidth, CGRectGetMaxY(titleImageView.frame), oneWidth, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame))];
-            preferentialButton.tag = i;
-            [preferentialButton addTarget:self action:@selector(clickPreferential:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [_preferentialView addSubview:iconView];
-            
-            [_preferentialView addSubview:markImageView];
-            
-            [_preferentialView addSubview:lineView];
-            
-            [_preferentialView addSubview:merchantNameLabel];
-            
-            [_preferentialView addSubview:preferentialLabel];
-            
-            [_preferentialView addSubview:preferentialButton];
-        }
-        offSetY = CGRectGetMaxY(_preferentialView.frame);
-    }
-    
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, offSetY + 10, CGRectGetWidth(_scrollView.frame),  935) style:UITableViewStylePlain];
     _tableView.scrollEnabled = NO;
     _tableView.delegate = self;
@@ -284,7 +214,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
     
     [_scrollView addSubview:categoryView];
     [_scrollView addSubview:_tableView];
-    [_scrollView addSubview:_preferentialView];
+    
     
     
     _scrollView.contentSize = CGSizeMake(CGRectGetWidth(_scrollView.frame), CGRectGetMaxY(_tableView.frame));
@@ -295,12 +225,6 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
         [_loadingLabel removeFromSuperview];
         _hots = merchants;
         [_tableView reloadData];
-    }];
-
-    
-    [self getPreferential:^(NSArray *preferentials) {
-        [self reloadPreferentialWithPreferentials:preferentials];
-        _preferentials = preferentials;
     }];
     
     id<YTMall> mall = _mall;
@@ -313,6 +237,94 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
         _posistionVC = [[YTMallPosistionViewController alloc]initWithMallCoordinate:[_mall coord] address:address mallName:[_mall mallName]];
     }];
     
+    //优惠信息块
+    [_mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+        if (isExistence) {
+            _preferentialView = [[UIView alloc]initWithFrame:CGRectMake(0, offSetY + 10, CGRectGetWidth(_scrollView.frame), 165)];
+            _preferentialView.alpha = 0;
+            _preferentialView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+            
+            UIImage *titleImage = [UIImage imageNamed:@"title_disco"];
+            UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, titleImage.size.width, titleImage.size.height)];
+            titleImageView.image = titleImage;
+            titleImageView.tag = 10;
+            [_preferentialView addSubview:titleImageView];
+            
+            UIButton *more = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_scrollView.frame) - 100, 0, 100, 35)];
+            [more setTitle:@"更多" forState:UIControlStateNormal];
+            [more setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
+            [more.titleLabel setFont:[UIFont systemFontOfSize:13]];
+            [more setImage:[UIImage imageNamed:@"icon_arrow_orange"] forState:UIControlStateNormal];
+            [more setImageEdgeInsets:UIEdgeInsetsMake(0, 66, 0, 0)];
+            [more addTarget:self action:@selector(preferentialMore:) forControlEvents:UIControlEventTouchUpInside];
+            [_preferentialView addSubview:more];
+            
+            NSInteger count = 3;
+            CGFloat oneCentenX = (CGRectGetWidth(_scrollView.frame) / count) / 2 - 30;
+            CGFloat oneWidth = CGRectGetWidth(_scrollView.frame) / count;
+            for (NSInteger  i = 0;i < count; i++){
+                UIImageView *iconView = [[UIImageView alloc]initWithFrame:CGRectMake(oneCentenX + i * (60 + oneCentenX * 2), CGRectGetMaxY(titleImageView.frame) + 13.5, 60, 60)];
+                iconView.layer.cornerRadius = CGRectGetWidth(iconView.frame) / 2;
+                iconView.layer.masksToBounds = true;
+                iconView.tag = i;
+                iconView.image = [UIImage imageNamed:@"imgshop_default"];
+                
+                UIImageView *markImageView = [[UIImageView alloc]initWithFrame:CGRectMake((i + 1) * oneWidth - 30, CGRectGetMaxY(titleImageView.frame), 30, 30)];
+                markImageView.tag = i + 3;
+                markImageView.image = [UIImage imageNamed:@"flag_du"];
+                
+                UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(iconView.frame) + oneCentenX, CGRectGetMaxY(titleImageView.frame) + 12, 0.5, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame) - 24)];
+                lineView.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
+                
+                UILabel *merchantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(12 +  i * oneWidth, CGRectGetMaxY(iconView.frame) + 10, oneWidth - 24, 15)];
+                merchantNameLabel.text = @"敬请期待";
+                merchantNameLabel.textColor = [UIColor colorWithString:@"333333"];
+                merchantNameLabel.textAlignment = 1;
+                merchantNameLabel.tag = i;
+                merchantNameLabel.font = [UIFont systemFontOfSize:13];
+                
+                UILabel *preferentialLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(merchantNameLabel.frame), CGRectGetMaxY(merchantNameLabel.frame) + 5, CGRectGetWidth(merchantNameLabel.frame), CGRectGetHeight(merchantNameLabel.frame))];
+                preferentialLabel.textColor = [UIColor colorWithString:@"e95e37"];
+                preferentialLabel.textAlignment = 1;
+                preferentialLabel.font = [UIFont systemFontOfSize:13];
+                preferentialLabel.text = @"暂无优惠";
+                preferentialLabel.tag = i + 3;
+                
+                UIButton *preferentialButton = [[UIButton alloc]initWithFrame:CGRectMake(i * oneWidth, CGRectGetMaxY(titleImageView.frame), oneWidth, CGRectGetHeight(_preferentialView.frame) - CGRectGetMaxY(titleImageView.frame))];
+                preferentialButton.tag = i;
+                [preferentialButton addTarget:self action:@selector(clickPreferential:) forControlEvents:UIControlEventTouchUpInside];
+                
+                [_preferentialView addSubview:iconView];
+                
+                [_preferentialView addSubview:markImageView];
+                
+                [_preferentialView addSubview:lineView];
+                
+                [_preferentialView addSubview:merchantNameLabel];
+                
+                [_preferentialView addSubview:preferentialLabel];
+                
+                [_preferentialView addSubview:preferentialButton];
+                
+                [_scrollView addSubview:_preferentialView];
+            }
+            [self getPreferential:^(NSArray *preferentials) {
+                [self reloadPreferentialWithPreferentials:preferentials];
+                _preferentials = preferentials;
+                [UIView animateWithDuration:0.5 animations:^{
+                    CGRect frame = _tableView.frame;
+                    frame.origin.y =  CGRectGetMaxY(_preferentialView.frame) + 10;
+                    _tableView.frame = frame;
+                    _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, CGRectGetMaxY(_tableView.frame));
+                } completion:^(BOOL finished) {
+                    [UIView animateWithDuration:0.5 animations:^{
+                        _preferentialView.alpha = 1;
+                    }];
+                }];
+            }];
+            
+        }
+    }];
 }
 
 
@@ -374,7 +386,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 }
 -(void)jumpToFloorMap:(UIButton *)sender{
     id <YTFloor> floor = nil;
-    YTLocalMall *localmall = [(YTCloudMall*)self.mall getLocalCopy];
+    YTLocalMall *localmall = [_mallDict changeMallObject:self.mall resultType:YTMallClassLocal];
     if (localmall == nil){
         [[[UIAlertView alloc]initWithTitle:@"虾逛" message:@"地图正在建设中." delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
         return;

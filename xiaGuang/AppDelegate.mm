@@ -30,9 +30,6 @@
     
     [AVAnalytics setChannel:@""];
     
-    self.statusBar = [YTStatusBar defaultStatusBar];
-    [self.statusBar makeKeyAndVisible];
-    
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
     self.window.backgroundColor = [UIColor blackColor];
@@ -43,9 +40,6 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
        [self youmiProcedure];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-        });
     });
     return YES;
 }

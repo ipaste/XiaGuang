@@ -9,6 +9,7 @@
 #import "YTHomeViewController.h"
 #import "AppDelegate.h"
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
+#define APP_URL @"http://itunes.apple.com/cn/lookup?id=922405498"
 #define BLUR_HEIGHT 174
 
 #define STEP_LENGTH 20
@@ -62,9 +63,6 @@
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
-    
-   
-    
 
     
     _manager = [[CLLocationManager alloc]init];
@@ -124,25 +122,11 @@
     
     _latest = false;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSURL *url = [[NSURL alloc]initWithString:@"http://itunes.apple.com/cn/lookup?id=922405498"];
-        NSData *jsonData = [NSData dataWithContentsOfURL:url];
-        if(jsonData != nil){
-            NSString *cloudVersion = [[[[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil] valueForKey:@"results"] valueForKey:@"version"] firstObject];
-            NSString *localVersion = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleShortVersionString"];
-            if (cloudVersion > localVersion){
-                _latest = true;
-            }
-        }
+    _resourceManager = [YTStaticResourceManager sharedManager];
+    Reachability * reachability = [Reachability reachabilityWithHostname:@"www.xiashopping.com"];
+    [reachability startNotifier];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     
-        _resourceManager = [YTStaticResourceManager sharedManager];
-         [self firstStartSettingTheProgram];
-        Reachability * reachability = [Reachability reachabilityWithHostname:@"www.xiashopping.com"];
-        [reachability startNotifier];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    
-    });
-
     _mallDict = [YTMallDict sharedInstance];
     [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
         _malls = malls.copy;
@@ -253,8 +237,6 @@
     
 }
 
-
-
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     if(!decelerate && !_shouldScroll){
         _shouldScroll = YES;
@@ -346,7 +328,7 @@
     
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
-        mallInfoVC.mall = _malls[indexPath.row % _malls.count];
+        mallInfoVC.mall = cell.mall;
         [self.navigationController pushViewController:mallInfoVC animated:true];
     }
 }
@@ -404,7 +386,14 @@
     YTSettingViewController *settingVC = [[YTSettingViewController alloc]init];
     [settingVC setIsLatest:_latest];
     [AVAnalytics event:@"设置"];
-    [self.navigationController pushViewController:settingVC animated:YES];
+//    CATransition *animation = [CATransition animation];
+//    animation.delegate = self;
+//    animation.duration = 0.75;
+//    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    animation.type = kCATransitionFade;
+//    animation.subtype = kCATransitionFromRight;
+//    [self.navigationController.view.layer addAnimation:animation forKey:nil];
+    [self.navigationController pushViewController:settingVC animated:true];
 }
 
 -(void)jumpToMap:(UIButton *)sender{
@@ -449,18 +438,17 @@
 }
 
 -(void)firstStartSettingTheProgram{
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    if ([userDefault valueForKey:@"first"] == nil || false) {
-        [userDefault setValue:@YES forKey:@"first"];
-        [userDefault synchronize];
+    NSString *manifestPath = [[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"];
+    NSMutableDictionary *tmpManifest = [NSMutableDictionary dictionaryWithContentsOfFile:manifestPath];
+    if ([[tmpManifest valueForKey:@"first"] isEqualToNumber:@YES]) {
+        [tmpManifest setValue:@NO forKey:@"first"];
+        [tmpManifest writeToFile:manifestPath atomically:true];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
         NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
-        NSDictionary *mainfest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
-        
-        NSDictionary *tmpMainfest = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"]];
-        if (mainfest != nil && tmpMainfest != nil){
-            if ([fileManager fileExistsAtPath:currentPath] && tmpMainfest[@"version"] >= mainfest[@"version"]) {
+        NSDictionary *manifest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
+        if (manifest != nil && tmpManifest != nil){
+            if ([fileManager fileExistsAtPath:currentPath] && tmpManifest[@"version"] >= manifest[@"version"]) {
                 [_resourceManager restartCopyTheFile];
             }
         }
@@ -474,6 +462,5 @@
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self name:YTBluetoothStateHasChangedNotification object:nil];
 }
-
 
 @end

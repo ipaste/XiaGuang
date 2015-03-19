@@ -150,7 +150,7 @@
         [_mallNames insertObject:@"全部商圈" atIndex:0];
         [_mallObjects insertObject:[NSNull null] atIndex:0];
         height = 44 * _mallObjects.count > 274 ? 274:44 * _mallObjects.count;
-        _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 44 * _mallObjects.count);
+        _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
         [_mallView reloadData];
     }
     [UIView animateWithDuration:.5 animations:^{

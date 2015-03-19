@@ -33,4 +33,8 @@ typedef NS_ENUM(NSInteger, YTMallClass) {
 
 // 获得一个Mall的首层
 - (YTLocalFloor *)firstFloorFromMallLocalId:(NSString *)localDBId;
+
+//刷新云端或本地的Mall
+- (void)refershLocalMall;
+- (void)refershCloudMall;
 @end

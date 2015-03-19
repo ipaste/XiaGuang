@@ -11,6 +11,8 @@
 #import <AVOSCloud/AVOSCloud.h>
 #import <FCFileManager.h>
 #import <UnrarKit/URKArchive.h>
+#import "YTMallDict.h"
+
 #define LOCALDB_VERION_KEY  @"YTLocalDBVersion"
 #define BACKUPDB_VERSION_KEY    @"YTBackupDBVersion"
 
@@ -55,6 +57,7 @@
     NSTimer *_timer;
     
     YTStaticResourceDownloader *_downloader;
+    YTMallDict *_mallDict;
     
 }
 
@@ -150,6 +153,7 @@
 }
 
 - (void)restartCopyTheFile{
+     _mallDict = [YTMallDict sharedInstance];
     [FCFileManager removeItemAtPath:CURRENT_DIR];
 
     [FCFileManager createDirectoriesForPath:CURRENT_DIR];
@@ -162,7 +166,8 @@
     _db = [[FMDatabase alloc] initWithPath:CURRENT_DATA_DB_PATH];
     
     [_db open];
-
+    
+    [_mallDict refershLocalMall];
 }
 
 - (void)checkAndSwitchToNewStaticData {

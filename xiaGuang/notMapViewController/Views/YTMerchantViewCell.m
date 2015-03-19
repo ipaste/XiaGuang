@@ -110,13 +110,12 @@
     CGSize size = [[merchant merchantName] boundingRectWithSize:CGSizeMake(MAXFLOAT, CGRectGetHeight(_merchantNameLabel.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
     
     CGRect frame = _merchantNameLabel.frame;
-    if (size.width > 1) {
+    if (size.width < 150) {
         frame.size.width = size.width;
     }else{
         frame.size.width = 150;
     }
     _merchantNameLabel.frame = frame;
-    
     
     [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         //_preferentialImageView.hidden = !isExistence;

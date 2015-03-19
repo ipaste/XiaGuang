@@ -37,6 +37,7 @@
 #import "YTBathroom.h"
 #import "YTMerchantPoi.h"
 #import "BlurMenu.h"
+#import "YTMallDict.h"
 #import "BlurMenuItemCell.h"
 #import "YTBeaconBasedLocator.h"
 #import "YTBeaconPosistionPoi.h"

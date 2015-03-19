@@ -91,16 +91,6 @@
     }
 }
 
--(void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    _url = nil;
-    [_webView stopLoading];
-    _webView.delegate = nil;
-    [_webView removeFromSuperview];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[NSURLCache sharedURLCache]removeAllCachedResponses];
-    });
-}
 
 -(UIView *)leftBarButton{
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
@@ -116,6 +106,11 @@
 }
 
 -(void)back:(UIButton *)sender{
+    _url = nil;
+    [_webView stopLoading];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[NSURLCache sharedURLCache]removeAllCachedResponses];
+    });
     [self.navigationController popViewControllerAnimated:true];
 }
 

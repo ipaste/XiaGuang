@@ -98,6 +98,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSMutableArray *_allElvatorAndEscalator;
     
     YTBeaconBasedLocator *_locator;
+    YTMallDict *_mallDict;
     
     CLLocationCoordinate2D _userCoordintate;
     
@@ -1752,7 +1753,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         local = selected;
     }
     else{
-        local = [(YTCloudMall *)selected getLocalCopy];
+        local = [_mallDict changeMallObject:selected resultType:YTMallClassLocal];
     }
     id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];

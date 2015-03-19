@@ -42,7 +42,6 @@
 }
 
 -(void)startDownloadingDBVersion:(int)version{
-    [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeUpdateMessage];
     AVQuery *queryForDB = [AVQuery queryWithClassName:@"DB"];
     [queryForDB whereKey:@"version" equalTo:[NSNumber numberWithInt:version]];
     [queryForDB getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error1) {
@@ -69,7 +68,7 @@
                 if([FCFileManager existsItemAtPath:STAGING_FAIL_TABLE]){
                     [self removeFailRecordForKey:@"db"];
                 }
-                [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDone];
+           
             }
             
         }];
@@ -117,7 +116,6 @@
         return;
     }
     
-    [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDownloadMessage];
     
     AVQuery *or = [AVQuery orQueryWithSubqueries:queries];
     [or findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *err) {
@@ -159,7 +157,7 @@
                 }
             }];
         }
-         [((AppDelegate *)[UIApplication sharedApplication].delegate).statusBar changeMessageType:YTStatusBarTypeDone];
+
     }];
 }
 

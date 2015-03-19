@@ -18,9 +18,6 @@
     
     YTMapGraph *graph = [[YTMapGraphDict sharedInstance] getGraphFromMajorArea:majorArea usingMapview:mapView];
     
-    
-    
-    
     if(graph == nil)
         return nil;
     

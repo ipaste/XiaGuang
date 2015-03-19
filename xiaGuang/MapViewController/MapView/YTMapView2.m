@@ -32,7 +32,7 @@
         _annotationSource = [[YTAnnotationSource alloc] init];
         [self addSubview:_internalMapView];
         _map = _internalMapView;
-        _isShowPath = true;
+        _isShowPath = false;
     }
     return self;
 }
@@ -67,13 +67,10 @@
     
     NSMutableArray *annos = [NSMutableArray array];
     for(YTPoi *tmpPoi in pois){
-        
         YTAnnotation *tmpAnnotation = [tmpPoi produceAnnotationWithMapView:_internalMapView];
         [_annotationSource setAnnotation:tmpAnnotation forPoi:tmpPoi];
         [annos addObject:tmpAnnotation];
-        
     }
-    
     [_internalMapView addAnnotations:annos];
     
 }

@@ -33,6 +33,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
+            _titleImage = [UIImage imageWithData:[findResultSet dataForColumn:@"title_img"]];
+            _background = [UIImage imageWithData:[findResultSet dataForColumn:@"background_img"]];
         }
     }
     return self;
@@ -90,34 +92,13 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
-    _callBack = callback;
-    if (![self checkCallBackConditions]) {
-        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        [query whereKey:@"localDBId" equalTo:[self identifier]];
-        [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-            if (_titleImage == nil) {
-                [object[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    if (error) {
-                        callback(nil,nil,error);
-                        return ;
-                    }
-                    _titleImage = [UIImage imageWithData:data];
-                    [self checkCallBackConditions];
-                }];
-            }
-            if (_background == nil) {
-                [object[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    if (error) {
-                        callback(nil,nil,error);
-                        return ;
-                    }
-                    _background = [UIImage imageWithData:data];
-                    [self checkCallBackConditions];
-                }];
-            }
-        }];
+    NSError *error = nil;
+    if (_titleImage == nil && _background == nil) {
+        error = [NSError errorWithDomain:@"xiashopping" code:404 userInfo:nil];
     }
+    callback(_titleImage,_background,error);
 }
+
 -(BOOL)checkCallBackConditions{
     if (_titleImage != nil && _background != nil) {
         _callBack(_titleImage,_background,nil);

@@ -93,8 +93,11 @@
     if ([mall isMemberOfClass:[YTLocalMall class]]){
         switch (mallClass) {
             case YTMallClassCloud:{
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"localDBId == %@",[mall identifier]];
-                mall = [_cloudMalls filteredArrayUsingPredicate:predicate][0];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"localDB == %@",[mall identifier]];
+                NSArray *cloudMall = [_cloudMalls filteredArrayUsingPredicate:predicate];
+                if (cloudMall.count > 0) {
+                    mall = cloudMall.firstObject;
+                }
                 if (!mall){
                     return nil;
                 }
@@ -109,7 +112,12 @@
                 return mall;
             case YTMallClassLocal:{
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@",[mall localDB]];
-                mall = [_localMalls filteredArrayUsingPredicate:predicate][0];
+                NSArray *localMall = [_localMalls filteredArrayUsingPredicate:predicate];
+                if (localMall.count > 0) {
+                    mall = localMall[0];
+                }else{
+                    mall = nil;
+                }
                 return mall;
             }
         }
@@ -145,4 +153,15 @@
     }
     return floor;
 }
+
+- (void)refershLocalMall{
+    _localMalls = nil;
+    [self getAllLocalMallWithCallBack:nil];
+}
+
+- (void)refershCloudMall{
+    _cloudMalls = nil;
+    [self getAllCloudMallWithCallBack:nil];
+}
+
 @end
