@@ -110,14 +110,14 @@
 }
 
 -(void)positionUpdating:(CGPoint )position {
-    NSLog(@"======= %f %f", position.x, position.y);
-    if (position.x != -INFINITY && position.y != INFINITY) {
-        CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
-                                                                         mapView:_mapView];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
-        });
-    }
+//    NSLog(@"======= %f %f", position.x, position.y);
+//    if (position.x != -INFINITY && position.y != INFINITY) {
+//        CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
+//                                                                         mapView:_mapView];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
+//        });
+//    }
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons {

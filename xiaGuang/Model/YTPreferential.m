@@ -54,9 +54,9 @@
     //优惠信息
     if (_source == YTPreferentialTypeOther) {
         NSString *string = _dzdpDictionary[@"description"];
-        if ([string rangeOfString:@" "].length > 0 ){
-            return [string componentsSeparatedByString:@" "][1];
-        }
+//        if ([string rangeOfString:@" "].length > 0 ){
+//            return [string componentsSeparatedByString:@" "][1];
+//        }
         return string;
     }
     return _object[PREFERENTIAL_KEY_PREFERENTIALINFORMATION];
