@@ -210,36 +210,23 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
     _callBack = callback;
     if (![self checkCallBackConditions]) {
-        YTLocalMall *mall = [[YTMallDict sharedInstance] changeMallObject:self resultType:YTMallClassLocal];
-        if (mall){
-            FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-            [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
-                if (error) {
-                    [_internalObject[MALL_CLASS_BIGTITLE_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                        if (error) {
-                            callback(nil,nil,error);
-                            return ;
-                        }
-                        _titleImage = [UIImage imageWithData:data];
-                        [db executeUpdate:@"update Mall set title_img = ? where mallId = ?",data,[mall identifier]];
-                        [self checkCallBackConditions];
-                    }];
-                    [_internalObject[MALL_CLASS_BIGBACKGROUND_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                        if (error) {
-                            callback(nil,nil,error);
-                            return ;
-                        }
-                        _background = [UIImage imageWithData:data];
-                        [db executeUpdate:@"update Mall set background_img = ? where mallId = ?",data,[mall identifier]];
-                        [self checkCallBackConditions];
-                    }];
-                }else{
-                    callback(titleImage,background,error);
-                }
-            }];
-        }
+        [_internalObject[MALL_CLASS_BIGTITLE_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (error) {
+                callback(nil,nil,error);
+                return ;
+            }
+            _titleImage = [UIImage imageWithData:data];
+            [self checkCallBackConditions];
+        }];
+        [_internalObject[MALL_CLASS_BIGBACKGROUND_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (error) {
+                callback(nil,nil,error);
+                return ;
+            }
+            _background = [UIImage imageWithData:data];
+            [self checkCallBackConditions];
+        }];
     }
-    
 }
 
 -(BOOL)checkCallBackConditions{

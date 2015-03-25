@@ -34,12 +34,11 @@
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
         CGFloat searchBarX = 5;
-        _searchBarWidth =  CGRectGetWidth(self.frame) - 10;
+        _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
         CGFloat cancelX = CGRectGetWidth(self.frame) - 40;
         if (indent) {
             _isIndent = indent;
             searchBarX = -10;
-            _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
             cancelX = CGRectGetWidth(self.frame) - 80;
         }
         if([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
@@ -89,12 +88,8 @@
     
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];
-    if (_isIndent){
-        _searchClearButton.frame = CGRectMake(225 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
-    }else{
-        _searchClearButton.frame = CGRectMake(254 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
-    }
-    
+  
+    _searchClearButton.frame = CGRectMake(_searchTextFieldWidth - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
     
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
@@ -142,7 +137,6 @@
         _displayFirstResponder = NO;
         [self showSearchViewWithAnimation:NO];
     }else{
-        
         _displayFirstResponder = YES;
         [self hideSearchViewWithAnimation:NO];
     }
@@ -173,7 +167,7 @@
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
     self.hidden = YES;
-    if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
+    //if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
     
 }
 
@@ -181,18 +175,42 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     [self searchBar:searchBar dealWithTextChange:searchText];
 }
+
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     _detailsView.hidden = NO;
+    if ([_delegate  respondsToSelector:@selector(startSearch)]) {
+        [_delegate startSearch];
+    }
     if (_searchTextFieldWidth == 0) {
         _searchTextFieldWidth = CGRectGetWidth(_searchTextField.frame);
     }
     [UIView animateWithDuration:.2 animations:^{
-        CGRect frame = _searchTextField.frame;
-        frame.size.width =_searchTextFieldWidth - 33;
-        if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]) {
-            frame.size.width =_searchTextFieldWidth - 38;
-        }
+        
+        _searchTextFieldWidth -= 5;
+        
+        CGRect frame;
+        frame = _searchTextField.frame;
+        frame.size.width = _searchTextFieldWidth;
         _searchTextField.frame = frame;
+        
+        
+        frame = self.frame;
+        frame.origin.x = 0;
+        self.frame = frame;
+        
+        frame = _searchBar.frame;
+        frame.origin.x = 5;
+        frame.size.width = _searchTextFieldWidth;
+        _searchBar.frame = frame;
+        
+        frame = _cancelButton.frame;
+        if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
+            frame.origin.x = CGRectGetMaxX(_searchTextField.frame) + 10;
+        }else{
+            frame.origin.x = CGRectGetMaxX(_searchTextField.frame) + 5;
+        }
+        _cancelButton.frame = frame;
+        
     } completion:^(BOOL finished) {
         _cancelButton.hidden = NO;
         
@@ -222,7 +240,6 @@
 
 
 -(void)selectSearchResultsWithUniIds:(NSArray *)uniIds{
-    
     [AVAnalytics event:@"选中某搜索结果"];
     
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
@@ -253,10 +270,25 @@
     if (animation) {
         duration = .2;
     }
+    
+    
+    _searchTextFieldWidth += 5;
+    
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = _searchTextField.frame;
         frame.size.width = _searchTextFieldWidth;
         _searchTextField.frame = frame;
+        
+        frame = self.frame;
+        frame.origin.x = 40;
+        self.frame = frame;
+        
+        frame = _searchBar.frame;
+        frame.origin.x = -10;
+        frame.size.width = CGRectGetWidth(self.frame) - 40;
+        _searchBar.frame = frame;
+        
+        
     } completion:^(BOOL finished) {
         if (completion != nil) {
             completion();
