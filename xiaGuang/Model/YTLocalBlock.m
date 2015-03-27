@@ -70,6 +70,14 @@
             [_tmpFloors addObject:tmp];
         }
         
+        [_tmpFloors sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            if ([(YTLocalFloor *)obj1 queue]  > [(YTLocalFloor *)obj2 queue] ) {
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedDescending;
+            }
+        }];
+        
     }
     
     return _tmpFloors;

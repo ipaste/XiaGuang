@@ -131,7 +131,6 @@
     [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
         _malls = malls.copy;
         for(int j = 0; j<_malls.count*3; j++){
-        
             YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
             cell1.selectionStyle = UITableViewCellSelectionStyleNone;
             [_cells addObject:cell1];

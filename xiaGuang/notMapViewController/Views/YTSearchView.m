@@ -89,7 +89,7 @@
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];
   
-    _searchClearButton.frame = CGRectMake(_searchTextFieldWidth - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
+    _searchClearButton.frame = CGRectMake(_searchTextFieldWidth - rightImage.size.width - 5, 0, rightImage.size.width, rightImage.size.height);
     
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
@@ -167,8 +167,6 @@
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
     self.hidden = YES;
-    //if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
-    
 }
 
 #pragma mark searchBar的协议

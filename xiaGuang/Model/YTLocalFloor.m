@@ -14,6 +14,7 @@
     int _tmpFloorWeight;
     NSString *_tmpFloorName;
     NSString *_tmpUniId;
+    NSInteger _queue;
     NSMutableArray *_tmpMajorAreas;
     id<YTBlock> _tmpBlock;
     
@@ -33,6 +34,7 @@
             _tmpFloorWeight = [findResultSet intForColumn:@"weight"];
             _tmpFloorName = [findResultSet stringForColumn:@"floorName"];
             _tmpUniId = [findResultSet stringForColumn:@"uniId"];
+            _queue = [findResultSet intForColumn:@"queue"];
         }
     }
     return self;
@@ -87,5 +89,9 @@
 
 -(NSString *)uniId{
     return _tmpUniId;
+}
+
+-(NSInteger)queue{
+    return _queue;
 }
 @end

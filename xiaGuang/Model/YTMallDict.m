@@ -49,6 +49,8 @@
 - (void)getAllCloudMallWithCallBack:(void (^)(NSArray *malls))callBack{
     if (!_cloudMalls) {
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
+        query.maxCacheAge = 24 * 3600;
+        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         [query whereKey:MALL_CLASS_LOCALID notEqualTo:@""];
         [query whereKeyExists:MALL_CLASS_LOCALID];
         [query whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:self.localMallMaxId];

@@ -72,8 +72,7 @@
         double n2_x = [components[3] doubleValue];
         double n2_y = [components[4] doubleValue];
         
-        CGPoint adjustedCoord2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:CLLocationCoordinate2DMake(n2_y, n2_x)
-                                                                         mapView:_mapView];
+        CGPoint adjustedCoord2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:CLLocationCoordinate2DMake(n2_y, n2_x) mapView:_mapView];
         
         PESGraphNode *node2 = [self makeNodeWithPoint:adjustedCoord2];
         
@@ -168,7 +167,8 @@
 - (NSDictionary *)projectToGraphFromPoint:(CGPoint)point
                              betweenNodes:(NSArray *)nodes {
     
-    __block double minDist = INFINITY;
+    __block double minDist = HUGE;
+
     __block NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     
     [self iterateEdgesWithNodeRestrictions:nodes callback:^(PESGraphNode *node1, PESGraphNode *node2, PESGraphEdge *edge) {
@@ -231,12 +231,13 @@
     NSDictionary *projectedSrc = [self projectToGraphFromPoint:src];
     NSDictionary *projectedDest = [self projectToGraphFromPoint:dest];
    
- 
+    
     PESGraphNode *srcNode = [self makeNodeWithPoint:src];
     PESGraphNode *destNode = [self makeNodeWithPoint:dest];
     
     PESGraphNode *projectedSrcNode = [self makeNodeWithPoint:[projectedSrc[kYTMapGraphProjectionPointKey] CGPointValue]];
     PESGraphNode *projectedDestNode = [self makeNodeWithPoint:[projectedDest[kYTMapGraphProjectionPointKey] CGPointValue]];
+  
     
     [self tweakGraphWithNode:srcNode
                    projected:projectedSrcNode
@@ -308,10 +309,10 @@
 
 - (PESGraphNode *)makeNodeWithPoint:(CGPoint)point {
     PESGraphNode *node = [PESGraphNode nodeWithIdentifier:[NSString stringWithFormat:@"%f-%f",point.x, point.y]];
-    node.additionalData = [[NSMutableDictionary alloc] init];
+    node.additionalData = [NSMutableDictionary dictionary];
     node.additionalData[@"x"] = [NSNumber numberWithDouble:point.x];
     node.additionalData[@"y"] = [NSNumber numberWithDouble:point.y];
-    node.additionalData[@"point"] = [NSValue valueWithCGPoint:CGPointMake(point.x, point.y)];
+    node.additionalData[@"point"] = [NSValue valueWithCGPoint:point];
     return node;
 }
 

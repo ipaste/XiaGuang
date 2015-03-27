@@ -164,7 +164,7 @@
                 _otherPreferentials = preferentials;
                 CGRect frame = _otherDiscountTableView.frame;
                 frame.size = CGSizeMake(CGRectGetWidth(_otherDiscountTableView.frame), 95 * _otherPreferentials.count);
-                _otherDiscountTableView.frame = frame;
+                _otherDiscountTableView.frame = frame; 
                 [_otherDiscountTableView reloadData];
                 [self reloadUI];
             }];

@@ -1,4 +1,4 @@
-//
+ //
 //  YTMapViewController2.m
 //  HighGuang
 //
@@ -1374,8 +1374,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     
-    //if same floor
+    //if same flooor
     if([[[_curDisplayedMajorArea floor] identifier] isEqualToString:[[[_userMinorArea majorArea] floor] identifier]]){
+        if (_userCoordintate.latitude == -888) {
+            _userCoordintate = _userCord;
+        }
         [_mapView setCenterCoordinate:_userCoordintate animated:YES];
         [AVAnalytics event:@"sameFloorMoveToUser"];
         
@@ -1443,7 +1446,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _targetCord = [merchantLocation coordinate];
         [self setTargetCordToDoorCoordIfPossible:merchantLocation];
         
-        
+        if (_userCoordintate.latitude == -888) {
+            _userCoordintate = _userCord;
+        }
         [_mapView showPathFromCoord1:_userCoordintate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
         
     }

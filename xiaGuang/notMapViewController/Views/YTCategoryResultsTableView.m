@@ -79,7 +79,7 @@
         _subcategoryView.hidden = NO;
         _subcategoryView.delegate = self;
         _subcategoryView.dataSource = self;
-        _categoryView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame) / 2, 6 * 44 + 10);
+        _categoryView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame) / 2, 5 * 44 + 22);
         height = CGRectGetHeight(_categoryView.frame);
         _categoryView.delegate = self;
         _categoryView.dataSource = self;
@@ -125,7 +125,7 @@
             
             
         }
-        height = 44 * _floorObjects.count > 274 ? 274:44 * _floorObjects.count;
+        height = 44 * _floorObjects.count >  5 * 44 + 22 ?  5 * 44 + 22:44 * _floorObjects.count;
         _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
         [_floorView reloadData];
 
@@ -149,7 +149,7 @@
         }
         [_mallNames insertObject:@"全部商圈" atIndex:0];
         [_mallObjects insertObject:[NSNull null] atIndex:0];
-        height = 44 * _mallObjects.count > 274 ? 274:44 * _mallObjects.count;
+        height = 44 * _mallObjects.count >  5 * 44 + 22 ?  5 * 44 + 22:44 * _mallObjects.count;
         _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
         [_mallView reloadData];
     }

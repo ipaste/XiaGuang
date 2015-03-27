@@ -14,6 +14,7 @@
 @property(weak,nonatomic)NSString *uniId;
 @property(weak,nonatomic)NSString *floorName;
 @property(weak,nonatomic)NSArray *majorAreas;
+@property(assign,nonatomic)NSInteger queue;
 @property(weak,nonatomic)id <YTBlock> block;
 
 @end

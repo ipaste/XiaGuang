@@ -32,7 +32,7 @@
         _annotationSource = [[YTAnnotationSource alloc] init];
         [self addSubview:_internalMapView];
         _map = _internalMapView;
-        _isShowPath = false;
+        _isShowPath = true;
     }
     return self;
 }

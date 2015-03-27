@@ -25,6 +25,7 @@
     
     NSMutableArray *locs = [[NSMutableArray alloc] init];
     
+    
     for (NSValue *val in points) {
         
         CGPoint p = [val CGPointValue];
