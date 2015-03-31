@@ -106,6 +106,8 @@
 
 
 -(void)setMerchant:(id<YTMerchant>)merchant{
+    _soleImageView.hidden = true;
+    _otherImageView.hidden = true;
     _merchantNameLabel.text = [merchant merchantName];
     CGSize size = [[merchant merchantName] boundingRectWithSize:CGSizeMake(MAXFLOAT, CGRectGetHeight(_merchantNameLabel.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
     
@@ -118,7 +120,6 @@
     _merchantNameLabel.frame = frame;
     
     [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-        //_preferentialImageView.hidden = !isExistence;
         YTCloudMerchant *cloudMerchant = (YTCloudMerchant *)merchant;
         if (cloudMerchant.isSole) {
             _soleImageView.hidden = false;

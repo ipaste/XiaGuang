@@ -33,6 +33,7 @@
     if (self) {
         _graph = [[PESGraph alloc] init];
         _mapView = mapView;
+        _majorArea = majorArea;
         if([self loadPESGraph:majorArea.mapName]){
             return self;
         }
@@ -326,6 +327,11 @@
                                           andWeight:[NSNumber numberWithDouble:dist]];
     
     return edge;
+}
+
+- (NSArray *)getCurrentPath{
+
+
 }
 
 @end

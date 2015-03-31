@@ -130,7 +130,13 @@
         _scrollView.hidden = YES;
         _searchResultstableView.hidden = NO;
     }
+    NSRange range = [keyWord rangeOfString:@"'"];
     
+    if (range.length > 0 ) {
+        [self updateUI:@{@"uniIds":@[],@"merchants":@[]}];
+        return;
+    }
+   
     NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:^{
     
         if(op.isCancelled){
@@ -140,11 +146,11 @@
         FMDatabase *db = [YTStaticResourceManager sharedManager].db;
         FMResultSet *result = nil;
         if (_mall) {
-            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance where majorAreaId in %@ group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord],_majorAreaIds];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ COLLATE NOCASE and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance where majorAreaId in %@ group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord],_majorAreaIds];
             
             result = [db executeQuery:sql];
         }else{
-            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ COLLATE NOCASE and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
             result = [db executeQuery:sql];
         }
         NSMutableArray *results = [NSMutableArray array];
@@ -452,7 +458,6 @@
     CFMutableStringRef string  = CFStringCreateMutableCopy(NULL, 0, (__bridge CFStringRef)str);
     CFStringTransform(string, NULL, kCFStringTransformMandarinLatin, false);
     CFStringTransform(string, NULL, kCFStringTransformStripDiacritics, NO);
-    NSLog(@"%@",string);
     return (__bridge NSString *)string;
 }
 

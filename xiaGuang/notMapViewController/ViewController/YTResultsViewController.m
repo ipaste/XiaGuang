@@ -208,8 +208,11 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             if (merchants.count > 0) {
                 [_merchants addObjectsFromArray:merchants];
                 [self reloadData];
+                [_tableView footerEndRefreshing];
+            }else{
+                [_tableView footerEndRefreshingWillNotLoading];
             }
-            [_tableView footerEndRefreshing];
+            
             _isLoading = NO;
         }];
     }
@@ -260,7 +263,6 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         }
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            
             if(error){
                 block(nil);
                 return;
@@ -300,11 +302,16 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                     merchantQuery.limit = number - merchants.count;
                     merchantQuery.skip = _dealCount;
                     [merchantQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                        
                         for (AVObject *object in objects) {
                             YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:object];
                             [merchants addObject:merchant];
                         }
-                        _dealCount = _dealCount + (number - merchants.count);
+                        if (merchants.count == 0) {
+                            
+                        }else{
+                            _dealCount = _dealCount + merchants.count;
+                        }
                         block(merchants);
                     }];
                 }

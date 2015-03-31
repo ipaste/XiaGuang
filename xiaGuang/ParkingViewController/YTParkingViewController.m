@@ -654,13 +654,18 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
 }
 
--(void)rangedBeacons:(NSArray *)beacons{
+-(void)rangedBeacons:(NSArray *)objects{
     
-    if(beacons.count <= 0){
+    if(objects.count <= 0){
         return;
     }
     
-    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:beacons];
+    NSMutableArray *beacons = [NSMutableArray array];
+    for (NSDictionary *beaconDict in objects) {
+        [beacons addObject:beaconDict[@"Beacon"]];
+    }
+    
+    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:objects];
     
     ESTBeacon *bestGuessBeacon = [self topBeaconWithInMajorAreaId:votedMajorAreaId inBeacons:beacons];
     if(bestGuessBeacon == nil){

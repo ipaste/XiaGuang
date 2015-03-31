@@ -179,6 +179,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _beaconManager.delegate = self;
     
     
+    
     [self createNavigationBar];
     [self createMapView];
     [self setTargetMall:[[[_majorArea floor] block]mall]];
@@ -392,7 +393,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [self showUserAtCoordinate:_userCoordintate];
     }
-    
     NSArray *merchants = [majorArea merchantLocations];
     NSArray *elevators = [majorArea elevators];
     NSArray *bathrooms = [majorArea bathrooms];
@@ -462,6 +462,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         [_mapView highlightPoi:highlightPoi animated:NO];
     }
+    
+    [_mapView showMapPathWithMajorArea:majorArea];
     
     if (_navigationView.isNavigating){
         if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]] && [[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
@@ -1071,14 +1073,19 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 
--(void)rangedBeacons:(NSArray *)beacons{
+-(void)rangedObjects:(NSArray *)objects{
     if(_locator==nil){
         NSLog(@"locator nil");
     }
-    if(beacons.count <= 0){
+    if(objects.count <= 0){
         
         return;
     }
+    NSMutableArray *beacons = [NSMutableArray array];
+    for (NSDictionary *beaconDict in objects) {
+        [beacons addObject:beaconDict[@"Beacon"]];
+    }
+    
     /*
      for(YTMinorAreaPoi *beaconPoi in _beaconsPoi){
      [_mapView setScore:-1.0 forMinorAreaPoi:beaconPoi];
@@ -1089,7 +1096,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
      [_mapView setScore:[beacon.distance doubleValue] forMinorAreaPoi:relatedBeacon];
      }*/
     
-    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:beacons];
+    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:objects];
     if(_lastMajorAreaId != nil){
         if(![votedMajorAreaId isEqualToString:_lastMajorAreaId]){
             NSString *tmp = [votedMajorAreaId copy];
@@ -1385,6 +1392,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     //different floor
     else{
+        
         [self switchFloor:[[_userMinorArea majorArea] floor]];
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:NO];
@@ -1763,6 +1771,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
+   
     [_mapView displayMapNamed:[_majorArea mapName]];
     _shownFloorChange = NO;
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
@@ -1784,7 +1793,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
     YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
-    
     YTLocalMinorArea * minorArea = [localBeacon minorArea];
     return minorArea;
 }
@@ -1792,10 +1800,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark YTBeaconBasedLocatorDelegate method
 - (void)YTBeaconBasedLocator:(YTBeaconBasedLocator *)locator
            coordinateUpdated:(CLLocationCoordinate2D)coordinate{
-    //NSLog(@"cordinate!!! lat: %f, long:%f",coordinate.latitude,coordinate.longitude);
     
     _userCoordintate = coordinate;
-    
+
     if([[_curDisplayedMajorArea identifier] isEqualToString:[[_userMinorArea majorArea] identifier]]){
         //[_mapView showUserLocationAtCoordinate:coordinate];
         [self showUserAtCoordinate:coordinate];

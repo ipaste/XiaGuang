@@ -16,6 +16,7 @@
     YTUserAnnotation *_userAnnotation;
     CGFloat _offset;
     YTPathAnnotation *_pathAnnotation;
+    YTPathAnnotation *_mapAnnotation;
 }
 
 #pragma mark init
@@ -329,7 +330,21 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     return sqrt(xdiff*xdiff+ydiff*ydiff);
     
 }
+-(void)showMapPathWithMajorArea:(id<YTMajorArea>)majorArea{
+    if (_mapAnnotation != nil){
+        [self hideMapPath];
+    }
+    _mapAnnotation = [[YTPathAnnotation alloc]initWithMapView:_internalMapView majorArea:majorArea];
+    [_internalMapView  addAnnotation:_mapAnnotation];
+    
+}
 
+-(void)hideMapPath{
+    if (_mapAnnotation != nil) {
+        [_internalMapView removeAnnotation:_mapAnnotation];
+        _mapAnnotation = nil;
+    }
+}
 
 -(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
                  toCoord2:(CLLocationCoordinate2D)c2

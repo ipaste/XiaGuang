@@ -14,7 +14,7 @@
 #import "YTPositionBot.h"
 #import "YTDistanceBoundingBox.h"
 #import "YTDeadReckoning.h"
-
+#import "YTMapGraph.h"
 #import "YTStaticResourceManager.h"
 
 @interface YTBeaconBasedLocator() <YTDeadReckoningDelegate> {
@@ -32,6 +32,10 @@
     dispatch_queue_t _queue;
     
     YTDeadReckoning *_inertia;
+    
+    YTMapGraph *_mapGraph;
+    
+    BOOL _isRefresh;
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons;
@@ -71,6 +75,8 @@
         _inertia.mapMeterPerPixel = 1;
         _inertia.mapNorthOffset = offset;
         _inertia.delegate = self;
+        
+        _mapGraph = [[YTMapGraph alloc]initWithMajorArea:_majorArea mapView:_mapView];
 
     }
     return self;
@@ -82,9 +88,9 @@
 }
 
 -(void)YTBeaconManager:(YTBeaconManager *)manager
-         rangedBeacons:(NSArray *)beacons {
+         rangedObjects:(NSArray *)objects {
     
-    NSArray *distances = [self prepareDistances:beacons];
+    NSArray *distances = [self prepareDistances:objects];
     
     dispatch_async(_queue, ^{
         
@@ -106,30 +112,39 @@
         position = [_boundingBox updateAndGetCurrentPoint:position];
         
         _inertia.startPoint = position;
+        
+        if ( !_isRefresh) {
+            [self positionUpdating:position];
+        }
+    
     });
 }
 
 -(void)positionUpdating:(CGPoint )position {
-//    NSLog(@"======= %f %f", position.x, position.y);
-//    if (position.x != -INFINITY && position.y != INFINITY) {
-//        CLLocationCoordinate2D loc = [YTCanonicalCoordinate canonicalToMapCoordinate:position
-//                                                                         mapView:_mapView];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [_delegate YTBeaconBasedLocator:self coordinateUpdated:loc];
-//        });
-//    }
+    _isRefresh = false;
+    if (position.x != -INFINITY && position.y != INFINITY) {
+        NSDictionary *dict = [_mapGraph projectToGraphFromPoint:position];
+        CGPoint point = [dict[kYTMapGraphProjectionPointKey] CGPointValue];
+        CLLocationCoordinate2D coord = [YTCanonicalCoordinate canonicalToMapCoordinate:point mapView:_mapView];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate YTBeaconBasedLocator:self coordinateUpdated:coord];
+        });
+    }
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons {
     
     NSMutableArray *distances = [[NSMutableArray alloc] init];
     
-    for (ESTBeacon *beacon in beacons) {
+    for (NSDictionary *beaconDict in beacons) {
         
         double dist = -1.0;
         
-        if ([beacon.distance intValue] != -1) {
-            dist =  [YTCanonicalCoordinate worldToCanonicalDistance:[beacon.distance doubleValue]
+        ESTBeacon *beacon = beaconDict[@"Beacon"];
+        
+        NSNumber *distance = beaconDict[@"distance"];
+        if ([distance intValue] != -1) {
+            dist =  [YTCanonicalCoordinate worldToCanonicalDistance:[distance doubleValue]
                                                             mapView:_mapView
                                                           majorArea:_majorArea];
         }

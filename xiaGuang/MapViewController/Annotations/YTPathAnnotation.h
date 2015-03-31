@@ -18,5 +18,7 @@
           fromPoint1:(CGPoint)p1
             toPoint2:(CGPoint)p2;
 
+-(instancetype) initWithMapView:(RMMapView *)mapView majorArea:(id<YTMajorArea>)majorArea;
+-(void)changeStartPoint:(CGPoint)p;
 
 @end

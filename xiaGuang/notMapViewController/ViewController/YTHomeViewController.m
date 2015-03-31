@@ -81,6 +81,12 @@
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
     
+    if(!_scrollFired){
+        [self test];
+        _scrollFired = YES;
+        _shouldScroll = YES;
+    }
+    
     _blurView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), BLUR_HEIGHT)];
     _blurView.tintColor = [UIColor blackColor];
     _blurView.barStyle = UIBarStyleBlack;
@@ -137,12 +143,6 @@
         }
         [_tableView reloadData];
     }];
-    
-    if(!_scrollFired){
-        [self test];
-        _scrollFired = YES;
-        _shouldScroll = YES;
-    }
     
     _transitionToolbar = [[UIToolbar alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _transitionToolbar.tintColor = [UIColor blackColor];
@@ -349,9 +349,10 @@
     _status =  tmpReachability.currentReachabilityStatus;
 }
 
--(void)rangedBeacons:(NSArray *)beacons{
-    if(beacons.count > 0){
-        _recordMinorArea = [self getMinorArea:beacons[0]];
+-(void)rangedObjects:(NSArray *)objects{
+    if(objects.count > 0){
+        NSDictionary *beaconDict = objects[0];
+        _recordMinorArea = [self getMinorArea:beaconDict[@"Beacon"]];
     }
     else{
         _recordMinorArea = nil;
@@ -382,7 +383,6 @@
 
 -(void)jumpToSetting:(UIButton *)sender{
     YTSettingViewController *settingVC = [[YTSettingViewController alloc]init];
-    [settingVC setIsLatest:_latest];
     [AVAnalytics event:@"设置"];
 //    CATransition *animation = [CATransition animation];
 //    animation.delegate = self;

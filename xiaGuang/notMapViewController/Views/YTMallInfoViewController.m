@@ -428,32 +428,18 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 }
 
 -(void)getPreferential:(void (^)(NSArray *preferentials))black{
-    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
-    AVObject *cloudMall = [((YTCloudMall *)_mall) getCloudObj];
-    [query whereKey:@"mall" equalTo:cloudMall];
-    [query whereKey:@"switch" equalTo:@YES];
-    [query includeKey:@"merchant"];
-    query.limit = 3;
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:@"http://xiaguang.avosapps.com/coupon" parameters:@{@"count":@3,@"mallId":[_mall identifier]} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSArray *objects = responseObject;
         NSMutableArray *preferentials = [NSMutableArray array];
-        for (AVObject *object in objects) {
-            YTPreferential *preferential = [[YTPreferential alloc]initWithCloudObject:object];
+        for (NSDictionary *object in objects) {
+            YTPreferential *preferential = [[YTPreferential alloc]initWithDaZhongDianPing:object];
             [preferentials addObject:preferential];
         }
-        NSNumber *lack = [NSNumber numberWithInt:3 - preferentials.count];
-        if (lack != 0) {
-            _callBack = black;
-            NSNumber *latitude = [NSNumber numberWithDouble:[self.mall coord].latitude];
-            NSNumber *longitude = [NSNumber numberWithDouble:[self.mall coord].longitude];
-            NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:@[@"深圳",latitude,longitude,@"100",lack] forKeys:@[@"city",@"latitude",@"longitude",@"radius",@"limit"]];
-            DPRequest *request = [DPRequest requestWithURL:@"http://api.dianping.com/v1/deal/find_deals" params:params delegate:self];
-            request.object = preferentials;
-            [request connect];
-            
-        }else{
-            black(preferentials);
-        }
-        
+        black(preferentials.copy);
+        [preferentials removeAllObjects];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        black(nil);
     }];
 }
 

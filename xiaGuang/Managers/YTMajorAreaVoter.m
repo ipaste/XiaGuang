@@ -34,9 +34,9 @@
     return self;
 }
 
--(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons{
+-(NSString *)shouldSwitchToMajorAreaId:(NSArray *)objects{
     
-    NSArray *readbeacons = beacons;
+    NSArray *readbeacons = objects;
     int analyzeTotal = MIN(10,readbeacons.count);
     
     NSMutableDictionary *scoreboard = [[NSMutableDictionary alloc] init];
@@ -44,22 +44,23 @@
     id<YTMajorArea> tmpMajorArea;
     NSNumber *total;
     double tmpDist;
+    NSNumber *distance;
     for(int i = 0; i<analyzeTotal; i++){
         
-        tmpBeacon = readbeacons[i];
-        
-        if([tmpBeacon.distance doubleValue]<0){
+        tmpBeacon = readbeacons[i][@"Beacon"];
+        distance = readbeacons[i][@"distance"];
+        if([distance doubleValue]<0){
             continue;
         }
         tmpMajorArea = [self getMajorArea:tmpBeacon];
         total = [scoreboard objectForKey:[tmpMajorArea identifier]];
         if(total == nil){
-            tmpDist = [tmpBeacon.distance doubleValue];
+            tmpDist = [distance doubleValue];
             double score = 1.0 / (tmpDist*tmpDist);
             [scoreboard setObject:[NSNumber numberWithDouble:score] forKey:[tmpMajorArea identifier]];
         }
         else{
-            tmpDist = [tmpBeacon.distance doubleValue];
+            tmpDist = [distance doubleValue];
             double score = 1.0 / (tmpDist*tmpDist);
             score = [total doubleValue] + score;
             [scoreboard setObject:[NSNumber numberWithDouble:score] forKey:[tmpMajorArea identifier]];

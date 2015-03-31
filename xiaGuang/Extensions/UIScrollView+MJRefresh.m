@@ -197,6 +197,11 @@ static char MJRefreshFooterViewKey;
     [self.footer endRefreshing];
 }
 
+- (void)footerEndRefreshingWillNotLoading{
+    self.footer.state = MJRefreshStateNotRefreshing;
+    [self.footer endRefreshing];
+}
+
 /**
  *  下拉刷新头部控件的可见性
  */

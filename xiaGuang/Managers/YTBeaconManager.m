@@ -10,6 +10,8 @@
 #define SHIFT_THRESHOLD 1
 #define LOST_THRESHOLD 1
 #define DISTANCE_THRESHOLD 1
+#define BUFFER_TIME 20
+#define ALPHA 0.3
 
 @interface YTMajorMinorPair : NSObject
 
@@ -38,6 +40,7 @@
     NSMutableDictionary *_whitelist;
     
     NSHashTable *_listeners;
+    NSMutableArray *_bufferBeacon;
 }
 
 @end
@@ -68,6 +71,11 @@
             tmpPair.minor = [NSNumber numberWithInt:minor];
             [_whitelist setObject:tmpPair forKey:[NSString  stringWithFormat:@"%@-%@",tmpPair.major,tmpPair.minor]];
         }
+        
+//        YTMajorMinorPair *tmpPaid = [[YTMajorMinorPair alloc]init];
+//        tmpPaid.major = @1004;
+//        tmpPaid.minor = @5025;
+//        [_whitelist setObject:tmpPaid forKey:[NSString stringWithFormat:@"%@-%@",tmpPaid.major,tmpPaid.minor]];
         
         _listeners = [NSHashTable weakObjectsHashTable];
     }
@@ -100,20 +108,60 @@
 }
 
 -(void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region{
-   
-    
+
     beacons = [self filterWhiteListedBeacon:beacons];
     _readbeacons = beacons;
     
-    // notify all listeners
-    NSLog(@"listeners:%lu",(unsigned long)_listeners.count);
-    for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
-        
-        [listener YTBeaconManager:self rangedBeacons:beacons];
-    }
-    
-    [self.delegate rangedBeacons:beacons];
-
+   
+    if (_bufferBeacon == nil) {
+        _bufferBeacon = [NSMutableArray array];
+        [beacons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSDictionary *beaconDict = @{@"Beacon":obj,@"time":[NSDate date],@"distance":((ESTBeacon *)obj).distance};
+            [_bufferBeacon addObject:beaconDict];
+            // notify all listeners
+            for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
+                [listener YTBeaconManager:self rangedObjects:_bufferBeacon];
+            }
+           [self.delegate rangedObjects:_bufferBeacon];
+        }];
+    }else{
+        [beacons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.Beacon.minor == %@ && self.Beacon.major == %@",((ESTBeacon *)obj).minor,((ESTBeacon *)obj).major];
+            NSArray *beaconSoure = [_bufferBeacon filteredArrayUsingPredicate:predicate];
+            if (beaconSoure.count > 0){
+                NSDictionary *dict = beaconSoure[0];
+                NSInteger index = [_bufferBeacon indexOfObject:dict];
+                ESTBeacon *newBeacon = obj;
+                double d = -1;
+                if (![newBeacon.distance isEqualToNumber:[NSNumber numberWithInt:-1]]){
+                    d = ALPHA * [newBeacon.distance doubleValue] + (1 - ALPHA) * [dict[@"distance"] doubleValue];
+                }
+                NSDictionary *beaconDict = @{@"Beacon":newBeacon,@"time":[NSDate date],@"distance":[NSNumber numberWithDouble:d]};
+                [_bufferBeacon replaceObjectAtIndex:index withObject:beaconDict];
+            }else{
+                NSDictionary *dict = @{@"Beacon":obj,@"time":[NSDate date],@"distance":((ESTBeacon *)obj).distance};
+                [_bufferBeacon addObject:dict];
+            }
+            if (idx == beacons.count - 1) {
+                [_bufferBeacon enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    NSDictionary *dict = obj;
+                    ESTBeacon *beacon = obj[@"Beacon"];
+                    NSTimeInterval time = [[NSDate date] timeIntervalSinceNow] - [((NSDate *)obj[@"time"] ) timeIntervalSinceNow];
+                    if (time > BUFFER_TIME) {
+                        [_bufferBeacon removeObject:obj];
+                    }
+                    if (idx == _bufferBeacon.count -1) {
+                        // notify all listeners
+                        for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
+                            [listener YTBeaconManager:self rangedObjects:_bufferBeacon];
+                        }
+                        [self.delegate rangedObjects:_bufferBeacon];
+                    }
+                }];
+            }
+           
+        }];
+   }
 }
 
 -(BOOL)isBeaconInRange:(ESTBeacon *)beacon{

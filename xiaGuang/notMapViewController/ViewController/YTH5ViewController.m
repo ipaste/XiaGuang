@@ -26,13 +26,13 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     if (CURRENTVERSION < 8.0) {
-        _7_webView = [[UIWebView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+        _7_webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame))];
         [_7_webView loadRequest:_request];
         _7_webView.delegate = self;
         [self.view addSubview:_7_webView];
     }else{
         _progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 2)];
-        _8_webView = [[WKWebView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+        _8_webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame))];
         [self.view addSubview:_8_webView];
         [self.view addSubview:_progressView];
         [_8_webView loadRequest:_request];

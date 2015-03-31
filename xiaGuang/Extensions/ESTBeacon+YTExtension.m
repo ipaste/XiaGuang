@@ -9,7 +9,6 @@
 #import "ESTBeacon+YTExtension.h"
 
 @implementation ESTBeacon (YTExtension)
-
 -(BOOL) equalTo:(ESTBeacon *)beacon{
     
     if(beacon == NULL){
@@ -23,5 +22,6 @@
         return false;
     }
 }
+
 
 @end

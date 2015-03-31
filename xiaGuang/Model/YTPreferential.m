@@ -53,10 +53,10 @@
 - (NSString *)preferentialInfo{
     //优惠信息
     if (_source == YTPreferentialTypeOther) {
-        NSString *string = _dzdpDictionary[@"description"];
-//        if ([string rangeOfString:@" "].length > 0 ){
-//            return [string componentsSeparatedByString:@" "][1];
-//        }
+        NSString *string = _dzdpDictionary[@"deal"][@"description"];
+        if (string == nil) {
+            string = _dzdpDictionary[@"description"];
+        }
         return string;
     }
     return _object[PREFERENTIAL_KEY_PREFERENTIALINFORMATION];
@@ -104,7 +104,7 @@
     if (!_merchant) {
         if (_source == YTPreferentialTypeOther) {
             AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-            [query whereKey:@"shopId" containedIn:[self shopIdFromBusinesses:_dzdpDictionary[@"businesses"]]];
+            [query whereKey:@"objectId" equalTo:_dzdpDictionary[@"merchant"]];
             [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
                 if (error == nil) {
                     _merchant = [[YTCloudMerchant alloc]initWithAVObject:object];

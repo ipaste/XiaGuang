@@ -79,8 +79,8 @@
     [_merchantInfoView addSubview:_subCategory];
 
     
-    CGSize textSize = [[_merchant address] boundingRectWithSize:CGSizeMake(200, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size;
-    _addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, textSize.width,textSize.height)];
+    CGSize textSize = [[_merchant address] boundingRectWithSize:CGSizeMake(200, CGRectGetWidth(self.view.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+    _addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame),textSize.height)];
     
     _jumpToMapButton  = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame) - 36, 40)];
     [_jumpToMapButton addTarget:self action:@selector(jumpToMap:) forControlEvents:UIControlEventTouchUpInside];

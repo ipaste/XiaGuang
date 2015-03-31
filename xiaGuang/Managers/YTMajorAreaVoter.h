@@ -16,7 +16,7 @@
 
 +(id)sharedInstance;
 
--(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons;
+-(NSString *)shouldSwitchToMajorAreaId:(NSArray *)objects;
 -(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon;
 
 @end
