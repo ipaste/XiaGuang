@@ -17,6 +17,7 @@
     CGFloat _offset;
     YTPathAnnotation *_pathAnnotation;
     YTPathAnnotation *_mapAnnotation;
+    id <YTMajorArea> _majorArea;
 }
 
 #pragma mark init
@@ -330,35 +331,20 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     return sqrt(xdiff*xdiff+ydiff*ydiff);
     
 }
--(void)showMapPathWithMajorArea:(id<YTMajorArea>)majorArea{
-    if (_mapAnnotation != nil){
-        [self hideMapPath];
-    }
-    _mapAnnotation = [[YTPathAnnotation alloc]initWithMapView:_internalMapView majorArea:majorArea];
-    [_internalMapView  addAnnotation:_mapAnnotation];
-    
-}
-
--(void)hideMapPath{
-    if (_mapAnnotation != nil) {
-        [_internalMapView removeAnnotation:_mapAnnotation];
-        _mapAnnotation = nil;
-    }
-}
 
 -(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea{
     
     if (self.isShowPath) {
-        if(_pathAnnotation != nil){
-            [_internalMapView removeAnnotation:_pathAnnotation];
+        if (_pathAnnotation != nil) {
+            [self removePath];
         }
         
         CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
         CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
         _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
-        
+        _majorArea = majorArea;
         if(_pathAnnotation != nil){
             [_internalMapView addAnnotation:_pathAnnotation];
         }
@@ -369,6 +355,13 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     if(_pathAnnotation != nil){
         [_internalMapView removeAnnotation:_pathAnnotation];
         _pathAnnotation = nil;
+    }
+}
+
+-(void)changePathFromStartCoord:(CLLocationCoordinate2D)coord{
+    if (_pathAnnotation) {
+        [_pathAnnotation changeStartPoint:[YTCanonicalCoordinate mapToCanonicalCoordinate:coord mapView:_internalMapView]];
+        [_internalMapView setNeedsDisplay];
     }
 }
 

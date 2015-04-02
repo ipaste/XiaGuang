@@ -71,10 +71,10 @@
         
         _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
         
-        _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
+        //_inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
         _inertia.mapMeterPerPixel = 1;
         _inertia.mapNorthOffset = offset;
-        _inertia.delegate = self;
+        //_inertia.delegate = self;
         
         _mapGraph = [[YTMapGraph alloc]initWithMajorArea:_majorArea mapView:_mapView];
 
@@ -121,7 +121,7 @@
 }
 
 -(void)positionUpdating:(CGPoint )position {
-    _isRefresh = false;
+   // _isRefresh = false;
     if (position.x != -INFINITY && position.y != INFINITY) {
         NSDictionary *dict = [_mapGraph projectToGraphFromPoint:position];
         CGPoint point = [dict[kYTMapGraphProjectionPointKey] CGPointValue];

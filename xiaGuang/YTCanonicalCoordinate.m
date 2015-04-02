@@ -97,4 +97,97 @@
     return dist * canonicalToPixelScale * view.metersPerPixel / majorArea.worldToMapRatio;
 }
 
++ (NSArray *)graphChangeStartPoint:(CGPoint)startPoint
+                             graph:(NSArray *)graph{
+    
+    NSMutableArray *newGraph = [NSMutableArray arrayWithArray:graph];
+    NSRange range;
+    double minDistance = MAXFLOAT;
+    CGPoint point;
+    for (NSInteger index = 0; index < graph.count / 2; index ++) {
+        CGPoint point1 = [graph[index * 2] CGPointValue];
+        CGPoint point2 = [graph[index * 2 + 1] CGPointValue];
+        CGPoint bitchPoint = [YTCanonicalCoordinate projectPoint:startPoint toNode:point1 andNode:point2];
+        double distance = sqrt(pow(startPoint.x - bitchPoint.x, 2) + pow(startPoint.y - bitchPoint.y, 2));
+        if (distance < minDistance) {
+            minDistance = distance;
+            range = NSMakeRange(0, index * 2);
+            point = bitchPoint;
+        }
+    }
+    [newGraph removeObjectsInRange:range];
+    [newGraph insertObject:[NSValue valueWithCGPoint:point] atIndex:0];
+    return newGraph;
+}
+
++ (CGPoint)projectPoint:(CGPoint)point
+                 toNode:(CGPoint)node1
+                andNode:(CGPoint)node2 {
+    
+    double x = 0;
+    double y = 0;
+    
+    double x1 = node1.x;
+    double y1 = node1.y;
+    
+    double x2 = node2.x;
+    double y2 = node2.y;
+    
+    double x0 = point.x;
+    double y0 = point.y;
+    
+    if (abs(x1 - x2) <= 0.1) {
+        // vertical
+        x = x1;
+        y = y0;
+    } else if (abs(y1 - y2) <= 0.1) {
+        // horizontal
+        x = x0;
+        y = y1;
+    } else {
+        
+        double a = (y2 - y1) / (x2 - x1);
+        double b = -1;
+        double c = y1 - a * x1;
+        
+        x = (b * (b*x0 - a*y0) - a*c) / (a*a + b*b);
+        y = (a * (a*y0 - b*x0) - b*c) / (a*a + b*b);
+    }
+    
+    
+    
+    if (x < MIN(x1, x2)) {
+        if (x1 < x2) {
+            return CGPointMake(x1, y1);
+        } else {
+            return CGPointMake(x2, y2);
+        }
+    } else if (x > MAX(x1,x2)) {
+        if (x1 > x2) {
+            return CGPointMake(x1, y1);
+        } else {
+            return CGPointMake(x2, y2);
+        }
+    } else if (abs(x1 - x2) < 0.1) {
+        if (y < MIN(y1, y2)) {
+            if (y1 < y2) {
+                return CGPointMake(x1, y1);
+            } else {
+                return CGPointMake(x2, y2);
+            }
+        } else if (y > MAX(y1, y2)) {
+            if (y1 > y2) {
+                return CGPointMake(x1, y1);
+            } else {
+                return CGPointMake(x2, y2);
+            }
+        } else {
+            return CGPointMake(x, y);
+        }
+    } else {
+        return CGPointMake(x, y);
+    }
+}
+
+
 @end

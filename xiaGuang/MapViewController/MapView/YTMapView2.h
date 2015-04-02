@@ -84,8 +84,7 @@ typedef enum : NSUInteger {
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea;
 -(void)removePath;
--(void)showMapPathWithMajorArea:(id<YTMajorArea>)majorArea;
--(void)hideMapPath;
+-(void)changePathFromStartCoord:(CLLocationCoordinate2D)coord;
 -(void)setScore:(double)score
 forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 

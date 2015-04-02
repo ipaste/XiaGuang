@@ -463,7 +463,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         [_mapView highlightPoi:highlightPoi animated:NO];
     }
     
-    [_mapView showMapPathWithMajorArea:majorArea];
+    
     
     if (_navigationView.isNavigating){
         if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]] && [[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
@@ -1151,12 +1151,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                     _lastStableCoordinate = coordinate;
                     [_mapView showPathFromCoord1:coordinate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
                 }
-                
-                if([_mapView canonicalDistanceFromCoordinate1:_lastStableCoordinate toCoordinate2:coordinate] > 10){
-                
-                    [_mapView showPathFromCoord1:coordinate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
-                    _lastStableCoordinate = coordinate;
-                }
+                [_mapView changePathFromStartCoord:coordinate];
             }
             [_mapView setUserCoordinate:_userCoordintate];
         }
