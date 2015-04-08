@@ -158,7 +158,6 @@
 
 
 -(void)clickToButtonAtTag:(NSInteger)tag{
-    
     if (tag == 1) {        
         [self stopNavigationMode];
     }

@@ -56,9 +56,4 @@ typedef NS_ENUM(NSInteger, YTPathStyle) {
     return self;
 }
 
-
-
--(RMMapLayer *)produceLayer{
-    return self.layer;
-}
 @end

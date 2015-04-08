@@ -18,6 +18,4 @@
            majorArea:(id<YTMajorArea>)majorArea
           fromPoint1:(CGPoint)p1
             toPoint2:(CGPoint)p2;
--(void)changeStartPoint:(CGPoint)p;
-
 @end
