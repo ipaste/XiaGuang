@@ -71,10 +71,10 @@
         
         _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
         
-        //_inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
+       // _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
         _inertia.mapMeterPerPixel = 1;
         _inertia.mapNorthOffset = offset;
-        //_inertia.delegate = self;
+        _inertia.delegate = self;
         
         _mapGraph = [[YTMapGraph alloc]initWithMajorArea:_majorArea mapView:_mapView];
 
@@ -111,6 +111,10 @@
         
         position = [_boundingBox updateAndGetCurrentPoint:position];
         
+        NSValue *value = [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
+        
+        position =  [value CGPointValue];
+        
         _inertia.startPoint = position;
         
         if ( !_isRefresh) {
@@ -121,11 +125,15 @@
 }
 
 -(void)positionUpdating:(CGPoint )position {
-   // _isRefresh = false;
+    //_isRefresh = false;
+    NSValue * val =  [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
+    
+    position = [val CGPointValue];
+    
     if (position.x != -INFINITY && position.y != INFINITY) {
-        NSDictionary *dict = [_mapGraph projectToGraphFromPoint:position];
-        CGPoint point = [dict[kYTMapGraphProjectionPointKey] CGPointValue];
-        CLLocationCoordinate2D coord = [YTCanonicalCoordinate canonicalToMapCoordinate:point mapView:_mapView];
+    
+        CLLocationCoordinate2D coord = [YTCanonicalCoordinate canonicalToMapCoordinate:position mapView:_mapView];
+       
         dispatch_async(dispatch_get_main_queue(), ^{
             [_delegate YTBeaconBasedLocator:self coordinateUpdated:coord];
         });

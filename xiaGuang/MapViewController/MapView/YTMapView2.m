@@ -16,7 +16,6 @@
     YTUserAnnotation *_userAnnotation;
     CGFloat _offset;
     YTPathAnnotation *_pathAnnotation;
-    YTPathAnnotation *_mapAnnotation;
     id <YTMajorArea> _majorArea;
 }
 
@@ -95,9 +94,6 @@
     
 }
 
--(void)reloadAnnotations{
-    
-}
 
 -(void)removeAnnotations{
     [_annotationSource removeAllAnnotations];
@@ -232,6 +228,8 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
 
+
+
 -(void)tapOnAnnotation:(RMAnnotation *)annotation onMap:(RMMapView *)map{
     
     if([annotation.annotationType isEqualToString:@"user"] || [annotation.annotationType isEqualToString:@"minor"]){
@@ -242,7 +240,9 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 }
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
-    
+    if ([annotation isMemberOfClass:[YTPathAnnotation class]]){
+        return annotation.layer;
+    }
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;
 }
@@ -258,17 +258,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     }
    
 }
-
-
-
--(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction{
-
-    
-    NSLog(@"zoom %f",map.zoom);
-    //[self refilterAnnotations];
-    
-}
-
 
 -(void)refilterAnnotations{
     
@@ -358,12 +347,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     }
 }
 
--(void)changePathFromStartCoord:(CLLocationCoordinate2D)coord{
-    if (_pathAnnotation) {
-        [_pathAnnotation changeStartPoint:[YTCanonicalCoordinate mapToCanonicalCoordinate:coord mapView:_internalMapView]];
-        [_internalMapView setNeedsDisplay];
-    }
-}
 
 -(void)setIsShowPath:(BOOL)isShowPath{
     if (!isShowPath) {
@@ -373,5 +356,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     }
     _isShowPath = isShowPath;
 }
+
 
 @end

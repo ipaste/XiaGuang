@@ -37,11 +37,7 @@
     [self.window makeKeyAndVisible];
    
     _timeInToBackground = 0;
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-       [self youmiProcedure];
-    });
-    
+    [self youmiProcedure];
     return YES;
 }
 

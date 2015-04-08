@@ -11,14 +11,13 @@
 #import "YTMapGraph.h"
 #import "YTCanonicalCoordinate.h"
 #import "YTMapGraphDict.h"
-@interface YTPathAnnotation : YTAnnotation
+#import "RMMarker+RMMarker_YTExtension.h"
+@interface YTPathAnnotation : RMPolylineAnnotation
 
 -(id)initWithMapView:(RMMapView *)mapView
            majorArea:(id<YTMajorArea>)majorArea
           fromPoint1:(CGPoint)p1
             toPoint2:(CGPoint)p2;
-
--(instancetype) initWithMapView:(RMMapView *)mapView majorArea:(id<YTMajorArea>)majorArea;
 -(void)changeStartPoint:(CGPoint)p;
 
 @end

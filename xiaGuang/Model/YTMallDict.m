@@ -27,8 +27,6 @@
     self = [super init];
     if (self) {
         _db = [YTStaticResourceManager sharedManager].db;
-        [self getAllLocalMallWithCallBack:nil];
-        [self getAllCloudMallWithCallBack:nil];
     }
     return self;
 }
@@ -78,24 +76,34 @@
 
 - (void)getAllLocalMallWithCallBack:(void (^)(NSArray *malls))callBack{
     if (!_localMalls) {
-        NSMutableArray *malls = [NSMutableArray array];
-        FMResultSet *result = [_db executeQuery:@"select * from Mall"];
-        while ([result next]) {
-            YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
-            [malls addObject:mall];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSMutableArray *malls = [NSMutableArray array];
+            FMResultSet *result = [_db executeQuery:@"select * from Mall"];
+            while ([result next]) {
+                YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
+                [malls addObject:mall];
+            }
+            _localMalls = malls.copy;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (callBack != nil) {
+                    callBack(_localMalls);
+                }
+            });
+        });
+        
+    }else{
+        if (callBack != nil) {
+            callBack(_localMalls);
         }
-        _localMalls = malls.copy;
     }
-    if (callBack != nil) {
-        callBack(_localMalls);
-    }
+    
 }
 
 -(id<YTMall>)changeMallObject:(id<YTMall>)mall resultType:(YTMallClass)mallClass{
     if ([mall isMemberOfClass:[YTLocalMall class]]){
         switch (mallClass) {
             case YTMallClassCloud:{
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"localDB == %@",[mall identifier]];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.localDB == %@",[mall identifier]];
                 NSArray *cloudMall = [_cloudMalls filteredArrayUsingPredicate:predicate];
                 if (cloudMall.count > 0) {
                     mall = cloudMall.firstObject;
@@ -113,7 +121,7 @@
             case YTMallClassCloud:
                 return mall;
             case YTMallClassLocal:{
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@",[mall localDB]];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.identifier == %@",[mall localDB]];
                 NSArray *localMall = [_localMalls filteredArrayUsingPredicate:predicate];
                 if (localMall.count > 0) {
                     mall = localMall[0];

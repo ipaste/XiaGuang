@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, YTPathStyle) {
 @implementation YTPathAnnotation{
     NSArray *_graph;
     RMShape *_shape;
+    RMMarker *_layer;
 }
 
 
@@ -44,47 +45,20 @@ typedef NS_ENUM(NSInteger, YTPathStyle) {
     }
     
     if(locs != nil && locs.count > 0){
-        self = [super initWithMapView:mapView coordinate:((CLLocation *)[locs objectAtIndex:0]).coordinate andTitle:@"Home"];
+        self = [super initWithMapView:mapView points:locs];
     }
     
     if(self){
-        self.userInfo = locs;
-        [self setBoundingBoxFromLocations:locs];
+        self.lineColor = [UIColor orangeColor];
+        self.lineWidth = 3;
     }
     
     return self;
 }
 
 
--(void)changeStartPoint:(CGPoint)p{
-    NSArray *newGrpha = [YTCanonicalCoordinate graphChangeStartPoint:p graph:_graph];
-    _graph = newGrpha;
-    NSMutableArray *locs = [NSMutableArray array];
-    for (NSValue *val in newGrpha) {
-        CGPoint point = [val CGPointValue];
-        CLLocationCoordinate2D coord = [YTCanonicalCoordinate canonicalToMapCoordinate:point mapView:self.mapView];
-        [locs addObject:[[CLLocation alloc] initWithLatitude:coord.latitude longitude:coord.longitude]];
-    }
-    self.userInfo = locs;
-    [_shape removeFromSuperlayer];
-    _shape = nil;
-    [self.mapView removeAnnotation:self];
-    [self.mapView addAnnotation:self];
-    
-}
 
 -(RMMapLayer *)produceLayer{
-    if (!_shape) {
-        _shape = [[RMShape alloc] initWithView:self.mapView];
-        
-        _shape.lineColor = [UIColor orangeColor];
-        _shape.lineWidth = 3.0;
-        
-        for (CLLocation *location in (NSArray *)self.userInfo){
-            [_shape addLineToCoordinate:location.coordinate];
-        }
-    }
-    return _shape;
-
+    return self.layer;
 }
 @end

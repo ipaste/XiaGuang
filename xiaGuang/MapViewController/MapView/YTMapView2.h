@@ -39,9 +39,6 @@ typedef enum : NSUInteger {
 
 -(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate;
 
-
--(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction;
-
 @end
 
 
@@ -84,7 +81,6 @@ typedef enum : NSUInteger {
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea;
 -(void)removePath;
--(void)changePathFromStartCoord:(CLLocationCoordinate2D)coord;
 -(void)setScore:(double)score
 forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 

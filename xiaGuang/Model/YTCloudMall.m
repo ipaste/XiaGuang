@@ -23,13 +23,12 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     NSMutableArray *_merchants;
     NSMutableArray *_resultArray;
     NSMutableArray *_resultMerchants;
+    NSNumber *_isExistence;
     YTLocalMall *_tmpLocalMall;
     DPRequest *_request;
     YTGetTitleImageAndBackgroundImageCallBack _callBack;
     YTExistenceOfPreferentialInformationCallBack _existenceCallBack;
-    BOOL _isExistence;
-    BOOL _isSearchCloud;
-    
+
     YTMallDict *_mallDict;
 }
 
@@ -43,7 +42,6 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     self = [super init];
     if(self){
         _internalObject = object;
-        _isSearchCloud = true;
         _mallDict = [YTMallDict sharedInstance];
     }
     return self;
@@ -208,8 +206,10 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
-    _callBack = callback;
-    if (![self checkCallBackConditions]) {
+    
+    if (_background == nil && _titleImage == nil) {
+        _callBack = nil;
+        _callBack = callback;
         [_internalObject[MALL_CLASS_BIGTITLE_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             if (error) {
                 callback(nil,nil,error);
@@ -226,7 +226,10 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
             _background = [UIImage imageWithData:data];
             [self checkCallBackConditions];
         }];
+    }else{
+        callback(_titleImage,_background,nil);
     }
+
 }
 
 -(BOOL)checkCallBackConditions{
@@ -291,28 +294,20 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager GET:@"http://xiaguang.avosapps.com/existence_PreferentialInformation" parameters:@{@"objectId":_internalObject.objectId} success:^(NSURLSessionDataTask *task, id responseObject) {
-        if ([responseObject[@"exidtence"] isEqualToNumber:@1]) {
-            callBack(true);
-        }else{
+    if (!_isExistence) {
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager GET:@"http://xiaguang.avosapps.com/existence_PreferentialInformation" parameters:@{@"objectId":_internalObject.objectId} success:^(NSURLSessionDataTask *task, id responseObject) {
+            if ([responseObject[@"exidtence"] isEqualToNumber:@1]) {
+                _isExistence = [NSNumber numberWithBool:true];
+            }else{
+                _isExistence = [NSNumber numberWithBool:false];
+            }
+            callBack([_isExistence boolValue]);
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
             callBack(false);
-        }
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        callBack(false);
-    }];
-}
-
-- (void)request:(DPRequest *)request didFinishLoadingWithResult:(id)result{
-    if ([result[@"count"]  isEqual: @1]) {
-        _isExistence = true;
+        }];
     }else{
-        _isExistence = false;
-    }
-    result = nil;
-    if (_existenceCallBack != nil) {
-        _existenceCallBack(_isExistence);
-        _existenceCallBack = nil;
+        callBack([_isExistence boolValue]);
     }
 }
 

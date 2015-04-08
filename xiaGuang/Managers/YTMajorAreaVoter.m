@@ -46,12 +46,13 @@
     double tmpDist;
     NSNumber *distance;
     for(int i = 0; i<analyzeTotal; i++){
-        
         tmpBeacon = readbeacons[i][@"Beacon"];
         distance = readbeacons[i][@"distance"];
+        
         if([distance doubleValue]<0){
             continue;
         }
+       
         tmpMajorArea = [self getMajorArea:tmpBeacon];
         total = [scoreboard objectForKey:[tmpMajorArea identifier]];
         if(total == nil){
@@ -73,16 +74,11 @@
     [scoreboard enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         
         double curScore =[(NSNumber *)obj doubleValue];
-    
         if(curScore > strongScore){
             strongScore = curScore;
             strongestMajorAreaId = key;
         }
-        
     }];
-    if(strongestMajorAreaId == nil){
-        NSLog(@"oops");
-    }
     return strongestMajorAreaId;
 
 }

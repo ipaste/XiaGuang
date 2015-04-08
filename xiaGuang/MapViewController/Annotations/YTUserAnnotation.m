@@ -38,7 +38,6 @@
 
 -(RMMapLayer *)produceLayer{
     _resultLayer = [[RMMarker alloc] initWithUserLocation];
-    
     return _resultLayer;
 }
 

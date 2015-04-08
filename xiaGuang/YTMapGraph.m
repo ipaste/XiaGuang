@@ -108,6 +108,20 @@
     double x0 = point.x;
     double y0 = point.y;
     
+    double cross = (x2-x1)*(x0-x1)+(y2-y1)*(y0-y1);
+    
+    if (cross <= 0) {
+        return CGPointMake(x1, y1);
+    }
+    
+    double d2 = (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+    if (cross >= d2) {
+        return CGPointMake(x2, y2);
+    }
+    
+    double r0 = cross/d2;
+    return CGPointMake(x1+(x2-x1)*r0, y1+(y2-y1)*r0);
+    /*
     if (abs(x1 - x2) <= 0.1) {
         // vertical
         x = x1;
@@ -158,7 +172,7 @@
         }
     } else {
         return CGPointMake(x, y);
-    }
+    } */
 }
 
 - (NSDictionary *)projectToGraphFromPoint:(CGPoint)point {

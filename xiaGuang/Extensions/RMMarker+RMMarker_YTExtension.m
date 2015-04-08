@@ -149,6 +149,54 @@ static YTCompletion Completion = nil;
     return self;
 }
 
+- (instancetype)initWithGraph:(NSArray *)graph mapView:(RMMapView *)mapView{
+    self = [super init];
+    if (self) {
+        CGMutablePathRef linePath = CGPathCreateMutable();
+        CAShapeLayer *layer = [CAShapeLayer layer];
+        layer.frame = mapView.bounds;
+        layer.lineWidth = 4.0;
+        layer.lineCap = kCALineCapRound;
+        layer.strokeEnd = 1.0f;
+        layer.strokeStart = 0.0f;
+        layer.strokeColor = [UIColor orangeColor].CGColor;
+        layer.backgroundColor = [UIColor redColor].CGColor;
+        CGPathMoveToPoint(linePath, NULL, 0, 0);
+        CGPathAddLineToPoint(linePath, NULL, 100, 100);
+        for (NSInteger index = 0; index< graph.count; index++) {
+            CLLocation *loc = graph[index];
+            CGPoint point = [YTCanonicalCoordinate mapToCanonicalCoordinate:loc.coordinate mapView:mapView];
+            if(index == 0){
+                CGPathMoveToPoint(linePath, NULL, point.x, point.y);
+                continue;
+            }
+            
+            CGPathAddLineToPoint(linePath, NULL, point.x, point.y);
+        }
+        layer.path = linePath;
+        
+        //CGPathRelease(linePath);
+        
+        [self addSublayer:layer];
+//        CGContextRef context = UIGraphicsGetCurrentContext();
+//        CGContextSetLineWidth(context, 3.0);
+//        CGContextSetStrokeColorWithColor(context, [UIColor orangeColor].CGColor);
+//        for (NSInteger index = 0;index < graph.count; index++) {
+//            CLLocation *loc  = graph[index];
+//            CGPoint point = [YTCanonicalCoordinate mapToCanonicalCoordinate:loc.coordinate mapView:mapView];
+//            if (index == 0) {
+//                CGContextMoveToPoint(context, point.x, point.y);
+//                continue;
+//            }
+//            
+//            CGContextAddLineToPoint(context, point.x, point.y);
+//        }
+//        CGContextStrokePath(context);
+        
+    }
+    return self;
+}
+
 
 -(id)initWithMerchant:(NSString *)merchantName{
     self = [super init];

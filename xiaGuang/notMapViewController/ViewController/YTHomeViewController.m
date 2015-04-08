@@ -81,6 +81,19 @@
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
     
+    _resourceManager = [YTStaticResourceManager sharedManager];
+    _mallDict = [YTMallDict sharedInstance];
+    [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
+        _malls = malls.copy;
+        for(int j = 0; j < _malls.count * 3; j++){
+            YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+            cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+            [_cells addObject:cell1];
+        }
+        [_tableView reloadData];
+    }];
+    
+    
     if(!_scrollFired){
         [self test];
         _scrollFired = YES;
@@ -128,21 +141,11 @@
     
     _latest = false;
     
-    _resourceManager = [YTStaticResourceManager sharedManager];
     Reachability * reachability = [Reachability reachabilityWithHostname:@"www.xiashopping.com"];
     [reachability startNotifier];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     
-    _mallDict = [YTMallDict sharedInstance];
-    [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
-        _malls = malls.copy;
-        for(int j = 0; j<_malls.count*3; j++){
-            YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-            cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-            [_cells addObject:cell1];
-        }
-        [_tableView reloadData];
-    }];
+    
     
     _transitionToolbar = [[UIToolbar alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _transitionToolbar.tintColor = [UIColor blackColor];

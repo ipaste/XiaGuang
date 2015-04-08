@@ -53,7 +53,7 @@
 
 -(void)layoutSubviews{
     
-    [super layoutSubviews];
+    //[super layoutSubviews];
     _mallBackgroundView.layer.cornerRadius = 8;
     _mallBackgroundView.layer.masksToBounds = true;
     self.backgroundColor = [UIColor clearColor];

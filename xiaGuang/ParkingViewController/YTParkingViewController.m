@@ -654,7 +654,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
 }
 
--(void)rangedBeacons:(NSArray *)objects{
+-(void)rangedObjects:(NSArray *)objects{
     
     if(objects.count <= 0){
         return;
