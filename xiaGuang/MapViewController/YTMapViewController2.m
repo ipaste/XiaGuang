@@ -364,6 +364,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [self.view insertSubview:_mapView belowSubview:_navigationBar];
     
+    [self refreshLocatorWithMapView:_mapView.map majorArea:_curDisplayedMajorArea];
     _shownFloorChange = NO;
     [_mapView displayMapNamed:[_curDisplayedMajorArea mapName]];
     [_mapView setZoom:1 animated:NO];
