@@ -373,13 +373,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 -(void)injectPoisForMajorArea:(id<YTMajorArea>)majorArea{
-    if([[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
+    if([[_majorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]] && _userMinorArea != nil){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
-        if (_userCoordintate.latitude == -888) {
-            [self showUserAtCoordinate:_userCord];
-        }else{
-            [self showUserAtCoordinate:_userCoordintate];
-        }
+        _shownUser = false;
+        [self showUserAtCoordinate:_userCoordintate];
+
     }
     NSArray *merchants = [majorArea merchantLocations];
     NSArray *elevators = [majorArea elevators];
@@ -455,10 +453,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             
             NSArray *transportsToHighlight = [self filteredTransportFrom: _curDisplayedMajorArea toArea:_navigationPlan.targetPoiSource.majorArea];
             //[_mapView highlightPois:transportsToHighlight animated:YES];
-            YTPoi *closestTransport = [self closestTransportToCoordinate:_userMinorArea.coordinate
+            if (_userCoordintate.latitude == -888){
+                _userCoordintate = [_userMinorArea coordinate];
+            }
+            YTPoi *closestTransport = [self closestTransportToCoordinate:_userCoordintate
                                                                  inArray:transportsToHighlight];
+            [_mapView superHighlightPoi:closestTransport animated:false];
             _targetCord = ((id<YTPoiSource>) closestTransport.sourceModel).coordinate;
-            [_mapView highlightPoi:closestTransport animated:false];
             
         }else{
             _targetCord = _navigationPlan.targetPoiSource.coordinate;
@@ -469,7 +470,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         if (highlightPoi != nil) {
             [_mapView superHighlightPoi:highlightPoi animated:NO];
-            
             
             if([self userOnCurdisplayedArea]){
                 [self showPathFromUserToPoi:highlightPoi];
@@ -486,7 +486,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)setTargetCordToDoorCoordIfPossible:(id<YTPoiSource>)merchantInstance{
     
-    
     if([merchantInstance isKindOfClass:[YTLocalMerchantInstance class]]){
         NSArray *doors = ((YTLocalMerchantInstance *)merchantInstance).doors;
         if(doors != nil && doors.count > 0){
@@ -499,28 +498,28 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(NSArray *)filteredTransportFrom:(id<YTMajorArea>)fromArea
                            toArea:(id<YTMajorArea>)toArea{
     
-    BOOL upward = fromArea.rank < toArea.rank;
-    NSMutableArray *result = [NSMutableArray new];
+//    BOOL upward = [[fromArea floor] queue] < [[toArea floor] queue];
+//    NSMutableArray *result = [NSMutableArray new];
+//    
+//    for(YTPoi *tmpTransport in _allElvatorAndEscalator){
+//        
+//        id<YTPoiSource> tmpelevator = tmpTransport.sourceModel;
+//        if(upward){
+//           // if(((id<YTTransport>)tmpelevator).type == YTTransportUpward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
+//                
+//                [result addObject:tmpTransport];
+//          //  }
+//        }
+//        else{
+//           // if(((id<YTTransport>)tmpelevator).type == YTTransportDownward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
+//                
+//                [result addObject:tmpTransport];
+//           // }
+//        }
+//        
+//    }
     
-    for(YTPoi *tmpTransport in _allElvatorAndEscalator){
-        
-        id<YTPoiSource> tmpelevator = tmpTransport.sourceModel;
-        if(upward){
-            if(((id<YTTransport>)tmpelevator).type == YTTransportUpward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
-                
-                [result addObject:tmpTransport];
-            }
-        }
-        else{
-            if(((id<YTTransport>)tmpelevator).type == YTTransportDownward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
-                
-                [result addObject:tmpTransport];
-            }
-        }
-        
-    }
-    
-    return result;
+    return _allElvatorAndEscalator;
     
 }
 
@@ -1103,7 +1102,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     _majorArea = [bestGuessMinorArea majorArea];
     
-    if (_majorArea != nil && ![[[_userMinorArea majorArea] identifier]isEqualToString:[_majorArea identifier]]) {
+    if (_majorArea != nil) {
+
         [self userMoveToMinorArea:bestGuessMinorArea];
         
         if (_type == YTMapViewControllerTypeNavigation) {
@@ -1173,7 +1173,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     //if this minorArea is in a different major area or _userMinorArea is not created yet
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
-        
+        [_mapView removeUserLocation];
         /*if (![[[_navigationPlan.targetPoiSource majorArea] identifier]isEqualToString:[[minorArea majorArea] identifier]] && _navigationView.isNavigating) {
          _navigationView.isShowSwitchButton = YES;
          }*/
@@ -1200,10 +1200,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
     }else{
         _shownFloorChange = NO;
-        if (_userCoordintate.latitude == -888) {
-            _userCoordintate = _userCord;
-        }
-        [self showUserAtCoordinate:_userCoordintate];
+//        if (_userCoordintate.latitude == -888) {
+//            _userCoordintate = _userCord;
+//        }
+//        [self showUserAtCoordinate:_userCoordintate];
         _switchingFloor = NO;
     }
     
@@ -1379,15 +1379,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView.hidden = NO;
     NSString *message = nil;
     [AVAnalytics event:@"开始导航" label:[merchantLocation name]];
-    if (!_bluetoothOn) {
-        message = @"蓝牙尚未打开";
-        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:message cancelButtonTitle:@"知道了"]show];
-        [AVAnalytics event:@"蓝牙未打开时导航"];
-        return;
-    }
-    else{
-        [AVAnalytics event:@"蓝牙已经打开时导航"];
-    }
     if(_userMinorArea == nil){
         
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
@@ -1563,7 +1554,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }else{
             YTCommonlyUsed *commonlyUsed = poiObject;
             NSString *message = [NSString stringWithFormat:@"很抱歉，该楼层没有%@",commonlyUsed.name];
-            [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+            [[[YTMessageBox alloc]initWithTitle:@"" Message:message cancelButtonTitle:@"知道了"]show];
             [_poiView deleteSelectedPoi];
             [self cancelCommonPoiState];
             _selectOnOneOfThePoi = NO;
@@ -1703,20 +1694,39 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 - (NSString *)messageFromButtonType:(YTMessageType)type{
     NSMutableString *subMessage = [NSMutableString string];
-    if (!_userMinorArea) {
-        [subMessage appendString:[NSString stringWithFormat:@"您当前不在%@,",[[[[_curDisplayedMajorArea floor] block] mall] mallName]]];
+    NSString *mallId = [[[NSUserDefaults standardUserDefaults]valueForKey:@"currentMall"] stringValue];
+    
+    if (!_bluetoothOn){
+        [subMessage appendString:@"请开启蓝牙功能以支持室内定位"];
     }else{
-        [subMessage appendString:@"您当前不处于导航模式"];
+        if ([mallId isEqualToString:[_targetMall identifier]]) {
+            // 在附近一公里范围内
+            [subMessage appendString:@"很抱歉，您不在覆盖范围"];
+        }else{
+            // 不在附近一公里范围内
+            [subMessage appendString:@"很抱歉，当前您不在该商城"];
+        }
     }
     
-    switch (type) {
-        case YTMessageTypeFromCurrentButton:
-            [subMessage appendString:@"无法定位当前位置"];
-            break;
-        case YTMessageTypeFromNavigationButton:
-            [subMessage appendString:@"无法使用导航功能"];
-            break;
-    }
+//    if (_bluetoothOn) {
+//        if (!_userMinorArea) {
+//            [subMessage appendString:[NSString stringWithFormat:@"您当前不在%@,",[[[[_curDisplayedMajorArea floor] block] mall] mallName]]];
+//        }else{
+//            [subMessage appendString:@"您当前不处于导航模式"];
+//        }
+//    }else{
+//        [subMessage appendString:@"请开启蓝牙功能以支持室内定位"];
+//        return subMessage;
+//    }
+//    
+//    switch (type) {
+//        case YTMessageTypeFromCurrentButton:
+//            [subMessage appendString:@"无法定位当前位置"];
+//            break;
+//        case YTMessageTypeFromNavigationButton:
+//            [subMessage appendString:@"无法使用导航功能"];
+//            break;
+//    }
     return subMessage;
 }
 

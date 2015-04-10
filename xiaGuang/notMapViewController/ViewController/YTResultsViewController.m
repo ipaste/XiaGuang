@@ -212,7 +212,6 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             }else{
                 [_tableView footerEndRefreshingWillNotLoading];
             }
-            
             _isLoading = NO;
         }];
     }
@@ -224,14 +223,6 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
         [query orderByAscending:@"name"];
         [query includeKey:@"mall,floor"];
-         AVQuery *mallquery = [AVQuery queryWithClassName:@"Mall"];
-        if (_mall) {
-            AVQuery *mallquery = [AVQuery queryWithClassName:@"Mall"];
-            [mallquery whereKey:MALL_CLASS_LOCALID equalTo:_mallUniId];
-        }else{
-            [mallquery whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
-        }
-        [query whereKey:@"mall" matchesQuery:mallquery];
         query.limit = number;
         query.skip = skip;
         if (_isCategory) {
@@ -256,23 +247,24 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             [query whereKey:@"floor" matchesQuery:floorObject];
         }
         
-        if (_mallUniId != nil) {
-            AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
-            [mallObject whereKey:@"localDBId" equalTo:_mallUniId];
-            [query whereKey:@"mall" matchesQuery:mallObject];
+        AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
+        if (_mall != nil) {
+            NSNumber *tmpId = [NSNumber numberWithInteger:[_mallUniId integerValue]];
+            [mallObject whereKey:MALL_CLASS_LOCALID equalTo:tmpId];
+        }else{
+            [mallObject whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
         }
+        [query whereKey:@"mall" matchesQuery:mallObject];
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error){
                 block(nil);
                 return;
             }
-            
             for (AVObject *merchantObject in objects) {
                 YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
                 [merchants addObject:merchant];
             }
-            
             block(merchants);
             return ;
         }];
@@ -282,7 +274,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         query.limit = number;
         query.skip = skip;
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
-        [mallObject whereKey:@"localDBId" equalTo:_mallUniId];
+        [mallObject whereKey:MALL_CLASS_LOCALID equalTo:_mallUniId];
         [query whereKey:@"mall" matchesQuery:mallObject];
         [query whereKey:@"switch" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

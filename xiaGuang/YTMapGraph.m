@@ -192,7 +192,6 @@
         
         if (dist < minDist) {
             minDist = dist;
-            
             result[kYTMapGraphProjectionPointKey] = [NSValue valueWithCGPoint:projectedP];
             result[kYTMapGraphProjectionNode1Key] = node1;
             result[kYTMapGraphProjectionNode2Key] = node2;

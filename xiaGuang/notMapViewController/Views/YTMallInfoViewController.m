@@ -230,7 +230,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
     id<YTMall> mall = _mall;
     
     if (mall == nil) {
-        [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"您的网络状况不好，无法显示商城内容，请检查是否开启无线网络" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"您当前的网络状况不稳定，请检查网络后再试" cancelButtonTitle:@"确定"] show];
     }
     
     [mall getMallBasicMallInfoWithCallBack:^(NSString *mallName, NSString *address, CLLocationCoordinate2D coord, NSError *error) {
@@ -388,7 +388,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
     id <YTFloor> floor = nil;
     YTLocalMall *localmall = [_mallDict changeMallObject:self.mall resultType:YTMallClassLocal];
     if (localmall == nil){
-        [[[UIAlertView alloc]initWithTitle:@"虾逛" message:@"地图正在建设中." delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，此商城暂时不提供该服务，敬请期待" cancelButtonTitle:@"确定"] show];
         return;
     }
     NSArray * temp = [[[localmall blocks] objectAtIndex:0] floors];

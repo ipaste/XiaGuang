@@ -155,7 +155,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)backButtonClicked{
     if (_navigationView.isNavigating) {
-        YTMessageBox *box = [[YTMessageBox alloc]initWithTitle:@"导航进行中" Message:@"点击确定退出导航"] ;
+        YTMessageBox *box = [[YTMessageBox alloc]initWithTitle:@"导航进行中" Message:@"您已处于目的地附近，导航结束"] ;
         [box show];
         [box callBack:^(NSInteger tag) {
             if (tag == 1) {
@@ -278,7 +278,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)clickcancelMarkedButton:(UIButton *)sender{
-    YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"已经标记" Message:@"是否取消"];
+    YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"已经标记" Message:@"取消停车标记将清除您的爱车位置，确定取消吗？"];
     [messageBox show];
     [messageBox callBack:^(NSInteger tag) {
         if (tag == 1) {
@@ -289,8 +289,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)clickStarNavigationButton:(UIButton *)sender{
     if (_userMinorArea == nil || ![[_userMinorArea majorArea] isParking]) {
-        NSString *message = [NSString stringWithFormat:@"您当前不处于%@的停车场,或者您的蓝牙未开启",[[[[[_tmpMarker majorArea]floor] block] mall] mallName]];
-        [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"请处于停车场中并开启蓝牙功能，以支持室内定位" cancelButtonTitle:@"确定"] show];
         return;
     }
     
@@ -414,8 +413,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 
 -(void)moveToUserLocationButtonClicked{
     if (_userMinorArea == nil || ![[_userMinorArea majorArea] isParking]) {
-        NSString *message = [NSString stringWithFormat:@"您当前不处于%@的停车场,或者您的蓝牙未开启",[[[[[_tmpMarker majorArea]floor] block] mall] mallName]];
-        [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"请处于停车场中并开启蓝牙功能，以支持室内定位" cancelButtonTitle:@"确定"] show];
         return;
     }
     
@@ -627,7 +625,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
     if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
         if ([[[[[[_userMinorArea majorArea]floor]block]mall]identifier] isEqualToString:[[[[[tmpMinorArea majorArea] floor] block] mall] identifier]]) {
-            
             [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您已经走出了停车场"] cancelButtonTitle:@"知道了"]show];
         }
         if (_shownUser == YES) {

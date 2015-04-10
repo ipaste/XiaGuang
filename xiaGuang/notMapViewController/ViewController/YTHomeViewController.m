@@ -45,7 +45,7 @@
     self = [super init];
     if (self) {
         _malls = [NSMutableArray array];
-         _cells = [NSMutableArray new];
+        _cells = [NSMutableArray new];
     }
     return self;
 }
@@ -63,10 +63,10 @@
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
-
+    
     _manager = _bluetoothManager.locationManager;
     _manager.delegate = self;
-    [_manager startUpdatingLocation];    
+    [_manager startUpdatingLocation];
     
     for (int i = 0; i < 9; i++) {
         YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
@@ -75,7 +75,7 @@
     }
     
     _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
-    _tableView.delegate = self; 
+    _tableView.delegate = self;
     _tableView.rowHeight = 130;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
@@ -171,8 +171,11 @@
                     NSString *mallId = responseObject[@"nearMallId"];
                     NSString *mallLocalDBId = responseObject[@"mallLocalDBId"];
                     float distance = ((NSString *)responseObject[@"distance"]).floatValue;
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:mallLocalDBId forKey:@"currentMall"];
+                    
                     if (distance < 1000) {
-                        YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您正处于%@,需要切换至%@吗？",mallName,mallName]];
+                        YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您正处于%@,需要自动导航吗？",mallName]];
                         messageBox.messageColor = [UIColor colorWithString:@"e95e37"];
                         [messageBox show];
                         [messageBox callBack:^(NSInteger tag) {
@@ -197,7 +200,7 @@
             
         }];
     }
-  
+    
 }
 - (void)test {
     
@@ -207,7 +210,7 @@
                               delay:0
                             options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
                          animations:^{
-                                [self scrollDown];
+                             [self scrollDown];
                          } completion:^(BOOL finished) {
                              
                              CGPoint p = _tableView.contentOffset;
@@ -262,7 +265,7 @@
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjects:@[[UIColor colorWithString:@"e65e37"],[UIFont systemFontOfSize:20]] forKeys:@[NSForegroundColorAttributeName,NSFontAttributeName]]];
-
+    
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];

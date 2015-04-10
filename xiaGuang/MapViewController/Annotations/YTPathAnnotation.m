@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger, YTPathStyle) {
     
     if(self){
         self.lineColor = [UIColor orangeColor];
-        self.lineWidth = 3;
+        self.lineWidth = 5;
     }
     
     return self;
