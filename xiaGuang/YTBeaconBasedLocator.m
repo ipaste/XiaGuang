@@ -126,9 +126,6 @@
 
 -(void)positionUpdating:(CGPoint )position {
     //_isRefresh = false;
-    NSValue * val =  [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
-    
-    position = [val CGPointValue];
     
     if (position.x != -INFINITY && position.y != INFINITY) {
     

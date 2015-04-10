@@ -449,9 +449,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         [_mapView highlightPoi:highlightPoi animated:NO];
     }
-    
-    
-    
+
     if (_navigationView.isNavigating){
         if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]] && [[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
             
@@ -714,10 +712,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
+    if (_navigationView.isNavigating) return;
+    
     if (_multipleView.isShow) {
         [_multipleView hide];
         _multipleView = nil;
     }
+    
     id<YTPoiSource> sourceModel = [poi sourceModel];
     
     //if there's activePoi
@@ -1168,10 +1169,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }];
     }
     
-    if (_navigationView.isNavigating) {
-        _navigationView.isShowSwitchButton = YES;
-    }
-    
     _userCoordintate = [minorArea coordinate];
     //if this minorArea is in a different major area or _userMinorArea is not created yet
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
@@ -1196,6 +1193,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 _shownFloorChange = YES;
                 
             }
+        }else{
+            _navigationView.isShowSwitchButton = true;
         }
         _shownUser = NO;
         
@@ -1247,12 +1246,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark switch floor and block delegate methods
 -(void)switchBlock:(id<YTBlock>)block{
-    
     if(_switchFloorView.toggle){
         [_switchFloorView toggleFloor];
     }
-    
-    
+
     id<YTMajorArea> majorArea = [[[[block floors] firstObject] majorAreas] firstObject];
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
         if(_shownCallout && [_mapView currentState] == YTMapViewDetailStateNormal){
@@ -1545,7 +1542,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)highlightTargetGroupOfPoi:(id)poiObject{
-    
     if ([poiObject isMemberOfClass:[YTCategory class]]){
         YTCategory *category = poiObject;
         [_selectedPoiButton setPoiImage:category.image];
@@ -1564,14 +1560,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             [_mapView highlightPois:_activePois animated:YES];
             [_selectedPoiButton setPoiImage:commonlyUsed.icon];
             _selectOnOneOfThePoi = YES;
-        }
-        else{
-            [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+        }else{
+            YTCommonlyUsed *commonlyUsed = poiObject;
+            NSString *message = [NSString stringWithFormat:@"很抱歉，该楼层没有%@",commonlyUsed.name];
+            [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
             [_poiView deleteSelectedPoi];
             [self cancelCommonPoiState];
             _selectOnOneOfThePoi = NO;
         }
-        
     }
 }
 

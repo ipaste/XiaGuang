@@ -64,11 +64,15 @@
     [_beaconManager startRangingBeacons];
     _beaconManager.delegate = self;
 
-    
-    _manager = [[CLLocationManager alloc]init];
+    _manager = _bluetoothManager.locationManager;
     _manager.delegate = self;
-    [_manager startUpdatingLocation];
+    [_manager startUpdatingLocation];    
     
+    for (int i = 0; i < 9; i++) {
+        YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        [_cells addObject:cell1];
+    }
     
     _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     _tableView.delegate = self; 
@@ -81,18 +85,8 @@
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
     
-    _resourceManager = [YTStaticResourceManager sharedManager];
-    _mallDict = [YTMallDict sharedInstance];
-    [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
-        _malls = malls.copy;
-        for(int j = 0; j < _malls.count * 3; j++){
-            YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-            cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-            [_cells addObject:cell1];
-        }
-        [_tableView reloadData];
-    }];
     
+    _mallDict = [YTMallDict sharedInstance];
     
     if(!_scrollFired){
         [self test];
@@ -309,17 +303,22 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (_malls.count <= 0 ) {
+        return  _cells.count / 3;
+    }
     return _malls.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMallCell *cell = _cells[indexPath.row];
-    id<YTMall> mall = _malls[indexPath.row%_malls.count];
-    if([mall isMemberOfClass:[YTCloudMall class]]){
-        cell.mall = mall;
-        [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-            cell.isPreferential = isExistence;
-        }];
+    if (_malls.count > 0) {
+        id<YTMall> mall = _malls[indexPath.row % _malls.count];
+        if([mall isMemberOfClass:[YTCloudMall class]]){
+            cell.mall = mall;
+            [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+                cell.isPreferential = isExistence;
+            }];
+        }
     }
     return cell;
 }
@@ -339,6 +338,12 @@
     if ((_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) || tmpReachability.currentReachabilityStatus != NotReachable) {
         [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
             if (malls.count != 0 && malls != nil) {
+                [_cells removeAllObjects];
+                for (int i = 0; i < malls.count * 3; i++) {
+                    YTMallCell *cell = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    [_cells addObject:cell];
+                }
                 _malls = malls.copy;
                 [_tableView reloadData];
             }
@@ -353,6 +358,8 @@
 }
 
 -(void)rangedObjects:(NSArray *)objects{
+    [_beaconManager stopRanging];
+    _beaconManager.delegate = nil;
     if(objects.count > 0){
         NSDictionary *beaconDict = objects[0];
         _recordMinorArea = [self getMinorArea:beaconDict[@"Beacon"]];
@@ -387,13 +394,6 @@
 -(void)jumpToSetting:(UIButton *)sender{
     YTSettingViewController *settingVC = [[YTSettingViewController alloc]init];
     [AVAnalytics event:@"设置"];
-//    CATransition *animation = [CATransition animation];
-//    animation.delegate = self;
-//    animation.duration = 0.75;
-//    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    animation.type = kCATransitionFade;
-//    animation.subtype = kCATransitionFromRight;
-//    [self.navigationController.view.layer addAnimation:animation forKey:nil];
     [self.navigationController pushViewController:settingVC animated:true];
 }
 
@@ -429,31 +429,10 @@
     if (!isOpen) {
         _recordMinorArea = nil;
     }
-    else{
-        
-    } 
 }
 
 -(BOOL)prefersStatusBarHidden{
     return NO;
-}
-
--(void)firstStartSettingTheProgram{
-    NSString *manifestPath = [[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"];
-    NSMutableDictionary *tmpManifest = [NSMutableDictionary dictionaryWithContentsOfFile:manifestPath];
-    if ([[tmpManifest valueForKey:@"first"] isEqualToNumber:@YES]) {
-        [tmpManifest setValue:@NO forKey:@"first"];
-        [tmpManifest writeToFile:manifestPath atomically:true];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
-        NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
-        NSDictionary *manifest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
-        if (manifest != nil && tmpManifest != nil){
-            if ([fileManager fileExistsAtPath:currentPath] && tmpManifest[@"version"] >= manifest[@"version"]) {
-                [_resourceManager restartCopyTheFile];
-            }
-        }
-    }
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{

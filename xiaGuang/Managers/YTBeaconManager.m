@@ -10,7 +10,7 @@
 #define SHIFT_THRESHOLD 1
 #define LOST_THRESHOLD 1
 #define DISTANCE_THRESHOLD 1
-#define BUFFER_TIME 20
+#define BUFFER_TIME 10
 #define ALPHA 0.6
 #define MAX_DISTANCE 40
 @interface YTMajorMinorPair : NSObject

@@ -14,10 +14,12 @@
 #import <UnrarKit/URKArchive.h>
 #import "YTBeaconManager.h"
 #import <AdSupport/AdSupport.h>
+#import "YTStaticResourceManager.h"
 #import <AFNetworking.h>
 
 @interface AppDelegate () {
     double _timeInToBackground;
+    YTStaticResourceManager *_resourceManager;
 }
 
 @end
@@ -27,8 +29,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Override point for customization after application launch.
     [AVOSCloud setApplicationId:@"p8eq0otfz420q56dsn8s1yp8dp82vopaikc05q5h349nd87w" clientKey:@"kzx1ajhbxkno0v564rcremcz18ub0xh2upbjabbg5lruwkqg"];
-    
     [AVAnalytics setChannel:@""];
+    
+    _resourceManager = [YTStaticResourceManager sharedManager];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    id first = [userDefaults objectForKey:@"first"];
+    if (first == nil) {
+        [self firstConfig];
+        [userDefaults setObject:@1 forKey:@"first"];
+    }
     
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
@@ -36,10 +46,12 @@
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
    
+    
     _timeInToBackground = 0;
     [self youmiProcedure];
     return YES;
 }
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interXruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -124,7 +136,23 @@
     
 }
 
-
+-(void)firstConfig{
+    NSString *manifestPath = [[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"];
+    NSMutableDictionary *tmpManifest = [NSMutableDictionary dictionaryWithContentsOfFile:manifestPath];
+    if ([[tmpManifest valueForKey:@"first"] isEqualToNumber:@YES]) {
+        [tmpManifest setValue:@NO forKey:@"first"];
+        [tmpManifest writeToFile:manifestPath atomically:true];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+        NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
+        NSDictionary *manifest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
+        if (manifest != nil && tmpManifest != nil){
+            if ([fileManager fileExistsAtPath:currentPath] && tmpManifest[@"version"] >= manifest[@"version"]) {
+                [_resourceManager restartCopyTheFile];
+            }
+        }
+    }
+}
 
     
 @end

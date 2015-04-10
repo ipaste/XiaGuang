@@ -85,12 +85,14 @@
     
     if( contentOffset.y<=0.0)
     {
-        contentOffset.y = self.contentSize.height/3.0f;
+        contentOffset.y = self.contentSize.height / 3.0f;
+        
     }
     else if( contentOffset.y >= ( self.contentSize.height - self.bounds.size.height) )//scrollview content offset reached bottom minus the height of the tableview
     {
         //this scenario is same as the data repeating for 2nd time minus the height of the table view
-        contentOffset.y = self.contentSize.height/3.0f- self.bounds.size.height;
+        contentOffset.y = self.contentSize.height / 3.0f - self.bounds.size.height;
+        
     }
     [self setContentOffset: contentOffset];
 }
@@ -190,10 +192,10 @@
 
 - (void)layoutSubviews
 {
+    
     mTotalCellsVisible = self.frame.size.height / self.rowHeight;
     [self resetContentOffsetIfNeeded];
     [super layoutSubviews];
-    
     //[self setupShapeFormationInVisibleCells];
 }
 

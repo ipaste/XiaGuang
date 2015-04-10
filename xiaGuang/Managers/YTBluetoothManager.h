@@ -13,6 +13,7 @@
 typedef void(^YTBluetoothCallBack)(BOOL isOpen);
 
 @interface YTBluetoothManager : NSObject<CBCentralManagerDelegate,CLLocationManagerDelegate>
+@property (copy,nonatomic) CLLocationManager *locationManager;
 
 +(instancetype)shareBluetoothManager;
 -(void)refreshBluetoothState;
