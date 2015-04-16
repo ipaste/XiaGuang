@@ -33,7 +33,7 @@
         _reachability = [Reachability reachabilityWithHostname:@"www.leancloud.cn"];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(networkStateChanged:) name:kReachabilityChangedNotification object:nil];
         [_reachability startNotifier];
-        
+        NSLog(@"%@",[[NSBundle mainBundle]pathForAuxiliaryExecutable:@"highGuangDB"]);
         _tmpDatabase = [FMDatabase databaseWithPath:[[NSBundle mainBundle]pathForAuxiliaryExecutable:@"highGuangDB"]];
         
     }

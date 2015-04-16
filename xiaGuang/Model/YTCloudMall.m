@@ -49,7 +49,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 - (BOOL)isShowPath{
-    return _internalObject[@"pathSwitch"];
+    return [_internalObject[@"pathSwitch"] boolValue];
 }
 
 - (CLLocationCoordinate2D)coord{

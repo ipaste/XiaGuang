@@ -361,9 +361,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame))];
     _mapView.delegate = self;
-    id <YTMall> mall = [[[_majorArea floor] block] mall];
-    mall = [_mallDict changeMallObject:mall resultType:YTMallClassCloud];
-    _mapView.isShowPath = [mall isShowPath];
     [self.view insertSubview:_mapView belowSubview:_navigationBar];
     
     [self refreshLocatorWithMapView:_mapView.map majorArea:_curDisplayedMajorArea];
@@ -1857,11 +1854,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _targetMall = aMall;
         [_mapView setMapOffset:[_targetMall offset]];
         [self createSearchView];
-        
-        id <YTMall> mall = [_mallDict changeMallObject:aMall resultType:YTMallClassCloud];
-        _mapView.isShowPath = [mall isShowPath];
     }
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
