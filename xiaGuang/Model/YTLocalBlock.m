@@ -45,7 +45,7 @@
 -(id<YTMall>)mall{
     if(_tmpMall == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",_tmpMallId];
@@ -60,7 +60,7 @@
 -(NSArray *)floors{
     if(_tmpFloors == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Floor where blockId = ?",_tmpBlockId];
         
         _tmpFloors = [[NSMutableArray alloc] init];

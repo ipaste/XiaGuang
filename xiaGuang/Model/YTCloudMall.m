@@ -271,7 +271,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
         if (uniId == nil || uniId.length <= 0) {
             return nil;
         }
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",uniId];

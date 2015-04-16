@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <ESTBeacon.h>
 #import "YTMajorArea.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTLocalMajorArea.h"
 
 @interface YTMajorAreaVoter : NSObject

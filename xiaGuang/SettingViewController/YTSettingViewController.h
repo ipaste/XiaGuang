@@ -13,7 +13,6 @@
 #import "YTAboutViewController.h"
 #import "YTGuideViewController.h"
 #import "YTFeedBackViewController.h"
-#import <POP.h>
 @interface YTSettingViewController : UIViewController
 
 @end

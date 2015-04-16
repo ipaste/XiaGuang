@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "YTBathroom.h"
 #import "YTLocalMajorArea.h"
-#import "FMDatabase.h"
 #import "YTDataManager.h"
 #import "YTBathroomPoi.h"
 

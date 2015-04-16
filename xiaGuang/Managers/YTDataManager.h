@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FCFileManager.h"
 #import "Reachability.h"
 #import "FMDB.h"
 

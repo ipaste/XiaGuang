@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "YTMall.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 @protocol YTCategoryResultsDelegete <NSObject>
 -(void)searchKeyForCategoryTitle:(NSString *)category subCategoryTitle:(NSString *)subCategory mallUniId:(NSString *)malluniId floorUniId:(NSString *)floorUniId;
 @end

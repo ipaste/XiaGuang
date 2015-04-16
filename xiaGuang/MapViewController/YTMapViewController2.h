@@ -14,7 +14,7 @@
 #import <AVQuery.h>
 #import "YTMapView2.h"
 #import "YTCloudBeacon.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTMultipleMerchantView.h"
 #import "YTLocalBeacon.h"
 #import "YTNavigationBar.h"
@@ -33,7 +33,6 @@
 #import "YTSelectedPoiButton.h"
 #import "YTBluetoothManager.h"
 #import "YTMessageBox.h"
-#import <POP.h>
 #import "YTBathroom.h"
 #import "YTMerchantPoi.h"
 #import "BlurMenu.h"

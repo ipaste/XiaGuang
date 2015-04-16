@@ -46,7 +46,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.hidden = YES;
         _allMall = [NSMutableArray array];
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *result = [db executeQuery:@"select * from Mall"];
         while ([result next]) {
             YTLocalMall *tmpMall = [[YTLocalMall alloc]initWithDBResultSet:result];

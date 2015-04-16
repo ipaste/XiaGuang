@@ -15,7 +15,7 @@
 #import "YTDistanceBoundingBox.h"
 #import "YTDeadReckoning.h"
 #import "YTMapGraph.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 
 @interface YTBeaconBasedLocator() <YTDeadReckoningDelegate> {
     RMMapView *_mapView;
@@ -154,7 +154,7 @@
                                                           majorArea:_majorArea];
         }
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         
         int major = [beacon.major intValue];
         int minor = [beacon.minor intValue];

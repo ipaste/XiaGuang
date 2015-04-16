@@ -116,9 +116,6 @@
             }];
         }else{
             AVObject *cloudMerchant = _object[PREFERENTIAL_KEY_MERCHANT];
-            if (cloudMerchant == nil) {
-                return  nil;
-            }
             _merchant = [[YTCloudMerchant alloc]initWithAVObject:cloudMerchant];
             callBack(_merchant);
         }

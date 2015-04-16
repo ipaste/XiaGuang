@@ -659,7 +659,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
     [self.view addSubview:_navigationView];
-    [_navigationView.layer pop_animationForKey:@"shake"];
 }
 -(void)createPoiView{
     _poiView = [[YTPoiView alloc]initWithShow:NO];
@@ -996,7 +995,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     if([db open]){
         NSString *uniId = [uniIds firstObject];
         FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",uniId];
@@ -1235,7 +1234,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTBeacon>)getYTBeacon:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -1763,7 +1762,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

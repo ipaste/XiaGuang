@@ -58,7 +58,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"Cell"];
-    [cell pop_animationForKey:@"show"];
+    //[cell pop_animationForKey:@"show"];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     UIView *selectView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -190,7 +190,7 @@
 
 -(void)dealloc{
     for (UITableViewCell *tmpCell in [_tableView visibleCells]) {
-        [tmpCell pop_removeAllAnimations];
+        //[tmpCell pop_removeAllAnimations];
     }
     NSLog(@"settingDealloc");
 }

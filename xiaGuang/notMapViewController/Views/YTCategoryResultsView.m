@@ -162,7 +162,7 @@
             case 1:
             {
                 if ([_curSelectButton isEqual:tempButton]) {
-                    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+                    FMDatabase *db = [YTDataManager defaultDataManager].database;
                     
                     if (!_mall){//全部商场
                         if (key == nil) {

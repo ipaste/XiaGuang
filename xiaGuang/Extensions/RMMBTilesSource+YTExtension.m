@@ -7,17 +7,18 @@
 //
 
 #import "RMMBTilesSource+YTExtension.h"
-#import <FCFileManager.h>
-#define CURRENT_DATA_DIR [FCFileManager pathForDocumentsDirectoryWithPath:@"/current/data/"]
+#define CURRENT_DATA_DIR [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject stringByAppendingString:@"/current/data/"]
 
 @implementation RMMBTilesSource (YTExtension)
 
 - (id)initWithTileSetResourceInDocument:(NSString *)name ofType:(NSString *)extension{
-    if(![FCFileManager existsItemAtPath:[NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension]]){
-        NSLog(@"%@",[NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension]);
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+
+    NSString *path = [NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension];
+    if (![fileManager fileExistsAtPath:path]) {
         return nil;
     }
-    return [self initWithTileSetURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@.%@",CURRENT_DATA_DIR,name,extension]]];
+    return [self initWithTileSetURL:[NSURL fileURLWithPath:path]];
 }
 
 @end

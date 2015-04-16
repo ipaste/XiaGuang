@@ -10,6 +10,7 @@
 @interface YTDataManager(){
     Reachability *_reachability;
     NetworkStatus _currentNetworkStatus;
+    FMDatabase *_tmpDatabase;
 }
 
 @end
@@ -33,6 +34,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(networkStateChanged:) name:kReachabilityChangedNotification object:nil];
         [_reachability startNotifier];
         
+        _tmpDatabase = [FMDatabase databaseWithPath:[[NSBundle mainBundle]pathForAuxiliaryExecutable:@"highGuangDB"]];
         
     }
     return self;
@@ -52,6 +54,10 @@
             NSLog(@"no network");
             break;
     }
+}
+
+- (FMDatabase *)database {
+    return _tmpDatabase;
 }
 
 @end
