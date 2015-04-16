@@ -7,20 +7,17 @@
 //
 
 #import "AppDelegate.h"
-#import "YTNavigationController.h"
+
 #import <AVOSCloud/AVOSCloud.h>
-#import "YTStaticResourceManager.h"
-#import <FCFileManager.h>
-#import <UnrarKit/URKArchive.h>
-#import "YTBeaconManager.h"
 #import <AdSupport/AdSupport.h>
-#import "YTStaticResourceManager.h"
 #import <AFNetworking.h>
+
+#import "YTDataManager.h"
+#import "YTNavigationController.h"
 #import "YTGuideViewController.h"
 
 @interface AppDelegate ()<YTGuideDelegate> {
     double _timeInToBackground;
-    YTStaticResourceManager *_resourceManager;
     YTNavigationController *_navigation;
 }
 

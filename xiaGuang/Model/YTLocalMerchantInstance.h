@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTLocalMall.h"
 #import "YTMerchantLocation.h"
 #import <AVOSCloud/AVOSCloud.h>

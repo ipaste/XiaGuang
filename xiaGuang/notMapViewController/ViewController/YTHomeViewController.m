@@ -7,7 +7,7 @@
 //
 
 #import "YTHomeViewController.h"
-#import "AppDelegate.h"
+
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define APP_URL @"http://itunes.apple.com/cn/lookup?id=922405498"
 #define BLUR_HEIGHT 174
@@ -31,8 +31,7 @@
     
     NSMutableArray *_cells;
     NetworkStatus _status;
-    
-    YTStaticResourceManager *_resourceManager;
+
     UIToolbar *_transitionToolbar;
     
     YTMallDict *_mallDict;
@@ -58,7 +57,6 @@
     [self.view addSubview:_backgroundImageView];
     
     
-    _resourceManager = [YTStaticResourceManager sharedManager];
     
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
@@ -356,11 +354,6 @@
             }
         }];
     }
-    
-    if (tmpReachability.isReachableViaWiFi) {
-        [_resourceManager startBackgroundDownload];
-        [_resourceManager checkAndSwitchToNewStaticData];
-    }
     _status =  tmpReachability.currentReachabilityStatus;
 }
 
@@ -382,7 +375,7 @@
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];

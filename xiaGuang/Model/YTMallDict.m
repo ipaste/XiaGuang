@@ -26,7 +26,7 @@
 - (instancetype)init{
     self = [super init];
     if (self) {
-        _db = [YTStaticResourceManager sharedManager].db;
+        _db = [YTDataManager defaultDataManager].database;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self getAllLocalMallWithCallBack:nil];
         });
@@ -157,7 +157,7 @@
 }
 
 - (YTLocalFloor *)firstFloorFromMallLocalId:(NSString *)localDBId{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     NSString *sql = [NSString stringWithFormat:@"select * from Floor where floorName = \"L1\" and mallId = %@",localDBId];
     FMResultSet *result = [db executeQuery:sql];
     YTLocalFloor *floor;

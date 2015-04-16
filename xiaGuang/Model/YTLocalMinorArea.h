@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FMResultSet.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTMinorArea.h"
 #import "YTLocalBeacon.h"
 #import "YTLocalMajorArea.h"

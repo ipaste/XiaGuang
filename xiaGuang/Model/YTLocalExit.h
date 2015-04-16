@@ -9,7 +9,7 @@
 #import "YTExit.h"
 #import "YTLocalMajorArea.h"
 #import "FMDatabase.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTExitPoi.h"
 
 @interface YTLocalExit : NSObject<YTExit>

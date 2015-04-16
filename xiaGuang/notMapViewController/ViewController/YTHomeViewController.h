@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YTSettingViewController.h"
 #import "YTSearchViewController.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
 #import "Reachability.h"
@@ -19,6 +19,7 @@
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "BBTableView.h"
 #import "YTMallDict.h"
+#import "AppDelegate.h"
 @interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>
 
 @end

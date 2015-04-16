@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YTMajorArea.h"
 #import "FMDatabase.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTLocalMinorArea.h"
 #import "YTLocalFloor.h"
 #import "YTLocalElevator.h"
