@@ -47,6 +47,8 @@
 - (void)dismissGuideViewController{
     if ([_delegate respondsToSelector:@selector(dismissGuideViewController)]) {
         [_delegate dismissGuideViewController];
+    }else{
+        [self dismissViewControllerAnimated:false completion:nil];
     }
 }
 
