@@ -57,6 +57,9 @@
     _backgroundImageView.image = backgroundImage;
     [self.view addSubview:_backgroundImageView];
     
+    
+    _resourceManager = [YTStaticResourceManager sharedManager];
+    
     _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
     
@@ -77,6 +80,7 @@
     _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     _tableView.delegate = self;
     _tableView.rowHeight = 130;
+    _tableView.scrollsToTop = false;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -435,7 +439,7 @@
 }
 
 -(BOOL)prefersStatusBarHidden{
-    return NO;
+    return false;
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{

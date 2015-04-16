@@ -134,7 +134,6 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 }
 -(void)selectedUniIds:(NSArray *)uniIds{
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:self.mall andResultsLocalDBIds:uniIds];
-    resultsVC.isSearch = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
 

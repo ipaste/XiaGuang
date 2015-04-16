@@ -16,10 +16,12 @@
 #import <AdSupport/AdSupport.h>
 #import "YTStaticResourceManager.h"
 #import <AFNetworking.h>
+#import "YTGuideViewController.h"
 
-@interface AppDelegate () {
+@interface AppDelegate ()<YTGuideDelegate> {
     double _timeInToBackground;
     YTStaticResourceManager *_resourceManager;
+    YTNavigationController *_navigation;
 }
 
 @end
@@ -28,24 +30,30 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Override point for customization after application launch.
+    [NSThread sleepForTimeInterval:1];
     [AVOSCloud setApplicationId:@"p8eq0otfz420q56dsn8s1yp8dp82vopaikc05q5h349nd87w" clientKey:@"kzx1ajhbxkno0v564rcremcz18ub0xh2upbjabbg5lruwkqg"];
     [AVAnalytics setChannel:@""];
     
-    _resourceManager = [YTStaticResourceManager sharedManager];
+    UIViewController *viewController = nil;
+    
+    _navigation = [[YTNavigationController alloc]initWithCreateHomeViewController];
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     id first = [userDefaults objectForKey:@"first"];
     if (first == nil) {
-        [self firstConfig];
+        [self initialization];
+        viewController = [[YTGuideViewController alloc]init];
+        ((YTGuideViewController *)viewController).delegate = self;
         [userDefaults setObject:@1 forKey:@"first"];
+    }else{
+        viewController = _navigation;
     }
     
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
     self.window.backgroundColor = [UIColor blackColor];
-    self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
+    self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
-   
     
     _timeInToBackground = 0;
     [self youmiProcedure];
@@ -86,6 +94,10 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (void)dismissGuideViewController{
+    [self.window.rootViewController presentViewController:_navigation animated:false completion:nil];
+}
+
 - (NSString *)identifierForAdvertising
 {
     if([[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled])
@@ -105,52 +117,43 @@
     if(idfa == nil){
         return;
     }
-    
-    AVQuery *query = [AVQuery queryWithClassName:@"YoumiRecord"];
-    [query whereKey:@"ifa" equalTo:idfa];
-    [query whereKey:@"sent" equalTo:@NO];
-    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        if(!error){
-            NSString *url = object[@"callback"];
-            if(url != nil && ![url isEqualToString:@""]){
-                NSString *decoded = [url stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                if(decoded != nil && ![decoded isEqualToString:@""]){
-                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-                    [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        object[@"sent"] = @YES;
-                        [object saveEventually];
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        object[@"failed"] = @YES;
-                        [object saveEventually];
-                    }];
-                }
-                else{
-                    object[@"failed"] = @YES;
-                    [object saveEventually];
-                }
-            }
-            
-        }
-    }];
+//    
+//    AVQuery *query = [AVQuery queryWithClassName:@"YoumiRecord"];
+//    [query whereKey:@"ifa" equalTo:idfa];
+//    [query whereKey:@"sent" equalTo:@NO];
+//    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+//        if(!error){
+//            NSString *url = object[@"callback"];
+//            if(url != nil && ![url isEqualToString:@""]){
+//                NSString *decoded = [url stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//                if(decoded != nil && ![decoded isEqualToString:@""]){
+//                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//                    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+//                    [manager GET:decoded parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//                        object[@"sent"] = @YES;
+//                        [object saveEventually];
+//                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                        object[@"failed"] = @YES;
+//                        [object saveEventually];
+//                    }];
+//                }
+//                else{
+//                    object[@"failed"] = @YES;
+//                    [object saveEventually];
+//                }
+//            }
+//            
+//        }
+//    }];
     
 }
 
--(void)firstConfig{
-    NSString *manifestPath = [[NSBundle mainBundle]pathForResource:@"manifest" ofType:@"plist"];
-    NSMutableDictionary *tmpManifest = [NSMutableDictionary dictionaryWithContentsOfFile:manifestPath];
-    if ([[tmpManifest valueForKey:@"first"] isEqualToNumber:@YES]) {
-        [tmpManifest setValue:@NO forKey:@"first"];
-        [tmpManifest writeToFile:manifestPath atomically:true];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
-        NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
-        NSDictionary *manifest = [NSDictionary dictionaryWithContentsOfFile:[currentPath stringByAppendingPathComponent:@"manifest.plist"]];
-        if (manifest != nil && tmpManifest != nil){
-            if ([fileManager fileExistsAtPath:currentPath] && tmpManifest[@"version"] >= manifest[@"version"]) {
-                [_resourceManager restartCopyTheFile];
-            }
-        }
+-(void)initialization{
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
+    NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:currentPath]) {
+        [fileManager removeItemAtPath:currentPath error:nil];
     }
 }
 

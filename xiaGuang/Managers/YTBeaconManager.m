@@ -82,7 +82,6 @@
     return self;
 }
 
-
 +(id)sharedBeaconManager{
     static YTBeaconManager *beaconManager;
     static dispatch_once_t onceToken;
@@ -96,7 +95,10 @@
     
     NSUUID *aprilBrotherId = [[NSUUID alloc] initWithUUIDString:@"5A4BCFCE-174E-4BAC-A814-092E77F6B7E5"];
     
+    NSUUID *yunjiBId = [[NSUUID alloc] initWithUUIDString:@"FDA50693-A4E2-4FB1-AFCF-C6EB07647825"];
+    
     _region = [[ESTBeaconRegion alloc] initWithProximityUUID:aprilBrotherId identifier:@"us"];
+    
     
     [_estimoteBeaconManager startRangingBeaconsInRegion:_region];
     _readbeacons = nil;
@@ -120,7 +122,6 @@
             }
             
             if (idx == beacons.count - 1) {
-                
                 // notify all listeners
                 for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
                     [listener YTBeaconManager:self rangedObjects:_bufferBeacon];

@@ -55,7 +55,6 @@
             }
         }
         
-        
         _categoryResltsTableView = [[YTCategoryResultsTableView alloc]initWithFrame:CGRectMake(0, 40, CGRectGetWidth(frame), 0)];
         _categoryResltsTableView.delegate = self;
         [self addSubview:_categoryResltsTableView];
@@ -202,7 +201,6 @@
                 }
                 
             }
-                
                 break;
         }
     }

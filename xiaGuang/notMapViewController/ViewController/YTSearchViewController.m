@@ -153,7 +153,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTCategory *category  = _categorys[indexPath.row];
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResutsKey:category.text];
-    resultsVC.isSearch = NO;
+
     resultsVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -162,7 +162,6 @@
 
 -(void)selectedUniIds:(NSArray *)uniIds{
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:uniIds];
-    resultsVC.isSearch = YES;
     resultsVC.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:resultsVC animated:YES];
