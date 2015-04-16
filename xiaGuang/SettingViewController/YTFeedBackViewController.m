@@ -44,6 +44,7 @@
 
 - (void)sender{
     if (!_isSend) {
+        [[[UIAlertView alloc]initWithTitle:@"虾逛提示" message:@"您所填的反馈不能为空" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil]show];
         return;
     }
     AVObject *feedBack = [[AVObject alloc] initWithClassName:@"Feedback"];
@@ -78,7 +79,6 @@
         textView.text = @"";
         _textView.textColor = [UIColor colorWithString:@"202020"];
     }
-    
     return YES;
 }
 

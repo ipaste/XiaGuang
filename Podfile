@@ -1,7 +1,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, "7.1"
 xcodeproj '虾逛.xcodeproj'
-pod 'Mapbox-iOS-SDK',:git => 'https://github.com/robotaoyuan/mapbox-ios-sdk'
+pod 'Mapbox-iOS-SDK',:git => 'https://github.com/robotaoyuan/mapbox-ios-sdk'
 pod 'EstimoteSDK','2.1.5'
 pod 'AVOSCloud','2.6.6'
 pod 'FMDB','2.3'

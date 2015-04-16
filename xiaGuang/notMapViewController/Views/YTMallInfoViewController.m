@@ -56,7 +56,6 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
     [self.view addSubview:_scrollView];
     [self setNavigation];
     [self mainView];
-    
     self.navigationItem.title = [_mall mallName];
 }
 
