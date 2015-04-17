@@ -29,16 +29,12 @@
         _db = [YTDataManager defaultDataManager].database;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self getAllLocalMallWithCallBack:nil];
+            [self getAllCloudMallWithCallBack:nil];
         });
     }
     return self;
 }
 
-- (NSNumber *)localMallMaxId{
-    FMResultSet *result = [_db executeQuery:@"select count(*) from Mall"];
-    [result next];
-    return (NSNumber *)[result objectAtIndexedSubscript:0];
-}
 
 - (BOOL)loadFinishes{
     if (_localMalls != nil && _cloudMalls != nil) {
@@ -54,7 +50,7 @@
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         [query whereKey:MALL_CLASS_LOCALID notEqualTo:@""];
         [query whereKeyExists:MALL_CLASS_LOCALID];
-        [query whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:self.localMallMaxId];
+        [query whereKey:@"ready" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error && objects.count > 0) {
                 NSMutableArray *malls = [NSMutableArray array];

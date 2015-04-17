@@ -33,8 +33,6 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
-            _titleImage = [UIImage imageWithData:[findResultSet dataForColumn:@"title_img"]];
-            _background = [UIImage imageWithData:[findResultSet dataForColumn:@"background_img"]];
         }
     }
     return self;

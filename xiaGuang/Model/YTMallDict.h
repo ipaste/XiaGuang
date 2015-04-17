@@ -18,7 +18,6 @@ typedef NS_ENUM(NSInteger, YTMallClass) {
 @interface YTMallDict : NSObject
 
 @property (readonly ,nonatomic) BOOL loadFinishes;
-@property (readonly ,nonatomic) NSNumber *localMallMaxId;
 
 + (instancetype)sharedInstance;
 

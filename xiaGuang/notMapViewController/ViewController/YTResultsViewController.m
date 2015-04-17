@@ -173,12 +173,12 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
             if (merchants != nil) {
                 _merchants = [NSMutableArray arrayWithArray:merchants];
-                if (!_isCategory) {
+                if (_ids) {
                     id<YTMerchant> tmpMerchant = [merchants firstObject];
                     _subCategory = [[tmpMerchant type] lastObject];
                     _category = [[tmpMerchant type] firstObject];
+                    [_categoryResultsView setKey:_category subKey:_subCategory];
                 }
-                [_categoryResultsView setKey:_category subKey:_subCategory];
             }
            
             dispatch_time_t showTime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC);
@@ -263,7 +263,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             NSNumber *tmpId = [NSNumber numberWithInteger:[_mallId integerValue]];
             [mallObject whereKey:MALL_CLASS_LOCALID equalTo:tmpId];
         }else{
-            [mallObject whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
+            //[mallObject whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
         }
         [query whereKey:@"mall" matchesQuery:mallObject];
         

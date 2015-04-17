@@ -21,7 +21,7 @@
 - (void)viewDidLoad{
     NSMutableArray *images = [NSMutableArray new];
     for (NSInteger index = 0; index < 4; index++) {
-        NSString *imageName = [NSString stringWithFormat:@"help%ld.jpg",index + 1];
+        NSString *imageName = [NSString stringWithFormat:@"help%d.jpg",index + 1];
         UIImage * image = [UIImage imageNamed:imageName];
         [images addObject:image];
     }

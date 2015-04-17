@@ -11,7 +11,6 @@
 #import <AVOSCloud/AVOSCloud.h>
 #import <AdSupport/AdSupport.h>
 #import <AFNetworking.h>
-
 #import "YTDataManager.h"
 #import "YTNavigationController.h"
 #import "YTGuideViewController.h"
@@ -27,33 +26,32 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Override point for customization after application launch.
-    [NSThread sleepForTimeInterval:1];
+    double startTime = [[NSDate date] timeIntervalSinceReferenceDate];
     [AVOSCloud setApplicationId:@"p8eq0otfz420q56dsn8s1yp8dp82vopaikc05q5h349nd87w" clientKey:@"kzx1ajhbxkno0v564rcremcz18ub0xh2upbjabbg5lruwkqg"];
     [AVAnalytics setChannel:@""];
-    
-    UIViewController *viewController = nil;
-    
-    _navigation = [[YTNavigationController alloc]initWithCreateHomeViewController];
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    id first = [userDefaults objectForKey:@"first"];
-    if (first == nil) {
-        [self initialization];
-        viewController = [[YTGuideViewController alloc]init];
-        ((YTGuideViewController *)viewController).delegate = self;
-        [userDefaults setObject:@1 forKey:@"first"];
-    }else{
-        viewController = _navigation;
-    }
     
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
     self.window.backgroundColor = [UIColor blackColor];
-    self.window.rootViewController = viewController;
+    self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
     
-    _timeInToBackground = 0;
-    [self youmiProcedure];
+     _timeInToBackground = 0;
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    id first = [userDefaults objectForKey:@"first"];
+    if (!first) {
+        [userDefaults setObject:@YES forKey:@"first"];
+        YTGuideViewController *guideVC = [[YTGuideViewController alloc]init];
+        [self.window.rootViewController presentViewController:guideVC animated:false completion:nil];
+    }
+    
+    double timeDifference = [[NSDate date]timeIntervalSinceReferenceDate] - startTime;
+    
+    if (timeDifference < 0.08) {
+        [NSThread sleepForTimeInterval:0.1];
+    }
+
     return YES;
 }
 
@@ -74,12 +72,14 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
     if (now - _timeInToBackground >= 10 * 60) { // 30 minutes wait
-        self.window = [[UIWindow alloc]init];
-        self.window.frame = [UIScreen mainScreen].bounds;
-        self.window.backgroundColor = [UIColor blackColor];
-        self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
-        [self.window makeKeyAndVisible];
+        id currentViewController = [[self.window subviews][0] nextResponder];
+        if ([currentViewController isMemberOfClass:[YTNavigationController class]]) {
+            [(UINavigationController *)currentViewController popToRootViewControllerAnimated:false];
+        }else{
+            [(UIViewController *)currentViewController dismissViewControllerAnimated:false completion:nil];
+        }
     }
+    [NSThread sleepForTimeInterval:0.5];
 }
 
 
@@ -89,31 +89,29 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [[YTDataManager defaultDataManager]closeAllDatebase];
 }
 
-- (void)dismissGuideViewController{
-    [self.window.rootViewController presentViewController:_navigation animated:false completion:nil];
-}
 
-- (NSString *)identifierForAdvertising
-{
-    if([[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled])
-    {
-        NSUUID *IDFA = [[ASIdentifierManager sharedManager] advertisingIdentifier];
-        
-        return [IDFA UUIDString];
-    }
-    
-    return nil;
-}
-
--(void)youmiProcedure{
-    
-    NSString *idfa = [self identifierForAdvertising];
-    
-    if(idfa == nil){
-        return;
-    }
+//- (NSString *)identifierForAdvertising
+//{
+//    if([[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled])
+//    {
+//        NSUUID *IDFA = [[ASIdentifierManager sharedManager] advertisingIdentifier];
+//        
+//        return [IDFA UUIDString];
+//    }
+//    
+//    return nil;
+//}
+//
+//-(void)youmiProcedure{
+//    
+//    NSString *idfa = [self identifierForAdvertising];
+//    
+//    if(idfa == nil){
+//        return;
+//    }
 //    
 //    AVQuery *query = [AVQuery queryWithClassName:@"YoumiRecord"];
 //    [query whereKey:@"ifa" equalTo:idfa];
@@ -142,8 +140,8 @@
 //            
 //        }
 //    }];
-    
-}
+//    
+//}
 
 -(void)initialization{
     NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;

@@ -12,7 +12,6 @@
 #import "YTDataManager.h"
 #import "YTMallInfoViewController.h"
 #import "YTMapViewController2.h"
-#import "Reachability.h"
 #import "YTMallCell.h"
 #import "YTParkingViewController.h"
 #import "YTBluetoothManager.h"
@@ -20,7 +19,7 @@
 #import "BBTableView.h"
 #import "YTMallDict.h"
 #import "AppDelegate.h"
-@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>
+@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,YTDataManagerDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>
 
 @end
 

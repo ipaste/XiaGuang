@@ -32,7 +32,6 @@
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     self.automaticallyAdjustsScrollViewInsets = false;
-
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -45,10 +44,8 @@
         case 10:
             return 0;
         case 0:
-            
             return 2;
         case 1:
-            
             return 4;
     }
     return 0;
@@ -74,11 +71,11 @@
         switch (indexPath.row) {
             case 0:
                 cell.textLabel.text = @"商城地图管理";
-                cell.imageView.image = [UIImage imageNamed:@"icon_2"];
+                cell.imageView.image = [UIImage imageNamed:@"icon_1"];
                 break;
             case 1:
                 cell.textLabel.text = @"新手指引";
-                cell.imageView.image = [UIImage imageNamed:@"icon_3"];
+                cell.imageView.image = [UIImage imageNamed:@"icon_2"];
                 break;
         }
     }else if (indexPath.section == 1) {
@@ -86,21 +83,21 @@
 
             case 0:
                 cell.textLabel.text = @"给虾逛评分";
-                cell.imageView.image = [UIImage imageNamed:@"icon_5"];
+                cell.imageView.image = [UIImage imageNamed:@"icon_4"];
                 break;
             case 1:
                 cell.textLabel.text = @"关于虾逛";
-                cell.imageView.image = [UIImage imageNamed:@"icon_6"];
+                cell.imageView.image = [UIImage imageNamed:@"icon_5"];
                 //_isShowAnimation = NO;
                 break;
             case 2:
                 cell.textLabel.text = @"用户协议";
-                cell.imageView.image = [UIImage imageNamed:@"icon_7"];
+                cell.imageView.image = [UIImage imageNamed:@"icon_6"];
                 _isShowAnimation = NO;
                 break;
             case 3:
                 cell.textLabel.text = @"意见反馈";
-                cell.imageView.image =[UIImage imageNamed:@"icon_8"];
+                cell.imageView.image =[UIImage imageNamed:@"icon_7"];
                 break;
         }
     }

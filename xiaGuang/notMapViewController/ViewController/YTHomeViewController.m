@@ -14,27 +14,27 @@
 
 #define STEP_LENGTH 20
 @interface YTHomeViewController (){
-    UIViewController *_mapViewController;
-    UIImageView *_backgroundImageView;
-    YTBluetoothManager *_bluetoothManager;
-    UIToolbar *_blurView;
-    UIButton *_navigationButton;
-    UIButton *_carButton;
-    BBTableView *_tableView;
     BOOL _blueToothOn;
-    BOOL _latest;
-    YTBeaconManager *_beaconManager;
-    id<YTMinorArea> _recordMinorArea;
-    NSMutableArray *_malls;
     BOOL _scrollFired;
     BOOL _shouldScroll;
     
-    NSMutableArray *_cells;
-    NetworkStatus _status;
-
-    UIToolbar *_transitionToolbar;
+    UIViewController *_mapViewController;
+    UIImageView *_backgroundImageView;
+    UIToolbar *_blurView;
+    UIButton *_navigationButton;
+    UIButton *_carButton;
+    UIButton *_choosRegionButton;
     
+    BBTableView *_tableView;
     YTMallDict *_mallDict;
+    YTBeaconManager *_beaconManager;
+    YTBluetoothManager *_bluetoothManager;
+    YTDataManager *_dataManager;
+    id<YTMinorArea> _recordMinorArea;
+    
+    NSMutableArray *_malls;
+    NSMutableArray *_cells;
+    UIToolbar *_transitionToolbar;
     CLLocationManager *_manager;
 }
 @end
@@ -45,6 +45,12 @@
     if (self) {
         _malls = [NSMutableArray array];
         _cells = [NSMutableArray new];
+        _mallDict = [YTMallDict sharedInstance];
+        _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
+        _beaconManager = [YTBeaconManager sharedBeaconManager];
+        _manager = _bluetoothManager.locationManager;
+        _dataManager = [YTDataManager defaultDataManager];
+        _dataManager.delegate = self;
     }
     return self;
 }
@@ -56,16 +62,8 @@
     _backgroundImageView.image = backgroundImage;
     [self.view addSubview:_backgroundImageView];
     
-    
-    
-    _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
     
-    _beaconManager = [YTBeaconManager sharedBeaconManager];
-    [_beaconManager startRangingBeacons];
-    _beaconManager.delegate = self;
-    
-    _manager = _bluetoothManager.locationManager;
     _manager.delegate = self;
     [_manager startUpdatingLocation];
     
@@ -87,8 +85,6 @@
     _tableView.dataSource = self;
     [self.view addSubview:_tableView];
     
-    
-    _mallDict = [YTMallDict sharedInstance];
     
     if(!_scrollFired){
         [self test];
@@ -129,19 +125,11 @@
     _carButton.layer.cornerRadius = 10;
     [_blurView addSubview:_carButton];
     
-    self.navigationItem.title = @"深圳";
+    self.navigationItem.titleView = [self customTitleView];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButtonItemCustomView]];
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg"].CGImage;
-    
-    _latest = false;
-    
-    Reachability * reachability = [Reachability reachabilityWithHostname:@"www.xiashopping.com"];
-    [reachability startNotifier];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    
-    
     
     _transitionToolbar = [[UIToolbar alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _transitionToolbar.tintColor = [UIColor blackColor];
@@ -166,7 +154,7 @@
     }
     if (latitude != nil && longitude != nil){
         AFHTTPSessionManager *httpManager = [AFHTTPSessionManager manager];
-        [httpManager GET:@"http://xiaguang.avosapps.com/near_mall" parameters:@{@"latitude":latitude,@"longitude":longitude,@"maxMallId":_mallDict.localMallMaxId} success:^(NSURLSessionDataTask *task, id responseObject) {
+        [httpManager GET:@"http://xiaguang.avosapps.com/near_mall" parameters:@{@"latitude":latitude,@"longitude":longitude} success:^(NSURLSessionDataTask *task, id responseObject) {
             if (responseObject != nil){
                 if ([responseObject[@"status"] isEqualToString:@"OK"]) {
                     NSString *mallName = responseObject[@"mallName"];
@@ -214,7 +202,6 @@
                          animations:^{
                              [self scrollDown];
                          } completion:^(BOOL finished) {
-                             
                              CGPoint p = _tableView.contentOffset;
                              double toHeight = p.y + STEP_LENGTH;
                              if(toHeight >= ( _tableView.contentSize.height - _tableView.frame.size.height) ){
@@ -287,7 +274,21 @@
     p.y = p.y + STEP_LENGTH;
     _tableView.contentOffset = p;
 }
-
+-(UIView *)customTitleView{
+    _choosRegionButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 70, 20)];
+    [_choosRegionButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
+    [_choosRegionButton setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
+    [_choosRegionButton setTitle:@"   深圳全城" forState:UIControlStateNormal];
+    
+    [_choosRegionButton setImage:[UIImage imageNamed:@"arrow_down"] forState:UIControlStateNormal];
+    [_choosRegionButton setImage:[UIImage imageNamed:@"arrow_down"] forState:UIControlStateHighlighted];
+    [_choosRegionButton setImage:[UIImage imageNamed:@"arrow_up"] forState:UIControlStateSelected];
+    
+    [_choosRegionButton addTarget:self action:@selector(choosRegionButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_choosRegionButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -30, 0, 0)];
+    [_choosRegionButton setImageEdgeInsets:UIEdgeInsetsMake(0, 80, 0, 0)];
+    return _choosRegionButton;
+}
 -(UIView *)leftBarButtonItemCustomView{
     UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 60, 40)];
     [leftButton addTarget:self action:@selector(jumpToSetting:) forControlEvents:UIControlEventTouchUpInside];
@@ -330,7 +331,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMallCell *cell = (YTMallCell *)[tableView cellForRowAtIndexPath:indexPath];
-    
     if (cell.isFetch) {
         YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
         mallInfoVC.mall = cell.mall;
@@ -338,23 +338,29 @@
     }
 }
 
--(void)reachabilityChanged:(NSNotification *)notification{
-    Reachability *tmpReachability = notification.object;
-    if ((_status == NotReachable &&  tmpReachability.currentReachabilityStatus != NotReachable) || tmpReachability.currentReachabilityStatus != NotReachable) {
-        [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
-            if (malls.count != 0 && malls != nil) {
-                [_cells removeAllObjects];
-                for (int i = 0; i < malls.count * 3; i++) {
-                    YTMallCell *cell = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                    [_cells addObject:cell];
+-(void)networkStatusChanged:(YTNetworkSatus)status{
+    switch (status) {
+        case YTNetworkSatusWifi:
+        case YTNetworkSatusWWAN:
+        {
+            [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
+                if (malls.count != 0 && malls != nil) {
+                    [_cells removeAllObjects];
+                    for (int i = 0; i < malls.count * 3; i++) {
+                        YTMallCell *cell = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                        [_cells addObject:cell];
+                    }
+                    _malls = malls.copy;
+                    [_tableView reloadData];
                 }
-                _malls = malls.copy;
-                [_tableView reloadData];
-            }
-        }];
+            }];
+        }
+            break;
+        case YTNetworkSatusNotNomal:
+            
+            break;
     }
-    _status =  tmpReachability.currentReachabilityStatus;
 }
 
 -(void)rangedObjects:(NSArray *)objects{
@@ -428,6 +434,20 @@
     _blueToothOn = isOpen;
     if (!isOpen) {
         _recordMinorArea = nil;
+    }else{
+        _beaconManager.delegate = self;
+        [_beaconManager startRangingBeacons];
+    }
+}
+
+-(void)choosRegionButtonClicked:(UIButton *)sender{
+    sender.selected = !sender.selected;
+    if (sender.selected) {
+        //选择
+        
+    }else{
+        //取消选择
+        
     }
 }
 
