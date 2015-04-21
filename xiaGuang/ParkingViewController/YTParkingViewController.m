@@ -378,7 +378,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _navigationView.delegate = self;
     _navigationView.hidden = YES;
     [self.view addSubview:_navigationView];
-    [_navigationView.layer pop_animationForKey:@"shake"];
+    //[_navigationView.layer pop_animationForKey:@"shake"];
 }
 
 -(void)stopNavigationMode{

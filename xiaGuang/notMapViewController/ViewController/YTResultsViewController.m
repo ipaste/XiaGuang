@@ -274,7 +274,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         query.limit = number;
         query.skip = skip;
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
-        [mallObject whereKey:MALL_CLASS_LOCALID equalTo:_mallUniId];
+        
+        [mallObject whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[_mallUniId integerValue]]];
         [query whereKey:@"mall" matchesQuery:mallObject];
         [query whereKey:@"switch" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

@@ -113,7 +113,9 @@
         
         NSValue *value = [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
         
-        position =  [value CGPointValue];
+        if (value){
+            position =  [value CGPointValue];
+        }
         
         _inertia.startPoint = position;
         

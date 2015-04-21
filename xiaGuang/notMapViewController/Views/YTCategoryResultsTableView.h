@@ -26,5 +26,5 @@ typedef NS_ENUM(NSInteger, YTCategoryResultsStyle) {
 @interface YTCategoryResultsTableView : UIView
 @property (nonatomic,readonly) YTCategoryResultsStyle style;
 @property (weak,nonatomic) id <YTCategoryDelegate> delegate;
--(void)setShowStyle:(YTCategoryResultsStyle)style mallName:(NSString *)mallName key:(NSString *)key;
+-(void)setShowStyle:(YTCategoryResultsStyle)style malllocalId:(NSString *)localId key:(NSString *)key;
 @end

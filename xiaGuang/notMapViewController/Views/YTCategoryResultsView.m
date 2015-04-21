@@ -122,11 +122,11 @@
     
     switch (sender.tag) {
         case 0://所有分类
-            [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllCategory mallName:nil key:sender.titleLabel.text];
+            [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllCategory malllocalId:nil key:sender.titleLabel.text];
             break;
         case 1:
             if (!_mall) {
-                [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllMall mallName:nil key:sender.titleLabel.text];
+                [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllMall malllocalId:nil key:sender.titleLabel.text];
             }else{
                 [self allFloor];
             }
@@ -139,7 +139,7 @@
     if (mallName == nil) {
         mallName = _mallButton.titleLabel.text;
     }
-    [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllFloor mallName:mallName  key:_curSelectButton.titleLabel.text];
+    [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllFloor malllocalId:_mallUniId  key:_curSelectButton.titleLabel.text];
     
 }
 

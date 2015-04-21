@@ -412,9 +412,9 @@
     if (_mall) {
         AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
         if ([_mall isMemberOfClass:[YTLocalMall class]]){
-            [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[_mall identifier]];
+            [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[[_mall identifier] integerValue]]];
         }else{
-            [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[_mall localDB]];
+            [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[[_mall localDB] integerValue]]];
         }
         [query whereKey:@"mall" matchesQuery:mallQuery];
     }
