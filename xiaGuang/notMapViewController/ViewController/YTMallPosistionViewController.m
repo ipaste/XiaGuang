@@ -32,7 +32,7 @@
         
         _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
         _webView.delegate = self;
-        NSString * urlString = [NSString stringWithFormat:@"http://mo.amap.com/?q=%f,%f",coordinate.latitude,coordinate.longitude];
+        NSString * urlString = [NSString stringWithFormat:@"http://m.amap.com/?q=%f,%f",coordinate.latitude,coordinate.longitude];
         
         urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
