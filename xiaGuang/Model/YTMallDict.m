@@ -10,6 +10,7 @@
 @implementation YTMallDict{
     NSArray *_localMalls;
     NSArray *_cloudMalls;
+    NSArray *_localMallIds;
     FMDatabase *_db;
 }
 
@@ -41,6 +42,20 @@
         return true;
     }
     return false;
+}
+
+- (NSArray *)localMallIds{
+    if (!_localMallIds) {
+        NSMutableArray *malls = [NSMutableArray new];
+        FMResultSet *result = [_db executeQuery:@"SELECT mallId FROM Mall"];
+        while ([result next]) {
+            [malls addObject:[result stringForColumn:@"mallId"]];
+        }
+        _localMallIds = malls.copy;
+        [malls removeAllObjects];
+        malls = nil;
+    }
+    return _localMallIds;
 }
 
 - (void)getAllCloudMallWithCallBack:(void (^)(NSArray *malls))callBack{
@@ -133,6 +148,55 @@
     }else{
         return nil;
     }
+}
+
+- (NSArray *)localMallsFromRegion:(YTRegion *)region{
+    if (!region){
+        return _localMalls;
+    }
+    NSMutableArray *localMalls = [NSMutableArray new];
+    for (YTLocalMall *tmpMall in _localMalls) {
+        if ([[tmpMall region].name isEqualToString:region.name]){
+            [localMalls addObject:localMalls];
+        }
+    }
+    return localMalls.copy;
+}
+- (NSArray *)cloudMallsFromRegion:(YTRegion *)region{
+    if (!region){
+        return _cloudMalls;
+    }
+    
+    NSMutableArray *cloudMalls = [NSMutableArray new];
+    for (YTCloudMall *tmpMall in _cloudMalls) {
+        if ([[tmpMall region]isEqual:region]) {
+            [cloudMalls addObject:tmpMall];
+        }
+    }
+    return cloudMalls.copy;
+}
+
+- (NSArray *)threeRandomMallDoesNotContainRegion:(YTRegion *)region{
+    NSArray *source = _cloudMalls;
+    if (region) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.region.name != %@",region.name];
+        source = [source filteredArrayUsingPredicate:predicate];
+    }
+    if (source.count > 3) {
+        NSMutableArray *tmpMall = [NSMutableArray arrayWithArray:source];
+        YTCloudMall *mall_1 = tmpMall[arc4random() % tmpMall.count - 1];
+        [tmpMall removeObject:mall_1];
+        
+        YTCloudMall *mall_2 = tmpMall[arc4random() % tmpMall.count - 1];
+        [tmpMall removeObject:mall_2];
+        
+        YTCloudMall *mall_3 = tmpMall[arc4random() % tmpMall.count - 1];
+        source = @[mall_1,mall_2,mall_3];
+        
+        [tmpMall removeAllObjects];
+        tmpMall = nil;
+    }
+    return source;
 }
 
 - (id<YTMall>)getMallFromIdentifier:(NSString *)identifier{

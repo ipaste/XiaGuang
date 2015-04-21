@@ -14,6 +14,7 @@
 @property (readonly ,nonatomic) NSString *name;
 @property (readonly ,nonatomic) NSArray *regions;
 
++ (instancetype)defaultCity;
 - (instancetype)initWithSqlResultSet:(FMResultSet *)result;
 - (instancetype)initWithCloudObject:(AVObject *)object;
 @end
@@ -26,4 +27,5 @@
 
 - (instancetype)initWithSqlResultSet:(FMResultSet *)result;
 - (instancetype)initWithCloudObject:(AVObject *)object;
+- (BOOL)isEqual:(YTRegion *)object;
 @end

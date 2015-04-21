@@ -18,8 +18,9 @@
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "BBTableView.h"
 #import "YTMallDict.h"
+#import "YTChoosRegionView.h"
 #import "AppDelegate.h"
-@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,YTDataManagerDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>
+@interface YTHomeViewController : UIViewController<YTBeaconManagerDelegate,YTChoosRegionDelegate,YTDataManagerDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>
 
 @end
 

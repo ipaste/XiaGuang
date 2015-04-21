@@ -33,25 +33,26 @@
     self.window = [[UIWindow alloc]init];
     self.window.frame = [UIScreen mainScreen].bounds;
     self.window.backgroundColor = [UIColor blackColor];
-    self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
-    [self.window makeKeyAndVisible];
     
-     _timeInToBackground = 0;
+    _timeInToBackground = 0;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     id first = [userDefaults objectForKey:@"first"];
     if (!first) {
         [userDefaults setObject:@YES forKey:@"first"];
         YTGuideViewController *guideVC = [[YTGuideViewController alloc]init];
-        [self.window.rootViewController presentViewController:guideVC animated:false completion:nil];
+        guideVC.delegate = self;
+        self.window.rootViewController = guideVC;
+    }else{
+        self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     }
     
     double timeDifference = [[NSDate date]timeIntervalSinceReferenceDate] - startTime;
     
-    if (timeDifference < 0.08) {
-        [NSThread sleepForTimeInterval:0.1];
+    [self.window makeKeyAndVisible];
+    if (timeDifference < 0.8) {
+        [NSThread sleepForTimeInterval:0.3];
     }
-
     return YES;
 }
 
@@ -80,6 +81,8 @@
         }
     }
     [NSThread sleepForTimeInterval:0.5];
+    
+    
 }
 
 
@@ -142,6 +145,11 @@
 //    }];
 //    
 //}
+
+-(void)dismissGuideViewController{
+    self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
+    [self.window makeKeyAndVisible];
+}
 
 -(void)initialization{
     NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;

@@ -421,7 +421,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [self displayMapWithMajorArea:[_userMinorArea majorArea]];
     }
     [self refreshLocatorIfNeeded];
-    
+    if (_userCoordintate.latitude == -888) {
+        _userCoordintate = [_userMinorArea coordinate];
+    }
     [_mapView setCenterCoordinate:_userCoordintate animated:YES];
 }
 
@@ -644,9 +646,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                 [self setParkingState:YTParkingStateNotMark animation:YES];
             }
         }
-        if (_initializationComplete){
-            [self userMoveToMinorArea:tmpMinorArea];
-        }
+//        if (_initializationComplete){
+//            [self userMoveToMinorArea:tmpMinorArea];
+//        }
     }
     
 }
@@ -850,7 +852,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     int hours = 0;
     int charge = 0;
     int minute = (int)time % 3600;
-    BOOL free = NO;
     
     NSString *mallID = [[[[[_tmpMarker
                             majorArea] floor] block] mall] identifier];

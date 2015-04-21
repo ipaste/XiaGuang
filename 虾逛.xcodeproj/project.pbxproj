@@ -154,6 +154,7 @@
 		D93CE4D419FA5825004128FD /* xiaGuangTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4D319FA5825004128FD /* xiaGuangTests.m */; };
 		D941EFE51A0C70DC008F1218 /* YTChargeStandard.m in Sources */ = {isa = PBXBuildFile; fileRef = D941EFE41A0C70DC008F1218 /* YTChargeStandard.m */; };
 		D941EFE81A0C7DB9008F1218 /* YTLocalCharge.m in Sources */ = {isa = PBXBuildFile; fileRef = D941EFE71A0C7DB9008F1218 /* YTLocalCharge.m */; };
+		D9441E231AE15B89008FE57E /* YTChoosRegionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9441E221AE15B89008FE57E /* YTChoosRegionView.m */; };
 		D94C27A81A02639F009FF2F3 /* YTAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C27691A02639F009FF2F3 /* YTAnnotation.m */; };
 		D94C27A91A02639F009FF2F3 /* YTAnnotationSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C276B1A02639F009FF2F3 /* YTAnnotationSource.m */; };
 		D94C27AA1A02639F009FF2F3 /* YTBathroomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C276D1A02639F009FF2F3 /* YTBathroomAnnotation.m */; };
@@ -505,6 +506,8 @@
 		D941EFE41A0C70DC008F1218 /* YTChargeStandard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTChargeStandard.m; sourceTree = "<group>"; };
 		D941EFE61A0C7DB9008F1218 /* YTLocalCharge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalCharge.h; sourceTree = "<group>"; };
 		D941EFE71A0C7DB9008F1218 /* YTLocalCharge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalCharge.m; sourceTree = "<group>"; };
+		D9441E211AE15B89008FE57E /* YTChoosRegionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTChoosRegionView.h; sourceTree = "<group>"; };
+		D9441E221AE15B89008FE57E /* YTChoosRegionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTChoosRegionView.m; sourceTree = "<group>"; };
 		D94C27681A02639F009FF2F3 /* YTAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTAnnotation.h; sourceTree = "<group>"; };
 		D94C27691A02639F009FF2F3 /* YTAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTAnnotation.m; sourceTree = "<group>"; };
 		D94C276A1A02639F009FF2F3 /* YTAnnotationSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTAnnotationSource.h; sourceTree = "<group>"; };
@@ -1417,6 +1420,8 @@
 				D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */,
 				D92377881ADDF93A0017B1DE /* YTStateView.h */,
 				D92377891ADDF93A0017B1DE /* YTStateView.m */,
+				D9441E211AE15B89008FE57E /* YTChoosRegionView.h */,
+				D9441E221AE15B89008FE57E /* YTChoosRegionView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1778,6 +1783,7 @@
 				AE24A89E1A02432000A0CE91 /* YTCloudMall.m in Sources */,
 				D94C28331A0263CF009FF2F3 /* MJRefreshBaseView.m in Sources */,
 				AEE032BC1A1EEC47002AFB9C /* YTMajorAreaVoter.m in Sources */,
+				D9441E231AE15B89008FE57E /* YTChoosRegionView.m in Sources */,
 				D92D53841AA0015700DC0492 /* DPAPI.m in Sources */,
 				AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */,
 				D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */,

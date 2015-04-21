@@ -40,6 +40,13 @@
     return _regions;
 }
 
++ (instancetype)defaultCity{
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
+    FMResultSet *result = [db executeQuery:@"SELECT * FROM City WHERE name = '深圳'"];
+    [result next];
+    return [[YTCity alloc]initWithSqlResultSet:result];
+}
+
 - (instancetype)initWithSqlResultSet:(FMResultSet *)result{
     self = [super init];
     if (self) {
@@ -54,7 +61,8 @@
 
 - (instancetype)initWithCloudObject:(AVObject *)object{
     _db = [YTDataManager defaultDataManager].database;
-    FMResultSet *result = [_db executeQuery:@"SELCT * FROM City WHERE identify = ?",object.objectId];
+    FMResultSet *result = [_db executeQuery:@"SELECT * FROM City WHERE identify = ?",object.objectId];
+    [result next];
     return [self initWithSqlResultSet:result];
 }
 @end
@@ -87,7 +95,8 @@
 
 - (instancetype)initWithCloudObject:(AVObject *)object{
     _db = [YTDataManager defaultDataManager].database;
-    FMResultSet *result = [_db executeQuery:@"SELCT * FROM Region WHERE identify = ?",object.objectId];
+    FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE identify = ?",object.objectId];
+    [result next];
     return [self initWithSqlResultSet:result];
 }
 
@@ -102,6 +111,11 @@
         }
     }
     return self;
+}
+- (BOOL)isEqual:(YTRegion *)object{
+    BOOL equalName = [object.name isEqualToString:self.name];
+    BOOL equalIdentify = [object.identify isEqualToString:self.identify];
+    return (equalIdentify && equalName);
 }
 
 @end

@@ -26,6 +26,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     NSNumber *_isExistence;
     YTLocalMall *_tmpLocalMall;
     DPRequest *_request;
+    YTRegion *_region;
     YTGetTitleImageAndBackgroundImageCallBack _callBack;
     YTExistenceOfPreferentialInformationCallBack _existenceCallBack;
 
@@ -84,7 +85,12 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     
     return _blocks;
 }
-
+- (YTRegion *)region{
+    if (!_region) {
+        _region = [[YTRegion alloc]initWithCloudObject:_internalObject[MALL_CLASS_REGION]];
+    }
+    return _region;
+}
 
 
 -(NSArray *)merchants{

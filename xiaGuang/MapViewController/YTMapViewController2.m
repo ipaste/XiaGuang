@@ -375,7 +375,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([[_majorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]] && _userMinorArea != nil){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         _shownUser = false;
-        [self showUserAtCoordinate:_userCoordintate];
+//        [self showUserAtCoordinate:_userCoordintate];
 
     }
     NSArray *merchants = [majorArea merchantLocations];
@@ -1857,6 +1857,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
 }
 
+
+-(void)setShowMajorArea:(id<YTMajorArea>)showMajorArea{
+    [self switchFloor:[showMajorArea floor] hideCallOut:true];
+    _majorArea = showMajorArea;
+    _showMajorArea = showMajorArea;
+}
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){
         [self dismissViewControllerAnimated:YES completion:nil];

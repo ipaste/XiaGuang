@@ -17,6 +17,8 @@
     BOOL _blueToothOn;
     BOOL _scrollFired;
     BOOL _shouldScroll;
+    BOOL _scrollDown;
+    BOOL _scroll;
     
     UIViewController *_mapViewController;
     UIImageView *_backgroundImageView;
@@ -25,14 +27,17 @@
     UIButton *_carButton;
     UIButton *_choosRegionButton;
     
-    BBTableView *_tableView;
+    UITableView *_tableView;
+    YTChoosRegionView *_regionView;
     YTMallDict *_mallDict;
     YTBeaconManager *_beaconManager;
     YTBluetoothManager *_bluetoothManager;
     YTDataManager *_dataManager;
     id<YTMinorArea> _recordMinorArea;
+    YTCity *_defaultCity;
     
-    NSMutableArray *_malls;
+    NSArray *_malls;
+    NSArray *_recommendMalls;
     NSMutableArray *_cells;
     UIToolbar *_transitionToolbar;
     CLLocationManager *_manager;
@@ -43,14 +48,15 @@
 -(instancetype)init{
     self = [super init];
     if (self) {
-        _malls = [NSMutableArray array];
-        _cells = [NSMutableArray new];
+        _scrollDown = true;
+        _scroll = true;
         _mallDict = [YTMallDict sharedInstance];
         _bluetoothManager = [YTBluetoothManager shareBluetoothManager];
         _beaconManager = [YTBeaconManager sharedBeaconManager];
         _manager = _bluetoothManager.locationManager;
         _dataManager = [YTDataManager defaultDataManager];
         _dataManager.delegate = self;
+        _defaultCity = [YTCity defaultCity];
     }
     return self;
 }
@@ -64,27 +70,23 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
     
+    [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
+        _malls = malls.copy;
+    }];
+    
     _manager.delegate = self;
     [_manager startUpdatingLocation];
     
-    for (int i = 0; i < 9; i++) {
-        YTMallCell *cell1 = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-        [_cells addObject:cell1];
-    }
-    
-    _tableView = [[BBTableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     _tableView.delegate = self;
     _tableView.rowHeight = 130;
     _tableView.scrollsToTop = false;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [_tableView setEnableInfiniteScrolling:YES];
-    
     _tableView.dataSource = self;
+    _tableView.contentInset = UIEdgeInsetsMake(BLUR_HEIGHT, 0, 0, 0);
     [self.view addSubview:_tableView];
-    
     
     if(!_scrollFired){
         [self test];
@@ -125,6 +127,12 @@
     _carButton.layer.cornerRadius = 10;
     [_blurView addSubview:_carButton];
     
+    
+    _regionView = [[YTChoosRegionView alloc]initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), 0) city:_defaultCity];
+    _regionView.delegate = self;
+    [_regionView hide];
+    [self.view addSubview:_regionView];
+
     self.navigationItem.titleView = [self customTitleView];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     
@@ -154,14 +162,14 @@
     }
     if (latitude != nil && longitude != nil){
         AFHTTPSessionManager *httpManager = [AFHTTPSessionManager manager];
-        [httpManager GET:@"http://xiaguang.avosapps.com/near_mall" parameters:@{@"latitude":latitude,@"longitude":longitude} success:^(NSURLSessionDataTask *task, id responseObject) {
+        [httpManager GET:@"http://xiaguang.avosapps.com/new_near_mall" parameters:@{@"latitude":latitude,@"longitude":longitude,@"localMallIds":_mallDict.localMallIds} success:^(NSURLSessionDataTask *task, id responseObject) {
             if (responseObject != nil){
                 if ([responseObject[@"status"] isEqualToString:@"OK"]) {
-                    NSString *mallName = responseObject[@"mallName"];
+                    NSString *mallName = responseObject[@"name"];
                     NSString *mallId = responseObject[@"nearMallId"];
-                    NSString *mallLocalDBId = responseObject[@"mallLocalDBId"];
+                    NSString *mallLocalDBId = responseObject[@"localId"];
                     float distance = ((NSString *)responseObject[@"distance"]).floatValue;
-                    
+        
                     [[NSUserDefaults standardUserDefaults]setValue:mallLocalDBId forKey:@"currentMall"];
                     
                     if (distance < 1000) {
@@ -193,46 +201,47 @@
     
 }
 - (void)test {
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        [UIView animateWithDuration:1
-                              delay:0
-                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
-                         animations:^{
-                             [self scrollDown];
-                         } completion:^(BOOL finished) {
-                             CGPoint p = _tableView.contentOffset;
-                             double toHeight = p.y + STEP_LENGTH;
-                             if(toHeight >= ( _tableView.contentSize.height - _tableView.frame.size.height) ){
-                                 p.y = p.y - _tableView.contentSize.height/3.0f;
-                                 [_tableView setContentOffset:p];
-                             }
-                             if(_shouldScroll){
-                                 [self test];
-                             }
-                         }];
-        
-    });
-    
+    if (_scroll){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [UIView animateWithDuration:1
+                                  delay:0
+                                options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
+                             animations:^{
+                                 [self scroll];
+                             } completion:^(BOOL finished) {
+                                 CGFloat offsetY = _tableView.contentOffset.y;
+                                 if (offsetY >= _tableView.contentSize.height - _tableView.frame.size.height) {
+                                     _scrollDown = false;
+                                 }else if (offsetY <= -BLUR_HEIGHT + 5){
+                                     _scrollDown = true;
+                                 }
+                                 if(_shouldScroll){
+                                     [self test];
+                                 }
+                             }];
+            
+        });
+    }
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     _shouldScroll = NO;
-    
     [_tableView.layer removeAllAnimations];
     
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     if(!decelerate && !_shouldScroll){
+        if(_shouldScroll){
+            [self test];
+        }
         _shouldScroll = YES;
         [self test];
     }
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    
     if(!_shouldScroll){
         _shouldScroll = YES;
         [self test];
@@ -254,24 +263,33 @@
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjects:@[[UIColor colorWithString:@"e65e37"],[UIFont systemFontOfSize:20]] forKeys:@[NSForegroundColorAttributeName,NSFontAttributeName]]];
+    _beaconManager.delegate = self;
+    [_beaconManager startRangingBeacons];
+    
     
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    _beaconManager.delegate = nil;
+    [_beaconManager stopRanging];
+    
     if(!_scrollFired){
         [self test];
         _scrollFired = YES;
         _shouldScroll = YES;
     }
-    
     [UIView animateWithDuration:0.1 animations:^{
         _transitionToolbar.alpha = 0;
     }];
 }
 
--(void)scrollDown{
+-(void)scroll{
     CGPoint p = _tableView.contentOffset;
-    p.y = p.y + STEP_LENGTH;
+    if (_scrollDown) {
+        p.y = p.y + STEP_LENGTH;
+    }else{
+        p.y = p.y - STEP_LENGTH;
+    }
     _tableView.contentOffset = p;
 }
 -(UIView *)customTitleView{
@@ -307,24 +325,33 @@
     return rightButton;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if (_malls.count < 3) {
+        return 2;
+    }
+    return 1;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (_malls.count <= 0 ) {
-        return  _cells.count / 3;
+    if (section == 0) {
+        return _malls.count;
     }
-    return _malls.count;
+    return _recommendMalls.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    YTMallCell *cell = _cells[indexPath.row];
-    if (_malls.count > 0) {
-        id<YTMall> mall = _malls[indexPath.row % _malls.count];
+    YTMallCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (!cell) {
+        cell = [[YTMallCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    if (indexPath.section == 0){
+        id<YTMall> mall = _malls[indexPath.row];
         if([mall isMemberOfClass:[YTCloudMall class]]){
             cell.mall = mall;
-            [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-                cell.isPreferential = isExistence;
-            }];
         }
+    }else{
+        cell.mall = _recommendMalls[indexPath.row];
     }
     return cell;
 }
@@ -338,22 +365,30 @@
     }
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    if (section == 1) {
+        view.backgroundColor = [UIColor colorWithString:@"e95e37"];
+    }
+    return view;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    if (section == 1) {
+        return 20;
+    }
+    return 0;
+}
+
 -(void)networkStatusChanged:(YTNetworkSatus)status{
     switch (status) {
         case YTNetworkSatusWifi:
         case YTNetworkSatusWWAN:
         {
             [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
-                if (malls.count != 0 && malls != nil) {
-                    [_cells removeAllObjects];
-                    for (int i = 0; i < malls.count * 3; i++) {
-                        YTMallCell *cell = [[YTMallCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                        [_cells addObject:cell];
-                    }
-                    _malls = malls.copy;
-                    [_tableView reloadData];
-                }
+                _malls = malls.copy;
+                [_tableView reloadData];
+                
             }];
         }
             break;
@@ -364,11 +399,17 @@
 }
 
 -(void)rangedObjects:(NSArray *)objects{
-    [_beaconManager stopRanging];
-    _beaconManager.delegate = nil;
     if(objects.count > 0){
-        NSDictionary *beaconDict = objects[0];
-        _recordMinorArea = [self getMinorArea:beaconDict[@"Beacon"]];
+        ESTBeacon *beacon = nil;
+        double minDistance = MAXFLOAT;
+        for (NSDictionary *beaconInfo in objects) {
+            double beaconDistance = [beaconInfo[@"distance"] doubleValue];
+            if (beaconDistance < minDistance) {
+                beacon = beaconInfo[@"Beacon"];
+                minDistance = beaconDistance;
+            }
+        }
+        _recordMinorArea = [self getMinorArea:beacon];
     }
     else{
         _recordMinorArea = nil;
@@ -380,7 +421,6 @@
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
-    
     FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
@@ -398,8 +438,8 @@
 }
 
 -(void)jumpToSetting:(UIButton *)sender{
-    YTSettingViewController *settingVC = [[YTSettingViewController alloc]init];
     [AVAnalytics event:@"设置"];
+    YTSettingViewController *settingVC = [[YTSettingViewController alloc]init];
     [self.navigationController pushViewController:settingVC animated:true];
 }
 
@@ -410,6 +450,7 @@
             controller = [[YTMapViewController2 alloc]initWithMinorArea:_recordMinorArea];
         }else{
             controller = _mapViewController;
+            ((YTMapViewController2 *)controller).showMajorArea = [_recordMinorArea majorArea];
         }
         [AVAnalytics event:@"导航"];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -421,11 +462,9 @@
     
     [UIView animateWithDuration:0.5 animations:^{
         _transitionToolbar.alpha = 1;
-        
     }completion:^(BOOL finished) {
         [self presentViewController:controller animated:false completion:nil];
     }];
-    
 }
 
 -(void)detectedBluetoothStateHasChanged:(NSNotification *)notification{
@@ -444,11 +483,44 @@
     sender.selected = !sender.selected;
     if (sender.selected) {
         //选择
-        
+        [_regionView show];
     }else{
         //取消选择
-        
+        [_regionView hide];
     }
+}
+- (void)hideChoosRegionView{
+    _choosRegionButton.selected = false;
+}
+
+- (void)selectRegion:(YTRegion *)region{
+    NSString *title = nil;
+    if (region == nil) {
+        title = [NSString stringWithFormat:@"   %@全城",_defaultCity.name];
+        _scroll = true;
+    }else{
+        title = [NSString stringWithFormat:@"%@%@",_defaultCity.name,region.name];
+        _scroll = false;
+    }
+    [_choosRegionButton setTitle:title forState:UIControlStateNormal];
+
+    _malls = [_mallDict cloudMallsFromRegion:region];
+    
+    _recommendMalls = [_mallDict threeRandomMallDoesNotContainRegion:region];
+    
+    [_tableView reloadData];
+    [_tableView setContentOffset:CGPointMake(0, -BLUR_HEIGHT)];
+    
+    if (_scroll) {
+        CGFloat offsetY = _tableView.contentOffset.y;
+        if (offsetY >= _tableView.contentSize.height - _tableView.frame.size.height) {
+            _scrollDown = false;
+        }else if (offsetY <= -BLUR_HEIGHT + 5){
+            _scrollDown = true;
+        }
+        [self test];
+    }
+    
 }
 
 -(BOOL)prefersStatusBarHidden{

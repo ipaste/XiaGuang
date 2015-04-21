@@ -28,7 +28,8 @@
 
 @interface YTBeaconManager(){
     ESTBeaconManager *_estimoteBeaconManager;
-    ESTBeaconRegion *_region;
+    ESTBeaconRegion *_aprilRegion;
+    ESTBeaconRegion *_mircoChatRegion;
     NSDictionary *_lostDict;
     NSDictionary *_distanceDict;
     NSMutableArray *_actives;
@@ -55,9 +56,6 @@
         
         _lostDict = [[NSDictionary alloc] init];
         _distanceDict = [[NSDictionary alloc] init];
-        /*
-         _region = [[ESTBeaconRegion alloc] initWithProximityUUID:ESTIMOTE_PROXIMITY_UUID
-         identifier:@"EstimoteSampleRegion"];*/
         
         _whitelist = [[NSMutableDictionary alloc] init];
         FMDatabase *db = [YTDataManager defaultDataManager].database;
@@ -71,12 +69,10 @@
             tmpPair.minor = [NSNumber numberWithInt:minor];
             [_whitelist setObject:tmpPair forKey:[NSString  stringWithFormat:@"%@-%@",tmpPair.major,tmpPair.minor]];
         }
-        
-        //        YTMajorMinorPair *tmpPaid = [[YTMajorMinorPair alloc]init];
-        //        tmpPaid.major = @1004;
-        //        tmpPaid.minor = @5025;
-        //        [_whitelist setObject:tmpPaid forKey:[NSString stringWithFormat:@"%@-%@",tmpPaid.major,tmpPaid.minor]];
-        
+//        YTMajorMinorPair *tmpPaid = [[YTMajorMinorPair alloc]init];
+//        tmpPaid.major = @1004;
+//        tmpPaid.minor = @5025;
+//        [_whitelist setObject:tmpPaid forKey:[NSString stringWithFormat:@"%@-%@",tmpPaid.major,tmpPaid.minor]];
         _listeners = [NSHashTable weakObjectsHashTable];
     }
     return self;
@@ -95,18 +91,20 @@
     
     NSUUID *aprilBrotherId = [[NSUUID alloc] initWithUUIDString:@"5A4BCFCE-174E-4BAC-A814-092E77F6B7E5"];
     
-    NSUUID *yunjiBId = [[NSUUID alloc] initWithUUIDString:@"FDA50693-A4E2-4FB1-AFCF-C6EB07647825"];
+    NSUUID *mircoChatId = [[NSUUID alloc] initWithUUIDString:@"FDA50693-A4E2-4FB1-AFCF-C6EB07647825"];
     
-    _region = [[ESTBeaconRegion alloc] initWithProximityUUID:aprilBrotherId identifier:@"us"];
+    _aprilRegion = [[ESTBeaconRegion alloc] initWithProximityUUID:aprilBrotherId identifier:@"us"];
+    _mircoChatRegion = [[ESTBeaconRegion alloc] initWithProximityUUID:mircoChatId identifier:@"WX"];
     
-    
-    [_estimoteBeaconManager startRangingBeaconsInRegion:_region];
+    [_estimoteBeaconManager startRangingBeaconsInRegion:_aprilRegion];
+    [_estimoteBeaconManager startRangingBeaconsInRegion:_mircoChatRegion];
     _readbeacons = nil;
 }
 
 
 -(void)stopRanging{
-    [_estimoteBeaconManager stopRangingBeaconsInRegion:_region];
+    [_estimoteBeaconManager stopRangingBeaconsInRegion:_aprilRegion];
+    [_estimoteBeaconManager startRangingBeaconsInRegion:_mircoChatRegion];
 }
 
 -(void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region{
@@ -153,8 +151,8 @@
             }
             if (idx == beacons.count - 1) {
                 [_bufferBeacon enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    NSDictionary *dict = obj;
-                    ESTBeacon *beacon = obj[@"Beacon"];
+                    //NSDictionary *dict = obj;
+                    //ESTBeacon *beacon = obj[@"Beacon"];
                     NSTimeInterval time = [[NSDate date] timeIntervalSinceNow] - [((NSDate *)obj[@"time"] ) timeIntervalSinceNow];
                     if (time > BUFFER_TIME) {
                         [_bufferBeacon removeObject:obj];

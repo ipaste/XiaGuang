@@ -13,6 +13,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
+    NSString *_regionIdentify;
+    YTRegion *_region;
     CGFloat _offset;
     NSMutableArray *_tmpBlocks;
     NSMutableArray *_tmpMerchantInstance;
@@ -33,6 +35,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
+            _regionIdentify = [findResultSet stringForColumn:@"regionIdentify"];
+            
         }
     }
     return self;
@@ -65,6 +69,16 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return _tmpBlocks;
 }
 
+-(YTRegion *)region{
+    if (!_region) {
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Region WHERE identify = ?",_regionIdentify];
+        [result next];
+        _region = [[YTRegion alloc]initWithSqlResultSet:result];
+    }
+    return _region;
+}
+
 -(NSArray *)merchantLocations{
     
     if(_tmpMerchantInstance == nil){
@@ -87,6 +101,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 -(CGFloat)offset{
     return _offset;
 }
+
+
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
