@@ -183,14 +183,20 @@
         source = [source filteredArrayUsingPredicate:predicate];
     }
     if (source.count > 3) {
+    
         NSMutableArray *tmpMall = [NSMutableArray arrayWithArray:source];
-        YTCloudMall *mall_1 = tmpMall[arc4random() % tmpMall.count - 1];
+        
+        NSInteger mallIndex = arc4random() % tmpMall.count;
+        YTCloudMall *mall_1 = tmpMall[mallIndex];
         [tmpMall removeObject:mall_1];
         
-        YTCloudMall *mall_2 = tmpMall[arc4random() % tmpMall.count - 1];
+        mallIndex = arc4random() % tmpMall.count;
+        YTCloudMall *mall_2 = tmpMall[mallIndex];
         [tmpMall removeObject:mall_2];
         
-        YTCloudMall *mall_3 = tmpMall[arc4random() % tmpMall.count - 1];
+        mallIndex = arc4random() % tmpMall.count;
+        YTCloudMall *mall_3 = tmpMall[mallIndex];
+        
         source = @[mall_1,mall_2,mall_3];
         
         [tmpMall removeAllObjects];

@@ -169,7 +169,6 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 2) {
-
         if (_isManualSwitch) {
             [self toggleBanner:scrollView];
         }
@@ -179,7 +178,7 @@
 -(void)bannerSwitch:(NSTimer *)timer{
     _isManualSwitch = NO;
     UIScrollView *scrollView = timer.userInfo;
-    [UIView animateWithDuration:.5 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x + CGRectGetWidth(scrollView.frame), scrollView.contentOffset.y);
     } completion:^(BOOL finished) {
         [self toggleBanner:scrollView];

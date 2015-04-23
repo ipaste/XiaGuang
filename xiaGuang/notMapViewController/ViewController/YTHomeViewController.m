@@ -11,8 +11,8 @@
 #define BIGGER_THEN_IPHONE5 ([[UIScreen mainScreen]currentMode].size.height >= 1136.0f ? YES : NO)
 #define APP_URL @"http://itunes.apple.com/cn/lookup?id=922405498"
 #define BLUR_HEIGHT 174
-
 #define STEP_LENGTH 20
+
 @interface YTHomeViewController (){
     BOOL _blueToothOn;
     BOOL _scrollFired;
@@ -80,6 +80,7 @@
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     _tableView.delegate = self;
     _tableView.rowHeight = 130;
+
     _tableView.scrollsToTop = false;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
@@ -326,7 +327,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    if (_malls.count < 3) {
+    if (_recommendMalls.count > 0) {
         return 2;
     }
     return 1;
@@ -366,18 +367,24 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 30)];
     if (section == 1) {
-        view.backgroundColor = [UIColor colorWithString:@"e95e37"];
+        UIImage *backImage = [UIImage imageNamed:@"title_bg"];
+        view.backgroundColor = [UIColor colorWithPatternImage:backImage];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, 30)];
+        titleLabel.text = @"虾逛一下";
+        titleLabel.textColor = [UIColor colorWithString:@"cccccc"];
+        titleLabel.font = [UIFont systemFontOfSize:15];
+        [view addSubview:titleLabel];
     }
     return view;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (section == 1) {
-        return 20;
+    if (section == 0) {
+        return 0;
     }
-    return 0;
+    return 30;
 }
 
 -(void)networkStatusChanged:(YTNetworkSatus)status{
@@ -495,18 +502,28 @@
 
 - (void)selectRegion:(YTRegion *)region{
     NSString *title = nil;
+
     if (region == nil) {
         title = [NSString stringWithFormat:@"   %@全城",_defaultCity.name];
         _scroll = true;
     }else{
         title = [NSString stringWithFormat:@"%@%@",_defaultCity.name,region.name];
         _scroll = false;
+       
+    }
+    
+    if ([title isEqualToString:_choosRegionButton.titleLabel.text]) {
+        return;
     }
     [_choosRegionButton setTitle:title forState:UIControlStateNormal];
-
-    _malls = [_mallDict cloudMallsFromRegion:region];
     
-    _recommendMalls = [_mallDict threeRandomMallDoesNotContainRegion:region];
+    _malls = [_mallDict cloudMallsFromRegion:region].copy;
+    
+    if (_malls.count < 3) {
+         _recommendMalls = [_mallDict threeRandomMallDoesNotContainRegion:region].copy;
+    }else{
+        _recommendMalls = nil;
+    }
     
     [_tableView reloadData];
     [_tableView setContentOffset:CGPointMake(0, -BLUR_HEIGHT)];

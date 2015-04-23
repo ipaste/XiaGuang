@@ -41,22 +41,30 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 @end
 
 @implementation YTMallInfoViewController
+-(instancetype)init{
+    self = [super init];
+    if (self) {
+        _mallDict = [YTMallDict sharedInstance];
+        _searchView = [[YTSearchView alloc]initWithMall:[_mallDict changeMallObject:self.mall resultType:YTMallClassLocal] placeholder:@"商城/品牌" indent:NO];
+        _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) + 50, 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame) - 50)];
+    }
+    return self;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) + 50, 320, CGRectGetHeight(self.view.frame) - CGRectGetMaxY(self.navigationController.navigationBar.frame) - 50)];
+    
     _scrollView.backgroundColor = [UIColor clearColor];
     self.automaticallyAdjustsScrollViewInsets = false;
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
-    _mallDict = [YTMallDict sharedInstance];
-    _searchView = [[YTSearchView alloc]initWithMall:[_mallDict changeMallObject:self.mall resultType:YTMallClassLocal] placeholder:@"商城/品牌" indent:NO];
+
     _searchView.delegate = self;
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:NO];
     
     [self.view addSubview:_scrollView];
     [self setNavigation];
     [self mainView];
-    self.navigationItem.title = [_mall mallName];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -85,6 +93,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 }
 #pragma mark Navigation
 -(void)setNavigation{
+    self.navigationItem.title = [_mall mallName];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self rightBarButton]];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
 }
@@ -92,7 +101,6 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 -(UIView *)rightBarButton{
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
     [button addTarget:self action:@selector(jumpToSearch:) forControlEvents:UIControlEventTouchUpInside];
-
     [button setImage:[UIImage imageNamed:@"icon_search"] forState:UIControlStateNormal];
      [button setImage:[UIImage imageNamed:@"icon_searchOn"] forState:UIControlStateHighlighted];
     _rightButton = button;
@@ -102,7 +110,6 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 -(UIView *)leftBarButton{
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
     [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    
     [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
     _leftButton = button;
@@ -171,7 +178,7 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
         YTCategory *category = _categorys[i];
         [categoryBtn setImage:category.image forState:UIControlStateNormal];
         [categoryBtn addTarget:self action:@selector(jumpToCategory:) forControlEvents:UIControlEventTouchUpInside];
-        categoryBtn.tag = i;
+         categoryBtn.tag = i;
         [categoryView addSubview:categoryBtn];
         
         UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryBtn.frame) + 8, 50, 20)];
@@ -186,6 +193,8 @@ typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
         categoryLabel.font = [UIFont systemFontOfSize:14];
         [categoryView addSubview:categoryLabel];
     }
+    
+    
     CGFloat offSetY = CGRectGetMaxY(categoryView.frame);
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, offSetY + 10, CGRectGetWidth(_scrollView.frame),  935) style:UITableViewStylePlain];
     _tableView.scrollEnabled = NO;

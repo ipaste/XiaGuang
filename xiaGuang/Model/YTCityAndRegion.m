@@ -28,7 +28,7 @@
 - (NSArray *)regions{
     if (!_regions) {
         NSMutableArray *regions = [NSMutableArray new];
-        FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE city = ?",_identify];
+        FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE city = ? and isExistence = 1 ORDER BY queue",_identify];
         while ([result next]) {
             YTRegion *region = [[YTRegion alloc]initWithSqlResultSet:result];
             [regions addObject:region];
@@ -95,7 +95,7 @@
 
 - (instancetype)initWithCloudObject:(AVObject *)object{
     _db = [YTDataManager defaultDataManager].database;
-    FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE identify = ?",object.objectId];
+    FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE identify = ? ORDER BY queue",object.objectId];
     [result next];
     return [self initWithSqlResultSet:result];
 }
