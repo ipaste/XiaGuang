@@ -187,7 +187,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(id<YTMajorArea>)getDefaultMajorArea{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from MajorArea where isParking = 1"];
     [result next];
@@ -378,7 +378,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _navigationView.delegate = self;
     _navigationView.hidden = YES;
     [self.view addSubview:_navigationView];
-    [_navigationView.layer pop_animationForKey:@"shake"];
+  //  [_navigationView.layer pop_animationForKey:@"shake"];
 }
 
 -(void)stopNavigationMode{
@@ -421,7 +421,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         [self displayMapWithMajorArea:[_userMinorArea majorArea]];
     }
     [self refreshLocatorIfNeeded];
-    
+    if (_userCoordintate.latitude == -888) {
+        _userCoordintate = [_userMinorArea coordinate];
+    }
     [_mapView setCenterCoordinate:_userCoordintate animated:YES];
 }
 
@@ -644,9 +646,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                 [self setParkingState:YTParkingStateNotMark animation:YES];
             }
         }
-        if (_initializationComplete){
-            [self userMoveToMinorArea:tmpMinorArea];
-        }
+//        if (_initializationComplete){
+//            [self userMoveToMinorArea:tmpMinorArea];
+//        }
     }
     
 }
@@ -730,7 +732,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -850,7 +852,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     int hours = 0;
     int charge = 0;
     int minute = (int)time % 3600;
-    BOOL free = NO;
     
     NSString *mallID = [[[[[_tmpMarker
                             majorArea] floor] block] mall] identifier];

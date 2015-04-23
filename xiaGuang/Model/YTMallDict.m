@@ -10,6 +10,7 @@
 @implementation YTMallDict{
     NSArray *_localMalls;
     NSArray *_cloudMalls;
+    NSArray *_localMallIds;
     FMDatabase *_db;
 }
 
@@ -26,25 +27,35 @@
 - (instancetype)init{
     self = [super init];
     if (self) {
-        _db = [YTStaticResourceManager sharedManager].db;
+        _db = [YTDataManager defaultDataManager].database;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self getAllLocalMallWithCallBack:nil];
+            [self getAllCloudMallWithCallBack:nil];
         });
     }
     return self;
 }
 
-- (NSNumber *)localMallMaxId{
-    FMResultSet *result = [_db executeQuery:@"select count(*) from Mall"];
-    [result next];
-    return (NSNumber *)[result objectAtIndexedSubscript:0];
-}
 
 - (BOOL)loadFinishes{
     if (_localMalls != nil && _cloudMalls != nil) {
         return true;
     }
     return false;
+}
+
+- (NSArray *)localMallIds{
+    if (!_localMallIds) {
+        NSMutableArray *malls = [NSMutableArray new];
+        FMResultSet *result = [_db executeQuery:@"SELECT mallId FROM Mall"];
+        while ([result next]) {
+            [malls addObject:[result stringForColumn:@"mallId"]];
+        }
+        _localMallIds = malls.copy;
+        [malls removeAllObjects];
+        malls = nil;
+    }
+    return _localMallIds;
 }
 
 - (void)getAllCloudMallWithCallBack:(void (^)(NSArray *malls))callBack{
@@ -54,7 +65,7 @@
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         [query whereKey:MALL_CLASS_LOCALID notEqualTo:@""];
         [query whereKeyExists:MALL_CLASS_LOCALID];
-        [query whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:self.localMallMaxId];
+        [query whereKey:@"ready" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error && objects.count > 0) {
                 NSMutableArray *malls = [NSMutableArray array];
@@ -139,6 +150,55 @@
     }
 }
 
+- (NSArray *)localMallsFromRegion:(YTRegion *)region{
+    if (!region){
+        return _localMalls;
+    }
+    NSMutableArray *localMalls = [NSMutableArray new];
+    for (YTLocalMall *tmpMall in _localMalls) {
+        if ([[tmpMall region].name isEqualToString:region.name]){
+            [localMalls addObject:localMalls];
+        }
+    }
+    return localMalls.copy;
+}
+- (NSArray *)cloudMallsFromRegion:(YTRegion *)region{
+    if (!region){
+        return _cloudMalls;
+    }
+    
+    NSMutableArray *cloudMalls = [NSMutableArray new];
+    for (YTCloudMall *tmpMall in _cloudMalls) {
+        if ([[tmpMall region]isEqual:region]) {
+            [cloudMalls addObject:tmpMall];
+        }
+    }
+    return cloudMalls.copy;
+}
+
+- (NSArray *)threeRandomMallDoesNotContainRegion:(YTRegion *)region{
+    NSArray *source = _cloudMalls;
+    if (region) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.region.name != %@",region.name];
+        source = [source filteredArrayUsingPredicate:predicate];
+    }
+    if (source.count > 3) {
+        NSMutableArray *tmpMall = [NSMutableArray arrayWithArray:source];
+        YTCloudMall *mall_1 = tmpMall[arc4random() % tmpMall.count - 1];
+        [tmpMall removeObject:mall_1];
+        
+        YTCloudMall *mall_2 = tmpMall[arc4random() % tmpMall.count - 1];
+        [tmpMall removeObject:mall_2];
+        
+        YTCloudMall *mall_3 = tmpMall[arc4random() % tmpMall.count - 1];
+        source = @[mall_1,mall_2,mall_3];
+        
+        [tmpMall removeAllObjects];
+        tmpMall = nil;
+    }
+    return source;
+}
+
 - (id<YTMall>)getMallFromIdentifier:(NSString *)identifier{
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
     if (identifier.length < 24) {
@@ -157,7 +217,7 @@
 }
 
 - (YTLocalFloor *)firstFloorFromMallLocalId:(NSString *)localDBId{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     NSString *sql = [NSString stringWithFormat:@"select * from Floor where floorName = \"L1\" and mallId = %@",localDBId];
     FMResultSet *result = [db executeQuery:sql];
     YTLocalFloor *floor;

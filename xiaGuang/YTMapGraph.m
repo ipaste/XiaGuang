@@ -237,7 +237,7 @@
                                          to:(CGPoint)dest {
     
     if (_graph == nil) {
-        return;
+        return nil;
     }
     
     NSMutableArray *result = [[NSMutableArray alloc] init];
@@ -340,11 +340,6 @@
                                           andWeight:[NSNumber numberWithDouble:dist]];
     
     return edge;
-}
-
-- (NSArray *)getCurrentPath{
-
-
 }
 
 @end

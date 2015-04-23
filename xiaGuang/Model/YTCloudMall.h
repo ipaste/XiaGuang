@@ -18,6 +18,7 @@
 #define MALL_CLASS_BIGTITLE_KEY @"mall_img_title"
 #define MALL_CLASS_BIGBACKGROUND_KEY @"mall_img_background"
 #define MALL_CLASS_LOCALID @"localId"
+#define MALL_CLASS_REGION @"region"
 
 @interface YTCloudMall : NSObject<YTMall,DPRequestDelegate>
 

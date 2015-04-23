@@ -55,7 +55,7 @@
 -(NSArray *)beacons{
     if(_tmpBeacons == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Beacon where minorAreaId = ?",_tmpMinorAreaId];
         
         _tmpBeacons = [[NSMutableArray alloc] init];

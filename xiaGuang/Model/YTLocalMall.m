@@ -13,6 +13,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
+    NSString *_regionIdentify;
+    YTRegion *_region;
     CGFloat _offset;
     NSMutableArray *_tmpBlocks;
     NSMutableArray *_tmpMerchantInstance;
@@ -33,8 +35,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
-            _titleImage = [UIImage imageWithData:[findResultSet dataForColumn:@"title_img"]];
-            _background = [UIImage imageWithData:[findResultSet dataForColumn:@"background_img"]];
+            _regionIdentify = [findResultSet stringForColumn:@"regionIdentify"];
+            
         }
     }
     return self;
@@ -52,7 +54,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     
     if(_tmpBlocks == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Block where mallId = ?",_tmpMallId];
         
         _tmpBlocks = [[NSMutableArray alloc] init];
@@ -67,11 +69,21 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return _tmpBlocks;
 }
 
+-(YTRegion *)region{
+    if (!_region) {
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Region WHERE identify = ?",_regionIdentify];
+        [result next];
+        _region = [[YTRegion alloc]initWithSqlResultSet:result];
+    }
+    return _region;
+}
+
 -(NSArray *)merchantLocations{
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where mallId = ?",_tmpMallId];
         
         _tmpMerchantInstance = [[NSMutableArray alloc] init];
@@ -89,6 +101,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 -(CGFloat)offset{
     return _offset;
 }
+
+
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{

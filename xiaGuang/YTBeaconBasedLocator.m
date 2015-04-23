@@ -15,7 +15,7 @@
 #import "YTDistanceBoundingBox.h"
 #import "YTDeadReckoning.h"
 #import "YTMapGraph.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 
 @interface YTBeaconBasedLocator() <YTDeadReckoningDelegate> {
     RMMapView *_mapView;
@@ -113,7 +113,9 @@
         
         NSValue *value = [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
         
-        position =  [value CGPointValue];
+        if (value != nil) {
+          position =  [value CGPointValue];
+        }
         
         _inertia.startPoint = position;
         
@@ -126,8 +128,8 @@
 
 -(void)positionUpdating:(CGPoint )position {
     //_isRefresh = false;
-    
-    if (position.x != -INFINITY && position.y != INFINITY) {
+
+    if (fabs(position.x) != INFINITY && fabs(position.y) != INFINITY && position.x != 0 && position.y != 0) {
     
         CLLocationCoordinate2D coord = [YTCanonicalCoordinate canonicalToMapCoordinate:position mapView:_mapView];
        
@@ -154,7 +156,7 @@
                                                           majorArea:_majorArea];
         }
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         
         int major = [beacon.major intValue];
         int minor = [beacon.minor intValue];

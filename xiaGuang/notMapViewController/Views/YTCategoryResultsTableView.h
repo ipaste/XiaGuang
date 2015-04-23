@@ -11,7 +11,7 @@
 #import "YTCategory.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "YTSelectCategoryViewCell.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 typedef NS_ENUM(NSInteger, YTCategoryResultsStyle) {
     YTCategoryResultsStyleAllCategory,
     YTCategoryResultsStyleAllMall,

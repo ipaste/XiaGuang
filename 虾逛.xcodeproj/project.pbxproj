@@ -22,7 +22,6 @@
 		AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8091A0242F200A0CE91 /* highGuangDB */; };
 		AE24A8391A02430300A0CE91 /* YTBeaconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8321A02430300A0CE91 /* YTBeaconManager.m */; };
 		AE24A83A1A02430300A0CE91 /* YTBluetoothManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8341A02430300A0CE91 /* YTBluetoothManager.m */; };
-		AE24A83B1A02430300A0CE91 /* YTStaticResourceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8361A02430300A0CE91 /* YTStaticResourceManager.m */; };
 		AE24A83C1A02430300A0CE91 /* YTFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8381A02430300A0CE91 /* YTFileManager.m */; };
 		AE24A85F1A02430C00A0CE91 /* YTMapViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8551A02430B00A0CE91 /* YTMapViewController2.m */; };
 		AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */; };
@@ -48,7 +47,6 @@
 		AE24A8BA1A03855500A0CE91 /* BlurMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8B71A03855500A0CE91 /* BlurMenu.m */; };
 		AE24A8BB1A03855500A0CE91 /* BlurMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8B91A03855500A0CE91 /* BlurMenuItemCell.m */; };
 		AE24A8BE1A03861E00A0CE91 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AE24A8BD1A03861E00A0CE91 /* UIImage+ImageEffects.m */; };
-		AE33E08C1A27219600CDBF2A /* YTStaticResourceDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */; };
 		AE630BDA1A3EC4A100A562AA /* YTLocalDoor.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */; };
 		AE630BE51A43EC9100A562AA /* BBCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BDE1A43EC9000A562AA /* BBCell.m */; };
 		AE630BE61A43EC9100A562AA /* BBTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE630BE01A43EC9000A562AA /* BBTableView.m */; };
@@ -64,7 +62,6 @@
 		AED8463B1A0C9DE30055FD14 /* YTElevatorAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AED8463A1A0C9DE30055FD14 /* YTElevatorAnnotation.m */; };
 		AEE032B91A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */; };
 		AEE032BC1A1EEC47002AFB9C /* YTMajorAreaVoter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */; };
-		AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEE032BF1A22E1B3002AFB9C /* manifest.plist */; };
 		AEE032D71A22FE53002AFB9C /* YTMinorAreaPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032D61A22FE53002AFB9C /* YTMinorAreaPoi.m */; };
 		AEE032DA1A22FF67002AFB9C /* YTMinorAreaAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE032D91A22FF67002AFB9C /* YTMinorAreaAnnotation.m */; };
 		D923777C1ADBA03B0017B1DE /* help1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D92377781ADBA03B0017B1DE /* help1.jpg */; };
@@ -73,6 +70,68 @@
 		D92377851ADBBFF80017B1DE /* YTGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D92377841ADBBFF80017B1DE /* YTGuideViewController.m */; };
 		D92377871ADD04210017B1DE /* help4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D92377861ADD04210017B1DE /* help4.jpg */; };
 		D923778A1ADDF93A0017B1DE /* YTStateView.m in Sources */ = {isa = PBXBuildFile; fileRef = D92377891ADDF93A0017B1DE /* YTStateView.m */; };
+		D92377E01ADF6CF40017B1DE /* N_KKMALL_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D923779D1ADF6CF30017B1DE /* N_KKMALL_B1.mbtiles */; };
+		D92377E11ADF6CF40017B1DE /* N_KKMALL_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D923779E1ADF6CF30017B1DE /* N_KKMALL_L1.mbtiles */; };
+		D92377E21ADF6CF40017B1DE /* N_KKMALL_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D923779F1ADF6CF30017B1DE /* N_KKMALL_L2.mbtiles */; };
+		D92377E31ADF6CF40017B1DE /* N_KKMALL_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A01ADF6CF30017B1DE /* N_KKMALL_L3.mbtiles */; };
+		D92377E41ADF6CF40017B1DE /* N_KKMALL_L4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A11ADF6CF30017B1DE /* N_KKMALL_L4.mbtiles */; };
+		D92377E51ADF6CF40017B1DE /* N_KKMALL_PARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A21ADF6CF30017B1DE /* N_KKMALL_PARK-2.mbtiles */; };
+		D92377E61ADF6CF40017B1DE /* N_KKMALL_PARK-3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A31ADF6CF30017B1DE /* N_KKMALL_PARK-3.mbtiles */; };
+		D92377E71ADF6CF40017B1DE /* N_KKMALL_PARKB1J.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A41ADF6CF30017B1DE /* N_KKMALL_PARKB1J.mbtiles */; };
+		D92377E81ADF6CF40017B1DE /* N_KKMALL_PARKL2J.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A51ADF6CF30017B1DE /* N_KKMALL_PARKL2J.mbtiles */; };
+		D92377E91ADF6CF40017B1DE /* N_KKMALL_PARKL3J.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377A61ADF6CF30017B1DE /* N_KKMALL_PARKL3J.mbtiles */; };
+		D92377EA1ADF6CF40017B1DE /* N_HUANLEHAIAN.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377A81ADF6CF30017B1DE /* N_HUANLEHAIAN.csv */; };
+		D92377EB1ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377A91ADF6CF30017B1DE /* N_HUANLEHAIAN_PARK.csv */; };
+		D92377EC1ADF6CF40017B1DE /* N_JINGJIBAINA_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377AA1ADF6CF30017B1DE /* N_JINGJIBAINA_B1.csv */; };
+		D92377ED1ADF6CF40017B1DE /* N_JINGJIBAINA_B1H.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377AB1ADF6CF30017B1DE /* N_JINGJIBAINA_B1H.csv */; };
+		D92377EE1ADF6CF40017B1DE /* N_JINGJIBAINA_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377AC1ADF6CF30017B1DE /* N_JINGJIBAINA_L1.csv */; };
+		D92377EF1ADF6CF40017B1DE /* N_JINGJIBAINA_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377AD1ADF6CF30017B1DE /* N_JINGJIBAINA_L2.csv */; };
+		D92377F01ADF6CF40017B1DE /* N_JINGJIBAINA_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377AE1ADF6CF30017B1DE /* N_JINGJIBAINA_L3.csv */; };
+		D92377F11ADF6CF40017B1DE /* N_JINGJIBAINA_park.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377AF1ADF6CF30017B1DE /* N_JINGJIBAINA_park.csv */; };
+		D92377F21ADF6CF40017B1DE /* N_KKMALL_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B01ADF6CF30017B1DE /* N_KKMALL_B1.csv */; };
+		D92377F31ADF6CF40017B1DE /* N_KKMALL_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B11ADF6CF30017B1DE /* N_KKMALL_L1.csv */; };
+		D92377F41ADF6CF40017B1DE /* N_KKMALL_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B21ADF6CF30017B1DE /* N_KKMALL_L2.csv */; };
+		D92377F51ADF6CF40017B1DE /* N_KKMALL_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B31ADF6CF30017B1DE /* N_KKMALL_L3.csv */; };
+		D92377F61ADF6CF40017B1DE /* N_KKMALL_L4.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B41ADF6CF30017B1DE /* N_KKMALL_L4.csv */; };
+		D92377F71ADF6CF40017B1DE /* N_KKMALL_PARK-2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B51ADF6CF30017B1DE /* N_KKMALL_PARK-2.csv */; };
+		D92377F81ADF6CF40017B1DE /* N_KKMALL_PARK-3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B61ADF6CF30017B1DE /* N_KKMALL_PARK-3.csv */; };
+		D92377F91ADF6CF40017B1DE /* N_KKMALL_PARKB1J.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B71ADF6CF30017B1DE /* N_KKMALL_PARKB1J.csv */; };
+		D92377FA1ADF6CF40017B1DE /* N_KKMALL_PARKL2J.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B81ADF6CF30017B1DE /* N_KKMALL_PARKL2J.csv */; };
+		D92377FB1ADF6CF40017B1DE /* N_KKMALL_PARKL3J.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377B91ADF6CF40017B1DE /* N_KKMALL_PARKL3J.csv */; };
+		D92377FC1ADF6CF40017B1DE /* N_YITIAN_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377BA1ADF6CF40017B1DE /* N_YITIAN_B1.csv */; };
+		D92377FD1ADF6CF40017B1DE /* N_YITIAN_B2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377BB1ADF6CF40017B1DE /* N_YITIAN_B2.csv */; };
+		D92377FE1ADF6CF40017B1DE /* N_YITIAN_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377BC1ADF6CF40017B1DE /* N_YITIAN_L1.csv */; };
+		D92377FF1ADF6CF40017B1DE /* N_YITIAN_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377BD1ADF6CF40017B1DE /* N_YITIAN_L2.csv */; };
+		D92378001ADF6CF40017B1DE /* N_YITIAN_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D92377BE1ADF6CF40017B1DE /* N_YITIAN_L3.csv */; };
+		D92378011ADF6CF40017B1DE /* N_JINGJIBAINA_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C01ADF6CF40017B1DE /* N_JINGJIBAINA_B1.mbtiles */; };
+		D92378021ADF6CF40017B1DE /* N_JINGJIBAINA_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C11ADF6CF40017B1DE /* N_JINGJIBAINA_L1.mbtiles */; };
+		D92378031ADF6CF40017B1DE /* N_JINGJIBAINA_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C21ADF6CF40017B1DE /* N_JINGJIBAINA_L2.mbtiles */; };
+		D92378041ADF6CF40017B1DE /* N_JINGJIBAINA_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C31ADF6CF40017B1DE /* N_JINGJIBAINA_L3.mbtiles */; };
+		D92378051ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C41ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1.mbtiles */; };
+		D92378061ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1H.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C51ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1H.mbtiles */; };
+		D92378071ADF6CF40017B1DE /* N_HUANLEHAIAN.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C71ADF6CF40017B1DE /* N_HUANLEHAIAN.mbtiles */; };
+		D92378081ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377C81ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.mbtiles */; };
+		D92378091ADF6CF40017B1DE /* N_HAIANCHENG_EASTL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377CA1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL1.mbtiles */; };
+		D923780A1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377CB1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL2.mbtiles */; };
+		D923780B1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377CC1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-1.mbtiles */; };
+		D923780C1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377CD1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-2.mbtiles */; };
+		D923780D1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377CE1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL1.mbtiles */; };
+		D923780E1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377CF1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL2.mbtiles */; };
+		D923780F1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D01ADF6CF40017B1DE /* N_HAIANCHENG_WESTL3.mbtiles */; };
+		D92378101ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D11ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-1.mbtiles */; };
+		D92378111ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D21ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-2.mbtiles */; };
+		D92378121ADF6CF40017B1DE /* N_SHENGUOTOU_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D41ADF6CF40017B1DE /* N_SHENGUOTOU_B1.mbtiles */; };
+		D92378131ADF6CF40017B1DE /* N_SHENGUOTOU_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D51ADF6CF40017B1DE /* N_SHENGUOTOU_L1.mbtiles */; };
+		D92378141ADF6CF40017B1DE /* N_SHENGUOTOU_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D61ADF6CF40017B1DE /* N_SHENGUOTOU_L2.mbtiles */; };
+		D92378151ADF6CF40017B1DE /* N_SHENGUOTOU_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D71ADF6CF40017B1DE /* N_SHENGUOTOU_L3.mbtiles */; };
+		D92378161ADF6CF40017B1DE /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377D81ADF6CF40017B1DE /* N_SHENGUOTOU_PARK-2.mbtiles */; };
+		D92378171ADF6CF40017B1DE /* N_YITIAN_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377DA1ADF6CF40017B1DE /* N_YITIAN_B1.mbtiles */; };
+		D92378181ADF6CF40017B1DE /* N_YITIAN_B2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377DB1ADF6CF40017B1DE /* N_YITIAN_B2.mbtiles */; };
+		D92378191ADF6CF40017B1DE /* N_YITIAN_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377DC1ADF6CF40017B1DE /* N_YITIAN_L1.mbtiles */; };
+		D923781A1ADF6CF40017B1DE /* N_YITIAN_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377DD1ADF6CF40017B1DE /* N_YITIAN_L2.mbtiles */; };
+		D923781B1ADF6CF40017B1DE /* N_YITIAN_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377DE1ADF6CF40017B1DE /* N_YITIAN_L3.mbtiles */; };
+		D923781C1ADF6CF40017B1DE /* N_YITIAN_PARK_3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D92377DF1ADF6CF40017B1DE /* N_YITIAN_PARK_3.mbtiles */; };
+		D923781F1ADF802B0017B1DE /* YTDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D923781E1ADF802B0017B1DE /* YTDataManager.m */; };
 		D925EDE01A2D7ECD00F7FCD3 /* YTLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = D925EDDF1A2D7ECD00F7FCD3 /* YTLoadingView.m */; };
 		D925EDE31A2D893500F7FCD3 /* YTMultipleMerchantView.m in Sources */ = {isa = PBXBuildFile; fileRef = D925EDE21A2D893500F7FCD3 /* YTMultipleMerchantView.m */; };
 		D92D53841AA0015700DC0492 /* DPAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D53801AA0015700DC0492 /* DPAPI.m */; };
@@ -95,6 +154,7 @@
 		D93CE4D419FA5825004128FD /* xiaGuangTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D93CE4D319FA5825004128FD /* xiaGuangTests.m */; };
 		D941EFE51A0C70DC008F1218 /* YTChargeStandard.m in Sources */ = {isa = PBXBuildFile; fileRef = D941EFE41A0C70DC008F1218 /* YTChargeStandard.m */; };
 		D941EFE81A0C7DB9008F1218 /* YTLocalCharge.m in Sources */ = {isa = PBXBuildFile; fileRef = D941EFE71A0C7DB9008F1218 /* YTLocalCharge.m */; };
+		D9441E231AE15B89008FE57E /* YTChoosRegionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9441E221AE15B89008FE57E /* YTChoosRegionView.m */; };
 		D94C27A81A02639F009FF2F3 /* YTAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C27691A02639F009FF2F3 /* YTAnnotation.m */; };
 		D94C27A91A02639F009FF2F3 /* YTAnnotationSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C276B1A02639F009FF2F3 /* YTAnnotationSource.m */; };
 		D94C27AA1A02639F009FF2F3 /* YTBathroomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D94C276D1A02639F009FF2F3 /* YTBathroomAnnotation.m */; };
@@ -170,40 +230,13 @@
 		D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15521A072E57002077AD /* YTLocalParkingMarked.m */; };
 		D95B15571A078403002077AD /* YTMallPositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15561A078403002077AD /* YTMallPositionView.m */; };
 		D96030171A70D1C500B6DA80 /* YTStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D96030161A70D1C500B6DA80 /* YTStatusBar.m */; };
-		D97191131AB8304100D85229 /* N_HUANLEHAIAN.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97190FC1AB8304100D85229 /* N_HUANLEHAIAN.csv */; };
-		D97191141AB8304100D85229 /* N_HUANLEHAIAN_PARK.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97190FD1AB8304100D85229 /* N_HUANLEHAIAN_PARK.csv */; };
-		D97191151AB8304100D85229 /* N_JINGJIBAINA_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97190FE1AB8304100D85229 /* N_JINGJIBAINA_B1.csv */; };
-		D97191161AB8304100D85229 /* N_JINGJIBAINA_B1H.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97190FF1AB8304100D85229 /* N_JINGJIBAINA_B1H.csv */; };
-		D97191171AB8304100D85229 /* N_JINGJIBAINA_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191001AB8304100D85229 /* N_JINGJIBAINA_L1.csv */; };
-		D97191181AB8304100D85229 /* N_JINGJIBAINA_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191011AB8304100D85229 /* N_JINGJIBAINA_L2.csv */; };
-		D97191191AB8304100D85229 /* N_JINGJIBAINA_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191021AB8304100D85229 /* N_JINGJIBAINA_L3.csv */; };
-		D971911A1AB8304100D85229 /* N_JINGJIBAINA_park.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191031AB8304100D85229 /* N_JINGJIBAINA_park.csv */; };
-		D971911B1AB8304100D85229 /* N_KKMALL_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191041AB8304100D85229 /* N_KKMALL_B1.csv */; };
-		D971911C1AB8304100D85229 /* N_KKMALL_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191051AB8304100D85229 /* N_KKMALL_L1.csv */; };
-		D971911D1AB8304100D85229 /* N_KKMALL_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191061AB8304100D85229 /* N_KKMALL_L2.csv */; };
-		D971911E1AB8304100D85229 /* N_KKMALL_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191071AB8304100D85229 /* N_KKMALL_L3.csv */; };
-		D971911F1AB8304100D85229 /* N_KKMALL_L4.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191081AB8304100D85229 /* N_KKMALL_L4.csv */; };
-		D97191201AB8304100D85229 /* N_KKMALL_PARK-2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191091AB8304100D85229 /* N_KKMALL_PARK-2.csv */; };
-		D97191211AB8304100D85229 /* N_KKMALL_PARK-3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D971910A1AB8304100D85229 /* N_KKMALL_PARK-3.csv */; };
-		D97191221AB8304100D85229 /* N_KKMALL_PARKB1J.csv in Resources */ = {isa = PBXBuildFile; fileRef = D971910B1AB8304100D85229 /* N_KKMALL_PARKB1J.csv */; };
-		D97191231AB8304100D85229 /* N_KKMALL_PARKL2J.csv in Resources */ = {isa = PBXBuildFile; fileRef = D971910C1AB8304100D85229 /* N_KKMALL_PARKL2J.csv */; };
-		D97191241AB8304100D85229 /* N_KKMALL_PARKL3J.csv in Resources */ = {isa = PBXBuildFile; fileRef = D971910D1AB8304100D85229 /* N_KKMALL_PARKL3J.csv */; };
-		D97191251AB8304100D85229 /* N_YITIAN_B1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D971910E1AB8304100D85229 /* N_YITIAN_B1.csv */; };
-		D97191261AB8304100D85229 /* N_YITIAN_B2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D971910F1AB8304100D85229 /* N_YITIAN_B2.csv */; };
-		D97191271AB8304100D85229 /* N_YITIAN_L1.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191101AB8304100D85229 /* N_YITIAN_L1.csv */; };
-		D97191281AB8304100D85229 /* N_YITIAN_L2.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191111AB8304100D85229 /* N_YITIAN_L2.csv */; };
-		D97191291AB8304100D85229 /* N_YITIAN_L3.csv in Resources */ = {isa = PBXBuildFile; fileRef = D97191121AB8304100D85229 /* N_YITIAN_L3.csv */; };
 		D983BA7B1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D983BA7A1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m */; };
 		D992B0231A440F5300666AA0 /* img_default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D992B0221A440F5300666AA0 /* img_default.jpg */; };
-		D99EC7C31A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7BE1A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles */; };
-		D99EC7C41A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7BF1A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles */; };
-		D99EC7C51A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7C01A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles */; };
-		D99EC7C61A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7C11A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles */; };
-		D99EC7C71A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D99EC7C21A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles */; };
 		D99EC7CA1A8C617A00CD52DB /* YTChineseTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */; };
 		D9AE50731A0A1F280080CF21 /* YTMallPosistionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE50721A0A1F280080CF21 /* YTMallPosistionViewController.m */; };
 		D9AE507B1A0B4F160080CF21 /* YTBeaconPosistionPoi.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */; };
 		D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */; };
+		D9C1DDAA1AE0DB1E00728D66 /* YTCityAndRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C1DDA91AE0DB1E00728D66 /* YTCityAndRegion.m */; };
 		D9C35AC01AB19BE30001E389 /* YTPathAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35ABF1AB19BE30001E389 /* YTPathAnnotation.m */; };
 		D9C35B351AB19C100001E389 /* YTMapGraphDict.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35B141AB19C100001E389 /* YTMapGraphDict.m */; };
 		D9C35B381AB19C430001E389 /* YTMajorAreaDict.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35B371AB19C430001E389 /* YTMajorAreaDict.m */; };
@@ -211,47 +244,10 @@
 		D9C35B541AB6C1F20001E389 /* YTDeadReckoning.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35B531AB6C1F20001E389 /* YTDeadReckoning.m */; };
 		D9CAE85D1A52A8290053E758 /* bg_inner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9CAE85C1A52A8290053E758 /* bg_inner.jpg */; };
 		D9CAE8601A53A52D0053E758 /* YTBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CAE85F1A53A52D0053E758 /* YTBlockView.m */; };
-		D9D7DAD61A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB11A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles */; };
-		D9D7DAD71A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB21A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles */; };
-		D9D7DAD81A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB31A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles */; };
-		D9D7DAD91A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB41A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles */; };
-		D9D7DADA1A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB51A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles */; };
-		D9D7DADB1A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB61A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles */; };
-		D9D7DADC1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB71A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles */; };
-		D9D7DADD1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB81A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles */; };
-		D9D7DADE1A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAB91A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles */; };
-		D9D7DADF1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DABA1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles */; };
-		D9D7DAE01A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DABB1A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles */; };
-		D9D7DAE11A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DABC1A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-1.mbtiles */; };
-		D9D7DAE21A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DABD1A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles */; };
-		D9D7DAE31A5E3EC600674C3A /* N_HUANLEHAIAN_PARK.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DABE1A5E3EC600674C3A /* N_HUANLEHAIAN_PARK.mbtiles */; };
-		D9D7DAE41A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DABF1A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles */; };
-		D9D7DAE51A5E3EC600674C3A /* N_JINGJIBAINA_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC01A5E3EC600674C3A /* N_JINGJIBAINA_B1.mbtiles */; };
-		D9D7DAE61A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC11A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles */; };
-		D9D7DAE71A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC21A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles */; };
-		D9D7DAE81A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC31A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles */; };
-		D9D7DAE91A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC41A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles */; };
-		D9D7DAEA1A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC51A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles */; };
-		D9D7DAEB1A5E3EC600674C3A /* N_KKMALL_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC61A5E3EC600674C3A /* N_KKMALL_B1.mbtiles */; };
-		D9D7DAEC1A5E3EC600674C3A /* N_KKMALL_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC71A5E3EC600674C3A /* N_KKMALL_L1.mbtiles */; };
-		D9D7DAED1A5E3EC600674C3A /* N_KKMALL_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC81A5E3EC600674C3A /* N_KKMALL_L2.mbtiles */; };
-		D9D7DAEE1A5E3EC600674C3A /* N_KKMALL_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAC91A5E3EC600674C3A /* N_KKMALL_L3.mbtiles */; };
-		D9D7DAEF1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DACA1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles */; };
-		D9D7DAF01A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DACB1A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles */; };
-		D9D7DAF11A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DACC1A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles */; };
-		D9D7DAF21A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DACD1A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles */; };
-		D9D7DAF31A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DACE1A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles */; };
-		D9D7DAF41A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DACF1A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles */; };
-		D9D7DAF51A5E3EC600674C3A /* N_YITIAN_B1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD01A5E3EC600674C3A /* N_YITIAN_B1.mbtiles */; };
-		D9D7DAF61A5E3EC600674C3A /* N_YITIAN_B2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD11A5E3EC600674C3A /* N_YITIAN_B2.mbtiles */; };
-		D9D7DAF71A5E3EC600674C3A /* N_YITIAN_L2.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */; };
-		D9D7DAF81A5E3EC600674C3A /* N_YITIAN_L3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */; };
-		D9D7DAF91A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */; };
 		D9EB25571AADA6DE00210056 /* YTH5ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EB25561AADA6DE00210056 /* YTH5ViewController.m */; };
 		D9EB25591AAE8FA300210056 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EB25581AAE8FA300210056 /* WebKit.framework */; };
 		D9EEAB071A834DA50000D35D /* YTPreferentialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */; };
 		D9EEAB0A1A834DD50000D35D /* YTPreferential.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EEAB091A834DD50000D35D /* YTPreferential.m */; };
-		D9F699361A775D6D004432D8 /* N_YITIAN_L1.mbtiles in Resources */ = {isa = PBXBuildFile; fileRef = D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -294,8 +290,6 @@
 		AE24A8321A02430300A0CE91 /* YTBeaconManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBeaconManager.m; sourceTree = "<group>"; };
 		AE24A8331A02430300A0CE91 /* YTBluetoothManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBluetoothManager.h; sourceTree = "<group>"; };
 		AE24A8341A02430300A0CE91 /* YTBluetoothManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBluetoothManager.m; sourceTree = "<group>"; };
-		AE24A8351A02430300A0CE91 /* YTStaticResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStaticResourceManager.h; sourceTree = "<group>"; };
-		AE24A8361A02430300A0CE91 /* YTStaticResourceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStaticResourceManager.m; sourceTree = "<group>"; };
 		AE24A8371A02430300A0CE91 /* YTFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTFileManager.h; sourceTree = "<group>"; };
 		AE24A8381A02430300A0CE91 /* YTFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTFileManager.m; sourceTree = "<group>"; };
 		AE24A8541A02430B00A0CE91 /* YTMapViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMapViewController2.h; sourceTree = "<group>"; };
@@ -357,8 +351,6 @@
 		AE24A8B91A03855500A0CE91 /* BlurMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlurMenuItemCell.m; sourceTree = "<group>"; };
 		AE24A8BC1A03861E00A0CE91 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		AE24A8BD1A03861E00A0CE91 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
-		AE33E08A1A27219600CDBF2A /* YTStaticResourceDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStaticResourceDownloader.h; sourceTree = "<group>"; };
-		AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStaticResourceDownloader.m; sourceTree = "<group>"; };
 		AE630BD71A3EC43800A562AA /* YTDoor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTDoor.h; sourceTree = "<group>"; };
 		AE630BD81A3EC4A100A562AA /* YTLocalDoor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalDoor.h; sourceTree = "<group>"; };
 		AE630BD91A3EC4A100A562AA /* YTLocalDoor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalDoor.m; sourceTree = "<group>"; };
@@ -391,7 +383,6 @@
 		AEE032B81A1DEC32002AFB9C /* RMMBTilesSource+YTExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RMMBTilesSource+YTExtension.m"; sourceTree = "<group>"; };
 		AEE032BA1A1EEC47002AFB9C /* YTMajorAreaVoter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMajorAreaVoter.h; sourceTree = "<group>"; };
 		AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMajorAreaVoter.m; sourceTree = "<group>"; };
-		AEE032BF1A22E1B3002AFB9C /* manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = manifest.plist; sourceTree = "<group>"; };
 		AEE032D51A22FE53002AFB9C /* YTMinorAreaPoi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMinorAreaPoi.h; sourceTree = "<group>"; };
 		AEE032D61A22FE53002AFB9C /* YTMinorAreaPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMinorAreaPoi.m; sourceTree = "<group>"; };
 		AEE032D81A22FF67002AFB9C /* YTMinorAreaAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMinorAreaAnnotation.h; sourceTree = "<group>"; };
@@ -405,6 +396,69 @@
 		D92377861ADD04210017B1DE /* help4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = help4.jpg; sourceTree = "<group>"; };
 		D92377881ADDF93A0017B1DE /* YTStateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStateView.h; sourceTree = "<group>"; };
 		D92377891ADDF93A0017B1DE /* YTStateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStateView.m; sourceTree = "<group>"; };
+		D923779D1ADF6CF30017B1DE /* N_KKMALL_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_B1.mbtiles; sourceTree = "<group>"; };
+		D923779E1ADF6CF30017B1DE /* N_KKMALL_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L1.mbtiles; sourceTree = "<group>"; };
+		D923779F1ADF6CF30017B1DE /* N_KKMALL_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L2.mbtiles; sourceTree = "<group>"; };
+		D92377A01ADF6CF30017B1DE /* N_KKMALL_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L3.mbtiles; sourceTree = "<group>"; };
+		D92377A11ADF6CF30017B1DE /* N_KKMALL_L4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L4.mbtiles; sourceTree = "<group>"; };
+		D92377A21ADF6CF30017B1DE /* N_KKMALL_PARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_KKMALL_PARK-2.mbtiles"; sourceTree = "<group>"; };
+		D92377A31ADF6CF30017B1DE /* N_KKMALL_PARK-3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_KKMALL_PARK-3.mbtiles"; sourceTree = "<group>"; };
+		D92377A41ADF6CF30017B1DE /* N_KKMALL_PARKB1J.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_PARKB1J.mbtiles; sourceTree = "<group>"; };
+		D92377A51ADF6CF30017B1DE /* N_KKMALL_PARKL2J.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_PARKL2J.mbtiles; sourceTree = "<group>"; };
+		D92377A61ADF6CF30017B1DE /* N_KKMALL_PARKL3J.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_PARKL3J.mbtiles; sourceTree = "<group>"; };
+		D92377A81ADF6CF30017B1DE /* N_HUANLEHAIAN.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN.csv; sourceTree = "<group>"; };
+		D92377A91ADF6CF30017B1DE /* N_HUANLEHAIAN_PARK.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN_PARK.csv; sourceTree = "<group>"; };
+		D92377AA1ADF6CF30017B1DE /* N_JINGJIBAINA_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_B1.csv; sourceTree = "<group>"; };
+		D92377AB1ADF6CF30017B1DE /* N_JINGJIBAINA_B1H.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_B1H.csv; sourceTree = "<group>"; };
+		D92377AC1ADF6CF30017B1DE /* N_JINGJIBAINA_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L1.csv; sourceTree = "<group>"; };
+		D92377AD1ADF6CF30017B1DE /* N_JINGJIBAINA_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L2.csv; sourceTree = "<group>"; };
+		D92377AE1ADF6CF30017B1DE /* N_JINGJIBAINA_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L3.csv; sourceTree = "<group>"; };
+		D92377AF1ADF6CF30017B1DE /* N_JINGJIBAINA_park.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_park.csv; sourceTree = "<group>"; };
+		D92377B01ADF6CF30017B1DE /* N_KKMALL_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_B1.csv; sourceTree = "<group>"; };
+		D92377B11ADF6CF30017B1DE /* N_KKMALL_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L1.csv; sourceTree = "<group>"; };
+		D92377B21ADF6CF30017B1DE /* N_KKMALL_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L2.csv; sourceTree = "<group>"; };
+		D92377B31ADF6CF30017B1DE /* N_KKMALL_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L3.csv; sourceTree = "<group>"; };
+		D92377B41ADF6CF30017B1DE /* N_KKMALL_L4.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L4.csv; sourceTree = "<group>"; };
+		D92377B51ADF6CF30017B1DE /* N_KKMALL_PARK-2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "N_KKMALL_PARK-2.csv"; sourceTree = "<group>"; };
+		D92377B61ADF6CF30017B1DE /* N_KKMALL_PARK-3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "N_KKMALL_PARK-3.csv"; sourceTree = "<group>"; };
+		D92377B71ADF6CF30017B1DE /* N_KKMALL_PARKB1J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKB1J.csv; sourceTree = "<group>"; };
+		D92377B81ADF6CF30017B1DE /* N_KKMALL_PARKL2J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKL2J.csv; sourceTree = "<group>"; };
+		D92377B91ADF6CF40017B1DE /* N_KKMALL_PARKL3J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKL3J.csv; sourceTree = "<group>"; };
+		D92377BA1ADF6CF40017B1DE /* N_YITIAN_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_B1.csv; sourceTree = "<group>"; };
+		D92377BB1ADF6CF40017B1DE /* N_YITIAN_B2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_B2.csv; sourceTree = "<group>"; };
+		D92377BC1ADF6CF40017B1DE /* N_YITIAN_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L1.csv; sourceTree = "<group>"; };
+		D92377BD1ADF6CF40017B1DE /* N_YITIAN_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L2.csv; sourceTree = "<group>"; };
+		D92377BE1ADF6CF40017B1DE /* N_YITIAN_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L3.csv; sourceTree = "<group>"; };
+		D92377C01ADF6CF40017B1DE /* N_JINGJIBAINA_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_B1.mbtiles; sourceTree = "<group>"; };
+		D92377C11ADF6CF40017B1DE /* N_JINGJIBAINA_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_L1.mbtiles; sourceTree = "<group>"; };
+		D92377C21ADF6CF40017B1DE /* N_JINGJIBAINA_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_L2.mbtiles; sourceTree = "<group>"; };
+		D92377C31ADF6CF40017B1DE /* N_JINGJIBAINA_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_L3.mbtiles; sourceTree = "<group>"; };
+		D92377C41ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_PARKB1.mbtiles; sourceTree = "<group>"; };
+		D92377C51ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1H.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_PARKB1H.mbtiles; sourceTree = "<group>"; };
+		D92377C71ADF6CF40017B1DE /* N_HUANLEHAIAN.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HUANLEHAIAN.mbtiles; sourceTree = "<group>"; };
+		D92377C81ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HUANLEHAIAN_PARK.mbtiles; sourceTree = "<group>"; };
+		D92377CA1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_EASTL1.mbtiles; sourceTree = "<group>"; };
+		D92377CB1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_EASTL2.mbtiles; sourceTree = "<group>"; };
+		D92377CC1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_EASTPARK-1.mbtiles"; sourceTree = "<group>"; };
+		D92377CD1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_EASTPARK-2.mbtiles"; sourceTree = "<group>"; };
+		D92377CE1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_WESTL1.mbtiles; sourceTree = "<group>"; };
+		D92377CF1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_WESTL2.mbtiles; sourceTree = "<group>"; };
+		D92377D01ADF6CF40017B1DE /* N_HAIANCHENG_WESTL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_WESTL3.mbtiles; sourceTree = "<group>"; };
+		D92377D11ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_WESTPARK-1.mbtiles"; sourceTree = "<group>"; };
+		D92377D21ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_WESTPARK-2.mbtiles"; sourceTree = "<group>"; };
+		D92377D41ADF6CF40017B1DE /* N_SHENGUOTOU_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_B1.mbtiles; sourceTree = "<group>"; };
+		D92377D51ADF6CF40017B1DE /* N_SHENGUOTOU_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L1.mbtiles; sourceTree = "<group>"; };
+		D92377D61ADF6CF40017B1DE /* N_SHENGUOTOU_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L2.mbtiles; sourceTree = "<group>"; };
+		D92377D71ADF6CF40017B1DE /* N_SHENGUOTOU_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L3.mbtiles; sourceTree = "<group>"; };
+		D92377D81ADF6CF40017B1DE /* N_SHENGUOTOU_PARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_SHENGUOTOU_PARK-2.mbtiles"; sourceTree = "<group>"; };
+		D92377DA1ADF6CF40017B1DE /* N_YITIAN_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_B1.mbtiles; sourceTree = "<group>"; };
+		D92377DB1ADF6CF40017B1DE /* N_YITIAN_B2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_B2.mbtiles; sourceTree = "<group>"; };
+		D92377DC1ADF6CF40017B1DE /* N_YITIAN_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L1.mbtiles; sourceTree = "<group>"; };
+		D92377DD1ADF6CF40017B1DE /* N_YITIAN_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L2.mbtiles; sourceTree = "<group>"; };
+		D92377DE1ADF6CF40017B1DE /* N_YITIAN_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L3.mbtiles; sourceTree = "<group>"; };
+		D92377DF1ADF6CF40017B1DE /* N_YITIAN_PARK_3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_PARK_3.mbtiles; sourceTree = "<group>"; };
+		D923781D1ADF802B0017B1DE /* YTDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTDataManager.h; sourceTree = "<group>"; };
+		D923781E1ADF802B0017B1DE /* YTDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTDataManager.m; sourceTree = "<group>"; };
 		D925EDDE1A2D7ECD00F7FCD3 /* YTLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLoadingView.h; sourceTree = "<group>"; };
 		D925EDDF1A2D7ECD00F7FCD3 /* YTLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLoadingView.m; sourceTree = "<group>"; };
 		D925EDE11A2D893500F7FCD3 /* YTMultipleMerchantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMultipleMerchantView.h; sourceTree = "<group>"; };
@@ -452,6 +506,8 @@
 		D941EFE41A0C70DC008F1218 /* YTChargeStandard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTChargeStandard.m; sourceTree = "<group>"; };
 		D941EFE61A0C7DB9008F1218 /* YTLocalCharge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTLocalCharge.h; sourceTree = "<group>"; };
 		D941EFE71A0C7DB9008F1218 /* YTLocalCharge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTLocalCharge.m; sourceTree = "<group>"; };
+		D9441E211AE15B89008FE57E /* YTChoosRegionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTChoosRegionView.h; sourceTree = "<group>"; };
+		D9441E221AE15B89008FE57E /* YTChoosRegionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTChoosRegionView.m; sourceTree = "<group>"; };
 		D94C27681A02639F009FF2F3 /* YTAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTAnnotation.h; sourceTree = "<group>"; };
 		D94C27691A02639F009FF2F3 /* YTAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTAnnotation.m; sourceTree = "<group>"; };
 		D94C276A1A02639F009FF2F3 /* YTAnnotationSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTAnnotationSource.h; sourceTree = "<group>"; };
@@ -603,37 +659,9 @@
 		D95B15561A078403002077AD /* YTMallPositionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPositionView.m; sourceTree = "<group>"; };
 		D96030151A70D1C500B6DA80 /* YTStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStatusBar.h; sourceTree = "<group>"; };
 		D96030161A70D1C500B6DA80 /* YTStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStatusBar.m; sourceTree = "<group>"; };
-		D97190FC1AB8304100D85229 /* N_HUANLEHAIAN.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN.csv; sourceTree = "<group>"; };
-		D97190FD1AB8304100D85229 /* N_HUANLEHAIAN_PARK.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_HUANLEHAIAN_PARK.csv; sourceTree = "<group>"; };
-		D97190FE1AB8304100D85229 /* N_JINGJIBAINA_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_B1.csv; sourceTree = "<group>"; };
-		D97190FF1AB8304100D85229 /* N_JINGJIBAINA_B1H.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_B1H.csv; sourceTree = "<group>"; };
-		D97191001AB8304100D85229 /* N_JINGJIBAINA_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L1.csv; sourceTree = "<group>"; };
-		D97191011AB8304100D85229 /* N_JINGJIBAINA_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L2.csv; sourceTree = "<group>"; };
-		D97191021AB8304100D85229 /* N_JINGJIBAINA_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_L3.csv; sourceTree = "<group>"; };
-		D97191031AB8304100D85229 /* N_JINGJIBAINA_park.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_JINGJIBAINA_park.csv; sourceTree = "<group>"; };
-		D97191041AB8304100D85229 /* N_KKMALL_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_B1.csv; sourceTree = "<group>"; };
-		D97191051AB8304100D85229 /* N_KKMALL_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L1.csv; sourceTree = "<group>"; };
-		D97191061AB8304100D85229 /* N_KKMALL_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L2.csv; sourceTree = "<group>"; };
-		D97191071AB8304100D85229 /* N_KKMALL_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L3.csv; sourceTree = "<group>"; };
-		D97191081AB8304100D85229 /* N_KKMALL_L4.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_L4.csv; sourceTree = "<group>"; };
-		D97191091AB8304100D85229 /* N_KKMALL_PARK-2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "N_KKMALL_PARK-2.csv"; sourceTree = "<group>"; };
-		D971910A1AB8304100D85229 /* N_KKMALL_PARK-3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "N_KKMALL_PARK-3.csv"; sourceTree = "<group>"; };
-		D971910B1AB8304100D85229 /* N_KKMALL_PARKB1J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKB1J.csv; sourceTree = "<group>"; };
-		D971910C1AB8304100D85229 /* N_KKMALL_PARKL2J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKL2J.csv; sourceTree = "<group>"; };
-		D971910D1AB8304100D85229 /* N_KKMALL_PARKL3J.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_KKMALL_PARKL3J.csv; sourceTree = "<group>"; };
-		D971910E1AB8304100D85229 /* N_YITIAN_B1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_B1.csv; sourceTree = "<group>"; };
-		D971910F1AB8304100D85229 /* N_YITIAN_B2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_B2.csv; sourceTree = "<group>"; };
-		D97191101AB8304100D85229 /* N_YITIAN_L1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L1.csv; sourceTree = "<group>"; };
-		D97191111AB8304100D85229 /* N_YITIAN_L2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L2.csv; sourceTree = "<group>"; };
-		D97191121AB8304100D85229 /* N_YITIAN_L3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = N_YITIAN_L3.csv; sourceTree = "<group>"; };
 		D983BA791ACABE7500AE5F64 /* ESTBeacon+YTExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESTBeacon+YTExtension.h"; sourceTree = "<group>"; };
 		D983BA7A1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ESTBeacon+YTExtension.m"; sourceTree = "<group>"; };
 		D992B0221A440F5300666AA0 /* img_default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_default.jpg; sourceTree = "<group>"; };
-		D99EC7BE1A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_B1.mbtiles; sourceTree = "<group>"; };
-		D99EC7BF1A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L1.mbtiles; sourceTree = "<group>"; };
-		D99EC7C01A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L2.mbtiles; sourceTree = "<group>"; };
-		D99EC7C11A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_SHENGUOTOU_L3.mbtiles; sourceTree = "<group>"; };
-		D99EC7C21A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_SHENGUOTOU_PARK-2.mbtiles"; sourceTree = "<group>"; };
 		D99EC7C81A8C617A00CD52DB /* YTChineseTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTChineseTool.h; sourceTree = "<group>"; };
 		D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTChineseTool.m; sourceTree = "<group>"; };
 		D9AE50711A0A1F280080CF21 /* YTMallPosistionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMallPosistionViewController.h; sourceTree = "<group>"; };
@@ -642,6 +670,8 @@
 		D9AE507A1A0B4F160080CF21 /* YTBeaconPosistionPoi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTBeaconPosistionPoi.m; path = pois/YTBeaconPosistionPoi.m; sourceTree = "<group>"; };
 		D9AE507C1A0B4FDA0080CF21 /* YTBeaconAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTBeaconAnnotation.h; path = subView/YTBeaconAnnotation.h; sourceTree = "<group>"; };
 		D9AE507D1A0B4FDA0080CF21 /* YTBeaconAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTBeaconAnnotation.m; path = subView/YTBeaconAnnotation.m; sourceTree = "<group>"; };
+		D9C1DDA81AE0DB1E00728D66 /* YTCityAndRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTCityAndRegion.h; sourceTree = "<group>"; };
+		D9C1DDA91AE0DB1E00728D66 /* YTCityAndRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTCityAndRegion.m; sourceTree = "<group>"; };
 		D9C35ABE1AB19BE30001E389 /* YTPathAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPathAnnotation.h; sourceTree = "<group>"; };
 		D9C35ABF1AB19BE30001E389 /* YTPathAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPathAnnotation.m; sourceTree = "<group>"; };
 		D9C35B131AB19C100001E389 /* YTMapGraphDict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTMapGraphDict.h; path = xiaGuang/YTMapGraphDict.h; sourceTree = SOURCE_ROOT; };
@@ -655,42 +685,6 @@
 		D9CAE85C1A52A8290053E758 /* bg_inner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg_inner.jpg; sourceTree = "<group>"; };
 		D9CAE85E1A53A52D0053E758 /* YTBlockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBlockView.h; sourceTree = "<group>"; };
 		D9CAE85F1A53A52D0053E758 /* YTBlockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBlockView.m; sourceTree = "<group>"; };
-		D9D7DAB11A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_COCOPARK_B1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAB21A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_COCOPARK_L1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAB31A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_COCOPARK_L2.mbtiles; sourceTree = "<group>"; };
-		D9D7DAB41A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_COCOPARK_L3.mbtiles; sourceTree = "<group>"; };
-		D9D7DAB51A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_EASTL1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAB61A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_EASTL2.mbtiles; sourceTree = "<group>"; };
-		D9D7DAB71A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_EASTPARK-1.mbtiles"; sourceTree = "<group>"; };
-		D9D7DAB81A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_EASTPARK-2.mbtiles"; sourceTree = "<group>"; };
-		D9D7DAB91A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_WESTL1.mbtiles; sourceTree = "<group>"; };
-		D9D7DABA1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_WESTL2.mbtiles; sourceTree = "<group>"; };
-		D9D7DABB1A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HAIANCHENG_WESTL3.mbtiles; sourceTree = "<group>"; };
-		D9D7DABC1A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_WESTPARK-1.mbtiles"; sourceTree = "<group>"; };
-		D9D7DABD1A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_HAIANCHENG_WESTPARK-2.mbtiles"; sourceTree = "<group>"; };
-		D9D7DABE1A5E3EC600674C3A /* N_HUANLEHAIAN_PARK.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HUANLEHAIAN_PARK.mbtiles; sourceTree = "<group>"; };
-		D9D7DABF1A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_HUANLEHAIAN.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC01A5E3EC600674C3A /* N_JINGJIBAINA_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_B1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC11A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_L1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC21A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_L2.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC31A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_L3.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC41A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_PARKB1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC51A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_JINGJIBAINA_PARKB1H.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC61A5E3EC600674C3A /* N_KKMALL_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_B1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC71A5E3EC600674C3A /* N_KKMALL_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC81A5E3EC600674C3A /* N_KKMALL_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L2.mbtiles; sourceTree = "<group>"; };
-		D9D7DAC91A5E3EC600674C3A /* N_KKMALL_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L3.mbtiles; sourceTree = "<group>"; };
-		D9D7DACA1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_L4.mbtiles; sourceTree = "<group>"; };
-		D9D7DACB1A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_KKMALL_PARK-2.mbtiles"; sourceTree = "<group>"; };
-		D9D7DACC1A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = "N_KKMALL_PARK-3.mbtiles"; sourceTree = "<group>"; };
-		D9D7DACD1A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_PARKB1J.mbtiles; sourceTree = "<group>"; };
-		D9D7DACE1A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_PARKL2J.mbtiles; sourceTree = "<group>"; };
-		D9D7DACF1A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_KKMALL_PARKL3J.mbtiles; sourceTree = "<group>"; };
-		D9D7DAD01A5E3EC600674C3A /* N_YITIAN_B1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_B1.mbtiles; sourceTree = "<group>"; };
-		D9D7DAD11A5E3EC600674C3A /* N_YITIAN_B2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_B2.mbtiles; sourceTree = "<group>"; };
-		D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L2.mbtiles; sourceTree = "<group>"; };
-		D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L3.mbtiles; sourceTree = "<group>"; };
-		D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_PARK_3.mbtiles; sourceTree = "<group>"; };
 		D9EB25551AADA6DE00210056 /* YTH5ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTH5ViewController.h; sourceTree = "<group>"; };
 		D9EB25561AADA6DE00210056 /* YTH5ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTH5ViewController.m; sourceTree = "<group>"; };
 		D9EB25581AAE8FA300210056 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -698,7 +692,6 @@
 		D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPreferentialCell.m; sourceTree = "<group>"; };
 		D9EEAB081A834DD50000D35D /* YTPreferential.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPreferential.h; sourceTree = "<group>"; };
 		D9EEAB091A834DD50000D35D /* YTPreferential.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPreferential.m; sourceTree = "<group>"; };
-		D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */ = {isa = PBXFileReference; lastKnownFileType = file; path = N_YITIAN_L1.mbtiles; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -801,60 +794,9 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		AE24A7F91A022E1B00A0CE91 /* Map */ = {
-			isa = PBXGroup;
-			children = (
-				D97190FB1AB8304100D85229 /* Path */,
-				D9D7DAB11A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles */,
-				D9D7DAB21A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles */,
-				D9D7DAB31A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles */,
-				D9D7DAB41A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles */,
-				D9D7DAB51A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles */,
-				D9D7DAB61A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles */,
-				D9D7DAB71A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles */,
-				D9D7DAB81A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles */,
-				D99EC7BE1A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles */,
-				D99EC7BF1A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles */,
-				D99EC7C01A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles */,
-				D99EC7C11A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles */,
-				D99EC7C21A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles */,
-				D9D7DAB91A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles */,
-				D9D7DABA1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles */,
-				D9D7DABB1A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles */,
-				D9D7DABC1A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-1.mbtiles */,
-				D9D7DABD1A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles */,
-				D9D7DABE1A5E3EC600674C3A /* N_HUANLEHAIAN_PARK.mbtiles */,
-				D9D7DABF1A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles */,
-				D9D7DAC01A5E3EC600674C3A /* N_JINGJIBAINA_B1.mbtiles */,
-				D9D7DAC11A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles */,
-				D9D7DAC21A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles */,
-				D9D7DAC31A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles */,
-				D9D7DAC41A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles */,
-				D9D7DAC51A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles */,
-				D9D7DAC61A5E3EC600674C3A /* N_KKMALL_B1.mbtiles */,
-				D9D7DAC71A5E3EC600674C3A /* N_KKMALL_L1.mbtiles */,
-				D9D7DAC81A5E3EC600674C3A /* N_KKMALL_L2.mbtiles */,
-				D9D7DAC91A5E3EC600674C3A /* N_KKMALL_L3.mbtiles */,
-				D9D7DACA1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles */,
-				D9D7DACB1A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles */,
-				D9D7DACC1A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles */,
-				D9D7DACD1A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles */,
-				D9D7DACE1A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles */,
-				D9D7DACF1A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles */,
-				D9D7DAD01A5E3EC600674C3A /* N_YITIAN_B1.mbtiles */,
-				D9D7DAD11A5E3EC600674C3A /* N_YITIAN_B2.mbtiles */,
-				D9D7DAD21A5E3EC600674C3A /* N_YITIAN_L2.mbtiles */,
-				D9D7DAD31A5E3EC600674C3A /* N_YITIAN_L3.mbtiles */,
-				D9D7DAD41A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles */,
-				D9F699351A775D6D004432D8 /* N_YITIAN_L1.mbtiles */,
-			);
-			path = Map;
-			sourceTree = "<group>";
-		};
 		AE24A8081A0242F200A0CE91 /* DB */ = {
 			isa = PBXGroup;
 			children = (
-				AEE032BF1A22E1B3002AFB9C /* manifest.plist */,
 				AE24A8091A0242F200A0CE91 /* highGuangDB */,
 			);
 			path = DB;
@@ -863,18 +805,16 @@
 		AE24A8301A02430300A0CE91 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				AE33E08A1A27219600CDBF2A /* YTStaticResourceDownloader.h */,
-				AE33E08B1A27219600CDBF2A /* YTStaticResourceDownloader.m */,
 				AEE032BA1A1EEC47002AFB9C /* YTMajorAreaVoter.h */,
 				AEE032BB1A1EEC47002AFB9C /* YTMajorAreaVoter.m */,
 				AE24A8311A02430300A0CE91 /* YTBeaconManager.h */,
 				AE24A8321A02430300A0CE91 /* YTBeaconManager.m */,
 				AE24A8331A02430300A0CE91 /* YTBluetoothManager.h */,
 				AE24A8341A02430300A0CE91 /* YTBluetoothManager.m */,
-				AE24A8351A02430300A0CE91 /* YTStaticResourceManager.h */,
-				AE24A8361A02430300A0CE91 /* YTStaticResourceManager.m */,
 				AE24A8371A02430300A0CE91 /* YTFileManager.h */,
 				AE24A8381A02430300A0CE91 /* YTFileManager.m */,
+				D923781D1ADF802B0017B1DE /* YTDataManager.h */,
+				D923781E1ADF802B0017B1DE /* YTDataManager.m */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -988,6 +928,8 @@
 				D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */,
 				D9C35B391AB2D0260001E389 /* YTMallDict.h */,
 				D9C35B3A1AB2D0260001E389 /* YTMallDict.m */,
+				D9C1DDA81AE0DB1E00728D66 /* YTCityAndRegion.h */,
+				D9C1DDA91AE0DB1E00728D66 /* YTCityAndRegion.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1053,6 +995,130 @@
 				D92377861ADD04210017B1DE /* help4.jpg */,
 			);
 			name = Guide;
+			sourceTree = "<group>";
+		};
+		D923779B1ADF6CF30017B1DE /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				D92377A71ADF6CF30017B1DE /* Path */,
+				D923779C1ADF6CF30017B1DE /* KKMall */,
+				D92377BF1ADF6CF40017B1DE /* 京基百纳 */,
+				D92377C61ADF6CF40017B1DE /* 欢乐海岸 */,
+				D92377C91ADF6CF40017B1DE /* 海岸城 */,
+				D92377D31ADF6CF40017B1DE /* 深国投 */,
+				D92377D91ADF6CF40017B1DE /* 益田假日广场 */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		D923779C1ADF6CF30017B1DE /* KKMall */ = {
+			isa = PBXGroup;
+			children = (
+				D923779D1ADF6CF30017B1DE /* N_KKMALL_B1.mbtiles */,
+				D923779E1ADF6CF30017B1DE /* N_KKMALL_L1.mbtiles */,
+				D923779F1ADF6CF30017B1DE /* N_KKMALL_L2.mbtiles */,
+				D92377A01ADF6CF30017B1DE /* N_KKMALL_L3.mbtiles */,
+				D92377A11ADF6CF30017B1DE /* N_KKMALL_L4.mbtiles */,
+				D92377A21ADF6CF30017B1DE /* N_KKMALL_PARK-2.mbtiles */,
+				D92377A31ADF6CF30017B1DE /* N_KKMALL_PARK-3.mbtiles */,
+				D92377A41ADF6CF30017B1DE /* N_KKMALL_PARKB1J.mbtiles */,
+				D92377A51ADF6CF30017B1DE /* N_KKMALL_PARKL2J.mbtiles */,
+				D92377A61ADF6CF30017B1DE /* N_KKMALL_PARKL3J.mbtiles */,
+			);
+			path = KKMall;
+			sourceTree = "<group>";
+		};
+		D92377A71ADF6CF30017B1DE /* Path */ = {
+			isa = PBXGroup;
+			children = (
+				D92377A81ADF6CF30017B1DE /* N_HUANLEHAIAN.csv */,
+				D92377A91ADF6CF30017B1DE /* N_HUANLEHAIAN_PARK.csv */,
+				D92377AA1ADF6CF30017B1DE /* N_JINGJIBAINA_B1.csv */,
+				D92377AB1ADF6CF30017B1DE /* N_JINGJIBAINA_B1H.csv */,
+				D92377AC1ADF6CF30017B1DE /* N_JINGJIBAINA_L1.csv */,
+				D92377AD1ADF6CF30017B1DE /* N_JINGJIBAINA_L2.csv */,
+				D92377AE1ADF6CF30017B1DE /* N_JINGJIBAINA_L3.csv */,
+				D92377AF1ADF6CF30017B1DE /* N_JINGJIBAINA_park.csv */,
+				D92377B01ADF6CF30017B1DE /* N_KKMALL_B1.csv */,
+				D92377B11ADF6CF30017B1DE /* N_KKMALL_L1.csv */,
+				D92377B21ADF6CF30017B1DE /* N_KKMALL_L2.csv */,
+				D92377B31ADF6CF30017B1DE /* N_KKMALL_L3.csv */,
+				D92377B41ADF6CF30017B1DE /* N_KKMALL_L4.csv */,
+				D92377B51ADF6CF30017B1DE /* N_KKMALL_PARK-2.csv */,
+				D92377B61ADF6CF30017B1DE /* N_KKMALL_PARK-3.csv */,
+				D92377B71ADF6CF30017B1DE /* N_KKMALL_PARKB1J.csv */,
+				D92377B81ADF6CF30017B1DE /* N_KKMALL_PARKL2J.csv */,
+				D92377B91ADF6CF40017B1DE /* N_KKMALL_PARKL3J.csv */,
+				D92377BA1ADF6CF40017B1DE /* N_YITIAN_B1.csv */,
+				D92377BB1ADF6CF40017B1DE /* N_YITIAN_B2.csv */,
+				D92377BC1ADF6CF40017B1DE /* N_YITIAN_L1.csv */,
+				D92377BD1ADF6CF40017B1DE /* N_YITIAN_L2.csv */,
+				D92377BE1ADF6CF40017B1DE /* N_YITIAN_L3.csv */,
+			);
+			path = Path;
+			sourceTree = "<group>";
+		};
+		D92377BF1ADF6CF40017B1DE /* 京基百纳 */ = {
+			isa = PBXGroup;
+			children = (
+				D92377C01ADF6CF40017B1DE /* N_JINGJIBAINA_B1.mbtiles */,
+				D92377C11ADF6CF40017B1DE /* N_JINGJIBAINA_L1.mbtiles */,
+				D92377C21ADF6CF40017B1DE /* N_JINGJIBAINA_L2.mbtiles */,
+				D92377C31ADF6CF40017B1DE /* N_JINGJIBAINA_L3.mbtiles */,
+				D92377C41ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1.mbtiles */,
+				D92377C51ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1H.mbtiles */,
+			);
+			path = "京基百纳";
+			sourceTree = "<group>";
+		};
+		D92377C61ADF6CF40017B1DE /* 欢乐海岸 */ = {
+			isa = PBXGroup;
+			children = (
+				D92377C71ADF6CF40017B1DE /* N_HUANLEHAIAN.mbtiles */,
+				D92377C81ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.mbtiles */,
+			);
+			path = "欢乐海岸";
+			sourceTree = "<group>";
+		};
+		D92377C91ADF6CF40017B1DE /* 海岸城 */ = {
+			isa = PBXGroup;
+			children = (
+				D92377CA1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL1.mbtiles */,
+				D92377CB1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL2.mbtiles */,
+				D92377CC1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-1.mbtiles */,
+				D92377CD1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-2.mbtiles */,
+				D92377CE1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL1.mbtiles */,
+				D92377CF1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL2.mbtiles */,
+				D92377D01ADF6CF40017B1DE /* N_HAIANCHENG_WESTL3.mbtiles */,
+				D92377D11ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-1.mbtiles */,
+				D92377D21ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-2.mbtiles */,
+			);
+			path = "海岸城";
+			sourceTree = "<group>";
+		};
+		D92377D31ADF6CF40017B1DE /* 深国投 */ = {
+			isa = PBXGroup;
+			children = (
+				D92377D41ADF6CF40017B1DE /* N_SHENGUOTOU_B1.mbtiles */,
+				D92377D51ADF6CF40017B1DE /* N_SHENGUOTOU_L1.mbtiles */,
+				D92377D61ADF6CF40017B1DE /* N_SHENGUOTOU_L2.mbtiles */,
+				D92377D71ADF6CF40017B1DE /* N_SHENGUOTOU_L3.mbtiles */,
+				D92377D81ADF6CF40017B1DE /* N_SHENGUOTOU_PARK-2.mbtiles */,
+			);
+			path = "深国投";
+			sourceTree = "<group>";
+		};
+		D92377D91ADF6CF40017B1DE /* 益田假日广场 */ = {
+			isa = PBXGroup;
+			children = (
+				D92377DA1ADF6CF40017B1DE /* N_YITIAN_B1.mbtiles */,
+				D92377DB1ADF6CF40017B1DE /* N_YITIAN_B2.mbtiles */,
+				D92377DC1ADF6CF40017B1DE /* N_YITIAN_L1.mbtiles */,
+				D92377DD1ADF6CF40017B1DE /* N_YITIAN_L2.mbtiles */,
+				D92377DE1ADF6CF40017B1DE /* N_YITIAN_L3.mbtiles */,
+				D92377DF1ADF6CF40017B1DE /* N_YITIAN_PARK_3.mbtiles */,
+			);
+			path = "益田假日广场";
 			sourceTree = "<group>";
 		};
 		D92D537E1AA0015700DC0492 /* dianpingapi */ = {
@@ -1122,6 +1188,7 @@
 		D93CE4B619FA5825004128FD /* xiaGuang */ = {
 			isa = PBXGroup;
 			children = (
+				D923779B1ADF6CF30017B1DE /* Map */,
 				D92D53861AA012B600DC0492 /* SBJson */,
 				D92D537E1AA0015700DC0492 /* dianpingapi */,
 				D96030141A70D1AF00B6DA80 /* StatusBar */,
@@ -1137,7 +1204,6 @@
 				AE24A83D1A02430B00A0CE91 /* MapViewController */,
 				AE24A8301A02430300A0CE91 /* Managers */,
 				AE24A8081A0242F200A0CE91 /* DB */,
-				AE24A7F91A022E1B00A0CE91 /* Map */,
 				D93CE4BB19FA5825004128FD /* AppDelegate.h */,
 				D93CE4BC19FA5825004128FD /* AppDelegate.mm */,
 				D93CE4C419FA5825004128FD /* Images.xcassets */,
@@ -1354,6 +1420,8 @@
 				D9EEAB061A834DA50000D35D /* YTPreferentialCell.m */,
 				D92377881ADDF93A0017B1DE /* YTStateView.h */,
 				D92377891ADDF93A0017B1DE /* YTStateView.m */,
+				D9441E211AE15B89008FE57E /* YTChoosRegionView.h */,
+				D9441E221AE15B89008FE57E /* YTChoosRegionView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1452,36 +1520,6 @@
 			path = StatusBar;
 			sourceTree = "<group>";
 		};
-		D97190FB1AB8304100D85229 /* Path */ = {
-			isa = PBXGroup;
-			children = (
-				D97190FC1AB8304100D85229 /* N_HUANLEHAIAN.csv */,
-				D97190FD1AB8304100D85229 /* N_HUANLEHAIAN_PARK.csv */,
-				D97190FE1AB8304100D85229 /* N_JINGJIBAINA_B1.csv */,
-				D97190FF1AB8304100D85229 /* N_JINGJIBAINA_B1H.csv */,
-				D97191001AB8304100D85229 /* N_JINGJIBAINA_L1.csv */,
-				D97191011AB8304100D85229 /* N_JINGJIBAINA_L2.csv */,
-				D97191021AB8304100D85229 /* N_JINGJIBAINA_L3.csv */,
-				D97191031AB8304100D85229 /* N_JINGJIBAINA_park.csv */,
-				D97191041AB8304100D85229 /* N_KKMALL_B1.csv */,
-				D97191051AB8304100D85229 /* N_KKMALL_L1.csv */,
-				D97191061AB8304100D85229 /* N_KKMALL_L2.csv */,
-				D97191071AB8304100D85229 /* N_KKMALL_L3.csv */,
-				D97191081AB8304100D85229 /* N_KKMALL_L4.csv */,
-				D97191091AB8304100D85229 /* N_KKMALL_PARK-2.csv */,
-				D971910A1AB8304100D85229 /* N_KKMALL_PARK-3.csv */,
-				D971910B1AB8304100D85229 /* N_KKMALL_PARKB1J.csv */,
-				D971910C1AB8304100D85229 /* N_KKMALL_PARKL2J.csv */,
-				D971910D1AB8304100D85229 /* N_KKMALL_PARKL3J.csv */,
-				D971910E1AB8304100D85229 /* N_YITIAN_B1.csv */,
-				D971910F1AB8304100D85229 /* N_YITIAN_B2.csv */,
-				D97191101AB8304100D85229 /* N_YITIAN_L1.csv */,
-				D97191111AB8304100D85229 /* N_YITIAN_L2.csv */,
-				D97191121AB8304100D85229 /* N_YITIAN_L3.csv */,
-			);
-			path = Path;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1566,83 +1604,78 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D92378161ADF6CF40017B1DE /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */,
+				D92377EB1ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.csv in Resources */,
+				D92377FE1ADF6CF40017B1DE /* N_YITIAN_L1.csv in Resources */,
+				D92377F41ADF6CF40017B1DE /* N_KKMALL_L2.csv in Resources */,
+				D92377FC1ADF6CF40017B1DE /* N_YITIAN_B1.csv in Resources */,
 				D992B0231A440F5300666AA0 /* img_default.jpg in Resources */,
+				D92377F21ADF6CF40017B1DE /* N_KKMALL_B1.csv in Resources */,
+				D92378101ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-1.mbtiles in Resources */,
 				AE24A8671A02431700A0CE91 /* nav_bg_pic.jpg in Resources */,
-				D9D7DAE11A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-1.mbtiles in Resources */,
+				D92378011ADF6CF40017B1DE /* N_JINGJIBAINA_B1.mbtiles in Resources */,
+				D92378191ADF6CF40017B1DE /* N_YITIAN_L1.mbtiles in Resources */,
+				D92377E41ADF6CF40017B1DE /* N_KKMALL_L4.mbtiles in Resources */,
 				AE24A8231A0242F200A0CE91 /* highGuangDB in Resources */,
-				D97191141AB8304100D85229 /* N_HUANLEHAIAN_PARK.csv in Resources */,
-				D97191131AB8304100D85229 /* N_HUANLEHAIAN.csv in Resources */,
-				D97191251AB8304100D85229 /* N_YITIAN_B1.csv in Resources */,
-				D9D7DAE21A5E3EC600674C3A /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */,
-				D9D7DAF71A5E3EC600674C3A /* N_YITIAN_L2.mbtiles in Resources */,
-				D97191281AB8304100D85229 /* N_YITIAN_L2.csv in Resources */,
-				D971911A1AB8304100D85229 /* N_JINGJIBAINA_park.csv in Resources */,
+				D92378021ADF6CF40017B1DE /* N_JINGJIBAINA_L1.mbtiles in Resources */,
+				D923780E1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL2.mbtiles in Resources */,
+				D92378001ADF6CF40017B1DE /* N_YITIAN_L3.csv in Resources */,
+				D92377E51ADF6CF40017B1DE /* N_KKMALL_PARK-2.mbtiles in Resources */,
+				D92378131ADF6CF40017B1DE /* N_SHENGUOTOU_L1.mbtiles in Resources */,
+				D92377FD1ADF6CF40017B1DE /* N_YITIAN_B2.csv in Resources */,
+				D92377E71ADF6CF40017B1DE /* N_KKMALL_PARKB1J.mbtiles in Resources */,
+				D92377E01ADF6CF40017B1DE /* N_KKMALL_B1.mbtiles in Resources */,
+				D92377FA1ADF6CF40017B1DE /* N_KKMALL_PARKL2J.csv in Resources */,
+				D92377F11ADF6CF40017B1DE /* N_JINGJIBAINA_park.csv in Resources */,
 				D92377871ADD04210017B1DE /* help4.jpg in Resources */,
-				D9D7DAD81A5E3EC600674C3A /* N_COCOPARK_L2.mbtiles in Resources */,
-				D99EC7C41A8B4CEB00CD52DB /* N_SHENGUOTOU_L1.mbtiles in Resources */,
-				D9D7DAE71A5E3EC600674C3A /* N_JINGJIBAINA_L2.mbtiles in Resources */,
-				D9D7DADA1A5E3EC600674C3A /* N_HAIANCHENG_EASTL1.mbtiles in Resources */,
-				D9D7DAE51A5E3EC600674C3A /* N_JINGJIBAINA_B1.mbtiles in Resources */,
 				D923777E1ADBA03B0017B1DE /* help3.jpg in Resources */,
+				D923780F1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL3.mbtiles in Resources */,
+				D923781C1ADF6CF40017B1DE /* N_YITIAN_PARK_3.mbtiles in Resources */,
+				D92377EF1ADF6CF40017B1DE /* N_JINGJIBAINA_L2.csv in Resources */,
+				D92378041ADF6CF40017B1DE /* N_JINGJIBAINA_L3.mbtiles in Resources */,
+				D92378121ADF6CF40017B1DE /* N_SHENGUOTOU_B1.mbtiles in Resources */,
+				D92377EE1ADF6CF40017B1DE /* N_JINGJIBAINA_L1.csv in Resources */,
+				D92377F31ADF6CF40017B1DE /* N_KKMALL_L1.csv in Resources */,
 				D93CE4C519FA5825004128FD /* Images.xcassets in Resources */,
-				D9D7DAE31A5E3EC600674C3A /* N_HUANLEHAIAN_PARK.mbtiles in Resources */,
+				D92378091ADF6CF40017B1DE /* N_HAIANCHENG_EASTL1.mbtiles in Resources */,
+				D923780C1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-2.mbtiles in Resources */,
+				D923781B1ADF6CF40017B1DE /* N_YITIAN_L3.mbtiles in Resources */,
 				D923777C1ADBA03B0017B1DE /* help1.jpg in Resources */,
+				D92378071ADF6CF40017B1DE /* N_HUANLEHAIAN.mbtiles in Resources */,
+				D92377E61ADF6CF40017B1DE /* N_KKMALL_PARK-3.mbtiles in Resources */,
+				D92377E31ADF6CF40017B1DE /* N_KKMALL_L3.mbtiles in Resources */,
+				D92377FB1ADF6CF40017B1DE /* N_KKMALL_PARKL3J.csv in Resources */,
+				D92377E11ADF6CF40017B1DE /* N_KKMALL_L1.mbtiles in Resources */,
+				D92377E21ADF6CF40017B1DE /* N_KKMALL_L2.mbtiles in Resources */,
+				D92377F71ADF6CF40017B1DE /* N_KKMALL_PARK-2.csv in Resources */,
+				D92378081ADF6CF40017B1DE /* N_HUANLEHAIAN_PARK.mbtiles in Resources */,
+				D92378171ADF6CF40017B1DE /* N_YITIAN_B1.mbtiles in Resources */,
+				D92377F51ADF6CF40017B1DE /* N_KKMALL_L3.csv in Resources */,
 				D923777D1ADBA03B0017B1DE /* help2.jpg in Resources */,
-				D9D7DAED1A5E3EC600674C3A /* N_KKMALL_L2.mbtiles in Resources */,
-				D99EC7C31A8B4CEB00CD52DB /* N_SHENGUOTOU_B1.mbtiles in Resources */,
-				D9D7DAF31A5E3EC600674C3A /* N_KKMALL_PARKL2J.mbtiles in Resources */,
-				D9D7DAE01A5E3EC600674C3A /* N_HAIANCHENG_WESTL3.mbtiles in Resources */,
-				D9D7DAEB1A5E3EC600674C3A /* N_KKMALL_B1.mbtiles in Resources */,
-				D9D7DADB1A5E3EC600674C3A /* N_HAIANCHENG_EASTL2.mbtiles in Resources */,
-				D9D7DAF01A5E3EC600674C3A /* N_KKMALL_PARK-2.mbtiles in Resources */,
+				D92377F01ADF6CF40017B1DE /* N_JINGJIBAINA_L3.csv in Resources */,
 				D94C28131A0263C6009FF2F3 /* userAgreement.txt in Resources */,
-				D971911E1AB8304100D85229 /* N_KKMALL_L3.csv in Resources */,
+				D92377ED1ADF6CF40017B1DE /* N_JINGJIBAINA_B1H.csv in Resources */,
+				D923780D1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL1.mbtiles in Resources */,
+				D92377E91ADF6CF40017B1DE /* N_KKMALL_PARKL3J.mbtiles in Resources */,
+				D92377EC1ADF6CF40017B1DE /* N_JINGJIBAINA_B1.csv in Resources */,
+				D92378031ADF6CF40017B1DE /* N_JINGJIBAINA_L2.mbtiles in Resources */,
+				D92377EA1ADF6CF40017B1DE /* N_HUANLEHAIAN.csv in Resources */,
+				D92377F91ADF6CF40017B1DE /* N_KKMALL_PARKB1J.csv in Resources */,
+				D92378181ADF6CF40017B1DE /* N_YITIAN_B2.mbtiles in Resources */,
+				D92377E81ADF6CF40017B1DE /* N_KKMALL_PARKL2J.mbtiles in Resources */,
+				D92378151ADF6CF40017B1DE /* N_SHENGUOTOU_L3.mbtiles in Resources */,
 				D9CAE85D1A52A8290053E758 /* bg_inner.jpg in Resources */,
-				D9D7DAE41A5E3EC600674C3A /* N_HUANLEHAIAN.mbtiles in Resources */,
-				D9D7DAD71A5E3EC600674C3A /* N_COCOPARK_L1.mbtiles in Resources */,
-				D9D7DAEC1A5E3EC600674C3A /* N_KKMALL_L1.mbtiles in Resources */,
-				D9D7DAD61A5E3EC600674C3A /* N_COCOPARK_B1.mbtiles in Resources */,
-				D97191161AB8304100D85229 /* N_JINGJIBAINA_B1H.csv in Resources */,
-				D9D7DADD1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-2.mbtiles in Resources */,
-				D9F699361A775D6D004432D8 /* N_YITIAN_L1.mbtiles in Resources */,
-				D97191191AB8304100D85229 /* N_JINGJIBAINA_L3.csv in Resources */,
-				D97191201AB8304100D85229 /* N_KKMALL_PARK-2.csv in Resources */,
-				D97191271AB8304100D85229 /* N_YITIAN_L1.csv in Resources */,
-				D9D7DAF81A5E3EC600674C3A /* N_YITIAN_L3.mbtiles in Resources */,
-				D971911D1AB8304100D85229 /* N_KKMALL_L2.csv in Resources */,
-				D9D7DAE91A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */,
-				D9D7DAE61A5E3EC600674C3A /* N_JINGJIBAINA_L1.mbtiles in Resources */,
-				D9D7DAE81A5E3EC600674C3A /* N_JINGJIBAINA_L3.mbtiles in Resources */,
-				D971911B1AB8304100D85229 /* N_KKMALL_B1.csv in Resources */,
-				D99EC7C51A8B4CEB00CD52DB /* N_SHENGUOTOU_L2.mbtiles in Resources */,
-				D9D7DAEF1A5E3EC600674C3A /* N_KKMALL_L4.mbtiles in Resources */,
-				D9D7DAF61A5E3EC600674C3A /* N_YITIAN_B2.mbtiles in Resources */,
-				D97191181AB8304100D85229 /* N_JINGJIBAINA_L2.csv in Resources */,
-				D9D7DADF1A5E3EC600674C3A /* N_HAIANCHENG_WESTL2.mbtiles in Resources */,
-				D97191211AB8304100D85229 /* N_KKMALL_PARK-3.csv in Resources */,
-				D9D7DADC1A5E3EC600674C3A /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */,
-				D97191291AB8304100D85229 /* N_YITIAN_L3.csv in Resources */,
-				D97191151AB8304100D85229 /* N_JINGJIBAINA_B1.csv in Resources */,
-				D9D7DAF11A5E3EC600674C3A /* N_KKMALL_PARK-3.mbtiles in Resources */,
-				D971911C1AB8304100D85229 /* N_KKMALL_L1.csv in Resources */,
-				D99EC7C61A8B4CEB00CD52DB /* N_SHENGUOTOU_L3.mbtiles in Resources */,
+				D92378141ADF6CF40017B1DE /* N_SHENGUOTOU_L2.mbtiles in Resources */,
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
-				D97191241AB8304100D85229 /* N_KKMALL_PARKL3J.csv in Resources */,
-				D9D7DAEA1A5E3EC600674C3A /* N_JINGJIBAINA_PARKB1H.mbtiles in Resources */,
-				D9D7DAD91A5E3EC600674C3A /* N_COCOPARK_L3.mbtiles in Resources */,
-				D97191231AB8304100D85229 /* N_KKMALL_PARKL2J.csv in Resources */,
-				D9D7DAF41A5E3EC600674C3A /* N_KKMALL_PARKL3J.mbtiles in Resources */,
-				D99EC7C71A8B4CEB00CD52DB /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */,
-				D9D7DADE1A5E3EC600674C3A /* N_HAIANCHENG_WESTL1.mbtiles in Resources */,
-				D97191171AB8304100D85229 /* N_JINGJIBAINA_L1.csv in Resources */,
-				D9D7DAF51A5E3EC600674C3A /* N_YITIAN_B1.mbtiles in Resources */,
-				D9D7DAF21A5E3EC600674C3A /* N_KKMALL_PARKB1J.mbtiles in Resources */,
-				AEE032C01A22E1B3002AFB9C /* manifest.plist in Resources */,
-				D97191261AB8304100D85229 /* N_YITIAN_B2.csv in Resources */,
-				D9D7DAEE1A5E3EC600674C3A /* N_KKMALL_L3.mbtiles in Resources */,
-				D97191221AB8304100D85229 /* N_KKMALL_PARKB1J.csv in Resources */,
-				D971911F1AB8304100D85229 /* N_KKMALL_L4.csv in Resources */,
-				D9D7DAF91A5E3EC600674C3A /* N_YITIAN_PARK_3.mbtiles in Resources */,
+				D92378111ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */,
+				D923780B1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */,
+				D923780A1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL2.mbtiles in Resources */,
+				D92377F61ADF6CF40017B1DE /* N_KKMALL_L4.csv in Resources */,
+				D92377FF1ADF6CF40017B1DE /* N_YITIAN_L2.csv in Resources */,
+				D92377F81ADF6CF40017B1DE /* N_KKMALL_PARK-3.csv in Resources */,
+				D92378061ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1H.mbtiles in Resources */,
+				D92378051ADF6CF40017B1DE /* N_JINGJIBAINA_PARKB1.mbtiles in Resources */,
+				D923781A1ADF6CF40017B1DE /* N_YITIAN_L2.mbtiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1743,12 +1776,14 @@
 				D94C27FE1A0263C6009FF2F3 /* YTHomeViewController.m in Sources */,
 				AE24A89F1A02432000A0CE91 /* YTCloudMerchant.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.mm in Sources */,
+				D923781F1ADF802B0017B1DE /* YTDataManager.m in Sources */,
 				D9C35B541AB6C1F20001E389 /* YTDeadReckoning.m in Sources */,
 				D92D53A91AA012B600DC0492 /* SBJsonTokeniser.m in Sources */,
 				D94C27B71A02639F009FF2F3 /* YTMallBuildingSelector.m in Sources */,
 				AE24A89E1A02432000A0CE91 /* YTCloudMall.m in Sources */,
 				D94C28331A0263CF009FF2F3 /* MJRefreshBaseView.m in Sources */,
 				AEE032BC1A1EEC47002AFB9C /* YTMajorAreaVoter.m in Sources */,
+				D9441E231AE15B89008FE57E /* YTChoosRegionView.m in Sources */,
 				D92D53841AA0015700DC0492 /* DPAPI.m in Sources */,
 				AE24A8AE1A0258D500A0CE91 /* YTLocalExit.m in Sources */,
 				D9AE507E1A0B4FDA0080CF21 /* YTBeaconAnnotation.m in Sources */,
@@ -1758,7 +1793,6 @@
 				D94C27C51A02639F009FF2F3 /* YTZoomStepper.m in Sources */,
 				D94C28391A0263CF009FF2F3 /* UIColor+ExtensionColor_UIImage+ExtensionImage.m in Sources */,
 				D92D53A51AA012B600DC0492 /* SBJsonStreamParserState.m in Sources */,
-				AE24A83B1A02430300A0CE91 /* YTStaticResourceManager.m in Sources */,
 				D94C27B01A02639F009FF2F3 /* YTExitPoi.m in Sources */,
 				D94C28381A0263CF009FF2F3 /* RMMarker+RMMarker_YTExtension.m in Sources */,
 				D94C27B61A02639F009FF2F3 /* YTFloorView.m in Sources */,
@@ -1785,7 +1819,6 @@
 				D94C27AB1A02639F009FF2F3 /* YTExitAnnotation.m in Sources */,
 				D92D53AA1AA012B600DC0492 /* SBJsonUTF8Stream.m in Sources */,
 				D94C27A81A02639F009FF2F3 /* YTAnnotation.m in Sources */,
-				AE33E08C1A27219600CDBF2A /* YTStaticResourceDownloader.m in Sources */,
 				D94C283A1A0263CF009FF2F3 /* UIScrollView+MJExtension.m in Sources */,
 				D983BA7B1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m in Sources */,
 				AE630BE81A43EC9100A562AA /* BBTableViewInterceptor.m in Sources */,
@@ -1795,6 +1828,7 @@
 				AE24A8A51A02432100A0CE91 /* YTLocalElevator.m in Sources */,
 				D94C28431A0263EE009FF2F3 /* YTCategory.m in Sources */,
 				D94C27B51A02639F009FF2F3 /* YTDirectionIndicator.m in Sources */,
+				D9C1DDAA1AE0DB1E00728D66 /* YTCityAndRegion.m in Sources */,
 				D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */,
 				78ADBEA41A09EA89000688E3 /* YTMatrixToolBox.m in Sources */,
 				D9C35AC01AB19BE30001E389 /* YTPathAnnotation.m in Sources */,

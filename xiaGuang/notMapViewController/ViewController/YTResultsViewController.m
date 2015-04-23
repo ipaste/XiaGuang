@@ -21,15 +21,11 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     BOOL _isLoading;
     
     NSInteger _dealCount;
-    
     NSString *_category;
     NSString *_subCategory;
-    
     NSString *_mallId;
     NSString *_floorId;
-    
     NSArray *_ids;
-    
     NSMutableArray *_merchants;
     
     YTCategoryResultsView *_categoryResultsView;
@@ -173,12 +169,12 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
             if (merchants != nil) {
                 _merchants = [NSMutableArray arrayWithArray:merchants];
-                if (!_isCategory) {
+                if (_ids) {
                     id<YTMerchant> tmpMerchant = [merchants firstObject];
                     _subCategory = [[tmpMerchant type] lastObject];
                     _category = [[tmpMerchant type] firstObject];
+                    [_categoryResultsView setKey:_category subKey:_subCategory];
                 }
-                [_categoryResultsView setKey:_category subKey:_subCategory];
             }
            
             dispatch_time_t showTime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC);
@@ -263,7 +259,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             NSNumber *tmpId = [NSNumber numberWithInteger:[_mallId integerValue]];
             [mallObject whereKey:MALL_CLASS_LOCALID equalTo:tmpId];
         }else{
-            [mallObject whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
+            //[mallObject whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
         }
         [query whereKey:@"mall" matchesQuery:mallObject];
         
@@ -285,7 +281,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         query.limit = number;
         query.skip = skip;
         AVQuery *mallObject = [AVQuery queryWithClassName:@"Mall"];
-        [mallObject whereKey:MALL_CLASS_LOCALID equalTo:_mallId];
+        [mallObject whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:_mallId.integerValue]];
         [query whereKey:@"mall" matchesQuery:mallObject];
         [query whereKey:@"switch" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -305,14 +301,11 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                     merchantQuery.limit = number - merchants.count;
                     merchantQuery.skip = _dealCount;
                     [merchantQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                        
                         for (AVObject *object in objects) {
                             YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:object];
                             [merchants addObject:merchant];
                         }
-                        if (merchants.count == 0) {
-                            
-                        }else{
+                        if (merchants.count != 0) {
                             _dealCount = _dealCount + merchants.count;
                         }
                         block(merchants);

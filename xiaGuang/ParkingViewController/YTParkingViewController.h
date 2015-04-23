@@ -22,7 +22,6 @@
 #import "YTChargeStandard.h"
 #import "YTLocalCharge.h"
 #import "YTLocalParkingMarked.h"
-#import <POP.h>
 #import "YTMoveCurrentLocationButton.h"
 #import "YTBeaconBasedLocator.h"
 #import "YTMajorAreaVoter.h"

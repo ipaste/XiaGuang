@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YTCloudMall.h"
 #import "YTLocalMall.h"
-
+#import "YTCityAndRegion.h"
 typedef NS_ENUM(NSInteger, YTMallClass) {
     YTMallClassCloud,
     YTMallClassLocal
@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, YTMallClass) {
 @interface YTMallDict : NSObject
 
 @property (readonly ,nonatomic) BOOL loadFinishes;
-@property (readonly ,nonatomic) NSNumber *localMallMaxId;
+@property (readonly ,nonatomic) NSArray *localMallIds;
 
 + (instancetype)sharedInstance;
 
@@ -30,6 +30,10 @@ typedef NS_ENUM(NSInteger, YTMallClass) {
 - (id<YTMall>)changeMallObject:(id<YTMall>)mall resultType:(YTMallClass)mallClass;
 
 - (id<YTMall>)getMallFromIdentifier:(NSString *)identifier;
+- (NSArray *)localMallsFromRegion:(YTRegion *)region;
+- (NSArray *)cloudMallsFromRegion:(YTRegion *)region;
+- (NSArray *)threeRandomMallDoesNotContainRegion:(YTRegion *)region;
+
 
 // 获得一个Mall的首层
 - (YTLocalFloor *)firstFloorFromMallLocalId:(NSString *)localDBId;

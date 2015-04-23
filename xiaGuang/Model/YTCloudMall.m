@@ -26,6 +26,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     NSNumber *_isExistence;
     YTLocalMall *_tmpLocalMall;
     DPRequest *_request;
+    YTRegion *_region;
     YTGetTitleImageAndBackgroundImageCallBack _callBack;
     YTExistenceOfPreferentialInformationCallBack _existenceCallBack;
 
@@ -49,7 +50,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 - (BOOL)isShowPath{
-    return _internalObject[@"pathSwitch"];
+    return [_internalObject[@"pathSwitch"] boolValue];
 }
 
 - (CLLocationCoordinate2D)coord{
@@ -84,7 +85,12 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     
     return _blocks;
 }
-
+- (YTRegion *)region{
+    if (!_region) {
+        _region = [[YTRegion alloc]initWithCloudObject:_internalObject[MALL_CLASS_REGION]];
+    }
+    return _region;
+}
 
 
 -(NSArray *)merchants{
@@ -271,7 +277,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
         if (uniId == nil || uniId.length <= 0) {
             return nil;
         }
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",uniId];

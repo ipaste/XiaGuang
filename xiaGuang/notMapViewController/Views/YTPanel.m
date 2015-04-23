@@ -8,7 +8,6 @@
 
 #import "YTPanel.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#import <POP.h>
 #define BUTTON_SIZE 80
 #define INNER_CIRCLE 160
 #define SPACING 17.5
@@ -48,7 +47,7 @@
             [button setTitleEdgeInsets:UIEdgeInsetsMake(30,0, 0, 0)];
             button.tag = i;
             [button addTarget:self action:@selector(clickToButton:) forControlEvents:UIControlEventTouchUpInside];
-            [button pop_animationForKey:@"move"];
+            //[button pop_animationForKey:@"move"];
             [self addSubview:button];
             [_items addObject:button];
         }

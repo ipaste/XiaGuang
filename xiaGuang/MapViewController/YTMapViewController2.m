@@ -361,7 +361,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame))];
     _mapView.delegate = self;
-    
     [self.view insertSubview:_mapView belowSubview:_navigationBar];
     
     [self refreshLocatorWithMapView:_mapView.map majorArea:_curDisplayedMajorArea];
@@ -376,7 +375,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if([[_majorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]] && _userMinorArea != nil){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         _shownUser = false;
-        [self showUserAtCoordinate:_userCoordintate];
+//        [self showUserAtCoordinate:_userCoordintate];
 
     }
     NSArray *merchants = [majorArea merchantLocations];
@@ -657,7 +656,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
     [self.view addSubview:_navigationView];
-    [_navigationView.layer pop_animationForKey:@"shake"];
 }
 -(void)createPoiView{
     _poiView = [[YTPoiView alloc]initWithShow:NO];
@@ -994,7 +992,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     if([db open]){
         NSString *uniId = [uniIds firstObject];
         FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",uniId];
@@ -1233,7 +1231,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTBeacon>)getYTBeacon:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -1761,7 +1759,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -1856,14 +1854,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _targetMall = aMall;
         [_mapView setMapOffset:[_targetMall offset]];
         [self createSearchView];
-        
-        if ([aMall isMemberOfClass:[YTCloudMall class]]) {
-            _mapView.isShowPath = [aMall isShowPath];
-        }
     }
-    
 }
 
+
+-(void)setShowMajorArea:(id<YTMajorArea>)showMajorArea{
+    [self switchFloor:[showMajorArea floor] hideCallOut:true];
+    _majorArea = showMajorArea;
+    _showMajorArea = showMajorArea;
+}
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){
         [self dismissViewControllerAnimated:YES completion:nil];

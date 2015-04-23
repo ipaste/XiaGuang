@@ -42,7 +42,7 @@
         [self addSubview:_tableView];
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+            FMDatabase *db = [YTDataManager defaultDataManager].database;
             for (NSString *tmpUniId in uniIds) {
                 FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",tmpUniId];
                 [result next];

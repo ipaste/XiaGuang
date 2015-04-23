@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
+#import "YTCityAndRegion.h"
+
 #define MERCHANTLOCATION_CLASS_NAME @"MerchantLocation"
 #define MERCHANTLOCATION_CLASS_MALL_KEY @"Mall"
 @protocol YTMall <NSObject>
@@ -23,6 +25,7 @@
 @property(nonatomic)CGFloat offset;
 @property(nonatomic)CLLocationCoordinate2D coord;
 @property(nonatomic)BOOL isShowPath;
+@property(readonly ,nonatomic)YTRegion *region;
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback;

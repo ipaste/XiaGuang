@@ -57,7 +57,7 @@
 -(id<YTBlock>)block{
     if(_tmpBlock == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Block where blockId = ?",_tmpBlockId];
@@ -72,7 +72,7 @@
 -(NSArray *)majorAreas{
     if(_tmpMajorAreas == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from MajorArea where floorId = ?",_tmpFloorId];
         
         _tmpMajorAreas = [[NSMutableArray alloc] init];
