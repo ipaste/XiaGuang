@@ -8,7 +8,7 @@
 
 #import "YTDataManager.h"
 #import "YTMallDict.h"
-
+#import "YTCloudMerchant.h"
 #define DEVICE_IDENTIFIER [[[UIDevice currentDevice] identifierForVendor] UUIDString]
 #define DOCUMENT_PATH NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject
 #define USER_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".user"]
@@ -270,15 +270,36 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         [_userDatabase executeUpdate:@"INSERT INTO MallInfo('identify','name','count') VALUES(?,?,?)",identify,[tmpMall mallName],@0];
     }else{
         NSInteger count = [result intForColumn:@"count"];
-        [_userDatabase executeUpdate:@"UPDATE SET MallInfo count = ? WHERE identify = ?",count + 1,identify];
+        [_userDatabase executeUpdate:@"UPDATE MallInfo SET count = ? WHERE identify = ?",[NSNumber numberWithInteger:count + 1],identify];
     }
 }
 
 - (void)saveMerchantInfo:(id)merchant {
-
+    NSString *identify = nil;
+    NSString *name = nil;
+    NSString *comment = nil;
+    if ([merchant isKindOfClass:[YTCloudMerchant class]]) {
+        identify = [(YTCloudMerchant *)merchant uniId];
+        name = [(YTCloudMerchant *)merchant merchantName];
+        comment = [[(YTCloudMerchant *)merchant mall] mallName];
+    }else if([merchant isKindOfClass:[YTLocalMerchantInstance class]]){
+        identify = [(YTLocalMerchantInstance *)merchant uniId];
+        name = [(YTLocalMerchantInstance *)merchant merchantLocationName];
+        comment = [[(YTLocalMerchantInstance *)merchant mall] mallName];
+    }else{
+        return;
+    }
+    
+    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify,count FROM MerchantInfo identify = ?",identify];
+    if ([result next]) {
+        NSInteger count = [result intForColumn:@"count"];
+        [_userDatabase executeUpdate:@"UPDATE MerchantInfo SET count = ? WHERE identify = ?",[NSNumber numberWithInteger:count],identify];
+    }else{
+        [_userDatabase executeUpdate:@"INSERT INTO MerchantInfo('identify','name','count','comment') VALUES(?,?,?,?)",identify,name,@0,comment];
+    }
 }
 
--(void)saveLocationInfo:(CLLocationCoordinate2D)coord name:(NSString *)name {
+- (void)saveLocationInfo:(CLLocationCoordinate2D)coord name:(NSString *)name {
     NSNumber *isNearMall = @0;
     if (name) {
         isNearMall = @1;
@@ -291,7 +312,13 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
 }
 
 -(void)saveBeaconInfo:(ESTBeacon *)beacon {
-    
+    NSString *identify = [NSString stringWithFormat:@"%@-%@",[beacon.major stringValue],[beacon.minor stringValue]];
+    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify FROM BeaconInfo WHERE identify = ?",identify];
+    if ([result next]) {
+        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ?",_date,[beacon.batteryLevel stringValue]];
+    }else{
+        [_userDatabase executeUpdate:@"INSERT INTO BeaconInfo('identify','date','power') VALUES (?,?,?)",identify,_date,[beacon.batteryLevel stringValue]];
+    }
 }
 
 //跳过云备份

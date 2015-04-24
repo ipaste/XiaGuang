@@ -17,6 +17,7 @@
 #import "YTStateView.h"
 #import "MJRefresh.h"
 #import "YTMallDict.h"
+#import "YTDataManager.h"
 #import "Reachability.h"
 #import "YTMerchantInfoViewController.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"

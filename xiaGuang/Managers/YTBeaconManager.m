@@ -17,7 +17,6 @@
 
 @property (strong,nonatomic) NSNumber *major;
 @property (strong,nonatomic) NSNumber *minor;
-
 @end
 
 @implementation YTMajorMinorPair
@@ -30,6 +29,7 @@
     ESTBeaconManager *_estimoteBeaconManager;
     ESTBeaconRegion *_aprilRegion;
     ESTBeaconRegion *_mircoChatRegion;
+    YTDataManager *_dataManager;
     NSDictionary *_lostDict;
     NSDictionary *_distanceDict;
     NSMutableArray *_actives;
@@ -53,6 +53,8 @@
     if(self){
         _estimoteBeaconManager = [[ESTBeaconManager alloc] init];
         _estimoteBeaconManager.delegate = self;
+        
+        _dataManager = [YTDataManager defaultDataManager];
         
         _lostDict = [[NSDictionary alloc] init];
         _distanceDict = [[NSDictionary alloc] init];
@@ -113,6 +115,7 @@
     if (_bufferBeacon == nil) {
         _bufferBeacon = [NSMutableArray array];
         [beacons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [_dataManager saveBeaconInfo:obj];
             NSNumber *distance = ((ESTBeacon *)obj).distance;
             if (![distance isEqualToNumber:@-1] && [distance doubleValue] < MAX_DISTANCE) {
                 NSDictionary *beaconDict = @{@"Beacon":obj,@"time":[NSDate date],@"distance":distance};
@@ -130,6 +133,7 @@
         }];
     }else{
         [beacons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [_dataManager saveBeaconInfo:obj];
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.Beacon.minor == %@ AND self.Beacon.major == %@",((ESTBeacon *)obj).minor,((ESTBeacon *)obj).major];
             NSArray *beaconSoure = [_bufferBeacon filteredArrayUsingPredicate:predicate];
             if (beaconSoure.count > 0){

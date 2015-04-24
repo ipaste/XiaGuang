@@ -31,7 +31,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     YTSearchDetailsView *_detailsView;
     CGFloat _searchBarWidth;
     CGFloat _searchTextFieldWidth;
-    NSMutableDictionary *_object;
+    __weak NSMutableDictionary *_object;
 }
 @end
 @implementation YTSearchView

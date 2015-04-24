@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     YTResultsType _type;
     YTMallDict *_mallDict;
     YTStateView *_stateView;
+    YTDataManager *_dataManager;
     
     UITableView *_tableView;
 }
@@ -270,6 +271,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             }
             for (AVObject *merchantObject in objects) {
                 YTCloudMerchant *merchant = [[YTCloudMerchant alloc]initWithAVObject:merchantObject];
+                [_dataManager saveMerchantInfo:merchant];
                 [merchants addObject:merchant];
             }
             block(merchants);
@@ -375,7 +377,9 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     YTMerchantViewCell *cell = (YTMerchantViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.selected = NO;
     id<YTMerchant> merchant = _merchants[indexPath.row];
+    [_dataManager saveMerchantInfo:merchant];
     YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
+    
     [self.navigationController pushViewController:merchantInfoVC animated:YES];
 }
 
