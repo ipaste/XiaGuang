@@ -101,7 +101,8 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         
         // 设置数据库密码
         // [_tmpDatabase setKey:kDatabasePassword];
-        // [_userDatabase setKey:kDatabasePassword];
+        [_userDatabase setKey:kDatabasePassword];
+
         if (isConfig) {
             NSOperation *config = [[NSInvocationOperation alloc]initWithTarget:self selector:@selector(firstConfig) object:nil];
             [config start];
@@ -238,7 +239,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     sql = @"CREATE TABLE BeaconInfo('identify' TEXT NOT NULL PRIMARY KEY,'power' TEXT,'date' TEXT)";
     [_userDatabase executeUpdate:sql];
     
-    sql = @"CREATE TABLE LocationInfo('identify' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'latitude' REAL,'longitude' REAL,'isNearMall' INTEGER,'date' TEXT,''mallName TEXT,UNIQUE (\"identify\" ASC))";
+    sql = @"CREATE TABLE LocationInfo('identify' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'latitude' REAL,'longitude' REAL,'isNearMall' INTEGER,'date' TEXT,'mallName' TEXT,UNIQUE (\"identify\" ASC))";
     [_userDatabase executeUpdate:sql];
     
     sql = @"CREATE TABLE NetworkInfo('status' TEXT PRIMARY KEY,'count' INTERGER,'comment' TEXT)";
@@ -266,7 +267,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     }
     FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify,count FROM MallInfo WHERE identify = ?",identify];
     if (![result next]){
-        [_userDatabase executeUpdate:@"INSERT INTO MallInfo('identify','name','count') VALUES(?,?,?)",identify,[tmpMall mallName],0];
+        [_userDatabase executeUpdate:@"INSERT INTO MallInfo('identify','name','count') VALUES(?,?,?)",identify,[tmpMall mallName],@0];
     }else{
         NSInteger count = [result intForColumn:@"count"];
         [_userDatabase executeUpdate:@"UPDATE SET MallInfo count = ? WHERE identify = ?",count + 1,identify];
@@ -278,18 +279,19 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
 }
 
 -(void)saveLocationInfo:(CLLocationCoordinate2D)coord name:(NSString *)name {
-    NSInteger isNearMall = 0;
+    NSNumber *isNearMall = @0;
     if (name) {
-        isNearMall = 1;
+        isNearMall = @1;
     }else{
         name = @"";
     }
-    
-    [_userDatabase executeUpdate:@"INSERT INTO LocationInfo('latitude','longitude,isNearMall,mallName,date') VALUES(?,?,?,?,?)",coord.latitude,coord.longitude,isNearMall,name,_date];
+    NSNumber *latitude = [NSNumber numberWithDouble:coord.latitude];
+    NSNumber *longitude = [NSNumber numberWithDouble:coord.longitude];
+    [_userDatabase executeUpdate:@"INSERT INTO LocationInfo('latitude','longitude','isNearMall','mallName','date') VALUES(?,?,?,?,?)",latitude,longitude,isNearMall,name,_date];
 }
 
 -(void)saveBeaconInfo:(ESTBeacon *)beacon {
-
+    
 }
 
 //跳过云备份

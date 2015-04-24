@@ -11,7 +11,6 @@
 #define ROW_HEIGHT 90
 #define HEAD_HEIGHT 35
 #define DEFAULT_ANIMTAION_TIME 0.5
-typedef void(^YTPreferentialsCallBack)(NSArray *preferentials);
 
 NSString *const kMerchantCellIdentify = @"MerchantCell";
 

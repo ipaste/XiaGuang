@@ -33,6 +33,11 @@
     YTCommonlyUsed *frontDesk = [[YTCommonlyUsed alloc]init];
     frontDesk.name = @"服务台";
     frontDesk.icon = [UIImage imageNamed:@"nav_ico_13"];
-    return @[entrance,wc,escalator,elevator,frontDesk];
+    
+    
+    YTCommonlyUsed *subway = [[YTCommonlyUsed alloc]init];
+    subway.name = @"地铁";
+    subway.icon = [UIImage imageNamed:@"nav_ico_19"];
+    return @[entrance,wc,escalator,elevator,frontDesk,subway];
 }
 @end
