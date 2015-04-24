@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self defaultNavigation];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     //_tableView.tableHeaderView = [self tableHeadView];
     _tableView.delegate = self;
@@ -49,6 +50,7 @@
     _searchView = [[YTSearchView alloc]initWithMall:nil placeholder:@"搜索" indent:YES];
     _searchView.delegate = self;
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:YES];
+    
     
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     self.automaticallyAdjustsScrollViewInsets = false;
@@ -102,18 +104,14 @@
   //  [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:scrollView repeats:YES];
     return background;
 }
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [_searchView showSearchViewWithAnimation:NO];
-    self.navigationItem.title = @"虾逛";
-    self.navigationItem.titleView = [[UIView alloc]init];
-    
+
+- (void)defaultNavigation{
+    self.navigationItem.hidesBackButton = true;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     self.navigationController.navigationBar.clipsToBounds = true;
     self.navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
-    
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -121,7 +119,10 @@
     [_searchView hideSearchViewWithAnimation:NO];
 }
 
-
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [_searchView showSearchViewWithAnimation:NO];
+}
 -(void)viewWillLayoutSubviews{
     CGFloat topHeight = [self.topLayoutGuide length];
     
@@ -162,10 +163,9 @@
 
 -(void)selectedUniIds:(NSArray *)uniIds{
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:uniIds];
-    resultsVC.hidesBottomBarWhenPushed = YES;
-    
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 2) {
@@ -210,22 +210,13 @@
     }
 }
 -(void)back{
-    [_searchView hideSearchViewWithAnimation:NO];
+    [_searchView removeFromSuperview];
     [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)searchCancelButtonClicked{
-    _leftButton.hidden = false;
-}
--(void)startSearch{
-    _leftButton.hidden = true;
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
 }
--(void)dealloc{
-    [_searchView removeFromSuperview];
-}
+
 
 @end

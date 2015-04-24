@@ -170,7 +170,8 @@
                     NSString *mallId = responseObject[@"nearMallId"];
                     NSString *mallLocalDBId = responseObject[@"localId"];
                     float distance = ((NSString *)responseObject[@"distance"]).floatValue;
-        
+                    [_dataManager saveLocationInfo:CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]) name:mallName];
+                    
                     [[NSUserDefaults standardUserDefaults]setValue:mallLocalDBId forKey:@"currentMall"];
                     
                     if (distance < 1000) {
@@ -181,10 +182,8 @@
                             if (tag == 1){
                                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                     id<YTFloor> floor = [_mallDict firstFloorFromMallLocalId:mallLocalDBId];
-                                    id<YTMall> mall = [_mallDict getMallFromIdentifier:mallId];
                                     YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
-                                    YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
-                                    mallInfoVC.mall = mall;
+                                    YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]initWithMallIdentify:mallId];
                                     [self.navigationController pushViewController:mallInfoVC animated:false];
                                     dispatch_async(dispatch_get_main_queue(), ^{
                                         [mallInfoVC presentViewController:mapVC animated:false completion:nil];
@@ -194,9 +193,11 @@
                         }];
                     }
                 }
+            }else{
+                [_dataManager saveLocationInfo:CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]) name:nil];
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            
+            [_dataManager saveLocationInfo:CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]) name:nil];
         }];
     }
     
@@ -360,8 +361,8 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTMallCell *cell = (YTMallCell *)[tableView cellForRowAtIndexPath:indexPath];
     if (cell.isFetch) {
-        YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]init];
-        mallInfoVC.mall = cell.mall;
+        YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]initWithMallIdentify:[cell.mall identifier]];
+        [_dataManager saveMallInfo:cell.mall];
         [self.navigationController pushViewController:mallInfoVC animated:true];
     }
 }

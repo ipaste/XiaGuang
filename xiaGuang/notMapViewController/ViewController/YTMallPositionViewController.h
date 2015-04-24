@@ -1,5 +1,5 @@
 //
-//  YTMallPosistionViewController.h
+//  YTMallPositionViewController.h
 //  xiaGuang
 //
 //  Created by YunTop on 14/11/5.
@@ -10,7 +10,7 @@
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface YTMallPosistionViewController : UIViewController<UIWebViewDelegate>
+@interface YTMallPositionViewController : UIViewController<UIWebViewDelegate>
 //-(instancetype)initWithImage:(UIImage *)image address:(NSString *)address phoneNumber:(NSString *)phoneNumber;
 
 -(instancetype)initWithMallCoordinate:(CLLocationCoordinate2D )coordinate address:(NSString *)address mallName:(NSString *)mallName;

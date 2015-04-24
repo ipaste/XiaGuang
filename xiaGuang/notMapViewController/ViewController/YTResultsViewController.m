@@ -191,7 +191,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
             });
         }];
     }else{
-        [_stateView setType:YTStateTypeNotNetWork];
+        [_stateView setType:YTStateTypeNoNetWork];
     }
 }
 

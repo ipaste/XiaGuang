@@ -1,14 +1,14 @@
 //
-//  YTMallPosistionViewController.m
+//  YTMallPositionViewController.m
 //  xiaGuang
 //
 //  Created by YunTop on 14/11/5.
 //  Copyright (c) 2014年 YunTop. All rights reserved.
 //
 
-#import "YTMallPosistionViewController.h"
+#import "YTMallPositionViewController.h"
 
-@implementation YTMallPosistionViewController{
+@implementation YTMallPositionViewController{
     UIView *_detailsView;
 //    UIImageView *_mapImageView;
 //    UILabel *_phoneNumberLabel;

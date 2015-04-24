@@ -10,6 +10,7 @@
 #import "YTCloudMall.h"
 #import "YTLocalMall.h"
 #import "YTCityAndRegion.h"
+
 typedef NS_ENUM(NSInteger, YTMallClass) {
     YTMallClassCloud,
     YTMallClassLocal

@@ -13,6 +13,7 @@
 @interface YTStateView(){
     UIImageView *_showImageView;
     UILabel *_promptLable;
+    UIView *_backgroundView;
 }
 @end
 
@@ -30,14 +31,18 @@
 - (instancetype)initWithStateType:(YTStateType)type{
     self = [super initWithFrame:[UIScreen mainScreen].bounds];
     if (self) {
-        _promptLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 15)];
+        _promptLable = [[UILabel alloc]init];
         _promptLable.font = [UIFont systemFontOfSize:14];
         _promptLable.textAlignment = 1;
         _promptLable.textColor = [UIColor colorWithString:@"999999"];
         [self addSubview:_promptLable];
         
+        _backgroundView = [[UIView alloc]init];
+        _backgroundView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+        [self addSubview:_backgroundView];
+        
         self.type = type;
-        self.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+        self.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     }
     return self;
 }
@@ -47,7 +52,13 @@
     
     CGRect frame = _promptLable.frame;
     frame.origin.y = CGRectGetMaxY(_showImageView.frame) + 8;
+    frame.size.width = CGRectGetWidth(self.frame);
+    frame.size.height = 15;
     _promptLable.frame = frame;
+    
+    frame = _backgroundView.frame;
+    frame = self.bounds;
+    _backgroundView.frame = frame;
 }
 
 - (UIImageView *)changeCurrntShowWithType:(YTStateType)type{
@@ -71,7 +82,7 @@
             showImageView.image = [UIImage imageNamed:@"icon_non_content"];
             _promptLable.text = @"很抱歉,无搜索结果";
             break;
-        case YTStateTypeNotNetWork:
+        case YTStateTypeNoNetWork:
             showImageView.image = [UIImage imageNamed:@"icon_non_wifi"];
             _promptLable.text = @"网络不给力";
             break;
