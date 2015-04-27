@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTUserAgreementViewController.h"
+#import "YTInvitationViewController.h"
+#import "YTAboutViewController.h"
+#import "YTFeedBackViewController.h"
+#import "YTMallManageListViewController.h"
 
 @interface YTSettingViewController : UIViewController
 @property (nonatomic) BOOL isLatest;

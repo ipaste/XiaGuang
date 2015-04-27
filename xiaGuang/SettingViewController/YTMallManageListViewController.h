@@ -10,6 +10,9 @@
 #import <AVObject.h>
 #import <AVQuery.h>
 #import "YTCityAndRegion.h"
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTMallmanageCell.h"
+
 @interface YTMallManageListViewController : UIViewController
 
 @property (nonatomic, assign) NSInteger selectedTabID;

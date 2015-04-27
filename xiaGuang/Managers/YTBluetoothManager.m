@@ -33,10 +33,12 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
     [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
 }
+
 -(void)refreshBluetoothStateForCallBack:(YTBluetoothCallBack)callback{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
     callback(curState);
 }
+
 -(instancetype)init{
     self = [super init];
     if (self) {

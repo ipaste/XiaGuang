@@ -11,6 +11,7 @@
 #import <ESTBeacon.h>
 #import "ESTBeaconRegion.h"
 #import "YTMall.h"
+#import "YTDataManager.h"
 #import "ESTBeacon+YTExtension.h"
 #import "YTDataManager.h"
 

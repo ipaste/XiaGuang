@@ -11,6 +11,11 @@
 #import <AVOSCloud/AVOSCloud.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "AppDelegate.h"
+
+NSString *const kViewControllerKey = @"viewController";
+NSString *const kNavigationTitleKey = @"title";
+NSString *const kLeftBarItemKey = @"leftBarItem";
+NSString *const kRightBarItemKey = @"rightBarItem";
 @interface YTSearchView()<UISearchBarDelegate,YTSearchDetailsDelegate>{
     id<YTMall> _mall;
     UISearchBar *_searchBar;
@@ -22,9 +27,11 @@
     BOOL _isAddInNavigationBar;
     BOOL _displayFirstResponder;
     BOOL _isIndent;
+    BOOL _isHide;
     YTSearchDetailsView *_detailsView;
     CGFloat _searchBarWidth;
     CGFloat _searchTextFieldWidth;
+    __weak NSMutableDictionary *_object;
 }
 @end
 @implementation YTSearchView
@@ -34,6 +41,7 @@
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
         CGFloat searchBarX = 5;
+        _isHide = true;
         _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
         CGFloat cancelX = CGRectGetWidth(self.frame) - 40;
         if (indent) {
@@ -127,6 +135,33 @@
         _displayFirstResponder = YES;
         [self hideSearchViewWithAnimation:NO];
     }
+    
+    if (_isAddInNavigationBar) {
+        _object = [NSMutableDictionary new];
+        for (UIView *view = [self superview]; view; view = view.superview) {
+            UIResponder *responder = [view nextResponder];
+            if ([responder isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navigationController = (UINavigationController *)responder;
+                UIViewController *viewController = navigationController.visibleViewController;
+                NSString *title = viewController.navigationItem.title;
+                UIBarButtonItem *rightBarItem = viewController.navigationItem.rightBarButtonItem;
+                UIBarButtonItem *leftBarItem = viewController.navigationItem.leftBarButtonItem;
+                if (title) {
+                    [_object setObject:title forKey:kNavigationTitleKey];
+                }
+                if (rightBarItem) {
+                    [_object setObject:rightBarItem forKey:kRightBarItemKey];
+                }else{
+                    _isHide = false;
+                }
+                if (leftBarItem) {
+                    [_object setObject:leftBarItem forKey:kLeftBarItemKey];
+                }
+                [_object setObject:viewController forKey:kViewControllerKey];
+                return;
+            }
+        }
+    }
 }
 
 
@@ -159,14 +194,28 @@
 }
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
-    self.hidden = NO;
+    if (_object[kViewControllerKey]) {
+        UIViewController *viewController = _object[kViewControllerKey];
+        viewController.navigationItem.title = @"";
+        viewController.navigationItem.rightBarButtonItem = nil;
+        if (!animation){
+            viewController.navigationItem.leftBarButtonItem = _object[kLeftBarItemKey];
+        }
+    }
+    if (_searchBar.hidden){
+        _searchBar.hidden = false;
+    }
+    self.hidden = false;
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
     }
 }
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
-    self.hidden = YES;
+    if (!_searchBar.hidden){
+        _searchBar.hidden = true;
+    }
+    self.hidden = true;
 }
 
 #pragma mark searchBar的协议
@@ -176,8 +225,9 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     _detailsView.hidden = NO;
-    if ([_delegate  respondsToSelector:@selector(startSearch)]) {
-        [_delegate startSearch];
+    if (_object[kLeftBarItemKey]) {
+        UIViewController *viewController = _object[kViewControllerKey];
+        viewController.navigationItem.leftBarButtonItem = nil;
     }
     if (_searchTextFieldWidth == 0) {
         _searchTextFieldWidth = CGRectGetWidth(_searchTextField.frame);
@@ -243,7 +293,7 @@
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
-    [self cancelAnimation:NO completion:nil];
+    [self cancelAnimation:false completion:nil];
     [self.delegate selectedUniIds:uniIds];
 }
 
@@ -253,23 +303,25 @@
 }
 
 -(void)clickCancelButton:(UIButton *)sender{
-    [self cancelAnimation:YES completion:nil];
-    if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]) {
-        [self.delegate searchCancelButtonClicked];
-    }
+    [self cancelAnimation:true completion:nil];
 }
 
 -(void)cancelAnimation:(BOOL)animation completion:(void (^)(void))completion{
-    _cancelButton.hidden = YES;
-    _detailsView.hidden = YES;
+    if (_isAddInNavigationBar) {
+        UIViewController *viewController = _object[kViewControllerKey];
+        viewController.navigationItem.title = _object[kNavigationTitleKey];
+        viewController.navigationItem.leftBarButtonItem = _object[kLeftBarItemKey];
+        viewController.navigationItem.rightBarButtonItem = _object[kRightBarItemKey]; 
+    }
+    self.hidden = _isHide;
+    _cancelButton.hidden = true;
+    _detailsView.hidden = true;
     [_searchBar resignFirstResponder];
     [self searchBar:_searchBar dealWithTextChange:@""];
     NSTimeInterval duration = 0;
     if (animation) {
         duration = .2;
     }
-    
-    
     _searchTextFieldWidth += 5;
     
     [UIView animateWithDuration:duration animations:^{
@@ -308,6 +360,7 @@
     [[[contentView subviews] firstObject] removeFromSuperview];
     return [[contentView subviews] firstObject];
 }
+
 
 -(void)dealloc{
     [_detailsView removeFromSuperview];

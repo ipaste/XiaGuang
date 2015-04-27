@@ -7,7 +7,8 @@
 //
 
 #import "YTDataManager.h"
-
+#import "YTMallDict.h"
+#import "YTCloudMerchant.h"
 #define DEVICE_IDENTIFIER [[[UIDevice currentDevice] identifierForVendor] UUIDString]
 #define DOCUMENT_PATH NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject
 #define USER_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".user"]
@@ -22,11 +23,16 @@ NSString *const KWwanNetworkKey = @"2G/3G/4G";
 NSString *const KNoNetworkKey = @"No Network";
 NSString *const kUploadKey = @"DataUpload";
 
+/**
+ *  更换数据库密码，使用正确的密码打开数据，然后再用ResetKey去修改
+ */
+NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
+
 @interface YTDataManager(){
     Reachability *_reachability;
     NetworkStatus _currentNetworkStatus;
     FMDatabase *_tmpDatabase;
-    FMDatabase *_tmpUserDatabase;
+    FMDatabase *_userDatabase;
     NSFileManager *_fileManager;
     NSString *_date;
 }
@@ -40,12 +46,12 @@ NSString *const kUploadKey = @"DataUpload";
     return _tmpDatabase;
 }
 
-- (FMDatabase *)userDatebase {
-    return _tmpUserDatabase;
-}
-
 - (NSString *)documentMapPath {
     return MAP_PATH;
+}
+
+- (NSString *)date{
+    return _date;
 }
 
 + (instancetype)defaultDataManager{
@@ -89,11 +95,14 @@ NSString *const kUploadKey = @"DataUpload";
         }
         
         _tmpDatabase = [FMDatabase databaseWithPath:DB_PATH];
-        _tmpUserDatabase = [FMDatabase databaseWithPath:USERDB_PATH];
-        
+        _userDatabase = [FMDatabase databaseWithPath:USERDB_PATH];
         [_tmpDatabase open];
-        [_tmpUserDatabase open];
+        [_userDatabase open];
         
+        // 设置数据库密码
+        // [_tmpDatabase setKey:kDatabasePassword];
+        [_userDatabase setKey:kDatabasePassword];
+
         if (isConfig) {
             NSOperation *config = [[NSInvocationOperation alloc]initWithTarget:self selector:@selector(firstConfig) object:nil];
             [config start];
@@ -114,7 +123,7 @@ NSString *const kUploadKey = @"DataUpload";
 
 - (void)closeAllDatebase{
     [_tmpDatabase close];
-    [_tmpUserDatabase close];
+    [_userDatabase close];
 }
 
 - (void)checkWhetherTheDataNeedsToBeUpdated{
@@ -160,7 +169,7 @@ NSString *const kUploadKey = @"DataUpload";
 - (void)networkStatusChanged:(NSNotification *)notification{
     NetworkStatus status = _reachability.currentReachabilityStatus;
     YTNetworkSatus networkStatus = YTNetworkSatusNotNomal;
-    if (_tmpUserDatabase) {
+    if (_userDatabase) {
         NSString *statusString = nil;
         NSNumber *count = nil;
         switch (status) {
@@ -168,7 +177,7 @@ NSString *const kUploadKey = @"DataUpload";
             {
                 //WIFI
                 statusString = KWifiNetworkKey;
-                FMResultSet *result = [_tmpUserDatabase executeQueryWithFormat:@"SELECT * FROM NetworkInfo WHERE status = %@",statusString];
+                FMResultSet *result = [_userDatabase executeQueryWithFormat:@"SELECT * FROM NetworkInfo WHERE status = %@",statusString];
                 if ([result next]) {
                     count = [NSNumber numberWithInt:[result intForColumn:@"count"] + 1];
                 }
@@ -179,7 +188,7 @@ NSString *const kUploadKey = @"DataUpload";
             {
                 //WWAN
                 statusString = KWwanNetworkKey;
-                FMResultSet *result = [_tmpUserDatabase executeQueryWithFormat:@"SELECT * FROM NetworkInfo WHERE status = %@",statusString];
+                FMResultSet *result = [_userDatabase executeQueryWithFormat:@"SELECT * FROM NetworkInfo WHERE status = %@",statusString];
                 if ([result next]) {
                     count = [NSNumber numberWithInt:[result intForColumn:@"count"] + 1];
                 }
@@ -190,7 +199,7 @@ NSString *const kUploadKey = @"DataUpload";
             {
                 //NO NETWORK
                 statusString = KNoNetworkKey;
-                FMResultSet *result = [_tmpUserDatabase executeQueryWithFormat:@"SELECT * FROM NetworkInfo WHERE status = %@",statusString];
+                FMResultSet *result = [_userDatabase executeQueryWithFormat:@"SELECT * FROM NetworkInfo WHERE status = %@",statusString];
                 if ([result next]) {
                     count = [NSNumber numberWithInt:[result intForColumn:@"count"] + 1];
                 }
@@ -198,7 +207,7 @@ NSString *const kUploadKey = @"DataUpload";
             }
                 break;
         }
-        [_tmpUserDatabase executeUpdateWithFormat:@"UPDATE NetworkInfo SET count = %@ WHERE status = %@",count,statusString];
+        [_userDatabase executeUpdateWithFormat:@"UPDATE NetworkInfo SET count = %@ WHERE status = %@",count,statusString];
         if ([_delegate respondsToSelector:@selector(networkStatusChanged:)]) {
             [_delegate networkStatusChanged:networkStatus];
         }
@@ -221,27 +230,94 @@ NSString *const kUploadKey = @"DataUpload";
 }
 
 - (void)firstConfig {
-    NSString *sql = @"CREATE TABLE MallInfo('identify' INTEGER NOT NULL PRIMARY KEY,'name' TEXT,'count' INTERGER,'comment' TEXT)";
-    [_tmpUserDatabase executeUpdate:sql];
+    NSString *sql = @"CREATE TABLE MallInfo('identify' INTEGER NOT NULL PRIMARY KEY,'name' TEXT,'count' INTERGER)";
+    [_userDatabase executeUpdate:sql];
     
     sql = @"CREATE TABLE MerchantInfo('identify' INTEGER NOT NULL PRIMARY KEY,'name' TEXT,'count' INTERGER,'comment' TEXT)";
-    [_tmpUserDatabase executeUpdate:sql];
+    [_userDatabase executeUpdate:sql];
     
     sql = @"CREATE TABLE BeaconInfo('identify' TEXT NOT NULL PRIMARY KEY,'power' TEXT,'date' TEXT)";
-    [_tmpUserDatabase executeUpdate:sql];
+    [_userDatabase executeUpdate:sql];
     
-    sql = @"CREATE TABLE LocationInfo('identify' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'latitude' REAL,'longitude' REAL,'isNearMall' INTEGER,'date' TEXT,UNIQUE (\"identify\" ASC))";
-    [_tmpUserDatabase executeUpdate:sql];
+    sql = @"CREATE TABLE LocationInfo('identify' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'latitude' REAL,'longitude' REAL,'isNearMall' INTEGER,'date' TEXT,'mallName' TEXT,UNIQUE (\"identify\" ASC))";
+    [_userDatabase executeUpdate:sql];
     
     sql = @"CREATE TABLE NetworkInfo('status' TEXT PRIMARY KEY,'count' INTERGER,'comment' TEXT)";
-    [_tmpUserDatabase executeUpdate:sql];
+    [_userDatabase executeUpdate:sql];
     
     NSArray *netWorkStatus = @[KWifiNetworkKey,KWwanNetworkKey,KNoNetworkKey];
     NSArray *comment = @[@"使用WIFI的次数",@"使用普通网络的次数",@"不使用网络的次数"];
     
     sql = @"INSERT INTO NetworkInfo(status,count,comment) VALUES (?,?,?)";
     for (int index = 0; index < 3; index++){
-        [_tmpUserDatabase executeUpdate:sql withArgumentsInArray:@[netWorkStatus[index],@0,comment[index]]];
+        [_userDatabase executeUpdate:sql withArgumentsInArray:@[netWorkStatus[index],@0,comment[index]]];
+    }
+}
+
+#pragma mark Insert UserDatabase Data
+- (void)saveMallInfo:(id)mall {
+    NSString *identify = nil;
+    id <YTMall> tmpMall = mall;
+    if ([mall isMemberOfClass:[YTCloudMall class]]) {
+        identify = [mall localDB];
+    }else if([mall isMemberOfClass:[YTLocalMall class]]){
+        identify = [mall identifier];
+    }else{
+        return;
+    }
+    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify,count FROM MallInfo WHERE identify = ?",identify];
+    if (![result next]){
+        [_userDatabase executeUpdate:@"INSERT INTO MallInfo('identify','name','count') VALUES(?,?,?)",identify,[tmpMall mallName],@0];
+    }else{
+        NSInteger count = [result intForColumn:@"count"];
+        [_userDatabase executeUpdate:@"UPDATE MallInfo SET count = ? WHERE identify = ?",[NSNumber numberWithInteger:count + 1],identify];
+    }
+}
+
+- (void)saveMerchantInfo:(id)merchant {
+    NSString *identify = nil;
+    NSString *name = nil;
+    NSString *comment = nil;
+    if ([merchant isKindOfClass:[YTCloudMerchant class]]) {
+        identify = [(YTCloudMerchant *)merchant uniId];
+        name = [(YTCloudMerchant *)merchant merchantName];
+        comment = [[(YTCloudMerchant *)merchant mall] mallName];
+    }else if([merchant isKindOfClass:[YTLocalMerchantInstance class]]){
+        identify = [(YTLocalMerchantInstance *)merchant uniId];
+        name = [(YTLocalMerchantInstance *)merchant merchantLocationName];
+        comment = [[(YTLocalMerchantInstance *)merchant mall] mallName];
+    }else{
+        return;
+    }
+    
+    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify,count FROM MerchantInfo WHERE identify = ?",identify];
+    if ([result next]) {
+        NSInteger count = [result intForColumn:@"count"];
+        [_userDatabase executeUpdate:@"UPDATE MerchantInfo SET count = ? WHERE identify = ?",[NSNumber numberWithInteger:count + 1],identify];
+    }else{
+        [_userDatabase executeUpdate:@"INSERT INTO MerchantInfo('identify','name','count','comment') VALUES(?,?,?,?)",identify,name,@0,comment];
+    }
+}
+
+- (void)saveLocationInfo:(CLLocationCoordinate2D)coord name:(NSString *)name {
+    NSNumber *isNearMall = @0;
+    if (name) {
+        isNearMall = @1;
+    }else{
+        name = @"";
+    }
+    NSNumber *latitude = [NSNumber numberWithDouble:coord.latitude];
+    NSNumber *longitude = [NSNumber numberWithDouble:coord.longitude];
+    [_userDatabase executeUpdate:@"INSERT INTO LocationInfo('latitude','longitude','isNearMall','mallName','date') VALUES(?,?,?,?,?)",latitude,longitude,isNearMall,name,_date];
+}
+
+-(void)saveBeaconInfo:(ESTBeacon *)beacon {
+    NSString *identify = [NSString stringWithFormat:@"%@-%@",[beacon.major stringValue],[beacon.minor stringValue]];
+    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify FROM BeaconInfo WHERE identify = ?",identify];
+    if ([result next]) {
+        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ?",_date,[beacon.batteryLevel stringValue]];
+    }else{
+        [_userDatabase executeUpdate:@"INSERT INTO BeaconInfo('identify','date','power') VALUES (?,?,?)",identify,_date,[beacon.batteryLevel stringValue]];
     }
 }
 

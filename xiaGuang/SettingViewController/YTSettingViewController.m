@@ -7,13 +7,7 @@
 //
 
 #import "YTSettingViewController.h"
-#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#import "YTUserAgreementViewController.h"
-#import "YTInvitationViewController.h"
-#import "YTAboutViewController.h"
-#import "YTFeedBackViewController.h"
-#import "YTMallManageListViewController.h"
-#import <POP.h>
+
 @interface YTSettingViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     CGFloat _duration;
@@ -65,7 +59,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"Cell"];
-    [cell pop_animationForKey:@"show"];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     UIView *selectView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -228,9 +221,6 @@
 }
 
 -(void)dealloc{
-    for (UITableViewCell *tmpCell in [_tableView visibleCells]) {
-        [tmpCell pop_removeAllAnimations];
-    }
     NSLog(@"settingDealloc");
 }
 @end

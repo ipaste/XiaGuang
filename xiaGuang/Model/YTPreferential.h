@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AVObject.h"
 #import <AFNetworking/AFNetworking.h>
+#import "AVObject.h"
 
 typedef NS_ENUM(NSInteger, YTPreferentialType) {
-    YTPreferentialTypeSole,
-    YTPreferentialTypeOther
+    YTPreferentialTypeOther = 0,
+    YTPreferentialTypeSole
 };
 
 @class YTCloudMerchant;

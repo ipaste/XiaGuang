@@ -10,8 +10,7 @@
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
 #import "YTMallManageListViewController.h"
-#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#import "YTMallmanageCell.h"
+
 
 @interface YTMallManageListViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 
@@ -28,11 +27,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    YTCity *defaultCity = [YTCity defaultCity];
     AVQuery *query = [AVQuery queryWithClassName:@"Region"];
-    AVQuery *cityQuery = [AVQuery queryWithClassName:@"City"];
-    [cityQuery whereKey:@"cityName" equalTo:@"深圳"];
-    [query whereKey:@"city" matchesQuery:cityQuery];
+    [query whereKey:@"cityId" equalTo:[NSNumber numberWithInteger:defaultCity.identify]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         float xOffset = 0;
         _nameArr = [NSMutableArray new];
