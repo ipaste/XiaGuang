@@ -290,10 +290,10 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         return;
     }
     
-    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify,count FROM MerchantInfo identify = ?",identify];
+    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify,count FROM MerchantInfo WHERE identify = ?",identify];
     if ([result next]) {
         NSInteger count = [result intForColumn:@"count"];
-        [_userDatabase executeUpdate:@"UPDATE MerchantInfo SET count = ? WHERE identify = ?",[NSNumber numberWithInteger:count],identify];
+        [_userDatabase executeUpdate:@"UPDATE MerchantInfo SET count = ? WHERE identify = ?",[NSNumber numberWithInteger:count + 1],identify];
     }else{
         [_userDatabase executeUpdate:@"INSERT INTO MerchantInfo('identify','name','count','comment') VALUES(?,?,?,?)",identify,name,@0,comment];
     }

@@ -8,7 +8,7 @@
 
 #import "YTCityAndRegion.h"
 @interface YTCity(){
-    NSString *_identify;
+    NSInteger _identify;
     NSString *_name;
     NSArray *_regions;
     FMDatabase *_db;
@@ -17,7 +17,7 @@
 @end
 
 @implementation YTCity
-- (NSString *)identify{
+- (NSInteger)identify{
     return _identify;
 }
 
@@ -28,7 +28,7 @@
 - (NSArray *)regions{
     if (!_regions) {
         NSMutableArray *regions = [NSMutableArray new];
-        FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE city = ? and isExistence = 1 ORDER BY queue",_identify];
+        FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE city = ? and isExistence = 1 ORDER BY identify",[NSNumber numberWithInteger:_identify]];
         while ([result next]) {
             YTRegion *region = [[YTRegion alloc]initWithSqlResultSet:result];
             [regions addObject:region];
@@ -50,7 +50,7 @@
 - (instancetype)initWithSqlResultSet:(FMResultSet *)result{
     self = [super init];
     if (self) {
-        _identify = [result stringForColumn:@"identify"];
+        _identify = [result intForColumn:@"identify"];
         _name = [result stringForColumn:@"name"];
         if (!_db) {
             _db = [YTDataManager defaultDataManager].database;
@@ -59,18 +59,18 @@
     return self;
 }
 
-- (instancetype)initWithCloudObject:(AVObject *)object{
+- (instancetype)initWithIdentify:(NSInteger)identify{
     _db = [YTDataManager defaultDataManager].database;
-    FMResultSet *result = [_db executeQuery:@"SELECT * FROM City WHERE identify = ?",object.objectId];
+    FMResultSet *result = [_db executeQuery:@"SELECT * FROM City WHERE identify = ?",[NSNumber numberWithInteger:identify]];
     [result next];
     return [self initWithSqlResultSet:result];
 }
 @end
 
 @interface YTRegion(){
-    NSString *_identify;
+    NSInteger _identify;
     NSString *_name;
-    NSString *_cityIdentify;
+    NSInteger _cityIdentify;
     YTCity *_city;
     FMDatabase *_db;
 }
@@ -78,43 +78,45 @@
 @end
 
 @implementation YTRegion
-- (NSString *)identify{
+- (NSInteger)identify{
     return _identify;
 }
 
 - (NSString *)name{
     return _name;
 }
+
 - (YTCity *)city {
     if (!_city) {
-        FMResultSet *result = [_db executeQuery:@"SELECT * FROM City WHERE identify = ?",_cityIdentify];
+        FMResultSet *result = [_db executeQuery:@"SELECT * FROM City WHERE identify = ?",[NSNumber numberWithInteger:_cityIdentify]];
         _city = [[YTCity alloc]initWithSqlResultSet:result];
     }
     return _city;
 }
 
-- (instancetype)initWithCloudObject:(AVObject *)object{
+- (instancetype)initWithIdentify:(NSInteger)identify{
     _db = [YTDataManager defaultDataManager].database;
-    FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE identify = ? ORDER BY queue",object.objectId];
+    FMResultSet *result = [_db executeQuery:@"SELECT * FROM Region WHERE identify = ? ORDER BY identify",[NSNumber numberWithInteger:identify]];
     [result next];
     return [self initWithSqlResultSet:result];
 }
 
--(instancetype)initWithSqlResultSet:(FMResultSet *)result{
+- (instancetype)initWithSqlResultSet:(FMResultSet *)result{
     self = [super init];
     if (self) {
-        _identify = [result stringForColumn:@"identify"];
+        _identify = [result intForColumn:@"identify"];
         _name = [result stringForColumn:@"name"];
-        _cityIdentify = [result stringForColumn:@"city"];
+        _cityIdentify = [result intForColumn:@"city"];
         if (!_db) {
             _db = [YTDataManager defaultDataManager].database;
         }
     }
     return self;
 }
+
 - (BOOL)isEqual:(YTRegion *)object{
     BOOL equalName = [object.name isEqualToString:self.name];
-    BOOL equalIdentify = [object.identify isEqualToString:self.identify];
+    BOOL equalIdentify = object.identify == self.identify ? true:false;
     return (equalIdentify && equalName);
 }
 

@@ -87,7 +87,8 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 - (YTRegion *)region{
     if (!_region) {
-        _region = [[YTRegion alloc]initWithCloudObject:_internalObject[MALL_CLASS_REGION]];
+        
+        _region = [[YTRegion alloc]initWithIdentify:[_internalObject[MALL_CLASS_REGION] integerValue]];
     }
     return _region;
 }

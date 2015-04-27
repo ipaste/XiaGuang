@@ -251,12 +251,12 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
 }
 
--(void)back:(UIButton *)sender{
+- (void)back:(UIButton *)sender{
     [_searchView removeFromSuperview];
     [self.navigationController popViewControllerAnimated:true];
 }
 
--(void)jumpToSearch:(UIButton *)sender{
+- (void)jumpToSearch:(UIButton *)sender{
     [_searchView showSearchViewWithAnimation:YES];
 }
 
@@ -284,24 +284,44 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 }
 
 - (void)getSale{
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:@"http://xiaguang.avosapps.com/coupon" parameters:@{@"count":@3,@"mallId":[_mall identifier]} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if (responseObject) {
-            NSArray *objects = responseObject;
+    AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+    [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
+    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
+    query.limit = 3;
+    [query whereKey:@"switch" equalTo:@YES];
+    [query whereKey:@"mall" matchesQuery:mallQuery];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
             NSMutableArray *preferentials = [NSMutableArray array];
-            for (NSDictionary *object in objects) {
-                YTPreferential *preferential = [[YTPreferential alloc]initWithDaZhongDianPing:object];
+            for (AVObject *object in objects) {
+                YTPreferential *preferential = [[YTPreferential alloc]initWithCloudObject:object];
                 [preferentials addObject:preferential];
             }
-            _sales = preferentials.copy;
-            [self reloadSaleData];
-            [self checkAnimationisStop];
-        }else{
-            if (_stateView.type != YTStateTypeNoNetWork) {
-                _stateView.type = YTStateTypeNoNetWork;
+            if (preferentials.count < 3) {
+                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                [manager GET:@"http://xiaguang.avosapps.com/coupon" parameters:@{@"count":[NSNumber numberWithInteger:3 - preferentials.count],@"mallId":[_mall identifier]} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    if (responseObject) {
+                        NSArray *objects = responseObject;
+                        for (NSDictionary *object in objects) {
+                            YTPreferential *preferential = [[YTPreferential alloc]initWithDaZhongDianPing:object];
+                            [preferentials addObject:preferential];
+                        }
+                        _sales = preferentials.copy;
+                        [self reloadSaleData];
+                        [self checkAnimationisStop];
+                    }else{
+                        if (_stateView.type != YTStateTypeNoNetWork) {
+                            _stateView.type = YTStateTypeNoNetWork;
+                        }
+                    }
+                } failure:nil];
             }
+        }else{
+            _stateView.type = YTStateTypeNoNetWork;
         }
-    } failure:nil];
+    }];
+
+    
 }
 
 - (void)checkAnimationisStop{
@@ -325,18 +345,19 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 
 - (void)reloadSaleData{
     [_saleView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass:[YTSaleView class]]) {
+        if ([obj isKindOfClass:[YTSaleView class]] && [(UIView *)obj tag] <= _sales.count - 1) {
             YTSaleView *saleView = obj;
             YTPreferential *preferential = _sales[saleView.tag];
             [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
-                [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-                    if (!error) {
-                        [saleView setSaleViewWithMerchantImage:result merchantName:[merchant merchantName] saleInfo:[preferential preferentialInfo] isSole:[preferential type]];
-                    }
-                }];
+                if (merchant) {
+                    [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+                        if (!error) {
+                            [saleView setSaleViewWithMerchantImage:result merchantName:[merchant merchantName] saleInfo:[preferential preferentialInfo] isSole:[preferential type]];
+                        }
+                    }];
+                }
             }];
         }
-        
     }];
 }
 

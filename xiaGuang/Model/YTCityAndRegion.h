@@ -10,22 +10,22 @@
 #import "YTDataManager.h"
 
 @interface YTCity : NSObject
-@property (readonly ,nonatomic) NSString *identify;
+@property (readonly ,nonatomic) NSInteger identify;
 @property (readonly ,nonatomic) NSString *name;
 @property (readonly ,nonatomic) NSArray *regions;
 
 + (instancetype)defaultCity;
 - (instancetype)initWithSqlResultSet:(FMResultSet *)result;
-- (instancetype)initWithCloudObject:(AVObject *)object;
+- (instancetype)initWithIdentify:(NSInteger)identify;
 @end
 
 
 @interface YTRegion : NSObject
-@property (readonly ,nonatomic) NSString *identify;
+@property (readonly ,nonatomic) NSInteger identify;
 @property (readonly ,nonatomic) NSString *name;
 @property (readonly ,nonatomic) YTCity *city;
 
 - (instancetype)initWithSqlResultSet:(FMResultSet *)result;
-- (instancetype)initWithCloudObject:(AVObject *)object;
+- (instancetype)initWithIdentify:(NSInteger)identify;
 - (BOOL)isEqual:(YTRegion *)object;
 @end

@@ -521,7 +521,7 @@
     _malls = [_mallDict cloudMallsFromRegion:region].copy;
     
     if (_malls.count < 3) {
-         _recommendMalls = [_mallDict threeRandomMallDoesNotContainRegion:region].copy;
+         _recommendMalls =  [_mallDict threeRandomMallDoesNotContainRegion:region].copy;
     }else{
         _recommendMalls = nil;
     }
