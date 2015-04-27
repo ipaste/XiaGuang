@@ -11,19 +11,14 @@
 
 #import "YTMallManageListViewController.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTMallmanageCell.h"
 
-@interface YTMallManageListViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate> {
-    UILabel *_label;
-    UIButton *_downloadBtn;
-    
-}
+@interface YTMallManageListViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) UIScrollView *mainScrollView;
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) UIView *lineView;
-@property (nonatomic,strong) UIProgressView *downloadPrgView;
-
 
 @property (nonatomic,retain)NSMutableArray *nameArr;
 
@@ -33,10 +28,41 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSArray *arr = @[@"全部",@"福田",@"南山",@"罗湖",@"宝安",@"龙岗",@"盐田"];
-    _nameArr = [NSMutableArray arrayWithArray:arr];
-    _selectedTabID = 100;
     
+    AVQuery *query = [AVQuery queryWithClassName:@"Region"];
+    AVQuery *cityQuery = [AVQuery queryWithClassName:@"City"];
+    [cityQuery whereKey:@"cityName" equalTo:@"深圳"];
+    [query whereKey:@"city" matchesQuery:cityQuery];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        float xOffset = 0;
+        _nameArr = [NSMutableArray new];
+        
+        for (int index = 0;index < objects.count; index++) {
+            //NSInteger tag = index - 1;
+            UIButton *mallBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            mallBtn.backgroundColor = [UIColor clearColor];
+            mallBtn.tag = 100 + index;
+            mallBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+            mallBtn.frame = CGRectMake(xOffset, 0, SCREEN_WIDTH / 6, CGRectGetHeight(self.scrollView.frame));
+            [mallBtn setTitleColor:[UIColor colorWithString:@"666666"] forState:UIControlStateNormal];
+            [mallBtn setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateSelected];
+            //            if (tag == -1) {
+            //                mallBtn.selected = YES;
+            //                [mallBtn setTitle:@"全城" forState:UIControlStateNormal];
+            //            }else{
+            YTRegion *region = [[YTRegion alloc]initWithCloudObject:objects[index]];
+            [mallBtn setTitle:region.name forState:UIControlStateNormal];
+            [_nameArr addObject:region];
+            //            }
+            xOffset += mallBtn.frame.size.width+ 44.0 ;
+            _scrollView.contentSize = CGSizeMake(xOffset, scrollH);
+            //[mallBtn addTarget:self action:@selector(selectBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [_scrollView addSubview:mallBtn];
+            
+        }
+    }];
+    
+    _selectedTabID = 100;
     float contentH = 0;
     // Do any additional setup after loading the view.
     self.navigationItem.title = @"商城管理列表";
@@ -44,7 +70,7 @@
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     
-    //关闭scrollView往下移动
+    //关闭scrollView往下移动的功能
     self.automaticallyAdjustsScrollViewInsets = NO;
     _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.0, CGRectGetMaxY(self.navigationController.navigationBar.frame),CGRectGetWidth(self.view.frame) , scrollH)];
     _scrollView.delegate = self;
@@ -53,25 +79,7 @@
     _scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_scrollView];
     
-    float xOffset = 0;
-    for (int i = 0; i < _nameArr.count; i++) {
-        UIButton *mallBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        mallBtn.backgroundColor = [UIColor clearColor];
-        [mallBtn setTitle:_nameArr[i] forState:UIControlStateNormal];
-        mallBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        mallBtn.frame = CGRectMake(xOffset, 0, SCREEN_WIDTH / 6, CGRectGetHeight(self.scrollView.frame));
-        [mallBtn setTitleColor:[UIColor colorWithString:@"666666"] forState:UIControlStateNormal];
-        [mallBtn setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateSelected];
-        if (i == 0) {
-            mallBtn.selected = YES;
-        }
-        xOffset += mallBtn.frame.size.width;
-        mallBtn.tag = 100 + i;
-        [mallBtn addTarget:self action:@selector(selectBtn:) forControlEvents:UIControlEventTouchUpInside];
-        [_scrollView addSubview:mallBtn];
-        
-    }
-    _scrollView.contentSize = CGSizeMake(xOffset, scrollH);
+    
     
     contentH += CGRectGetMaxY(_scrollView.frame);
     
@@ -100,8 +108,8 @@
 
     }
     
+   
     
-
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -113,50 +121,12 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray *mallArr = @[@"海岸城",@"欢乐海岸",@"KKMALL",@"cocopark 福田",@"益田假日广场",@"京基百纳广场.南山",@"深国投广场",@"万象城",@"喜荟城"];
-    _nameArr = [NSMutableArray arrayWithArray:mallArr];
-    
-    static  NSString *cellIdentifier = @"cellIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    static  NSString *cellIdentifier = @"cellIdetifier";
+    YTMallmanageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        
-       UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(26.0f, 20.0f, 180.0f, 20.0f)];
-        label.backgroundColor = [UIColor clearColor];
-        label.tag = 1;
-        [cell.contentView addSubview:label];
-        
-        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 26.0f - 30.0f, 18.0f, 30.0f, 20.0f)];
-        btn.backgroundColor = [UIColor redColor];
-        btn.tag = 2;
-        [cell addSubview:btn];
-        
-        UIProgressView *progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
-        progressView.frame = CGRectMake(label.frame.size.width + 26.0, 25.0, 50.0f, 50.0f);
-        progressView.backgroundColor = [UIColor clearColor];
-        progressView.tag = 3;
-        [cell addSubview:progressView];
+        cell = [[YTMallmanageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    // mall名称
-    _label = (UILabel *)[cell viewWithTag:1];
-    _label.textColor = [UIColor colorWithString:@"333333"];
-    for (int i =0; i<_nameArr.count; i++) {
-        if (indexPath.row == i) {
-            _label.text = _nameArr[i];
-            _label.font = [UIFont systemFontOfSize:15];
-        }
-    }
-    // 下载按钮
-    _downloadBtn = (UIButton *)[cell viewWithTag:2];
-    [_downloadBtn setImage:[UIImage imageNamed:@"icon_download"] forState:UIControlStateNormal];
-    
-    //进度条
-    _downloadPrgView = (UIProgressView *)[cell viewWithTag:3];
-    _downloadPrgView.progressTintColor = [UIColor orangeColor];
-    //_downloadPrgView.trackTintColor = [UIColor redColor];
-    _downloadPrgView.progress = 0.4;
-    
     
     return cell;
 }
@@ -166,10 +136,18 @@
     cell.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     
 }
-
+/*
 // btn 点击触发
 - (void)selectBtn: (UIButton *)sender {
-    
+    switch (sender.tag) {
+        case -1:
+            
+            break;
+        default:
+            YTRegion *region = _nameArr[sender.tag];
+            
+            break;
+    }
     if (sender.tag != _selectedTabID) {
         UIButton *preButton = (UIButton *)[_scrollView viewWithTag:_selectedTabID];
         preButton.selected = NO;
@@ -214,7 +192,7 @@
 
     
     [_tableView reloadData];
-}
+}*/
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
@@ -223,8 +201,6 @@
         
     }
 }
-
-
 
 //返回按钮
 -(UIView *)leftBarButton{
@@ -239,7 +215,6 @@
 -(void)back:(UIButton *)sender{
     [self.navigationController popViewControllerAnimated:true];
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

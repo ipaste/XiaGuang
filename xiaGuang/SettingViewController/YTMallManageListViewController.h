@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <AVObject.h>
+#import <AVQuery.h>
+#import "YTCityAndRegion.h"
 @interface YTMallManageListViewController : UIViewController
 
 @property (nonatomic, assign) NSInteger selectedTabID;
