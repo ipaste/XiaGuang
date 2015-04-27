@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTLocalMerchantInstance.h"
 @class YTMultipleMerchantView;
 @protocol YTMultipleMerchantDelegate <NSObject>

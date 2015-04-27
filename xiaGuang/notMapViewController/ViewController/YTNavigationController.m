@@ -22,9 +22,10 @@
     return self;
 }
 
+-(UIStatusBarStyle)preferredStatusBarStyle{
 
-
--(void)dealloc{
-    NSLog(@"ytNavigationController destroyed");
+    return UIStatusBarStyleLightContent;
 }
+
+
 @end

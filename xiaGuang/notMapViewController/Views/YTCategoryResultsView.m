@@ -55,7 +55,6 @@
             }
         }
         
-        
         _categoryResltsTableView = [[YTCategoryResultsTableView alloc]initWithFrame:CGRectMake(0, 40, CGRectGetWidth(frame), 0)];
         _categoryResltsTableView.delegate = self;
         [self addSubview:_categoryResltsTableView];
@@ -122,11 +121,11 @@
     
     switch (sender.tag) {
         case 0://所有分类
-            [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllCategory mallName:nil key:sender.titleLabel.text];
+            [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllCategory malllocalId:nil key:sender.titleLabel.text];
             break;
         case 1:
             if (!_mall) {
-                [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllMall mallName:nil key:sender.titleLabel.text];
+                [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllMall malllocalId:nil key:sender.titleLabel.text];
             }else{
                 [self allFloor];
             }
@@ -139,7 +138,7 @@
     if (mallName == nil) {
         mallName = _mallButton.titleLabel.text;
     }
-    [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllFloor mallName:mallName  key:_curSelectButton.titleLabel.text];
+    [_categoryResltsTableView setShowStyle:YTCategoryResultsStyleAllFloor malllocalId:_mallUniId  key:_curSelectButton.titleLabel.text];
     
 }
 
@@ -163,7 +162,7 @@
             case 1:
             {
                 if ([_curSelectButton isEqual:tempButton]) {
-                    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+                    FMDatabase *db = [YTDataManager defaultDataManager].database;
                     
                     if (!_mall){//全部商场
                         if (key == nil) {
@@ -202,11 +201,9 @@
                 }
                 
             }
-                
                 break;
         }
     }
-    
     
     if ([category isEqualToString:@"全部分类"]) {
         category = @"全部";

@@ -7,11 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTMall.h"
-#import "YTMallPositionView.h"
-#import "YTMallPosistionViewController.h"
+#import "YTMallDict.h"
+#import "YTMallPositionViewController.h"
 #import "YTPreferential.h"
-@interface YTMallInfoViewController : UIViewController
-@property (weak,nonatomic) id<YTMall> mall;
-@property (nonatomic) BOOL isPreferential;
+#import "YTSaleView.h"
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTMoreCategoryViewController.h"
+#import "YTMajorArea.h"
+#import "YTCloudMerchant.h"
+#import "YTCategory.h"
+#import "YTDataManager.h"
+#import "YTSearchView.h"
+#import "YTMerchantViewCell.h"
+#import "YTMerchantInfoViewController.h"
+#import "YTResultsViewController.h"
+#import "YTMapViewController2.h"
+#import "YTStateView.h"
+
+@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate>
+- (instancetype)initWithMallIdentify:(NSString *)identify;
 @end

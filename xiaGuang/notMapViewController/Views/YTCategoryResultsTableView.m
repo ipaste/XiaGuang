@@ -46,7 +46,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.hidden = YES;
         _allMall = [NSMutableArray array];
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *result = [db executeQuery:@"select * from Mall"];
         while ([result next]) {
             YTLocalMall *tmpMall = [[YTLocalMall alloc]initWithDBResultSet:result];
@@ -63,15 +63,15 @@
     self.layer.masksToBounds = YES;
 }
 
--(void)setShowStyle:(YTCategoryResultsStyle)style mallName:(NSString *)mallName key:(NSString *)key{
+-(void)setShowStyle:(YTCategoryResultsStyle)style malllocalId:(NSString *)localId key:(NSString *)key{
     self.hidden = NO;
-   __block CGRect frame = self.frame;
+    __block CGRect frame = self.frame;
     frame.size.height = 0;
     self.frame = frame;
     
     _style = style;
     _Key = key;
-    CGFloat height = 0;
+    __block CGFloat height = 0;
     if (style == YTCategoryResultsStyleAllCategory) {
         _mallView.hidden = YES;
         _floorView.hidden = YES;
@@ -79,7 +79,7 @@
         _subcategoryView.hidden = NO;
         _subcategoryView.delegate = self;
         _subcategoryView.dataSource = self;
-        _categoryView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame) / 2, 6 * 44 + 10);
+        _categoryView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame) / 2, 5 * 44 + 22);
         height = CGRectGetHeight(_categoryView.frame);
         _categoryView.delegate = self;
         _categoryView.dataSource = self;
@@ -108,27 +108,21 @@
         _floorNames = [NSMutableArray array];
         [_floorNames addObject:@"全部楼层"];
         [_floorObjects addObject:[NSNull null]];
-        for (id<YTMall> mall in _allMall) {
-            
-            if ([[mall mallName] isEqualToString:mallName]) {
-                
-                for(id<YTBlock> block in [mall blocks]){
-                    
-                    for (id<YTFloor> floor in [block floors]) {
-                        [_floorNames addObject:[floor floorName]];
-                        [_floorObjects addObject:floor];
-                    }
-                }
-
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.identifier == %@",localId];
+        id<YTMall> mall =  [_allMall filteredArrayUsingPredicate:predicate].firstObject;
+        
+        [[mall blocks] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            for (id<YTFloor> floor in [obj floors]) {
+                [_floorNames addObject:[floor floorName]];
+                [_floorObjects addObject:floor];
             }
-             
-            
-            
-        }
-        height = 44 * _floorObjects.count > 274 ? 274:44 * _floorObjects.count;
-        _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
-        [_floorView reloadData];
-
+            if (idx == [mall blocks].count - 1){
+                height = 44 * _floorObjects.count >  5 * 44 + 22 ?  5 * 44 + 22:44 * _floorObjects.count;
+                _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
+                [_floorView reloadData];
+            }
+        }];
+        
     }else if (style == YTCategoryResultsStyleAllMall){
         _mallView.hidden = NO;
         _floorView.hidden = YES;
@@ -149,8 +143,8 @@
         }
         [_mallNames insertObject:@"全部商圈" atIndex:0];
         [_mallObjects insertObject:[NSNull null] atIndex:0];
-        height = 44 * _mallObjects.count > 274 ? 274:44 * _mallObjects.count;
-        _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 44 * _mallObjects.count);
+        height = 44 * _mallObjects.count >  5 * 44 + 22 ?  5 * 44 + 22:44 * _mallObjects.count;
+        _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
         [_mallView reloadData];
     }
     [UIView animateWithDuration:.5 animations:^{
@@ -183,7 +177,7 @@
             _curCategoryCell = cell;
             if(![categoryKey isEqualToString:@"全部分类"]){
                 _subObjects = cell.category.subText;
-            
+                
             }else{
                 _subObjects = nil;
             }
@@ -272,7 +266,7 @@
         YTSelectCategoryViewCell *cell = (YTSelectCategoryViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.isSelect = YES;
         _curCategoryCell = cell;
-
+        
         [self.delegate selectKey:cell.category.text];
     }
     
@@ -308,7 +302,7 @@
         NSString *floorUniId = nil;
         id<YTFloor> tmpFloor = _floorObjects[indexPath.row];
         if (![tmpFloor isMemberOfClass:[NSNull class]]) {
-           floorUniId = [tmpFloor uniId];
+            floorUniId = [tmpFloor uniId];
         }
         [self.delegate selectKey:floorUniId];
     }

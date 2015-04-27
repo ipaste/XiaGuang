@@ -17,7 +17,8 @@ typedef enum {
 	MJRefreshStatePulling = 1, // 松开就可以进行刷新的状态
 	MJRefreshStateNormal = 2, // 普通状态
 	MJRefreshStateRefreshing = 3, // 正在刷新中的状态
-    MJRefreshStateWillRefreshing = 4
+    MJRefreshStateWillRefreshing = 4,
+    MJRefreshStateNotRefreshing = 5
 } MJRefreshState;
 
 #pragma mark - 控件的类型

@@ -32,4 +32,11 @@
                            mapView:(RMMapView *)view
                          majorArea:(id<YTMajorArea>)majorArea;
 
++ (NSArray *)graphChangeStartPoint:(CGPoint)startPoint
+                             graph:(NSArray *)graph;
+
++ (CGPoint)projectPoint:(CGPoint)point
+                 toNode:(CGPoint)node1
+                andNode:(CGPoint)node2;
+
 @end

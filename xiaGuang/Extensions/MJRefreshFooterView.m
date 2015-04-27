@@ -183,6 +183,13 @@
 			break;
         }
             
+        case MJRefreshStateNotRefreshing:
+        {
+            [UIView animateWithDuration:0.8 animations:^{
+                self.scrollView.mj_contentInsetBottom = self.scrollViewOriginalInset.bottom;
+            }];
+            break;
+        }
         default:
             break;
 	}

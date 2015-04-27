@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTMerchant.h"
+#import "YTCloudMerchant.h"
 @interface YTMerchantViewCell : UITableViewCell
 @property (strong,nonatomic) id<YTMerchant> merchant;
 @property (strong,nonatomic) UIColor *titleColor;

@@ -24,6 +24,7 @@
 @synthesize inMinorArea;
 @synthesize coordinate;
 @synthesize identifier;
+@synthesize type;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -44,7 +45,7 @@
 -(id<YTMajorArea>)majorArea{
     if(_tmpMajorArea == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpMajorAreaId];
@@ -60,7 +61,7 @@
     
     if(_tmpMinorArea == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MinorArea where minorAreaId = ?",_tmpMinorAreaId];
@@ -92,6 +93,10 @@
 
 -(NSString *)iconName{
     return @"nav_ico_11";
+}
+
+-(YTTransportType)type{
+    return YTTransportBothWays;
 }
 
 

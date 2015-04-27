@@ -13,6 +13,7 @@
 @protocol YTSearchViewDelegate <NSObject>
 @optional
 -(void)searchCancelButtonClicked;
+-(void)startSearch;
 @required
 -(void)selectedUniIds:(NSArray *)uniIds;
 @end

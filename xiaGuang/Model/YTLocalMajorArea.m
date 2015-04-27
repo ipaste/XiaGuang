@@ -27,6 +27,7 @@
     id<YTFloor> _tmpFloor;
     
     double _tmpWorldToMapRatio;
+    int _tmpRank;
 }
 
 @synthesize mapName;
@@ -40,6 +41,7 @@
 @synthesize serviceStations;
 @synthesize exits;
 @synthesize isParking;
+@synthesize rank;
 
 -(id)initWithDBResultSet:(FMResultSet *)findResultSet{
     if(findResultSet != nil){
@@ -52,6 +54,7 @@
             _tmpIsParking = [findResultSet stringForColumn:@"isParking"];
             _tmpUnId = [findResultSet stringForColumnIndex:@"unId"];
             _tmpWorldToMapRatio = [findResultSet doubleForColumn:@"worldToMapDistRatio"];
+            _tmpRank = [findResultSet intForColumn:@"rank"];
         }
     }
     return self;
@@ -65,7 +68,7 @@
 -(NSArray *)elevators{
     if(_tmpElevators == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Elevator where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpElevators = [[NSMutableArray alloc] init];
@@ -83,7 +86,7 @@
 -(NSArray *)bathrooms{
     if(_tmpBathrooms == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Bathroom where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpBathrooms = [[NSMutableArray alloc] init];
@@ -101,7 +104,7 @@
 -(NSArray *)exits{
     if(_tmpExits == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Exit where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpExits = [[NSMutableArray alloc] init];
@@ -122,7 +125,7 @@
     if(_tmpMerchantAreas == nil){
         
 
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where latitude is not null and majorAreaId = ? and uniId != 0 ",_tmpMajorAreaId];
         
         _tmpMerchantAreas = [[NSMutableArray alloc] init];
@@ -140,7 +143,7 @@
 -(NSArray *)minorAreas{
     if(_tmpMinorAreas == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from MinorArea where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpMinorAreas = [[NSMutableArray alloc] init];
@@ -158,7 +161,7 @@
 -(NSArray *)escalators{
     if(_tmpEscalators == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Escalator where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpEscalators = [[NSMutableArray alloc] init];
@@ -176,7 +179,7 @@
 -(NSArray *)serviceStations{
     if(_tmpServiceStations == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from ServiceStation where majorAreaId = ?",_tmpMajorAreaId];
         
         _tmpServiceStations = [[NSMutableArray alloc] init];
@@ -198,7 +201,7 @@
 -(id<YTFloor>)floor{
     if(_tmpFloor == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Floor where floorId = ?",_tmpFloorId];

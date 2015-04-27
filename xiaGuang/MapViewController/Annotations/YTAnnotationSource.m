@@ -113,7 +113,7 @@
         }
     }
     
-    double nomarlizedMaxDistance = (mapView.zoom-5.0) * -2.5;
+    double nomarlizedMaxDistance = (mapView.zoom - 5.0) * -2.5;
     if (curMinDistance > nomarlizedMaxDistance) {
         return nil;
     }

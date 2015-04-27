@@ -17,7 +17,7 @@
     RMMapView *_mapView;
 }
 
-- (void)loadPESGraph:(NSString *)fileName;
+- (BOOL)loadPESGraph:(NSString *)fileName;
 
 - (CGPoint)projectPoint:(CGPoint)point
                  toNode:(PESGraphNode *)node1
@@ -33,15 +33,21 @@
     if (self) {
         _graph = [[PESGraph alloc] init];
         _mapView = mapView;
-        [self loadPESGraph:majorArea.mapName];
+        _majorArea = majorArea;
+        if([self loadPESGraph:majorArea.mapName]){
+            return self;
+        }
+        else{
+            return nil;
+        }
     }
     return self;   
 }
 
-- (void)loadPESGraph:(NSString *)fileName {
+- (BOOL)loadPESGraph:(NSString *)fileName {
     NSString *file = [[NSBundle mainBundle] pathForResource:fileName ofType:@"csv"];
     if (file == nil) {
-        return;
+        return NO;
     }
     
     NSString *content = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
@@ -67,8 +73,7 @@
         double n2_x = [components[3] doubleValue];
         double n2_y = [components[4] doubleValue];
         
-        CGPoint adjustedCoord2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:CLLocationCoordinate2DMake(n2_y, n2_x)
-                                                                         mapView:_mapView];
+        CGPoint adjustedCoord2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:CLLocationCoordinate2DMake(n2_y, n2_x) mapView:_mapView];
         
         PESGraphNode *node2 = [self makeNodeWithPoint:adjustedCoord2];
         
@@ -82,6 +87,8 @@
         
         [_graph addBiDirectionalEdge:edge fromNode:node1 toNode:node2];
     }
+    
+    return YES;
 }
 
 
@@ -101,6 +108,20 @@
     double x0 = point.x;
     double y0 = point.y;
     
+    double cross = (x2-x1)*(x0-x1)+(y2-y1)*(y0-y1);
+    
+    if (cross <= 0) {
+        return CGPointMake(x1, y1);
+    }
+    
+    double d2 = (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+    if (cross >= d2) {
+        return CGPointMake(x2, y2);
+    }
+    
+    double r0 = cross/d2;
+    return CGPointMake(x1+(x2-x1)*r0, y1+(y2-y1)*r0);
+    /*
     if (abs(x1 - x2) <= 0.1) {
         // vertical
         x = x1;
@@ -151,7 +172,7 @@
         }
     } else {
         return CGPointMake(x, y);
-    }
+    } */
 }
 
 - (NSDictionary *)projectToGraphFromPoint:(CGPoint)point {
@@ -161,7 +182,8 @@
 - (NSDictionary *)projectToGraphFromPoint:(CGPoint)point
                              betweenNodes:(NSArray *)nodes {
     
-    __block double minDist = INFINITY;
+    __block double minDist = HUGE;
+
     __block NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     
     [self iterateEdgesWithNodeRestrictions:nodes callback:^(PESGraphNode *node1, PESGraphNode *node2, PESGraphEdge *edge) {
@@ -170,7 +192,6 @@
         
         if (dist < minDist) {
             minDist = dist;
-            
             result[kYTMapGraphProjectionPointKey] = [NSValue valueWithCGPoint:projectedP];
             result[kYTMapGraphProjectionNode1Key] = node1;
             result[kYTMapGraphProjectionNode2Key] = node2;
@@ -216,7 +237,7 @@
                                          to:(CGPoint)dest {
     
     if (_graph == nil) {
-        return;
+        return nil;
     }
     
     NSMutableArray *result = [[NSMutableArray alloc] init];
@@ -224,12 +245,13 @@
     NSDictionary *projectedSrc = [self projectToGraphFromPoint:src];
     NSDictionary *projectedDest = [self projectToGraphFromPoint:dest];
    
- 
+    
     PESGraphNode *srcNode = [self makeNodeWithPoint:src];
     PESGraphNode *destNode = [self makeNodeWithPoint:dest];
     
     PESGraphNode *projectedSrcNode = [self makeNodeWithPoint:[projectedSrc[kYTMapGraphProjectionPointKey] CGPointValue]];
     PESGraphNode *projectedDestNode = [self makeNodeWithPoint:[projectedDest[kYTMapGraphProjectionPointKey] CGPointValue]];
+  
     
     [self tweakGraphWithNode:srcNode
                    projected:projectedSrcNode
@@ -301,10 +323,10 @@
 
 - (PESGraphNode *)makeNodeWithPoint:(CGPoint)point {
     PESGraphNode *node = [PESGraphNode nodeWithIdentifier:[NSString stringWithFormat:@"%f-%f",point.x, point.y]];
-    node.additionalData = [[NSMutableDictionary alloc] init];
+    node.additionalData = [NSMutableDictionary dictionary];
     node.additionalData[@"x"] = [NSNumber numberWithDouble:point.x];
     node.additionalData[@"y"] = [NSNumber numberWithDouble:point.y];
-    node.additionalData[@"point"] = [NSValue valueWithCGPoint:CGPointMake(point.x, point.y)];
+    node.additionalData[@"point"] = [NSValue valueWithCGPoint:point];
     return node;
 }
 

@@ -11,6 +11,11 @@
 #import <AVOSCloud/AVOSCloud.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "AppDelegate.h"
+
+NSString *const kViewControllerKey = @"viewController";
+NSString *const kNavigationTitleKey = @"title";
+NSString *const kLeftBarItemKey = @"leftBarItem";
+NSString *const kRightBarItemKey = @"rightBarItem";
 @interface YTSearchView()<UISearchBarDelegate,YTSearchDetailsDelegate>{
     id<YTMall> _mall;
     UISearchBar *_searchBar;
@@ -22,9 +27,11 @@
     BOOL _isAddInNavigationBar;
     BOOL _displayFirstResponder;
     BOOL _isIndent;
+    BOOL _isHide;
     YTSearchDetailsView *_detailsView;
     CGFloat _searchBarWidth;
     CGFloat _searchTextFieldWidth;
+    __weak NSMutableDictionary *_object;
 }
 @end
 @implementation YTSearchView
@@ -34,12 +41,12 @@
     self = [super initWithFrame:CGRectMake(0, 0, width, 0)];
     if (self) {
         CGFloat searchBarX = 5;
-        _searchBarWidth =  CGRectGetWidth(self.frame) - 10;
+        _isHide = true;
+        _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
         CGFloat cancelX = CGRectGetWidth(self.frame) - 40;
         if (indent) {
             _isIndent = indent;
             searchBarX = -10;
-            _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
             cancelX = CGRectGetWidth(self.frame) - 80;
         }
         if([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
@@ -89,12 +96,8 @@
     
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];
-    if (_isIndent){
-        _searchClearButton.frame = CGRectMake(225 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
-    }else{
-        _searchClearButton.frame = CGRectMake(254 - rightImage.size.width / 2, 0, rightImage.size.width, rightImage.size.height);
-    }
-    
+  
+    _searchClearButton.frame = CGRectMake(_searchTextFieldWidth - rightImage.size.width - 5, 0, rightImage.size.width, rightImage.size.height);
     
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
     [_searchClearButton setImage:[UIImage imageNamed:@"search_ico_delete_pr"] forState:UIControlStateHighlighted];
@@ -132,6 +135,33 @@
         _displayFirstResponder = YES;
         [self hideSearchViewWithAnimation:NO];
     }
+    
+    if (_isAddInNavigationBar) {
+        _object = [NSMutableDictionary new];
+        for (UIView *view = [self superview]; view; view = view.superview) {
+            UIResponder *responder = [view nextResponder];
+            if ([responder isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navigationController = (UINavigationController *)responder;
+                UIViewController *viewController = navigationController.visibleViewController;
+                NSString *title = viewController.navigationItem.title;
+                UIBarButtonItem *rightBarItem = viewController.navigationItem.rightBarButtonItem;
+                UIBarButtonItem *leftBarItem = viewController.navigationItem.leftBarButtonItem;
+                if (title) {
+                    [_object setObject:title forKey:kNavigationTitleKey];
+                }
+                if (rightBarItem) {
+                    [_object setObject:rightBarItem forKey:kRightBarItemKey];
+                }else{
+                    _isHide = false;
+                }
+                if (leftBarItem) {
+                    [_object setObject:leftBarItem forKey:kLeftBarItemKey];
+                }
+                [_object setObject:viewController forKey:kViewControllerKey];
+                return;
+            }
+        }
+    }
 }
 
 
@@ -142,7 +172,6 @@
         _displayFirstResponder = NO;
         [self showSearchViewWithAnimation:NO];
     }else{
-        
         _displayFirstResponder = YES;
         [self hideSearchViewWithAnimation:NO];
     }
@@ -165,35 +194,71 @@
 }
 
 - (void)showSearchViewWithAnimation:(BOOL)animation{
-    
-    self.hidden = NO;
+    if (_object[kViewControllerKey]) {
+        UIViewController *viewController = _object[kViewControllerKey];
+        viewController.navigationItem.title = @"";
+        viewController.navigationItem.rightBarButtonItem = nil;
+        if (!animation){
+            viewController.navigationItem.leftBarButtonItem = _object[kLeftBarItemKey];
+        }
+    }
+    if (_searchBar.hidden){
+        _searchBar.hidden = false;
+    }
+    self.hidden = false;
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
     }
 }
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
-    self.hidden = YES;
-    if  (_searchTextFieldWidth != 0 )[self cancelAnimation:YES completion:nil];
-    
+    if (!_searchBar.hidden){
+        _searchBar.hidden = true;
+    }
+    self.hidden = true;
 }
 
 #pragma mark searchBar的协议
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     [self searchBar:searchBar dealWithTextChange:searchText];
 }
+
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     _detailsView.hidden = NO;
+    if (_object[kLeftBarItemKey]) {
+        UIViewController *viewController = _object[kViewControllerKey];
+        viewController.navigationItem.leftBarButtonItem = nil;
+    }
     if (_searchTextFieldWidth == 0) {
         _searchTextFieldWidth = CGRectGetWidth(_searchTextField.frame);
     }
     [UIView animateWithDuration:.2 animations:^{
-        CGRect frame = _searchTextField.frame;
-        frame.size.width =_searchTextFieldWidth - 33;
-        if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]) {
-            frame.size.width =_searchTextFieldWidth - 38;
-        }
+        
+        _searchTextFieldWidth -= 5;
+        
+        CGRect frame;
+        frame = _searchTextField.frame;
+        frame.size.width = _searchTextFieldWidth;
         _searchTextField.frame = frame;
+        
+        
+        frame = self.frame;
+        frame.origin.x = 0;
+        self.frame = frame;
+        
+        frame = _searchBar.frame;
+        frame.origin.x = 5;
+        frame.size.width = _searchTextFieldWidth;
+        _searchBar.frame = frame;
+        
+        frame = _cancelButton.frame;
+        if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
+            frame.origin.x = CGRectGetMaxX(_searchTextField.frame) + 10;
+        }else{
+            frame.origin.x = CGRectGetMaxX(_searchTextField.frame) + 5;
+        }
+        _cancelButton.frame = frame;
+        
     } completion:^(BOOL finished) {
         _cancelButton.hidden = NO;
         
@@ -223,13 +288,12 @@
 
 
 -(void)selectSearchResultsWithUniIds:(NSArray *)uniIds{
-    
     [AVAnalytics event:@"选中某搜索结果"];
     
     if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [self.delegate searchCancelButtonClicked];
     }
-    [self cancelAnimation:NO completion:nil];
+    [self cancelAnimation:false completion:nil];
     [self.delegate selectedUniIds:uniIds];
 }
 
@@ -239,25 +303,42 @@
 }
 
 -(void)clickCancelButton:(UIButton *)sender{
-    [self cancelAnimation:YES completion:nil];
-    if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]) {
-        [self.delegate searchCancelButtonClicked];
-    }
+    [self cancelAnimation:true completion:nil];
 }
 
 -(void)cancelAnimation:(BOOL)animation completion:(void (^)(void))completion{
-    _cancelButton.hidden = YES;
-    _detailsView.hidden = YES;
+    if (_isAddInNavigationBar) {
+        UIViewController *viewController = _object[kViewControllerKey];
+        viewController.navigationItem.title = _object[kNavigationTitleKey];
+        viewController.navigationItem.leftBarButtonItem = _object[kLeftBarItemKey];
+        viewController.navigationItem.rightBarButtonItem = _object[kRightBarItemKey]; 
+    }
+    self.hidden = _isHide;
+    _cancelButton.hidden = true;
+    _detailsView.hidden = true;
     [_searchBar resignFirstResponder];
     [self searchBar:_searchBar dealWithTextChange:@""];
     NSTimeInterval duration = 0;
     if (animation) {
         duration = .2;
     }
+    _searchTextFieldWidth += 5;
+    
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = _searchTextField.frame;
         frame.size.width = _searchTextFieldWidth;
         _searchTextField.frame = frame;
+        
+        frame = self.frame;
+        frame.origin.x = 40;
+        self.frame = frame;
+        
+        frame = _searchBar.frame;
+        frame.origin.x = -10;
+        frame.size.width = CGRectGetWidth(self.frame) - 40;
+        _searchBar.frame = frame;
+        
+        
     } completion:^(BOOL finished) {
         if (completion != nil) {
             completion();
@@ -279,6 +360,7 @@
     [[[contentView subviews] firstObject] removeFromSuperview];
     return [[contentView subviews] firstObject];
 }
+
 
 -(void)dealloc{
     [_detailsView removeFromSuperview];

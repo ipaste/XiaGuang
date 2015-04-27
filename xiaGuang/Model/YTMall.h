@@ -9,16 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
+#import "YTCityAndRegion.h"
+
 #define MERCHANTLOCATION_CLASS_NAME @"MerchantLocation"
 #define MERCHANTLOCATION_CLASS_MALL_KEY @"Mall"
 @protocol YTMall <NSObject>
 
 @property(weak,nonatomic)NSString *identifier;
 @property(weak,nonatomic)NSString *localDB;
-@property(weak,nonatomic)UIImage *background;
-@property(weak,nonatomic)UIImage *logo;
-@property(weak,nonatomic)UIImage *infoBackground;
-@property(weak,nonatomic)UIImage *mallInfoTitleImage;
 @property(weak,nonatomic)NSString *mallName;
 @property(weak,nonatomic)NSArray *blocks;
 @property(weak,nonatomic)NSArray *merchantLocations;
@@ -26,19 +24,18 @@
 @property(weak,nonatomic)NSString *uniId;
 @property(nonatomic)CGFloat offset;
 @property(nonatomic)CLLocationCoordinate2D coord;
+@property(nonatomic)BOOL isShowPath;
+@property(readonly ,nonatomic)YTRegion *region;
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback;
 
--(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
--(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
--(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback;
--(void)getInfoBackgroundImageWithCallBack:(void (^)(UIImage *result,NSError* error))callback;
--(void)getMallBasicInfoWithCallBack:(void(^)(UIImage *mapImage,NSString *address,NSString *phoneNumber,NSError *error))callback;
 -(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback;
+
 -(void)iconsFromStartIndex:(int)start
                      toEnd:(int)end
                   callBack:(void (^)(NSArray *result,NSError *error))callback;
+
 -(void)iconsFromStartIndex:(int)start
                 fetchCount:(int)numberOfIcons
                   callBack:(void (^)(NSArray *result,NSArray *merchants,NSError *error))callback;

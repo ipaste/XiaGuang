@@ -27,7 +27,7 @@
         _titleImageView = [[UIImageView alloc]init];
         _mallBackgroundView.layer.cornerRadius = 10;
         _mallBackgroundView.layer.masksToBounds = true;
-        self.backgroundColor = [UIColor clearColor];
+        
         _titleImageView.frame = CGRectMake(20, 90, 150, 30);
         
         _cellBackground = [[UIImageView alloc]init];
@@ -39,7 +39,7 @@
         _discoImageView.image = [UIImage imageNamed:@"ico_disco"];
         _discoImageView.frame = CGRectMake(CGRectGetMaxX(_mallBackgroundView.frame) - 65, 10, 65, 21);
         _discoImageView.hidden = true;
-        
+
         [self addSubview:_mallBackgroundView];
         [self addSubview:_titleImageView];
         [self addSubview:_cellBackground];
@@ -53,12 +53,10 @@
 
 -(void)layoutSubviews{
     
-    [super layoutSubviews];
+    //[super layoutSubviews];
     _mallBackgroundView.layer.cornerRadius = 8;
     _mallBackgroundView.layer.masksToBounds = true;
     self.backgroundColor = [UIColor clearColor];
-    
-    
 }
 
 
@@ -68,10 +66,7 @@
     _mallBackgroundView.image = nil;
     _titleImageView.image = nil;
     _isFetch = false;
-    [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-       _discoImageView.hidden = !isExistence;
-    }];
-
+    
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
 
         if (!error) {
@@ -80,6 +75,10 @@
             _mallBackgroundView.image = background;
             
             _isFetch = true;
+            
+            [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+                self.isPreferential = isExistence;
+            }];
         }
         
     }];
@@ -89,8 +88,8 @@
     return _isFetch;
 }
 
--(BOOL)isPreferential{
-    return !_discoImageView.hidden;
+-(void)setIsPreferential:(BOOL)isPreferential{
+    _discoImageView.hidden = !isPreferential;
+    _isPreferential = isPreferential;
 }
-
 @end

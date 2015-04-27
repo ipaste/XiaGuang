@@ -26,7 +26,7 @@
     self = [super init];
     if (self) {
         _userDefaults = [YTUserDefaults standardUserDefaults];
-        _dateBase = [YTStaticResourceManager sharedManager].db;
+        _dateBase = [YTDataManager defaultDataManager].database;
     }
     return self;
 }

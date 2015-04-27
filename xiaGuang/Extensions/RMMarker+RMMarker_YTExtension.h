@@ -8,6 +8,7 @@
 
 #import "RMMarker.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTCanonicalCoordinate.h"
 typedef void (^YTCompletion)(void);
 @interface RMMarker (RMMarker_YTExtension)
 - (void)didAppear;
@@ -16,7 +17,7 @@ typedef void (^YTCompletion)(void);
 - (void)userLocationDirection:(CATransform3D)transform3D;
 - (id)initWithMerchantImage:(UIImage *)image;
 - (id)initWithElevator;
-
+- (instancetype)initWithGraph:(NSArray *)graph mapView:(RMMapView *)mapView;
 - (id)initWithBeaconForMajorAreaID:(NSString *)majorID minorID:(NSString *)minorID;
 - (void)showMerchantAnimation:(BOOL)animation;
 - (void)hideMerchantAnimation:(BOOL)animation;

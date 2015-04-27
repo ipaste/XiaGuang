@@ -7,12 +7,32 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTMall.h"
+#import <AVObject.h>
+#import <AVQuery.h>
+#import "YTMerchantViewCell.h"
+#import "YTCloudMerchant.h"
+#import "YTCategoryResultsView.h"
+#import "YTPreferential.h"
+#import "YTCategory.h"
+#import "YTStateView.h"
+#import "MJRefresh.h"
+#import "YTMallDict.h"
+#import "YTDataManager.h"
+#import "Reachability.h"
+#import "YTMerchantInfoViewController.h"
+#import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 
 @interface YTResultsViewController : UIViewController
-@property (nonatomic) BOOL isSearch;
+
 -(instancetype)initWithPreferntialInMall:(id <YTMall>)mall;
--(id)initWithSearchInMall:(id<YTMall>)mall andResutsKey:(NSString *)key;
--(id)initWithSearchInMall:(id<YTMall>)mall andResutsKey:(NSString *)key andSubKey:(NSString *)subKey;
--(instancetype)initWithSearchInMall:(id<YTMall>)mall andResultsLocalDBIds:(NSArray *)ids;
+
+-(instancetype)initWithSearchInMall:(id<YTMall>)mall
+                       andResutsKey:(NSString *)key;
+
+-(instancetype)initWithSearchInMall:(id<YTMall>)mall
+                       andResutsKey:(NSString *)key
+                          andSubKey:(NSString *)subKey;
+
+-(instancetype)initWithSearchInMall:(id<YTMall>)mall
+               andResultsLocalDBIds:(NSArray *)ids;
 @end

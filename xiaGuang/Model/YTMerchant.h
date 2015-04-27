@@ -18,6 +18,7 @@
 @property (weak,nonatomic) NSArray *type;
 @property (weak,nonatomic) UIImage *icon;
 @property (weak,nonatomic) NSString *uniId;
+@property (weak,nonatomic) NSString *shopId;
 @property (weak,nonatomic) id<YTFloor> floor;
 @property (strong,nonatomic) id<YTMall> mall;
 

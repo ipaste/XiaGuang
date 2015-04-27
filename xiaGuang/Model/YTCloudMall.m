@@ -7,10 +7,13 @@
 //
 
 #import "YTCloudMall.h"
+#import "YTMallDict.h"
 #import "YTCloudMerchant.h"
 #define MALL_CLASS_NAME @"Mall"
 #define MALL_CLASS_MALLNAME_KEY @"name"
 typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
+typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
+
 @implementation YTCloudMall{
     AVObject *_internalObject;
     UIImage *_titleImage;
@@ -20,8 +23,14 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     NSMutableArray *_merchants;
     NSMutableArray *_resultArray;
     NSMutableArray *_resultMerchants;
+    NSNumber *_isExistence;
     YTLocalMall *_tmpLocalMall;
+    DPRequest *_request;
+    YTRegion *_region;
     YTGetTitleImageAndBackgroundImageCallBack _callBack;
+    YTExistenceOfPreferentialInformationCallBack _existenceCallBack;
+
+    YTMallDict *_mallDict;
 }
 
 @synthesize mallName;
@@ -34,10 +43,14 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     self = [super init];
     if(self){
         _internalObject = object;
-        
+        _mallDict = [YTMallDict sharedInstance];
     }
     return self;
     
+}
+
+- (BOOL)isShowPath{
+    return [_internalObject[@"pathSwitch"] boolValue];
 }
 
 - (CLLocationCoordinate2D)coord{
@@ -72,41 +85,14 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     
     return _blocks;
 }
--(UIImage *)background{
-    AVFile *file = _internalObject[MALL_CLASS_BACKGROUND_KEY];
-    return [UIImage imageWithData:[file getData]];
+- (YTRegion *)region{
+    if (!_region) {
+        
+        _region = [[YTRegion alloc]initWithIdentify:[_internalObject[MALL_CLASS_REGION] integerValue]];
+    }
+    return _region;
 }
 
--(void)getBackgroundWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_BACKGROUND_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
--(void)getInfoBackgroundImageWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_INFO_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
-
--(UIImage *)logo{
-    AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
-    return [UIImage imageWithData:[file getData]];
-}
 
 -(NSArray *)merchants{
     if(_merchants == nil){
@@ -127,10 +113,6 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return [_merchants copy];
 }
 
--(UIImage *)infoBackground{
-    AVFile *file = _internalObject[MALL_CLASS_INFO_KEY];
-    return [UIImage imageWithData:[file getData]];
-}
 
 -(void)iconsFromStartIndex:(int)start
                      toEnd:(int)end
@@ -165,8 +147,6 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             if (result == nil) {
                 count++;
             }
-            
-            
             
         }];
         
@@ -227,36 +207,36 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             UIImage *mallImage = [UIImage imageWithData:data];
             callback(mallImage,nil);
         }else{
-             callback(nil,error);
+            callback(nil,error);
         }
     }];
 }
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
-    _callBack = callback;
-    if (![self checkCallBackConditions]) {
-        if (_titleImage == nil) {
-            [_internalObject[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                if (error) {
-                    callback(nil,nil,error);
-                    return ;
-                }
-                _titleImage = [UIImage imageWithData:data];
-                [self checkCallBackConditions];
-            }];
-        }
-        
-        if (_background == nil) {
-            [_internalObject[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                if (error) {
-                    callback(nil,nil,error);
-                    return ;
-                }
-                _background = [UIImage imageWithData:data];
-                [self checkCallBackConditions];
-            }];
-        }
+    
+    if (_background == nil && _titleImage == nil) {
+        _callBack = nil;
+        _callBack = callback;
+        [_internalObject[MALL_CLASS_BIGTITLE_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (error) {
+                callback(nil,nil,error);
+                return ;
+            }
+            _titleImage = [UIImage imageWithData:data];
+            [self checkCallBackConditions];
+        }];
+        [_internalObject[MALL_CLASS_BIGBACKGROUND_KEY] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (error) {
+                callback(nil,nil,error);
+                return ;
+            }
+            _background = [UIImage imageWithData:data];
+            [self checkCallBackConditions];
+        }];
+    }else{
+        callback(_titleImage,_background,nil);
     }
+
 }
 
 -(BOOL)checkCallBackConditions{
@@ -268,32 +248,6 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     }
 }
 
--(void)getMallInfoTitleCallBack:(void (^)(UIImage *result,NSError *error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_INFOIMAGE_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
-
--(void)getMallTitleWithCallBack:(void (^)(UIImage *result,NSError* error))callback{
-    AVFile *file = _internalObject[MALL_CLASS_LOGO_KEY];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        
-        if(error != nil){
-            callback(nil,error);
-            return;
-        }
-        
-        UIImage *mallImage = [UIImage imageWithData:data];
-        callback(mallImage,nil);
-    }];
-}
 -(void)getMallBasicInfoWithCallBack:(void(^)(UIImage *mapImage,NSString *address,NSString *phoneNumber,NSError *error))callback{
     NSString *address = _internalObject[@"address"];
     NSString *phoneNumber = _internalObject[@"phoneNumber"];
@@ -304,7 +258,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             callback(tmpImage,address,phoneNumber,nil);
         }
     }];
-
+    
 }
 
 -(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback{
@@ -315,16 +269,16 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 }
 
 -(NSString *)localDB{
-    return _internalObject[@"localDBId"];
+    return ((NSNumber *)_internalObject[MALL_CLASS_LOCALID]).stringValue;
 }
 
 -(YTLocalMall *)getLocalCopy{
     if(_tmpLocalMall == nil){
-        NSString *uniId = _internalObject[@"localDBId"];
+        NSString *uniId = _internalObject[MALL_CLASS_LOCALID];
         if (uniId == nil || uniId.length <= 0) {
             return nil;
         }
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",uniId];
@@ -332,30 +286,36 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             
             _tmpLocalMall = [[YTLocalMall alloc] initWithDBResultSet:result];
         }
-       
+        
     }
     return _tmpLocalMall;
     
 }
 
 -(CGFloat)offset{
-    return [self getLocalCopy].offset;
+    return [_mallDict changeMallObject:self resultType:YTMallClassCloud].offset;
 }
 
 -(AVObject *)getCloudObj{
     return _internalObject;
 }
+
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
-    AVQuery *query = [AVQuery queryWithClassName:@"PreferentialInformation"];
-    [query whereKey:@"mall" equalTo:_internalObject];
-    [query whereKey:@"switch" equalTo:@YES];
-    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
-        if (number > 0) {
-            callBack(true);
-        }else{
+    if (!_isExistence) {
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager GET:@"http://xiaguang.avosapps.com/existence_PreferentialInformation" parameters:@{@"objectId":_internalObject.objectId} success:^(NSURLSessionDataTask *task, id responseObject) {
+            if ([responseObject[@"exidtence"] isEqualToNumber:@1]) {
+                _isExistence = [NSNumber numberWithBool:true];
+            }else{
+                _isExistence = [NSNumber numberWithBool:false];
+            }
+            callBack([_isExistence boolValue]);
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
             callBack(false);
-        }
-    }];
+        }];
+    }else{
+        callBack([_isExistence boolValue]);
+    }
 }
 
 

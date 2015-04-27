@@ -14,7 +14,7 @@
 #import <AVQuery.h>
 #import "YTMapView2.h"
 #import "YTCloudBeacon.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTMultipleMerchantView.h"
 #import "YTLocalBeacon.h"
 #import "YTNavigationBar.h"
@@ -33,16 +33,17 @@
 #import "YTSelectedPoiButton.h"
 #import "YTBluetoothManager.h"
 #import "YTMessageBox.h"
-#import <POP.h>
 #import "YTBathroom.h"
 #import "YTMerchantPoi.h"
 #import "BlurMenu.h"
+#import "YTMallDict.h"
 #import "BlurMenuItemCell.h"
 #import "YTBeaconBasedLocator.h"
 #import "YTBeaconPosistionPoi.h"
 #import "YTMajorAreaVoter.h"
 #import "YTMinorAreaPoi.h"
 @interface YTMapViewController2 : UIViewController<YTBeaconManagerDelegate,YTMapViewDelegate,YTNavigationBarDelegate,YTSearchViewDelegate,YTSwitchBlockDelegate,YTSwitchFloorDelegate,YTZoomStepperDelegate,YTMoveCurrentLocationDelegate,YTMoveTargetLocationDelegate,YTDetailsDelegate,YTNavigationDelegate,YTPoiDelegate,YTPoiViewDelegate,YTSelectedPoiDelegate,BlurMenuDelegate,YTBeaconBasedLocatorDelegate,YTMultipleMerchantDelegate,UITableViewDataSource,UITableViewDelegate>
+@property (assign ,nonatomic)id <YTMajorArea> showMajorArea;
 
 -(id)initWithMinorArea:(id <YTMinorArea>)minorArea;
 -(id)initWithMerchant:(id<YTMerchantLocation>)merchantLocation;

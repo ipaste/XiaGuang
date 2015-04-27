@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 
 @interface YTMapViewController2 (){
+    YTMajorAreaVoter *_voter;
+    
     id<YTMajorArea> _majorArea;
     YTBeaconManager *_beaconManager;
     YTBluetoothManager *_bluetoothManager;
@@ -70,6 +72,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     BOOL _viewDidAppear;
     
     BOOL _firstBlueToothRefresh;
+    
+    YTPoi *_selectedTransport;
     //NSArray *_beaconsPoi;
     
     
@@ -85,6 +89,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     YTPoiView *_poiView;
     
     YTPoi *_selectedPoi;
+    
+    
     CLLocationCoordinate2D _userCord;
     CLLocationCoordinate2D _targetCord;
     
@@ -92,19 +98,21 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     NSMutableArray *_allElvatorAndEscalator;
     
     YTBeaconBasedLocator *_locator;
+    YTMallDict *_mallDict;
     
     CLLocationCoordinate2D _userCoordintate;
     
-    CLLocationCoordinate2D _lastRecordedCoordinate;
+    CLLocationCoordinate2D _lastStableCoordinate;
     
     NSString *_lastMajorAreaId;
+    
+    BOOL _forceRepath;
     
 }
 @end
 
 @implementation YTMapViewController2{
     YTMapView2 *_mapView;
-    
 }
 
 -(id)initWithMinorArea:(id <YTMinorArea>)minorArea{
@@ -127,8 +135,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _merchantLocation = merchantLocation;
             _majorArea = [merchantLocation majorArea];
             _recordMall = [[[_majorArea floor] block] mall];
-            
-        
         }
         _type = YTMapViewControllerTypeMerchant;
     }
@@ -163,12 +169,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.view.bounds];
     background.image = [UIImage imageNamed:@"bg_inner.jpg"];
     [self.view addSubview:background];
+    
+    _voter = [YTMajorAreaVoter sharedInstance];
     _beaconManager = [YTBeaconManager sharedBeaconManager];
     _beaconManager.delegate = self;
     
     [self createNavigationBar];
     [self createMapView];
-    [self setTargetMall:[[[_majorArea floor] block]mall]];
     [self createCurLocationButton];
     [self createCommonPoiButton];
     [self createZoomStepper];
@@ -176,6 +183,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [self createDetailsView];
     [self createNavigationView];
     [self createPoiView];
+    [self setTargetMall:[[[_majorArea floor] block]mall]];
     [self createBlurMenuWithCallBack:nil];
     [self createSearchView];
     
@@ -196,6 +204,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     _currentViewDisplay = NO;
     [self cancelCommonPoiState];
     _viewDidAppear = NO;
@@ -212,9 +221,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-
+    
     if(_userMinorArea == nil){
-
         
         if(!_blurMenuShown){
             _toolbar.hidden = NO;
@@ -279,33 +287,22 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"] && [_mallTableView respondsToSelector:@selector(setLayoutMargins:)]) {
         [_mallTableView setLayoutMargins:UIEdgeInsetsMake(0, 10, 0, 10)];
     }
-
+    
 }
 
 -(void)createBlurMenuWithCallBack:(void (^)())callback{
-
     _malls = [NSMutableArray array];
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-    if([db open]){
-        
-        FMResultSet *result = [db executeQuery:@"select * from Mall"];
-        [result next];
-        while([result hasAnotherRow]){
-            YTLocalMall *tmpMall = [[YTLocalMall alloc] initWithDBResultSet:result];
-            [_malls addObject:tmpMall];
-            [result next];
-        }
+    YTMallDict *dict = [YTMallDict sharedInstance];
+    [dict getAllLocalMallWithCallBack:^(NSArray *malls) {
+        _malls = malls.copy;
         [self instantiateMenu];
         if(callback!= nil){
             callback();
-            
         }
-    }
-    
+    }];
 }
 
 -(void)instantiateMenu{
-    
     if(_toolbar == nil){
         NSMutableArray *mallNames = [NSMutableArray array];
         for(id<YTMall> mall in _malls){
@@ -316,11 +313,15 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _toolbar.barStyle = UIBarStyleBlack;
         _toolbar.translucent = YES;
         [self.view insertSubview:_toolbar belowSubview:_navigationBar];
-        [self showBlur];
+        if (!_majorArea) {
+            [self showBlur];
+            _navigationBar.titleName = @"选择商城";
+        }else{
+            [self hideBlur];
+        }
     }
-
+    
     if (_type == YTMapViewControllerTypeNavigation) {
-        _navigationBar.titleName = @"选择商城";
         if (_bluetoothLabel == nil) {
             _bluetoothLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_toolbar.frame) - 55, CGRectGetWidth(_toolbar.frame), 55)];
             _bluetoothLabel.font = [UIFont systemFontOfSize:15];
@@ -360,25 +361,23 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)createMapView{
     _mapView = [[YTMapView2 alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_navigationBar.frame), CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(_navigationBar.frame))];
     _mapView.delegate = self;
-    
     [self.view insertSubview:_mapView belowSubview:_navigationBar];
     
-    [_mapView displayMapNamed:[_majorArea mapName]];
+    [self refreshLocatorWithMapView:_mapView.map majorArea:_curDisplayedMajorArea];
     _shownFloorChange = NO;
-    [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
-    
+    [_mapView displayMapNamed:[_curDisplayedMajorArea mapName]];
     [_mapView setZoom:1 animated:NO];
-    
 }
 
 
 
 -(void)injectPoisForMajorArea:(id<YTMajorArea>)majorArea{
-    if([[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]){
+    if([[_majorArea identifier] isEqualToString:[_curDisplayedMajorArea identifier]] && _userMinorArea != nil){
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
-        [self showUserAtCoordinate:_userCoordintate];
+        _shownUser = false;
+//        [self showUserAtCoordinate:_userCoordintate];
+
     }
-    
     NSArray *merchants = [majorArea merchantLocations];
     NSArray *elevators = [majorArea elevators];
     NSArray *bathrooms = [majorArea bathrooms];
@@ -442,33 +441,38 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView addPois:pois];
     
-    /*
-    NSArray *minors = [majorArea minorAreas];
-    NSMutableArray *minorsArray = [NSMutableArray array];
-    for(YTLocalMinorArea *minor in minors){
-        YTMinorAreaPoi *tmpMinorPoi = [minor producePoi];
-        [minorsArray addObject:tmpMinorPoi];
-    }
-    [_mapView addPois:minorsArray];
-    _beaconsPoi = [minorsArray copy];*/
-    
     
     if(highlightPoi != nil && !_navigationView.isNavigating){
         
         [_mapView highlightPoi:highlightPoi animated:NO];
     }
-    
+
     if (_navigationView.isNavigating){
         if (![[_curDisplayedMajorArea  identifier] isEqualToString:[[[_navigationPlan targetPoiSource] majorArea] identifier]] && [[[_userMinorArea majorArea] identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
-           
-            [_mapView highlightPois:_allElvatorAndEscalator animated:YES];
-        
+            
+            NSArray *transportsToHighlight = [self filteredTransportFrom: _curDisplayedMajorArea toArea:_navigationPlan.targetPoiSource.majorArea];
+            //[_mapView highlightPois:transportsToHighlight animated:YES];
+            if (_userCoordintate.latitude == -888){
+                _userCoordintate = [_userMinorArea coordinate];
+            }
+            YTPoi *closestTransport = [self closestTransportToCoordinate:_userCoordintate
+                                                                 inArray:transportsToHighlight];
+            [_mapView superHighlightPoi:closestTransport animated:false];
+            _targetCord = ((id<YTPoiSource>) closestTransport.sourceModel).coordinate;
+            
         }else{
+            _targetCord = _navigationPlan.targetPoiSource.coordinate;
+            [self setTargetCordToDoorCoordIfPossible:_navigationPlan.targetPoiSource];
+            
             [_mapView hidePois:_allElvatorAndEscalator animated:NO];
         }
         
         if (highlightPoi != nil) {
             [_mapView superHighlightPoi:highlightPoi animated:NO];
+            
+            if([self userOnCurdisplayedArea]){
+                [self showPathFromUserToPoi:highlightPoi];
+            }
         }
     }
     
@@ -478,6 +482,76 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     }
     
 }
+
+-(void)setTargetCordToDoorCoordIfPossible:(id<YTPoiSource>)merchantInstance{
+    
+    if([merchantInstance isKindOfClass:[YTLocalMerchantInstance class]]){
+        NSArray *doors = ((YTLocalMerchantInstance *)merchantInstance).doors;
+        if(doors != nil && doors.count > 0){
+            _targetCord = ((id<YTDoor>)doors[0]).coordinate;
+        }
+    }
+}
+
+
+-(NSArray *)filteredTransportFrom:(id<YTMajorArea>)fromArea
+                           toArea:(id<YTMajorArea>)toArea{
+    
+//    BOOL upward = [[fromArea floor] queue] < [[toArea floor] queue];
+//    NSMutableArray *result = [NSMutableArray new];
+//    
+//    for(YTPoi *tmpTransport in _allElvatorAndEscalator){
+//        
+//        id<YTPoiSource> tmpelevator = tmpTransport.sourceModel;
+//        if(upward){
+//           // if(((id<YTTransport>)tmpelevator).type == YTTransportUpward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
+//                
+//                [result addObject:tmpTransport];
+//          //  }
+//        }
+//        else{
+//           // if(((id<YTTransport>)tmpelevator).type == YTTransportDownward || ((id<YTTransport>)tmpelevator).type == YTTransportBothWays){
+//                
+//                [result addObject:tmpTransport];
+//           // }
+//        }
+//        
+//    }
+    
+    return _allElvatorAndEscalator;
+    
+}
+
+-(YTPoi *)closestTransportToCoordinate:(CLLocationCoordinate2D)toCoord
+                               inArray:(NSArray *)array{
+    
+    CGPoint toPoint = [YTCanonicalCoordinate mapToCanonicalCoordinate:toCoord mapView:_mapView.map];
+    YTPoi *result;
+    double minDist = MAXFLOAT;
+    
+    
+    for(YTPoi *tmpPoi in array){
+        
+        id<YTPoiSource> tmpelevator = tmpPoi.sourceModel;
+        CGPoint tmpPoint = [YTCanonicalCoordinate mapToCanonicalCoordinate:tmpelevator.coordinate mapView:_mapView.map];
+        
+        double xdiff = toPoint.x-tmpPoint.x;
+        double ydiff = toPoint.y-tmpPoint.y;
+        double curdistance = xdiff*xdiff + ydiff*ydiff;
+        
+        if(curdistance < minDist){
+            result = tmpPoi;
+            minDist = curdistance;
+        }
+        
+        
+    }
+    
+    return result;
+}
+
+
+
 -(void)createNavigationBar{
     _navigationBar = [[YTNavigationBar alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 64)];
     _navigationBar.delegate = self;
@@ -582,7 +656,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView.isShowSwitchButton = NO;
     _navigationView.delegate = self;
     [self.view addSubview:_navigationView];
-    [_navigationView.layer pop_animationForKey:@"shake"];
 }
 -(void)createPoiView{
     _poiView = [[YTPoiView alloc]initWithShow:NO];
@@ -636,10 +709,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)mapView:(YTMapView2 *)mapView tapOnPoi:(YTPoi *)poi{
+    if (_navigationView.isNavigating) return;
+    
     if (_multipleView.isShow) {
         [_multipleView hide];
         _multipleView = nil;
     }
+    
     id<YTPoiSource> sourceModel = [poi sourceModel];
     
     //if there's activePoi
@@ -703,6 +779,48 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             }
         }
     }
+    else if([mapView currentState] == YTMapViewDetailStateNavigating){
+        
+        if([self userOnCurdisplayedArea] && ![self userOnTargetPoiMajorArea]){
+            if([sourceModel isMemberOfClass:[YTLocalElevator class]]
+               || [sourceModel isMemberOfClass:[YTLocalEscalator class]]){
+                
+                [self showPathFromUserToPoi:poi];
+            }
+        }
+    }
+}
+
+
+-(void)showPathFromUserToPoi:(YTPoi *)poi{
+    
+    [_mapView highlightPoi:_selectedTransport animated:NO];
+    
+    [_mapView superHighlightPoi:poi animated:NO];
+    _selectedTransport = poi;
+    _targetCord = ((id<YTPoiSource>)poi.sourceModel).coordinate;
+    
+    [self setTargetCordToDoorCoordIfPossible:((id<YTPoiSource>)poi.sourceModel)];
+    
+    _forceRepath = true;
+}
+
+-(BOOL)userOnCurdisplayedArea{
+    if(_userMinorArea == nil){
+        return NO;
+    }
+    
+    BOOL onSameArea = [[_userMinorArea majorArea].identifier isEqualToString:_curDisplayedMajorArea.identifier];
+    return onSameArea;
+}
+
+-(BOOL)userOnTargetPoiMajorArea{
+    if(_userMinorArea == nil || _navigationPlan.targetPoiSource == nil){
+        return NO;
+    }
+    
+    BOOL onSameArea = [[_userMinorArea majorArea].identifier isEqualToString:[_navigationPlan targetPoiSource].majorArea.identifier];
+    return onSameArea;
 }
 
 -(BOOL)selectedOnSameGroupCommonPoi:(YTPoi *)poi{
@@ -738,86 +856,91 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)showCallOut{
-    _poiButton.hidden = YES;
-    _moveTargetButton.hidden = NO;
-    _shownCallout = YES;
-    _detailsView.hidden = NO;
-    if(_type == YTMapViewControllerTypeMerchant){
-        _shownFloorChange = YES;
-    }
-    [UIView animateWithDuration:.5 animations:^{
-        [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
-        CGRect frame = _moveCurrentButton.frame;
-        frame.origin.y -= HOISTING_HEIGHT;
-        _moveCurrentButton.frame = frame;
-        
-        frame = _changeFloorIndicator.frame;
-        frame.origin.y -= HOISTING_HEIGHT;
-        _changeFloorIndicator.frame = frame;
-        
-        frame = _moveTargetButton.frame;
-        frame.origin.y -= HOISTING_HEIGHT;
-        _moveTargetButton.frame = frame;
-        
-        frame = _zoomStepper.frame;
-        frame.origin.y -= HOISTING_HEIGHT;
-        _zoomStepper.frame = frame;
-        
-        frame = _selectedPoiButton.frame;
-        frame.origin.y -= HOISTING_HEIGHT;
-        _selectedPoiButton.frame = frame;
-        
-        
-        frame = _detailsView.frame;
-        frame.origin.y -= HOISTING_HEIGHT;
-        _detailsView.frame = frame;
-        
-    } completion:^(BOOL finished) {
+    if ([_mapView currentState] != YTMapViewDetailStateShowDetail) {
+        _poiButton.hidden = YES;
+        _moveTargetButton.hidden = NO;
+        _shownCallout = YES;
+        _detailsView.hidden = NO;
         if(_type == YTMapViewControllerTypeMerchant){
-            _shownFloorChange = NO;
+            _shownFloorChange = YES;
         }
+        [UIView animateWithDuration:.5 animations:^{
+            [_mapView setMapViewDetailState:YTMapViewDetailStateShowDetail];
+            CGRect frame = _moveCurrentButton.frame;
+            frame.origin.y -= HOISTING_HEIGHT;
+            _moveCurrentButton.frame = frame;
+            
+            frame = _changeFloorIndicator.frame;
+            frame.origin.y -= HOISTING_HEIGHT;
+            _changeFloorIndicator.frame = frame;
+            
+            frame = _moveTargetButton.frame;
+            frame.origin.y -= HOISTING_HEIGHT;
+            _moveTargetButton.frame = frame;
+            
+            frame = _zoomStepper.frame;
+            frame.origin.y -= HOISTING_HEIGHT;
+            _zoomStepper.frame = frame;
+            
+            frame = _selectedPoiButton.frame;
+            frame.origin.y -= HOISTING_HEIGHT;
+            _selectedPoiButton.frame = frame;
+            
+            
+            frame = _detailsView.frame;
+            frame.origin.y -= HOISTING_HEIGHT;
+            _detailsView.frame = frame;
+            
+        } completion:^(BOOL finished) {
+            if(_type == YTMapViewControllerTypeMerchant){
+                _shownFloorChange = NO;
+            }
+            
+        }];
         
-    }];
+    }
 }
 -(void)hideCallOut{
-
-    _selectedPoi = nil;
-    _shownCallout = NO;
-    [UIView animateWithDuration:.5 animations:^{
-        [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
-        
-        CGRect frame = _moveCurrentButton.frame;
-        frame.origin.y += HOISTING_HEIGHT;
-        _moveCurrentButton.frame = frame;
-        
-        frame = _changeFloorIndicator.frame;
-        frame.origin.y += HOISTING_HEIGHT;
-        _changeFloorIndicator.frame = frame;
-        
-        
-        frame = _moveTargetButton.frame;
-        frame.origin.y += HOISTING_HEIGHT;
-        _moveTargetButton.frame = frame;
-        
-        frame = _zoomStepper.frame;
-        frame.origin.y += HOISTING_HEIGHT;
-        _zoomStepper.frame = frame;
-        
-        frame = _selectedPoiButton.frame;
-        frame.origin.y += HOISTING_HEIGHT;
-        _selectedPoiButton.frame = frame;
-        
-        frame = _detailsView.frame;
-        frame.origin.y += HOISTING_HEIGHT;
-        _detailsView.frame = frame;
-        
-    } completion:^(BOOL finished) {
-        _poiButton.hidden = NO;
-        _moveTargetButton.hidden = YES;
-        _detailsView.hidden = YES;
-        _navigationView.hidden = YES;
-
-    }];
+    if ([_mapView currentState] != YTMapViewDetailStateNormal) {
+        _selectedPoi = nil;
+        _shownCallout = NO;
+        [UIView animateWithDuration:.5 animations:^{
+            [_mapView setMapViewDetailState:YTMapViewDetailStateNormal];
+            
+            CGRect frame = _moveCurrentButton.frame;
+            frame.origin.y += HOISTING_HEIGHT;
+            _moveCurrentButton.frame = frame;
+            
+            frame = _changeFloorIndicator.frame;
+            frame.origin.y += HOISTING_HEIGHT;
+            _changeFloorIndicator.frame = frame;
+            
+            
+            frame = _moveTargetButton.frame;
+            frame.origin.y += HOISTING_HEIGHT;
+            _moveTargetButton.frame = frame;
+            
+            frame = _zoomStepper.frame;
+            frame.origin.y += HOISTING_HEIGHT;
+            _zoomStepper.frame = frame;
+            
+            frame = _selectedPoiButton.frame;
+            frame.origin.y += HOISTING_HEIGHT;
+            _selectedPoiButton.frame = frame;
+            
+            frame = _detailsView.frame;
+            frame.origin.y += HOISTING_HEIGHT;
+            _detailsView.frame = frame;
+            
+        } completion:^(BOOL finished) {
+            _poiButton.hidden = NO;
+            _moveTargetButton.hidden = YES;
+            _detailsView.hidden = YES;
+            _navigationView.hidden = YES;
+            
+        }];
+    }
+    
 }
 
 #pragma mark YTNavigationBarManager
@@ -840,11 +963,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (_selectedPoi != nil){
         _navigationView.hidden = YES;
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
     if(_type != YTMapViewControllerTypeNavigation){
         [_beaconManager removeListener:_locator];
         _locator = nil;
     }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 #pragma mark YTSearchViewManager
@@ -852,8 +976,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationBar.hidden = false;
     [_searchView hideSearchViewWithAnimation:YES];
     /*if(_activePoiMajorArea != nil){
-        [self cancelCommonPoiState];
-    }*/
+     [self cancelCommonPoiState];
+     }*/
 }
 
 -(void)selectedUniIds:(NSArray *)uniIds{
@@ -868,12 +992,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         return;
     }
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     if([db open]){
         NSString *uniId = [uniIds firstObject];
         FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",uniId];
         [result next];
-     
+        
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
         
         id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
@@ -908,8 +1032,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(void)selectToMerchantInstance:(id<YTMerchantLocation>)merchantInstance{
     
-    
-    
     id<YTMajorArea> tmpMajorArea = [merchantInstance majorArea];
     
     if(_selectedPoi != nil){
@@ -933,7 +1055,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if(!_shownCallout){
         [self showCallOut];
     }
-
+    
 }
 
 #pragma mark beacons delegate methods
@@ -942,25 +1064,29 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 
--(void)rangedBeacons:(NSArray *)beacons{
+-(void)rangedObjects:(NSArray *)objects{
     if(_locator==nil){
         NSLog(@"locator nil");
     }
-    if(beacons.count <= 0){
-
+    if(objects.count <= 0){
         return;
     }
-    /*
-    for(YTMinorAreaPoi *beaconPoi in _beaconsPoi){
-        [_mapView setScore:-1.0 forMinorAreaPoi:beaconPoi];
+    NSMutableArray *beacons = [NSMutableArray array];
+    for (NSDictionary *beaconDict in objects) {
+        [beacons addObject:beaconDict[@"Beacon"]];
     }
-    for(ESTBeacon *beacon in beacons){
-        YTLocalMinorArea *tmpMinor = [self getMinorArea:beacon];
-        YTMinorAreaPoi *relatedBeacon = [tmpMinor producePoi];
-        [_mapView setScore:[beacon.distance doubleValue] forMinorAreaPoi:relatedBeacon];
-    }*/
     
-    NSString *votedMajorAreaId = [YTMajorAreaVoter shouldSwitchToMajorAreaId:beacons];
+    /*
+     for(YTMinorAreaPoi *beaconPoi in _beaconsPoi){
+     [_mapView setScore:-1.0 forMinorAreaPoi:beaconPoi];
+     }
+     for(ESTBeacon *beacon in beacons){
+     YTLocalMinorArea *tmpMinor = [self getMinorArea:beacon];
+     YTMinorAreaPoi *relatedBeacon = [tmpMinor producePoi];
+     [_mapView setScore:[beacon.distance doubleValue] forMinorAreaPoi:relatedBeacon];
+     }*/
+    
+    NSString *votedMajorAreaId = [_voter shouldSwitchToMajorAreaId:objects];
     if(_lastMajorAreaId != nil){
         if(![votedMajorAreaId isEqualToString:_lastMajorAreaId]){
             NSString *tmp = [votedMajorAreaId copy];
@@ -975,12 +1101,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _majorArea = [bestGuessMinorArea majorArea];
     
     if (_majorArea != nil) {
-        [self userMoveToMinorArea:bestGuessMinorArea];
 
-        if (_type == YTMapViewControllerTypeNavigation || _navigationView.isNavigating) {
-            _navigationBar.titleName = [[[[_majorArea floor] block] mall] mallName];
-            
-        }
+        [self userMoveToMinorArea:bestGuessMinorArea];
+        
         if (_type == YTMapViewControllerTypeNavigation) {
             [self setTargetMall:[[[_majorArea floor] block] mall]];
         }
@@ -988,9 +1111,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(id<YTMinorArea>)topMinorAreaWithInMajorAreaId:(NSString *)majorAreaId
-                                   inBeacons:(NSArray *)beacons
+                                      inBeacons:(NSArray *)beacons
 {
-    
     for(ESTBeacon *tmp in beacons){
         id<YTMinorArea> minor = [self getMinorArea:tmp];
         if([[[minor majorArea] identifier] isEqualToString:majorAreaId]){
@@ -998,22 +1120,27 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         }
     }
     return nil;
-    
 }
 
 -(void)showUserAtCoordinate:(CLLocationCoordinate2D)coordinate{
+    
     if(_shownUser){
         if(coordinate.latitude == -888){
-            [_mapView setUserCoordinate:[_userMinorArea coordinate]];
+            [_mapView setUserCoordinate:_userCord];
         }
         else
         {
-            [_mapView setUserCoordinate:_userCoordintate];
+            if(_navigationView.isNavigating && [ _mapView canonicalDistanceFromCoordinate1:coordinate toCoordinate2:_lastStableCoordinate] > 10) {
+                _lastStableCoordinate = coordinate;
+                [_mapView showPathFromCoord1:coordinate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
+            }
+            
+            [_mapView setUserCoordinate:coordinate];
         }
     }
     else{
         if(coordinate.latitude == -888){
-            [_mapView showUserLocationAtCoordinate:[_userMinorArea coordinate]];
+            [_mapView showUserLocationAtCoordinate:_userCord];
         }
         else
         {
@@ -1033,47 +1160,26 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
     }
     
-    if(_type != YTMapViewControllerTypeNavigation){
-        if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[_targetMall identifier]]){
-            return;
-        }
-    }
-    
     if(_blurMenuShown){
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:0.3 animations:^{
             [self hideBlur];
-        }];
-        [self redrawBlockAndFloorSwitch];
-    }
-    
-    //当检测到换了一个mall
-    if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
-        [_mapView displayMapNamed:[[minorArea majorArea] mapName]];
-        _shownFloorChange = NO;
-        [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
-        _curDisplayedMajorArea = [minorArea majorArea];
-        [self redrawBlockAndFloorSwitch];
-        if(_selectedPoi != nil){
-            [_mapView hidePoi:_selectedPoi animated:false];
-            [self hideCallOut];
             
-        }
-        [self handlePoiForMajorArea:_curDisplayedMajorArea];
+        }];
     }
     
+    _userCoordintate = [minorArea coordinate];
     //if this minorArea is in a different major area or _userMinorArea is not created yet
     if (![[[minorArea majorArea]identifier] isEqualToString:[_curDisplayedMajorArea identifier]]) {
         _switchingFloor = YES;
-        
+        [_mapView removeUserLocation];
         /*if (![[[_navigationPlan.targetPoiSource majorArea] identifier]isEqualToString:[[minorArea majorArea] identifier]] && _navigationView.isNavigating) {
-            _navigationView.isShowSwitchButton = YES;
-        }*/
+         _navigationView.isShowSwitchButton = YES;
+         }*/
         if(!_navigationView.isNavigating){
-            
             if(!_shownFloorChange && _viewDidAppear){
                 [_moveCurrentButton promptFloorChange:[[[_userMinorArea majorArea] floor] floorName]];
                 [_changeFloorIndicator.layer removeAllAnimations];
-            
+                
                 _changeFloorIndicator.hidden = NO;
                 CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
                 animation.toValue = [NSNumber numberWithFloat:_changeFloorIndicator.layer.position.y+30];
@@ -1083,37 +1189,49 @@ typedef NS_ENUM(NSInteger, YTMessageType){
                 animation.repeatCount = 5;
                 [_changeFloorIndicator.layer addAnimation:animation forKey:@"animation"];
                 _shownFloorChange = YES;
+                
             }
+        }else{
+            _navigationView.isShowSwitchButton = true;
         }
-        else{
-            _navigationView.isShowSwitchButton = YES;
-        }
-        
-        [_mapView removeUserLocation];
-        //[_beaconManager removeListener:_locator];
-        //_locator = nil;
         _shownUser = NO;
         
     }else{
         _shownFloorChange = NO;
-        [self showUserAtCoordinate:_userCoordintate];
+//        if (_userCoordintate.latitude == -888) {
+//            _userCoordintate = _userCord;
+//        }
+//        [self showUserAtCoordinate:_userCoordintate];
         _switchingFloor = NO;
     }
     
-    _userCord = [minorArea coordinate];
+    
+    
+    //当检测到换了一个mall
+    if(![[[[[[minorArea majorArea] floor] block] mall] identifier] isEqualToString:[[[[_curDisplayedMajorArea floor] block] mall] identifier]]){
+        
+        if(_navigationView.isNavigating){
+            [_mapView removePath];
+            [_mapView removeUserLocation];
+            return;
+        }
+        [self switchFloor:[[minorArea majorArea] floor] hideCallOut:true];
+        [self refreshLocatorWithMapView:_mapView.map majorArea:[minorArea majorArea]];
+        [self redrawBlockAndFloorSwitch];
+        _shownFloorChange = NO;
+    }
     _userMinorArea = minorArea;
     [self updateNavManagerIfNeeded];
     
 }
 -(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    //NSLog(@"finish anim");
     _changeFloorIndicator.hidden = YES;
 }
 
 
 -(id<YTBeacon>)getYTBeacon:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
@@ -1126,12 +1244,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark switch floor and block delegate methods
 -(void)switchBlock:(id<YTBlock>)block{
-
     if(_switchFloorView.toggle){
         [_switchFloorView toggleFloor];
     }
 
-    
     id<YTMajorArea> majorArea = [[[[block floors] firstObject] majorAreas] firstObject];
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
         if(_shownCallout && [_mapView currentState] == YTMapViewDetailStateNormal){
@@ -1163,14 +1279,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)switchFloor:(id<YTFloor>)floor
-    hideCallOut:(BOOL)hide{
+       hideCallOut:(BOOL)hide{
     
     id<YTMajorArea> majorArea = [[floor majorAreas] firstObject];
-    if (![[floor floorName] isEqualToString:[[_curDisplayedMajorArea floor]floorName]]) {
+    if (![[floor identifier] isEqualToString:[[_curDisplayedMajorArea floor]identifier]]) {
         if( hide && _shownCallout && [_mapView currentState] != YTMapViewDetailStateNavigating ){
-            
             [self hideCallOut];
-            
         }
         [_switchFloorView promptFloorChange:floor];
         [_mapView displayMapNamed:[majorArea mapName]];
@@ -1187,6 +1301,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         
         _curDisplayedMajorArea = majorArea;
         [self cancelCommonPoiState];
+        return;
     }
     
     [self handlePoiForMajorArea:majorArea];
@@ -1218,20 +1333,29 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)moveToUserLocationButtonClicked{
+    
     //if user is not present
     if(_userMinorArea == nil){
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromCurrentButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
     
-    //if same floor
+    //if same flooor
     if([[[_curDisplayedMajorArea floor] identifier] isEqualToString:[[[_userMinorArea majorArea] floor] identifier]]){
+        if (_userCoordintate.latitude == -888) {
+            _userCoordintate = _userCord;
+        }
         [_mapView setCenterCoordinate:_userCoordintate animated:YES];
         [AVAnalytics event:@"sameFloorMoveToUser"];
+        
+        if(_navigationView.isShowSwitchButton){
+            _navigationView.isShowSwitchButton = false;
+        }
         
     }
     //different floor
     else{
+        
         [self switchFloor:[[_userMinorArea majorArea] floor]];
         //[_mapView showUserLocationAtCoordinate:_userCoordintate];
         [_mapView setCenterCoordinate:[_userMinorArea coordinate] animated:NO];
@@ -1253,46 +1377,39 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     _navigationView.hidden = NO;
     NSString *message = nil;
     [AVAnalytics event:@"开始导航" label:[merchantLocation name]];
-    if (!_bluetoothOn) {
-        message = @"蓝牙尚未打开";
-        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:message cancelButtonTitle:@"知道了"]show];
-        [AVAnalytics event:@"蓝牙未打开时导航"];
-        return;
-    }
-    else{
-        [AVAnalytics event:@"蓝牙已经打开时导航"];
-    }
     if(_userMinorArea == nil){
         
         [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[self messageFromButtonType:YTMessageTypeFromNavigationButton] cancelButtonTitle:@"知道了"]show];
         return;
     }
-//
-//    [_navigationBar setHidden:true];
+    
     [_navigationView startNavigationAndSetDestination:merchantLocation];
     
     _navigationPlan = [[YTNavigationModePlan alloc] initWithTargetPoiSource:merchantLocation];
     _navigationView.plan = _navigationPlan;
     
     if (![[[_userMinorArea majorArea] identifier]isEqualToString:[_curDisplayedMajorArea identifier]]) {
-        [_mapView displayMapNamed:[[_userMinorArea majorArea] mapName]];
         _shownFloorChange = NO;
-        [self refreshLocatorWithMapView:_mapView.map majorArea:[_userMinorArea majorArea]];
+        [self switchFloor:[[_userMinorArea majorArea] floor] hideCallOut:false];
         [_switchFloorView promptFloorChange:[[_userMinorArea majorArea] floor]];
-        _curDisplayedMajorArea = [_userMinorArea majorArea];
-        [self handlePoiForMajorArea:[_userMinorArea majorArea]];
     }
     
     
     if([[[[merchantLocation majorArea]floor] floorName] isEqualToString:[[[_userMinorArea majorArea] floor] floorName]]){
+        
         [_mapView zoomToShowPoint1:[merchantLocation coordinate]  point2:[_userMinorArea coordinate]];
         YTPoi *poi = [merchantLocation producePoi];
-
+        
         [_mapView superHighlightPoi:poi animated:YES];
-        //[_mapView setCenterCoordinate:CLLocationCoordinate2DMake(0, 0) animated:YES];
-        //[_mapView setZoom:0.7 animated:NO];
-
+        
         _targetCord = [merchantLocation coordinate];
+        [self setTargetCordToDoorCoordIfPossible:merchantLocation];
+        
+        if (_userCoordintate.latitude == -888) {
+            _userCoordintate = _userCord;
+        }
+        _lastStableCoordinate = _userCoordintate;
+        [_mapView showPathFromCoord1:_userCoordintate toCoord2:_targetCord forMajorArea:_curDisplayedMajorArea];
         
     }
     
@@ -1304,12 +1421,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _shownCallout = NO;
         _poiButton.hidden = YES;
         _moveTargetButton.hidden = NO;
-//        [_navigationView.layer pop_removeAllAnimations];
-//        POPSpringAnimation *animation = [POPSpringAnimation animation];
-//        animation.property = [POPAnimatableProperty propertyWithName:kPOPLayerPositionX];
-//        animation.velocity = @1000;
-//        animation.springBounciness = 20;
-//        [_navigationView.layer pop_addAnimation:animation forKey:@"shake"];
     }];
 }
 
@@ -1323,14 +1434,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame = _navigationView.frame;
         frame.origin.x = 0;
         _navigationView.frame = frame;
-//
-//        frame = _switchBlockView.frame;
-//        frame.origin.y -= 44;
-//        _switchBlockView.frame = frame;
-//        
-//        frame = _switchFloorView.frame;
-//        frame.origin.y -= 44;
-//        _switchFloorView.frame = frame;
+        //
+        //        frame = _switchBlockView.frame;
+        //        frame.origin.y -= 44;
+        //        _switchBlockView.frame = frame;
+        //
+        //        frame = _switchFloorView.frame;
+        //        frame.origin.y -= 44;
+        //        _switchFloorView.frame = frame;
         
     } completion:^(BOOL finished) {
         if (copmeletion != nil && finished) {
@@ -1342,9 +1453,9 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 #pragma mark navigationView delegate
 -(void)jumToUserFloor{
-    
-    [self moveToUserLocationButtonClicked];
-    
+    if(_navigationView.isShowSwitchButton){
+        [self moveToUserLocationButtonClicked];
+    }
 }
 
 
@@ -1362,6 +1473,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_mapView hidePoi:_selectedPoi animated:YES];
     [_mapView hidePois:_allElvatorAndEscalator animated:YES];
+    [_mapView removePath];
+    _forceRepath = true;
     [_navigationBar setHidden:false];
     
     [UIView animateWithDuration:.2 animations:^{
@@ -1386,13 +1499,13 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y += HOISTING_HEIGHT;
         _changeFloorIndicator.frame = frame;
         
-//        frame = _switchBlockView.frame;
-//        frame.origin.y += 44;
-//        _switchBlockView.frame = frame;
-//        
-//        frame = _switchFloorView.frame;
-//        frame.origin.y += 44;
-//        _switchFloorView.frame = frame;
+        //        frame = _switchBlockView.frame;
+        //        frame.origin.y += 44;
+        //        _switchBlockView.frame = frame;
+        //
+        //        frame = _switchFloorView.frame;
+        //        frame.origin.y += 44;
+        //        _switchFloorView.frame = frame;
         
         frame = _selectedPoiButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
@@ -1418,7 +1531,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 
 -(void)highlightTargetGroupOfPoi:(id)poiObject{
-    
     if ([poiObject isMemberOfClass:[YTCategory class]]){
         YTCategory *category = poiObject;
         [_selectedPoiButton setPoiImage:category.image];
@@ -1437,14 +1549,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             [_mapView highlightPois:_activePois animated:YES];
             [_selectedPoiButton setPoiImage:commonlyUsed.icon];
             _selectOnOneOfThePoi = YES;
-        }
-        else{
-            [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"本楼层没有你想选的目标" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil]show];
+        }else{
+            YTCommonlyUsed *commonlyUsed = poiObject;
+            NSString *message = [NSString stringWithFormat:@"很抱歉，该楼层没有%@",commonlyUsed.name];
+            [[[YTMessageBox alloc]initWithTitle:@"" Message:message cancelButtonTitle:@"知道了"]show];
             [_poiView deleteSelectedPoi];
             [self cancelCommonPoiState];
             _selectOnOneOfThePoi = NO;
         }
-        
     }
 }
 
@@ -1580,20 +1692,39 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 - (NSString *)messageFromButtonType:(YTMessageType)type{
     NSMutableString *subMessage = [NSMutableString string];
-    if (!_userMinorArea) {
-        [subMessage appendString:[NSString stringWithFormat:@"您当前不在%@,",[[[[_curDisplayedMajorArea floor] block] mall] mallName]]];
+    NSString *mallId = [[[NSUserDefaults standardUserDefaults]valueForKey:@"currentMall"] stringValue];
+    
+    if (!_bluetoothOn){
+        [subMessage appendString:@"请开启蓝牙功能以支持室内定位"];
     }else{
-        [subMessage appendString:@"您当前不处于导航模式"];
+        if ([mallId isEqualToString:[_targetMall identifier]]) {
+            // 在附近一公里范围内
+            [subMessage appendString:@"很抱歉，您不在覆盖范围"];
+        }else{
+            // 不在附近一公里范围内
+            [subMessage appendString:@"很抱歉，当前您不在该商城"];
+        }
     }
     
-    switch (type) {
-        case YTMessageTypeFromCurrentButton:
-            [subMessage appendString:@"无法定位当前位置"];
-            break;
-        case YTMessageTypeFromNavigationButton:
-            [subMessage appendString:@"无法使用导航功能"];
-            break;
-    }
+//    if (_bluetoothOn) {
+//        if (!_userMinorArea) {
+//            [subMessage appendString:[NSString stringWithFormat:@"您当前不在%@,",[[[[_curDisplayedMajorArea floor] block] mall] mallName]]];
+//        }else{
+//            [subMessage appendString:@"您当前不处于导航模式"];
+//        }
+//    }else{
+//        [subMessage appendString:@"请开启蓝牙功能以支持室内定位"];
+//        return subMessage;
+//    }
+//    
+//    switch (type) {
+//        case YTMessageTypeFromCurrentButton:
+//            [subMessage appendString:@"无法定位当前位置"];
+//            break;
+//        case YTMessageTypeFromNavigationButton:
+//            [subMessage appendString:@"无法使用导航功能"];
+//            break;
+//    }
     return subMessage;
 }
 
@@ -1606,11 +1737,12 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         local = selected;
     }
     else{
-        local = [(YTCloudMall *)selected getLocalCopy];
+        local = [_mallDict changeMallObject:selected resultType:YTMallClassLocal];
     }
     id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];
+    
     [_mapView displayMapNamed:[_majorArea mapName]];
     _shownFloorChange = NO;
     [self refreshLocatorWithMapView:_mapView.map majorArea:_majorArea];
@@ -1627,12 +1759,11 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
 -(id<YTMinorArea>)getMinorArea:(ESTBeacon *)beacon{
     
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     [db open];
     FMResultSet *result = [db executeQuery:@"select * from Beacon where major = ? and minor = ?",[beacon.major stringValue],[beacon.minor stringValue]];
     [result next];
     YTLocalBeacon *localBeacon = [[YTLocalBeacon alloc] initWithDBResultSet:result];
-    
     YTLocalMinorArea * minorArea = [localBeacon minorArea];
     return minorArea;
 }
@@ -1640,7 +1771,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 #pragma mark YTBeaconBasedLocatorDelegate method
 - (void)YTBeaconBasedLocator:(YTBeaconBasedLocator *)locator
            coordinateUpdated:(CLLocationCoordinate2D)coordinate{
-    //NSLog(@"cordinate!!! lat: %f, long:%f",coordinate.latitude,coordinate.longitude);
     
     _userCoordintate = coordinate;
     
@@ -1659,12 +1789,14 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     
     [_beaconManager removeListener:_locator];
     
-    _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea];
+    _locator = [[YTBeaconBasedLocator alloc] initWithMapView:aMapView beaconManager:_beaconManager majorArea:aMajorArea mapOffset:[_targetMall offset]];
+    
     
     [_locator start];
     [_beaconManager addListener:_locator];
     _locator.delegate = self;
     _userCoordintate = CLLocationCoordinate2DMake(-888, -888);
+    _lastStableCoordinate = CLLocationCoordinate2DMake(-888, -888);
     
 }
 
@@ -1716,12 +1848,21 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if ([[_targetMall identifier]isEqualToString:[aMall identifier]]) {
         return;
     }
-    _navigationBar.titleName = [aMall mallName];
-    _targetMall = aMall;
-    [_mapView setMapOffset:[_targetMall offset]];
-    [self createSearchView];
+    
+    if (!_navigationView.isNavigating || _type != YTMapViewControllerTypeFloor) {
+        _navigationBar.titleName = [aMall mallName];
+        _targetMall = aMall;
+        [_mapView setMapOffset:[_targetMall offset]];
+        [self createSearchView];
+    }
 }
 
+
+-(void)setShowMajorArea:(id<YTMajorArea>)showMajorArea{
+    [self switchFloor:[showMajorArea floor] hideCallOut:true];
+    _majorArea = showMajorArea;
+    _showMajorArea = showMajorArea;
+}
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(_alert!= nil){
         [self dismissViewControllerAnimated:YES completion:nil];

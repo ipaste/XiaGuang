@@ -7,6 +7,7 @@
 //
 
 #import "YTPoiView.h"
+#import "AppDelegate.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 @interface YTPoiView(){
    __weak UIWindow *_window;
@@ -27,7 +28,7 @@
         
         _selectedButtonIndex = -1;
         
-        _window = [[UIApplication sharedApplication].delegate window];
+        _window = [(AppDelegate *)[UIApplication sharedApplication].delegate window];
 
         _commons = [NSMutableArray arrayWithArray:[YTCommonlyUsed commonlyUsed]];
         

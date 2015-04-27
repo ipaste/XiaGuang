@@ -62,7 +62,7 @@
 - (UIActivityIndicatorView *)activityView
 {
     if (!_activityView) {
-        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         activityView.bounds = self.arrowImage.bounds;
         activityView.autoresizingMask = self.arrowImage.autoresizingMask;
         [self addSubview:_activityView = activityView];
@@ -150,7 +150,6 @@ typedef void (*send_type)(void *, SEL, UIView *);
         if (self.window) {
             self.state = MJRefreshStateRefreshing;
         } else {
-    #warning 不能调用set方法
             _state = MJRefreshStateWillRefreshing;
             [super setNeedsDisplay];
         }
@@ -160,7 +159,7 @@ typedef void (*send_type)(void *, SEL, UIView *);
 #pragma mark 结束刷新
 - (void)endRefreshing
 {
-    double delayInSeconds = 0.3;
+    double delayInSeconds = 0.6;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         self.state = MJRefreshStateNormal;
@@ -198,6 +197,9 @@ typedef void (*send_type)(void *, SEL, UIView *);
             // 设置文字
             self.statusLabel.text = self.refreshingText;
 			break;
+        case MJRefreshStateNotRefreshing:
+            self.statusLabel.text = MJRefreshFooterNotRefreshing;
+            break;
         default:
             break;
 	}
@@ -263,6 +265,11 @@ typedef void (*send_type)(void *, SEL, UIView *);
                 self.beginRefreshingCallback();
             }
 			break;
+        }
+        case MJRefreshStateNotRefreshing:
+        {
+            [self.activityView stopAnimating];
+            self.arrowImage.hidden = true;
         }
         default:
             break;

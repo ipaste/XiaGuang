@@ -20,6 +20,8 @@
 #import "YTMinorAreaPoi.h"
 #import "RMMarker+RMMarker_YTExtension.h"
 #import "YTCanonicalCoordinate.h"
+#import "YTMapGraph.h"
+#import "YTPathAnnotation.h"    
 
 typedef enum : NSUInteger {
     YTMapViewDetailStateNormal = 0,
@@ -37,9 +39,6 @@ typedef enum : NSUInteger {
 
 -(void)mapView:(YTMapView2 *)mapView doubleTapOnMap:(CLLocationCoordinate2D)coordinate;
 
-
--(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction;
-
 @end
 
 
@@ -48,6 +47,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic,weak) id<YTMapViewDelegate> delegate;
 @property (nonatomic,readonly) RMMapView *map;
+@property (nonatomic) BOOL isShowPath;
 
 
 #pragma mark Map Annimations
@@ -77,7 +77,10 @@ typedef enum : NSUInteger {
 -(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated;
-
+-(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
+                 toCoord2:(CLLocationCoordinate2D)c2
+             forMajorArea:(id<YTMajorArea>)majorArea;
+-(void)removePath;
 -(void)setScore:(double)score
 forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi;
 

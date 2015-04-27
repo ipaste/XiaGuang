@@ -22,9 +22,16 @@
 #define MERCHANT_CLASS_ICON_KEY @"Icon"
 #define MERCHANT_CLASS_FLOOR_KEY @"floor"
 
+@interface YTCloudMerchant : NSObject<YTMerchant,DPRequestDelegate>
+@property (assign ,nonatomic)BOOL isSole;
+@property (assign ,nonatomic)BOOL isOther;
 
-@interface YTCloudMerchant : NSObject<YTMerchant>
+
 -(id)initWithAVObject:(AVObject *)object;
 -(YTLocalMerchantInstance *)getLocalMerchantInstance;
-- (void)merchantWithPreferentials:(void(^)(NSArray *preferentials,NSError *error))callBack;
+
+- (void)merchantWithPreferentials:(void(^)(NSArray *preferentials,NSError *error))callBack DEPRECATED_ATTRIBUTE;
+
+- (void)getSolePreferentials:(void (^)(NSArray *preferentials,NSError *error))callBack;
+- (void)getOtherPreferentials:(void (^)(NSArray *preferentials,NSError *error))callBack;
 @end

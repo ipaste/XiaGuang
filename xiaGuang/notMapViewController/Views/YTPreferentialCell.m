@@ -16,6 +16,7 @@
     UILabel *_textLabel;
     UILabel *_originalPriceLabel;
     UILabel *_favorablePriceLabel;
+    UILabel *_timeLabel;
     UIView *_lineView;
 }
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -36,19 +37,28 @@
         frame.origin = CGPointMake(CGRectGetMinX(_textLabel.frame), CGRectGetMaxY(_textLabel.frame) + 16);
         _favorablePriceLabel = [[UILabel alloc]initWithFrame:frame];
         
+        frame.size = CGSizeMake(CGRectGetWidth(self.frame) - ICON_WIDTH_HEIGHT - 40, 18);
+        _timeLabel = [[UILabel alloc]initWithFrame:frame];
+        
         frame.size = CGSizeMake(100, 18);
         frame.origin = CGPointMake(CGRectGetMaxX(_favorablePriceLabel.frame) + 12, CGRectGetMinY(_favorablePriceLabel.frame));
         _originalPriceLabel = [[UILabel alloc]initWithFrame:frame];
+        
         
         frame.size = CGSizeMake(CGRectGetWidth(self.frame) - 20, 0.5);
         frame.origin = CGPointMake(10, CGRectGetMaxY(_imageView.frame) + 18);
         _lineView = [[UIView alloc]initWithFrame:frame];
         
+    
         [self addSubview:_imageView];
         [self addSubview:_textLabel];
+        [self addSubview:_timeLabel];
         [self addSubview:_originalPriceLabel];
         [self addSubview:_favorablePriceLabel];
         [self addSubview:_lineView];
+        
+        
+        self.style = YTPreferentialTypeSole;
     }
     return self;
 }
@@ -59,12 +69,15 @@
     
     _textLabel.textColor = [UIColor colorWithString:@"333333"];
     _textLabel.font = [UIFont systemFontOfSize:15];
-
+    
     _originalPriceLabel.textColor = [UIColor colorWithString:@"999999"];
     _originalPriceLabel.font = [UIFont systemFontOfSize:12];
     
     _favorablePriceLabel.textColor = [UIColor colorWithString:@"e95e37"];
     _favorablePriceLabel.font = [UIFont systemFontOfSize:13];
+    
+    _timeLabel.textColor = _favorablePriceLabel.textColor;
+    _timeLabel.font = _favorablePriceLabel.font;
     
     _lineView.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
 }
@@ -83,11 +96,18 @@
         _textLabel.text = preferential.preferentialInfo;
         _originalPriceLabel.text = preferential.originalPrice.stringValue;
         _favorablePriceLabel.text = [preferential.favorablePrice.stringValue  stringByAppendingString:@"元"];
+        if (preferential.time != nil) {
+            _timeLabel.text = [NSString stringWithFormat:@"活动时间: %@",preferential.time];
+        }else{
+            _timeLabel.text = [NSString stringWithFormat:@"活动时间: 无期限"];
+        }
+        
     }else{
         _imageView.image = [UIImage imageNamed:@"imgshop_default"];
         _textLabel.text = @"走过路过不要错过";
         _originalPriceLabel.text = @"100";
         _favorablePriceLabel.text = @"88元";
+        _timeLabel.text = [NSString stringWithFormat:@"活动时间: 2010 - 2020"];
     }
     
     
@@ -95,6 +115,7 @@
     CGRect frame = _favorablePriceLabel.frame;
     frame.size.width = textSize.width;
     _favorablePriceLabel.frame = frame;
+    
     
     
     textSize = [_originalPriceLabel.text boundingRectWithSize:CGSizeMake(100, 18) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_originalPriceLabel.font} context:nil].size;
@@ -110,6 +131,26 @@
     
     _originalPriceLabel.attributedText = string;
     
+}
+
+
+-(void)setStyle:(YTPreferentialCellStyle)style{
+
+    switch (style) {
+        case YTPreferentialCellStyleSole:
+            _originalPriceLabel.hidden = true;
+            _favorablePriceLabel.hidden = true;
+            _timeLabel.hidden = false;
+            break;
+            
+        case YTPreferentialCellStyleOther:
+            _timeLabel.hidden = true;
+            _originalPriceLabel.hidden = false;
+            _favorablePriceLabel.hidden = false;
+            break;
+    }
+    
+    _style = style;
 }
 
 @end

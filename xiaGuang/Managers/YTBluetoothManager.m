@@ -9,7 +9,6 @@
 #import "YTBluetoothManager.h"
 NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasChanged";
 @interface YTBluetoothManager (){
-    CLLocationManager *_locationManager;
     CBCentralManager *_centralManager;
     NSTimer *_timer;
     BOOL _isEnterBackground;
@@ -34,10 +33,12 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
     [[NSNotificationCenter defaultCenter]postNotificationName:YTBluetoothStateHasChangedNotification object:nil userInfo:@{@"isOpen":curState ? @YES:@NO}];
 }
+
 -(void)refreshBluetoothStateForCallBack:(YTBluetoothCallBack)callback{
     BOOL curState = _centralManager.state == CBCentralManagerStatePoweredOff ? NO : YES;
     callback(curState);
 }
+
 -(instancetype)init{
     self = [super init];
     if (self) {
@@ -46,8 +47,8 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         _isReceivedMessage = YES;
+        _locationManager = [[CLLocationManager alloc]init];
         if ([[[UIDevice currentDevice]systemVersion] hasPrefix:@"8"]){
-            _locationManager = [[CLLocationManager alloc]init];
             [_locationManager requestAlwaysAuthorization];
             [_locationManager requestWhenInUseAuthorization];
         }

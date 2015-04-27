@@ -8,7 +8,6 @@
 
 #import "YTDetailsView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
-#import <POP.h>
 #define TEXTCOLOR_AND_ARROWCOLOR [UIColor colorWithRed:139/255.0f green:139/255.0f blue:139/255.0f alpha:1.0]
 @implementation YTDetailsView{
     UILabel *_label;

@@ -8,7 +8,6 @@
 
 #import "YTNavigationView.h"
 #import "YTNavigationInstruction.h"
-#import "POP.h"
 #import "YTMessageBox.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #define TEXTCOLOR_AND_ARROWCOLOR [UIColor colorWithRed:139/255.0f green:139/255.0f blue:139/255.0f alpha:1.0]
@@ -41,7 +40,7 @@
         _stopNavigation = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(frame) - 69, 14.5, 51, 51)];
         
         _switchButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(_stopNavigation.frame) - CGRectGetWidth(_stopNavigation.frame) - 18, CGRectGetMinY(_stopNavigation.frame), CGRectGetWidth(_stopNavigation.frame), CGRectGetHeight(_stopNavigation.frame))];
-        _messageBox = [[YTMessageBox alloc]initWithTitle:@"导航进行中..." Message:@"确定退出导航"];
+        _messageBox = [[YTMessageBox alloc]initWithTitle:@"导航进行中..." Message:@"正在导航中，确定取消吗？"];
         _messageBox.delegate = self;
         [self addSubview:_icon];
         [self addSubview:_switchButton];
@@ -105,6 +104,7 @@
 
 -(void)jumToBeacon:(UIButton *)sender{
     [self.delegate jumToUserFloor];
+    self.isShowSwitchButton = false;
 }
 
 
@@ -136,7 +136,7 @@
     
     _subLabel.text = instruction.mainInstruction;
     if (instruction.type == YTNavigationInstructionApproachingDestination && !_approachMessageShown) {
-         YTMessageBox *tmpMessage = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"您已经到达了终点,是否结束导航"];
+         YTMessageBox *tmpMessage = [[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:@"您已处于目的地附近，导航结束"];
         tmpMessage.delegate = self;
         [tmpMessage show];
         _approachMessageShown = YES;
@@ -150,15 +150,17 @@
     animation.fromValue = [NSNumber numberWithFloat:1];
     animation.duration = 1;
     animation.repeatCount = 2;
-    animation.removedOnCompletion = NO;
+    animation.removedOnCompletion = false;
+    animation.delegate = self;
     animation.fillMode = kCAFillModeForwards;
     [_switchButton.layer addAnimation:animation forKey:@"animation"];
-    
 }
 
+-(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+    _switchButton.hidden = false;
+}
 
 -(void)clickToButtonAtTag:(NSInteger)tag{
-    
     if (tag == 1) {        
         [self stopNavigationMode];
     }

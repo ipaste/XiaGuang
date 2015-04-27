@@ -7,13 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YTStatusBar.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (strong, nonatomic) YTStatusBar *statusBar;
 
 @end
 

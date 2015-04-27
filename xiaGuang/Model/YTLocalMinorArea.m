@@ -33,6 +33,7 @@
             _tmpMajorAreaId = [findResultSet stringForColumn:@"majorAreaId"];
             _tmpLatitude = [findResultSet doubleForColumn:@"latitude"];
             _tmpLongtitude = [findResultSet doubleForColumn:@"longtitude"];
+            
         }
     }
     return self;
@@ -54,7 +55,7 @@
 -(NSArray *)beacons{
     if(_tmpBeacons == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Beacon where minorAreaId = ?",_tmpMinorAreaId];
         
         _tmpBeacons = [[NSMutableArray alloc] init];
@@ -72,14 +73,8 @@
 -(id<YTMajorArea>)majorArea{
     if(_tmpMajorArea == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
-        if([db open]){
-            
-            FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpMajorAreaId];
-            [result next];
-            
-            _tmpMajorArea = [[YTLocalMajorArea alloc] initWithDBResultSet:result];
-        }
+        _tmpMajorArea = [[YTMajorAreaDict sharedInstance] getMajorAreaFromId:_tmpMajorAreaId];
+    
     }
     return _tmpMajorArea;
 }

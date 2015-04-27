@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "YTPreferential.h"
+typedef NS_ENUM(NSInteger, YTPreferentialCellStyle) {
+    YTPreferentialCellStyleSole,
+    YTPreferentialCellStyleOther
+};
 @interface YTPreferentialCell : UITableViewCell
 @property (strong ,nonatomic) YTPreferential *preferential;
+@property (nonatomic) YTPreferentialCellStyle style;
 @end

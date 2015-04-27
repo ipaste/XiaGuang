@@ -24,7 +24,7 @@
 
 #define microAxis  6356752 //the half distance between north and sourth poles
 
-#define particleNum 100 //number of particles in particle filter
+#define particleNum 50 //number of particles in particle filter
 
 #define distanceThreshold 20 //unit: meters
 
@@ -78,7 +78,7 @@
     
     for (int i=0; i<particleNum; i++) {
         
-        double step = [YTCanonicalCoordinate worldToCanonicalDistance:stepLen + arc4random()/RAND_MAX
+        double step = [YTCanonicalCoordinate worldToCanonicalDistance:stepLen + arc4random()/RAND_MAX-0.5
                                                                mapView:_mapView
                                                              majorArea:_majorArea];
         _stepLens[i] = step;
@@ -101,7 +101,7 @@
     _motionManager = [[CMMotionManager alloc]init];
     
     //mag data
-    _motionManager.magnetometerUpdateInterval = 0.1;
+    _motionManager.magnetometerUpdateInterval = 0.2;
     [_motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMMagnetometerData *magData, NSError *error) {
         if (error) {
             NSLog(@"Magnetometer Error: %@", error);
@@ -112,7 +112,7 @@
     }];
     
     //motion data
-    _motionManager.deviceMotionUpdateInterval = 0.1;
+    _motionManager.deviceMotionUpdateInterval = 0.2;
     [_motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMDeviceMotion *motion, NSError *error){
         if (error ) {
             NSLog(@"Motion Error: %@", error);
@@ -280,7 +280,7 @@
             for (int i=0; i<particleNum; i++) {
                 
                 //step length, random, 10 meters
-                _stepLens[i] = [YTCanonicalCoordinate worldToCanonicalDistance:stepLen + arc4random()/RAND_MAX
+                _stepLens[i] = [YTCanonicalCoordinate worldToCanonicalDistance:stepLen + arc4random()/RAND_MAX-0.5
                                                                        mapView:_mapView
                                                                      majorArea:_majorArea];
                 

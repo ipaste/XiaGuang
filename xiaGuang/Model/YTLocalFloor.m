@@ -14,6 +14,7 @@
     int _tmpFloorWeight;
     NSString *_tmpFloorName;
     NSString *_tmpUniId;
+    NSInteger _queue;
     NSMutableArray *_tmpMajorAreas;
     id<YTBlock> _tmpBlock;
     
@@ -33,6 +34,7 @@
             _tmpFloorWeight = [findResultSet intForColumn:@"weight"];
             _tmpFloorName = [findResultSet stringForColumn:@"floorName"];
             _tmpUniId = [findResultSet stringForColumn:@"uniId"];
+            _queue = [findResultSet intForColumn:@"queue"];
         }
     }
     return self;
@@ -55,7 +57,7 @@
 -(id<YTBlock>)block{
     if(_tmpBlock == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Block where blockId = ?",_tmpBlockId];
@@ -70,7 +72,7 @@
 -(NSArray *)majorAreas{
     if(_tmpMajorAreas == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from MajorArea where floorId = ?",_tmpFloorId];
         
         _tmpMajorAreas = [[NSMutableArray alloc] init];
@@ -87,5 +89,9 @@
 
 -(NSString *)uniId{
     return _tmpUniId;
+}
+
+-(NSInteger)queue{
+    return _queue;
 }
 @end

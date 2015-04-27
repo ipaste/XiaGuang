@@ -27,13 +27,12 @@
             found = YES;
             //[self moveTileSourceAtIndex:i toIndex:[tileSources count]-1];
             [self showTileSourceAtIndex:i];
-            
+            self.zoom = 0;
             self.maxZoom = tileSource.maxZoom;
             
             break;
         }
     }
-    
     
     if(!found){
         RMMBTilesSource *source;
@@ -45,7 +44,7 @@
         }
         
         if(source == nil){
-            return;
+            source = [[RMMBTilesSource alloc]initWithTileSetResource:sourceName];
         }
         source.cacheable = NO;
         
@@ -54,7 +53,8 @@
         [self showTileSourceAtIndex:self.tileSources.count-1];
         
         self.maxZoom = source.maxZoom;
-        
+        self.minZoom = 0;
+        self.zoom = 1;
     }
     
     

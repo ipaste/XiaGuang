@@ -54,8 +54,6 @@
             _currentPoint.y = newPoint.y;
             _lastUpdateTime = now;
             _outOfRangeCount = 0;
-            
-            NSLog(@"!!!!!!!!!!!!!!!!!!");
         } else {
             double dist = sqrt(pow(newPoint.x - _currentPoint.x, 2) + pow(newPoint.y - _currentPoint.y, 2));
             double adjustedDist = [YTCanonicalCoordinate canonicalToWorldDistance:dist

@@ -15,16 +15,17 @@
     YTMapViewDetailState _detailState;
     YTUserAnnotation *_userAnnotation;
     CGFloat _offset;
+    YTPathAnnotation *_pathAnnotation;
+    id <YTMajorArea> _majorArea;
 }
 
 #pragma mark init
 -(id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if(self){
-        
         RMMBTilesSource *source = [[RMMBTilesSource alloc]initWithTileSetResource:@""];
         source.cacheable = NO;
-        _internalMapView = [[RMMapView alloc] initWithFrame:CGRectMake(-CGRectGetWidth(frame) / 2, -CGRectGetHeight(frame) / 2, CGRectGetWidth(frame), CGRectGetHeight(frame)) andTilesource:source centerCoordinate:CLLocationCoordinate2DMake(0, 0) zoomLevel:2 maxZoomLevel:6 minZoomLevel:0 backgroundImage:nil];
+        _internalMapView = [[RMMapView alloc] initWithFrame:CGRectMake(-CGRectGetWidth(frame) / 2, -CGRectGetHeight(frame) / 2, CGRectGetWidth(frame), CGRectGetHeight(frame)) andTilesource:source centerCoordinate:CLLocationCoordinate2DMake(0, 0) zoomLevel:2 maxZoomLevel:3 minZoomLevel:0 backgroundImage:nil];
         _internalMapView.hideAttribution = YES;
         _internalMapView.showLogoBug = NO;
         _internalMapView.delegate = self;
@@ -32,6 +33,7 @@
         _annotationSource = [[YTAnnotationSource alloc] init];
         [self addSubview:_internalMapView];
         _map = _internalMapView;
+        _isShowPath = true;
     }
     return self;
 }
@@ -59,7 +61,6 @@
 
 #pragma mark Map data manipulation
 -(void)displayMapNamed:(NSString *)mapName{
-    
     [_internalMapView addAndDisplayTileSourceNamed:mapName];
 }
 
@@ -67,13 +68,10 @@
     
     NSMutableArray *annos = [NSMutableArray array];
     for(YTPoi *tmpPoi in pois){
-        
         YTAnnotation *tmpAnnotation = [tmpPoi produceAnnotationWithMapView:_internalMapView];
         [_annotationSource setAnnotation:tmpAnnotation forPoi:tmpPoi];
         [annos addObject:tmpAnnotation];
-        
     }
-    
     [_internalMapView addAnnotations:annos];
     
 }
@@ -96,9 +94,6 @@
     
 }
 
--(void)reloadAnnotations{
-    
-}
 
 -(void)removeAnnotations{
     [_annotationSource removeAllAnnotations];
@@ -233,6 +228,8 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
 
+
+
 -(void)tapOnAnnotation:(RMAnnotation *)annotation onMap:(RMMapView *)map{
     
     if([annotation.annotationType isEqualToString:@"user"] || [annotation.annotationType isEqualToString:@"minor"]){
@@ -243,12 +240,9 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 }
 
 -(RMMapLayer *)mapView:(RMMapView *)mapView layerForAnnotation:(RMAnnotation *)annotation{
-    
-    if([annotation.annotationType isEqualToString:@"user"]){
-        NSLog(@"user annotation layer");
-        NSLog(@"coordinate:%f, %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+    if ([annotation isMemberOfClass:[YTPathAnnotation class]]){
+        return annotation.layer;
     }
-    
     RMMapLayer *layer = [(YTAnnotation *)annotation produceLayer];
     return layer;
 }
@@ -264,17 +258,6 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     }
    
 }
-
-
-
--(void)afterMapZoom:(RMMapView *)map byUser:(BOOL)wasUserAction{
-
-    
-    NSLog(@"zoom %f",map.zoom);
-    //[self refilterAnnotations];
-    
-}
-
 
 -(void)refilterAnnotations{
     
@@ -337,5 +320,42 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     return sqrt(xdiff*xdiff+ydiff*ydiff);
     
 }
+
+-(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
+                 toCoord2:(CLLocationCoordinate2D)c2
+             forMajorArea:(id<YTMajorArea>)majorArea{
+    
+    if (self.isShowPath) {
+        if (_pathAnnotation != nil) {
+            [self removePath];
+        }
+        
+        CGPoint p1 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c1 mapView:_internalMapView];
+        CGPoint p2 = [YTCanonicalCoordinate mapToCanonicalCoordinate:c2 mapView:_internalMapView];
+        _pathAnnotation = [[YTPathAnnotation alloc] initWithMapView:_internalMapView majorArea:majorArea fromPoint1:p1 toPoint2:p2];
+        _majorArea = majorArea;
+        if(_pathAnnotation != nil){
+            [_internalMapView addAnnotation:_pathAnnotation];
+        }
+    }
+}
+
+-(void)removePath{
+    if(_pathAnnotation != nil){
+        [_internalMapView removeAnnotation:_pathAnnotation];
+        _pathAnnotation = nil;
+    }
+}
+
+
+-(void)setIsShowPath:(BOOL)isShowPath{
+    if (!isShowPath) {
+        if (_pathAnnotation != nil) {
+            [self removePath];
+        }
+    }
+    _isShowPath = isShowPath;
+}
+
 
 @end

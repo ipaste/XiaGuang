@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <ESTBeacon.h>
 #import "YTMajorArea.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 #import "YTLocalMajorArea.h"
 
 @interface YTMajorAreaVoter : NSObject
 
-+(NSString *)shouldSwitchToMajorAreaId:(NSArray *)beacons;
-+(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon;
++(id)sharedInstance;
+
+-(NSString *)shouldSwitchToMajorAreaId:(NSArray *)objects;
+-(id<YTMajorArea>)getMajorArea:(ESTBeacon *)beacon;
 
 @end

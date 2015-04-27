@@ -85,6 +85,8 @@
  */
 - (void)footerEndRefreshing;
 
+- (void)footerEndRefreshingWillNotLoading;
+
 /**
  *  上拉刷新头部控件的可见性
  */

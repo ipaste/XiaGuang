@@ -11,14 +11,15 @@
 #import <ESTBeacon.h>
 #import "ESTBeaconRegion.h"
 #import "YTMall.h"
+#import "YTDataManager.h"
 #import "ESTBeacon+YTExtension.h"
-#import "YTStaticResourceManager.h"
+#import "YTDataManager.h"
 
 @class YTBeaconManager;
 
 @protocol YTBeaconManagerDelegate <NSObject>
 @required
--(void)rangedBeacons:(NSArray *)beacons;
+-(void)rangedObjects:(NSArray *)objects;
 -(void)noBeaconsFound;
 
 @end
@@ -26,7 +27,7 @@
 @protocol YTBeaconManagerUpdateListener <NSObject>
 
 -(void)YTBeaconManager:(YTBeaconManager *)manager
-         rangedBeacons:(NSArray *)beacons;
+         rangedObjects:(NSArray *)objects;
 
 @end
 

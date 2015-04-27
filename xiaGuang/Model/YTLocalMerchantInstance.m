@@ -62,14 +62,10 @@
             _tmpMerchantInstanceName = [findResultSet stringForColumn:@"merchantInstanceName"];
             _tmpLatitude = [findResultSet doubleForColumn:@"latitude"];
             _tmpLongtitude = [findResultSet doubleForColumn:@"longtitude"];
-            _tmpMinorAreaId = [findResultSet stringForColumn:@"minorAreaId"];
             _tmpMerchantInstanceName = [findResultSet stringForColumn:@"merchantInstanceName"];
             _tmpMajorAreaId = [findResultSet stringForColumn:@"majorAreaId"];
             _tmpFloorId = [findResultSet stringForColumn:@"floorId"];
             _tmpAddress = [findResultSet stringForColumn:@"address"];
-            _tmpDisplayLevel = [findResultSet doubleForColumn:@"displayLevel"];
-            _tmpLableHeight = [findResultSet doubleForColumn:@"labelHeight"];
-            _tmpLableWidth = [findResultSet doubleForColumn:@"labelWidth"];
             _tmpUniId = [findResultSet stringForColumn:@"uniId"];
             
         }
@@ -81,7 +77,7 @@
 -(id<YTMall>)mall{
     if(_tmpMall == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Mall where mallId = ?",_tmpMallId];
@@ -96,7 +92,7 @@
 -(id<YTFloor>)floor{
     if(_tmpFloor == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from Floor where floorId = ?",_tmpFloorId];
@@ -131,7 +127,7 @@
 -(id<YTMajorArea>)majorArea{
     if(_tmpMajorArea == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MajorArea where majorAreaId = ?",_tmpMajorAreaId];
@@ -147,7 +143,7 @@
     
     if(_tmpMinorArea == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             
             FMResultSet *result = [db executeQuery:@"select * from MinorArea where minorAreaId = ?",_tmpMinorAreaId];
@@ -219,7 +215,7 @@
     if(_tmpDoors == nil){
         
         _tmpDoors = [NSMutableArray new];
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
             NSString *query = @"select * from Door where uniId = ?";
             FMResultSet *result = [db executeQuery:query,_tmpUniId];

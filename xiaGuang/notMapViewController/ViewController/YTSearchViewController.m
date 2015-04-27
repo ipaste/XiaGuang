@@ -23,6 +23,7 @@
     NSArray *_categorys;
     NSArray *_images;
     NSMutableArray *_slideImageViews;
+    UIButton *_leftButton;
     BOOL _isManualSwitch;
 }
 @end
@@ -31,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self defaultNavigation];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     //_tableView.tableHeaderView = [self tableHeadView];
     _tableView.delegate = self;
@@ -49,18 +51,19 @@
     _searchView.delegate = self;
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:YES];
     
+    
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
     self.automaticallyAdjustsScrollViewInsets = false;
     
 }
 -(UIView *)leftBarButtonItemCustomView{
     UIImage *backImage = [UIImage imageNamed:@"icon_back"];
-    UIButton *backButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, backImage.size.width, backImage.size.height)];
-    [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [backButton setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
-    [backButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
-    [backButton setImage:backImage forState:UIControlStateNormal];
-    return backButton;
+    _leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, backImage.size.width, backImage.size.height)];
+    [_leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    [_leftButton setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    [_leftButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
+    [_leftButton setImage:backImage forState:UIControlStateNormal];
+    return _leftButton;
 }
 
 -(UIView *)tableHeadView{
@@ -98,25 +101,17 @@
     [background addSubview:_pageControl];
     [background addSubview:lineView];
     
-    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:scrollView repeats:YES];
+  //  [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:scrollView repeats:YES];
     return background;
 }
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [_searchView showSearchViewWithAnimation:NO];
-    self.navigationItem.title = @"虾逛";
-    self.navigationItem.titleView = [[UIView alloc]init];
-    
+
+- (void)defaultNavigation{
+    self.navigationItem.hidesBackButton = true;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
     self.navigationController.navigationBar.clipsToBounds = true;
     self.navigationController.navigationBar.tintColor = [UIColor colorWithString:@"e65e37"];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
-    
-//    self.navigationController.navigationBar.tintColor =[UIColor whiteColor];
-//    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButtonItemCustomView]];
-//    self.navigationController.navigationBar.clipsToBounds = false;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -124,7 +119,10 @@
     [_searchView hideSearchViewWithAnimation:NO];
 }
 
-
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [_searchView showSearchViewWithAnimation:NO];
+}
 -(void)viewWillLayoutSubviews{
     CGFloat topHeight = [self.topLayoutGuide length];
     
@@ -156,7 +154,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     YTCategory *category  = _categorys[indexPath.row];
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResutsKey:category.text];
-    resultsVC.isSearch = NO;
+
     resultsVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -165,14 +163,12 @@
 
 -(void)selectedUniIds:(NSArray *)uniIds{
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:uniIds];
-    resultsVC.isSearch = YES;
-    resultsVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 2) {
-
         if (_isManualSwitch) {
             [self toggleBanner:scrollView];
         }
@@ -182,7 +178,7 @@
 -(void)bannerSwitch:(NSTimer *)timer{
     _isManualSwitch = NO;
     UIScrollView *scrollView = timer.userInfo;
-    [UIView animateWithDuration:.5 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x + CGRectGetWidth(scrollView.frame), scrollView.contentOffset.y);
     } completion:^(BOOL finished) {
         [self toggleBanner:scrollView];
@@ -214,15 +210,13 @@
     }
 }
 -(void)back{
-    [_searchView hideSearchViewWithAnimation:NO];
+    [_searchView removeFromSuperview];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
 }
--(void)dealloc{
-    [_searchView removeFromSuperview];
-}
+
 
 @end

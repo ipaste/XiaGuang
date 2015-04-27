@@ -13,6 +13,7 @@
 #import "YTResultsViewController.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "YTFileManager.h"
+#import "YTChineseTool.h"
 #define HISTORYTABLECELL_HEIGHT 40
 #define HOTSEARCH_HEIGTH 148
 @interface YTSearchDetailsView()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>{
@@ -31,6 +32,7 @@
     NSOperationQueue *_searchOpQueue;
     UIView *_selectView;
     UIButton *_notNetWordButton;
+    NSMutableArray *_pinyingSearchSource;
     BOOL _isRefrest;
 }
 @end
@@ -86,16 +88,27 @@
         _searchResultstableView.hidden = YES;
         [self addSubview:_searchResultstableView];
         
-        _notLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,100, CGRectGetWidth(_searchResultstableView.frame), 45)];
-        _notLabel.font = [UIFont systemFontOfSize:20];
-        _notLabel.textColor = [UIColor colorWithString:@"c8c8c8"];
-        _notLabel.text = @"无结果";
-        _notLabel.textAlignment = 1;
-        _notLabel.hidden = YES;
-        [_searchResultstableView addSubview:_notLabel];
         self.hidden = YES;
         
         _majorAreaIds = [self getMajorAreaId:_mall];
+        
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            FMDatabase *db = [YTDataManager defaultDataManager].database;
+//            _pinyingSearchSource = [NSMutableArray array];
+//            if (_majorAreaIds != nil){
+//                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance where majo rArea in ? ",_majorAreaIds];
+//                while ([results next]) {
+//                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
+//                }
+//            }else{
+//                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance"];
+//                while ([results next]) {
+//                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
+//                }
+//            }
+//            
+//        });
+        
     }
     return self;
     
@@ -106,25 +119,31 @@
         _searchResultstableView.hidden = YES;
         _scrollView.hidden = NO;
         return;
+    }else{
+        _scrollView.hidden = YES;
+        _searchResultstableView.hidden = NO;
     }
+    NSRange range = [keyWord rangeOfString:@"'"];
     
-    _scrollView.hidden = YES;
-    _searchResultstableView.hidden = NO;
-    
+    if (range.length > 0 ) {
+        [self updateUI:@{@"uniIds":@[],@"merchants":@[]}];
+        return;
+    }
+   
     NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:^{
-        
+    
         if(op.isCancelled){
             NSLog(@"cancelled op so we don't search");
             return;
         }
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *result = nil;
         if (_mall) {
-            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance where majorAreaId in %@ group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord],_majorAreaIds];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ COLLATE NOCASE and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance where majorAreaId in %@ group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord],_majorAreaIds];
             
             result = [db executeQuery:sql];
         }else{
-            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
+            NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName like %@ COLLATE NOCASE and uniId != 0 and merchantInstanceId in (select max(merchantInstanceId) from MerchantInstance group by MerchantInstanceName)",[NSString stringWithFormat:@"'%%%@%%'",keyWord]];
             result = [db executeQuery:sql];
         }
         NSMutableArray *results = [NSMutableArray array];
@@ -143,7 +162,9 @@
             [self performSelectorOnMainThread:@selector(updateUI:) withObject:resultDict waitUntilDone:YES];
         }
         
+        
     }];
+    
     [_searchOpQueue cancelAllOperations];
     [_searchOpQueue addOperation:op];
 }
@@ -222,7 +243,7 @@
         
         id<YTMerchantLocation> merchant = _results[indexPath.row];
         NSString *merchantName = [merchant merchantLocationName];
-        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%d家",[_unIds[indexPath.row] count]];
+        NSString *remarks = [NSString stringWithFormat:@"总共搜索到%ld家",[_unIds[indexPath.row] count]];
         cell.textLabel.text = merchantName;
         cell.detailTextLabel.text = remarks;
         return cell;
@@ -317,7 +338,10 @@
 }
 
 -(NSString *)getMajorAreaId:(YTLocalMall *)aMall{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    if (aMall == nil){
+        return nil;
+    }
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     FMResultSet *result = [db executeQuery:@"select * from MajorArea where mallId = ?",aMall.identifier];
     NSMutableString *resultString = [NSMutableString stringWithFormat:@"("];
     while ([result next]) {
@@ -335,7 +359,7 @@
 
 -(NSArray *)merchantsWithMerchantName:(NSString *)merchantName{
     NSMutableArray *merchantCount = [NSMutableArray array];
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     FMResultSet *result = nil;
     if (_mall) {
         NSString *sql = [NSString stringWithFormat:@"select * from MerchantInstance where merchantInstanceName = ? and majorAreaId in %@",_majorAreaIds];
@@ -353,7 +377,7 @@
 }
 
 -(void)setHistoricalRecordNames:(NSArray *)recordNames{
-    FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
     NSMutableArray *tmpRecord = [NSMutableArray array];
     for (NSString *merchantName in recordNames) {
         FMResultSet *result = nil;
@@ -365,7 +389,7 @@
         [tmpRecord addObject:tmpMerchantInstance];
         
     }
-    if (_historyTableView != nil){ 
+    if (_historyTableView != nil){
         CGRect frame = _historyTableView.frame;
         frame.size.height = tmpRecord.count * HISTORYTABLECELL_HEIGHT + 35;
         _historyTableView.frame = frame;
@@ -380,12 +404,14 @@
     [query whereKey:@"uniId" notEqualTo:@""];
     if (_mall) {
         AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
-        [mallQuery whereKey:@"name" equalTo:[_mall mallName]];
+        if ([_mall isMemberOfClass:[YTLocalMall class]]){
+            [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[[_mall identifier] integerValue]]];
+        }else{
+            [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[[_mall localDB] integerValue]]];
+        }
         [query whereKey:@"mall" matchesQuery:mallQuery];
     }
-    
     query.limit = 6;
-    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (objects.count > 0) {
             _popularMerchants = [NSArray arrayWithArray:objects];
@@ -419,6 +445,13 @@
         [self getHotSearch];
     }
     
+}
+
+- (NSString *)getPinyin:(NSString *)str{
+    CFMutableStringRef string  = CFStringCreateMutableCopy(NULL, 0, (__bridge CFStringRef)str);
+    CFStringTransform(string, NULL, kCFStringTransformMandarinLatin, false);
+    CFStringTransform(string, NULL, kCFStringTransformStripDiacritics, NO);
+    return (__bridge NSString *)string;
 }
 
 -(void)dealloc{

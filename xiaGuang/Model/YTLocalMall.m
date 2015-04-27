@@ -13,6 +13,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 @implementation YTLocalMall{
     NSString *_tmpMallId;
     NSString *_tmpMallName;
+    NSString *_regionIdentify;
+    YTRegion *_region;
     CGFloat _offset;
     NSMutableArray *_tmpBlocks;
     NSMutableArray *_tmpMerchantInstance;
@@ -33,6 +35,8 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
+            _regionIdentify = [findResultSet stringForColumn:@"regionIdentify"];
+            
         }
     }
     return self;
@@ -50,7 +54,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     
     if(_tmpBlocks == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from Block where mallId = ?",_tmpMallId];
         
         _tmpBlocks = [[NSMutableArray alloc] init];
@@ -65,11 +69,21 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return _tmpBlocks;
 }
 
+-(YTRegion *)region{
+    if (!_region) {
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
+        FMResultSet *result = [db executeQuery:@"SELECT * FROM Region WHERE identify = ?",_regionIdentify];
+        [result next];
+        _region = [[YTRegion alloc]initWithSqlResultSet:result];
+    }
+    return _region;
+}
+
 -(NSArray *)merchantLocations{
     
     if(_tmpMerchantInstance == nil){
         
-        FMDatabase *db = [YTStaticResourceManager sharedManager].db;
+        FMDatabase *db = [YTDataManager defaultDataManager].database;
         FMResultSet *resultSet = [db executeQuery:@"select * from MerchantInstance where mallId = ?",_tmpMallId];
         
         _tmpMerchantInstance = [[NSMutableArray alloc] init];
@@ -83,40 +97,22 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return _tmpMerchantInstance;
 }
 
+
 -(CGFloat)offset{
     return _offset;
 }
 
 
+
+
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
-    _callBack = callback;
-    if (![self checkCallBackConditions]) {
-        AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        [query whereKey:@"localDBId" equalTo:[self identifier]];
-        [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-            if (_titleImage == nil) {
-                [object[@"mall_img_title"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    if (error) {
-                        callback(nil,nil,error);
-                        return ;
-                    }
-                    _titleImage = [UIImage imageWithData:data];
-                    [self checkCallBackConditions];
-                }];
-            }
-            if (_background == nil) {
-                [object[@"mall_img_background"] getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    if (error) {
-                        callback(nil,nil,error);
-                        return ;
-                    }
-                    _background = [UIImage imageWithData:data];
-                    [self checkCallBackConditions];
-                }];
-            }
-        }];
+    NSError *error = nil;
+    if (_titleImage == nil && _background == nil) {
+        error = [NSError errorWithDomain:@"xiashopping" code:404 userInfo:nil];
     }
+    callback(_titleImage,_background,error);
 }
+
 -(BOOL)checkCallBackConditions{
     if (_titleImage != nil && _background != nil) {
         _callBack(_titleImage,_background,nil);

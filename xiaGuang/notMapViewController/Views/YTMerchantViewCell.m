@@ -16,6 +16,8 @@
     UILabel *_merchantNameLabel;
     UILabel *_addressLable;
     UIImageView *_preferentialImageView;
+    UIImageView *_soleImageView;
+    UIImageView *_otherImageView;
     NSMutableArray *_subCategoryImageView;
     NSMutableArray *_subCategoryLabel;
     id<YTMerchant> _oldMerchant;
@@ -65,11 +67,21 @@
         _preferentialImageView.image = preferentialImage;
         _preferentialImageView.hidden = true;
         
+        
+        _otherImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ico_tuan"]];
+        _otherImageView.hidden = true;
+        
+        _soleImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ico_du"]];
+        _soleImageView.hidden = true;
+        
         [self addSubview:_iconView];
         [self addSubview:_merchantNameLabel];
         [self addSubview:_addressLable];
         [self addSubview:_line];
         [self addSubview:_preferentialImageView];
+        [self addSubview:_otherImageView];
+        [self addSubview:_soleImageView];
+        
         
     }
     return self;
@@ -88,18 +100,50 @@
     _merchantNameLabel.font = [UIFont systemFontOfSize:16];
     [_merchantNameLabel setTextColor:self.titleColor];
     
-    
     [_addressLable setFont:[UIFont systemFontOfSize:11]];
     [_addressLable setTextColor:[UIColor colorWithString:@"999999"]];
 }
 
 
 -(void)setMerchant:(id<YTMerchant>)merchant{
-    [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-        _preferentialImageView.hidden = !isExistence;
-    }];
-
+    _soleImageView.hidden = true;
+    _otherImageView.hidden = true;
     _merchantNameLabel.text = [merchant merchantName];
+    CGSize size = [[merchant merchantName] boundingRectWithSize:CGSizeMake(MAXFLOAT, CGRectGetHeight(_merchantNameLabel.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
+    
+    CGRect frame = _merchantNameLabel.frame;
+    if (size.width < 150) {
+        frame.size.width = size.width;
+    }else{
+        frame.size.width = 150;
+    }
+    _merchantNameLabel.frame = frame;
+    
+    [merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
+        YTCloudMerchant *cloudMerchant = (YTCloudMerchant *)merchant;
+        if (cloudMerchant.isSole) {
+            _soleImageView.hidden = false;
+            CGRect frame = _soleImageView.frame;
+            frame.origin = CGPointMake(CGRectGetMaxX(_merchantNameLabel.frame) + 10, CGRectGetMinY(_merchantNameLabel.frame));
+            _soleImageView.frame = frame;
+        }else{
+            _soleImageView.hidden = true;
+        }
+        if (cloudMerchant.isOther){
+            _otherImageView.hidden = false;
+            if (cloudMerchant.isSole){
+                CGRect frame = _otherImageView.frame;
+                frame.origin = CGPointMake(CGRectGetMaxX(_soleImageView.frame) + 5, CGRectGetMinY(_otherImageView.frame));
+                _otherImageView.frame = frame;
+            }else{
+                CGRect frame = _otherImageView.frame;
+                frame.origin = CGPointMake(CGRectGetMaxX(_merchantNameLabel.frame) + 10, CGRectGetMinY(_merchantNameLabel.frame));
+                _otherImageView.frame = frame;
+            }
+        }else{
+            _otherImageView.hidden = true;
+        }
+    }];
     
     _addressLable.text = [merchant address];
     
@@ -155,10 +199,8 @@
 }
 
 -(void)setIsShowMark:(BOOL)isShowMark{
-    _preferentialImageView.hidden = !isShowMark;
+   // _preferentialImageView.hidden = !isShowMark;
 }
--(void)dealloc{
-    NSLog(@"cell dealloc");
-}
+
 
 @end
