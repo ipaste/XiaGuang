@@ -263,8 +263,17 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 #pragma mark
 #pragma mark Custom method
 - (void)getHot{
+    AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+    if ([_mall isMemberOfClass:[YTCloudMall class]]) {
+        [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
+    }else{
+        [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[[_mall localDB] integerValue]]];
+    }
+    
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+    query.limit = 10;
     [query whereKeyExists:@"Icon"];
+    [query whereKey:@"mall" matchesQuery:mallQuery];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSMutableArray *hotMerchants = [NSMutableArray new];
