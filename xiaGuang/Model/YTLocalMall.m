@@ -11,6 +11,7 @@
 
 typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
 @implementation YTLocalMall{
+    BOOL _isShowPath;
     NSString *_tmpMallId;
     NSString *_tmpMallName;
     NSString *_regionIdentify;
@@ -36,7 +37,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
             _regionIdentify = [findResultSet stringForColumn:@"regionIdentify"];
-            
+            _isShowPath = [findResultSet stringForColumn:@"path"] == 0 ? false:true;
         }
     }
     return self;
@@ -103,7 +104,9 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 }
 
 
-
+- (BOOL)isShowPath{
+    return _isShowPath;
+}
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback{
     NSError *error = nil;

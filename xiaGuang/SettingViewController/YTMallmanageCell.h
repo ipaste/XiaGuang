@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "YTMallDict.h"
 
 @interface YTMallmanageCell : UITableViewCell
-
+@property (strong ,nonatomic) YTCloudMall *mall;
+/**
+ *  设置Cell进度条的数值
+ *
+ *  @param value 数值 范围在0 ~ 1之间
+ */
+- (void)setProgress:(CGFloat)value;
+- (void)stopDownload;
 @end

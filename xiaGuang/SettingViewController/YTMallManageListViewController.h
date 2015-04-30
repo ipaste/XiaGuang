@@ -12,10 +12,8 @@
 #import "YTCityAndRegion.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "YTMallmanageCell.h"
+#import "YTMallDict.h"
 
 @interface YTMallManageListViewController : UIViewController
-
-@property (nonatomic, assign) NSInteger selectedTabID;
-@property (nonatomic, assign) BOOL isLeft;                              // 向左滚动
 
 @end

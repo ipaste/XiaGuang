@@ -50,7 +50,9 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 - (BOOL)isShowPath{
-    return [_internalObject[@"pathSwitch"] boolValue];
+    FMResultSet *result = [[YTDataManager defaultDataManager].database executeQuery:@"SELECT path FROM Mall WHERE MallId = ?",[NSNumber numberWithInt:[[self localDB] intValue]]];
+    [result next];
+    return [result intForColumn:@"path"] == 0 ? false:true;
 }
 
 - (CLLocationCoordinate2D)coord{
@@ -70,7 +72,6 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 -(NSArray *)blocks{
     if(_blocks == nil){
         _blocks = [[NSMutableArray alloc] init];
-        
         AVQuery *query = [[AVQuery alloc] initWithClassName:@"Block"];
         query.maxCacheAge = 24 * 3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
@@ -239,7 +240,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 
 }
 
--(BOOL)checkCallBackConditions{
+- (BOOL)checkCallBackConditions{
     if (_titleImage != nil && _background != nil) {
         _callBack(_titleImage,_background,nil);
         return true;

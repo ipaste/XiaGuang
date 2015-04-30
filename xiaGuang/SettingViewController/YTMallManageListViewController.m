@@ -5,197 +5,144 @@
 //  Created by Nov_晓 on 15/4/20.
 //  Copyright (c) 2015年 YunTop. All rights reserved.
 //
-#define scrollH 40.0f
+#import "YTMallManageListViewController.h"
+
+#define SCROLL_HEIGHT 40.0f
 #define SCREEN_WIDTH [[UIScreen mainScreen] bounds].size.width
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
-#import "YTMallManageListViewController.h"
-
-
-@interface YTMallManageListViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface YTMallManageListViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>{
+    NSMutableArray *_cells;
+    NSArray *_allCells;
+    YTMallDict *_mallDict;
+}
 
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) UIScrollView *mainScrollView;
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) UIView *lineView;
-
-@property (nonatomic,retain)NSMutableArray *nameArr;
-
+@property (nonatomic,retain)NSMutableArray *regions;
 @end
 
 @implementation YTMallManageListViewController
 
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     YTCity *defaultCity = [YTCity defaultCity];
-    AVQuery *query = [AVQuery queryWithClassName:@"Region"];
-    [query whereKey:@"cityId" equalTo:[NSNumber numberWithInteger:defaultCity.identify]];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        float xOffset = 0;
-        _nameArr = [NSMutableArray new];
-        
-        for (int index = 0;index < objects.count; index++) {
-            //NSInteger tag = index - 1;
-            UIButton *mallBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            mallBtn.backgroundColor = [UIColor clearColor];
-            mallBtn.tag = 100 + index;
-            mallBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-            mallBtn.frame = CGRectMake(xOffset, 0, SCREEN_WIDTH / 6, CGRectGetHeight(self.scrollView.frame));
-            [mallBtn setTitleColor:[UIColor colorWithString:@"666666"] forState:UIControlStateNormal];
-            [mallBtn setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateSelected];
-            //            if (tag == -1) {
-            //                mallBtn.selected = YES;
-            //                [mallBtn setTitle:@"全城" forState:UIControlStateNormal];
-            //            }else{
-            YTRegion *region = [[YTRegion alloc]initWithCloudObject:objects[index]];
-            [mallBtn setTitle:region.name forState:UIControlStateNormal];
-            [_nameArr addObject:region];
-            //            }
-            xOffset += mallBtn.frame.size.width+ 44.0 ;
-            _scrollView.contentSize = CGSizeMake(xOffset, scrollH);
-            //[mallBtn addTarget:self action:@selector(selectBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [_scrollView addSubview:mallBtn];
-            
-        }
-    }];
-    
-    _selectedTabID = 100;
-    float contentH = 0;
-    // Do any additional setup after loading the view.
-    self.navigationItem.title = @"商城管理列表";
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
-    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
-    
-    //关闭scrollView往下移动的功能
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.0, CGRectGetMaxY(self.navigationController.navigationBar.frame),CGRectGetWidth(self.view.frame) , scrollH)];
+    _cells = [NSMutableArray array];
+    _mallDict = [YTMallDict sharedInstance];
+
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.0, CGRectGetMaxY(self.navigationController.navigationBar.frame),CGRectGetWidth(self.view.frame) , SCROLL_HEIGHT)];
     _scrollView.delegate = self;
     _scrollView.backgroundColor = [UIColor colorWithString:@"f0f0f0"];
-    _scrollView.showsHorizontalScrollIndicator =NO;
+    _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_scrollView];
     
-    
-    
-    contentH += CGRectGetMaxY(_scrollView.frame);
-    
-    _lineView = [[UIView alloc]initWithFrame:CGRectMake(0.0, CGRectGetHeight(_scrollView.frame) - 2.0f, SCREEN_WIDTH /6, 2.0f)];
+    _regions = [NSMutableArray new];
+    [_regions addObject:@"全城"];
+    CGFloat width = defaultCity.regions.count + 1 > 6 ? SCREEN_WIDTH / 6:SCREEN_WIDTH / (defaultCity.regions.count + 1);
+    for (NSInteger index = 0; index < defaultCity.regions.count + 1; index++) {
+        UIButton *regionButton = [[UIButton alloc]init];
+        regionButton.frame = CGRectMake(width * index, 0, width, CGRectGetHeight(self.scrollView.frame));
+        regionButton.backgroundColor = [UIColor clearColor];
+        regionButton.tag = index;
+        [regionButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [regionButton setTitleColor:[UIColor colorWithString:@"666666"] forState:UIControlStateNormal];
+        [regionButton setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateSelected];
+        [regionButton addTarget:self action:@selector(clickSwitchRegion:) forControlEvents:UIControlEventTouchUpInside];
+        if (index == 0){
+            [regionButton setTitle:_regions[index] forState:UIControlStateNormal];
+        }else{
+            YTRegion *region = defaultCity.regions[index - 1];
+            [regionButton setTitle:region.name forState:UIControlStateNormal];
+            [_regions addObject:region];
+        }
+        [_scrollView addSubview:regionButton];
+    }
+    _lineView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_scrollView.frame) - 2, width, 2.0f)];
     _lineView.backgroundColor = [UIColor colorWithString:@"e95e37"];
     [_scrollView addSubview:_lineView];
     
-    _mainScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.0, contentH, SCREEN_WIDTH, SCREEN_HEIGHT - contentH)];
-    _mainScrollView.backgroundColor = [UIColor colorWithString:@"b2b2b2"];
-    _mainScrollView.delegate = self;
-    _mainScrollView.pagingEnabled = YES;
-    _mainScrollView.showsHorizontalScrollIndicator = NO;
-    _mainScrollView.showsVerticalScrollIndicator = NO;
-    _mainScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    [self.view addSubview:_mainScrollView];
     
-    _mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH * _nameArr.count, SCREEN_HEIGHT - contentH);
-    for (int i =0; i<_nameArr.count; i++) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH * i, 1.0, SCREEN_WIDTH, SCREEN_HEIGHT - contentH - 1.0) style:UITableViewStylePlain];
-        _tableView.backgroundColor = [UIColor clearColor];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        _tableView.showsVerticalScrollIndicator = NO;
-        _tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
-        [_mainScrollView addSubview:_tableView];
+    [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
+        for (YTCloudMall *mall in malls) {
+            YTMallmanageCell *cell = [[YTMallmanageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+            cell.mall = mall;
+            [_cells addObject:cell];
+        }
+        _allCells = _cells.copy;
+        [_tableView reloadData];
+    }];
+    
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_scrollView.frame), SCREEN_WIDTH, SCREEN_HEIGHT - CGRectGetMaxY(_scrollView.frame))];
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+    [self.view addSubview:_tableView];
+    
+    
+    //关闭scrollView往下偏移的功能
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.navigationItem.title = @"商城地图列表";
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithString:@"e65e37"] forKey:NSForegroundColorAttributeName]];
+    self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
 
-    }
-    
-   
-    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _nameArr.count + 1;
+    return _cells.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return _cells[indexPath.row];
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    //[_tableView deselectRowAtIndexPath:indexPath animated:false];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50.0f;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static  NSString *cellIdentifier = @"cellIdetifier";
-    YTMallmanageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    if (!cell) {
-        cell = [[YTMallmanageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    
-    return cell;
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return [UIView new];
 }
-
-//cell背景色
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    cell.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+- (void)clickSwitchRegion:(UIButton *)sender{
+    CGRect frame = _lineView.frame;
+    frame.origin.x = CGRectGetMinX(sender.frame);
+    _lineView.frame = frame;
     
-}
-/*
-// btn 点击触发
-- (void)selectBtn: (UIButton *)sender {
-    switch (sender.tag) {
-        case -1:
-            
-            break;
-        default:
-            YTRegion *region = _nameArr[sender.tag];
-            
-            break;
-    }
-    if (sender.tag != _selectedTabID) {
-        UIButton *preButton = (UIButton *)[_scrollView viewWithTag:_selectedTabID];
-        preButton.selected = NO;
-        _selectedTabID = sender.tag;
-        
-        if (sender.tag == 100 ) {
-            [_scrollView setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
-        }
-        else if (sender.tag == 101) {
-            self.isLeft = NO;
-            [_scrollView setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
-        }
-        else if (sender.tag == 106) {
-            self.isLeft = YES;
-            [_scrollView setContentOffset:CGPointMake(SCREEN_WIDTH / 6, 0.0) animated:YES];
-        }
-        else if (sender.tag == 102) {
-            self.isLeft = YES;
-            if (_scrollView.contentOffset.x == 0.0) {
-                [_scrollView setContentOffset:CGPointMake(SCREEN_WIDTH / 6, 0.0) animated:YES];
-                self.isLeft = YES;
+    if (sender.tag == 0) {
+        _cells = [NSMutableArray arrayWithArray:_allCells];
+        [_tableView reloadData];
+    }else{
+        YTRegion *region = _regions[sender.tag];
+        _cells = [NSMutableArray new];
+        NSArray *malls = [_mallDict cloudMallsFromRegion:region];
+        [malls enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            YTCloudMall *mall = obj;
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.mall == %@",mall];
+            YTMallmanageCell *tmpCell = [_allCells filteredArrayUsingPredicate:predicate].firstObject;
+            if (tmpCell != nil) {
+                [_cells addObject:tmpCell];
             }
-            else {
-                [_scrollView setContentOffset:CGPointMake(0.0, 0.0) animated:YES];
-                self.isLeft = YES;
+            if (idx == malls.count - 1) {
+                [_tableView reloadData];
             }
-        } else {
-            [_scrollView setContentOffset:CGPointMake(SCREEN_WIDTH / 6, 0.0) animated:YES];
-        }
-        [UIView animateWithDuration:0.25 animations:^{
-            _lineView.frame = CGRectMake(sender.frame.origin.x, _lineView.frame.origin.y, sender.frame.size.width, _lineView.frame.size.height);
         }];
-    }
-    
-    if (!sender.selected) {
-        sender.selected = YES;
-        [_mainScrollView setContentOffset:CGPointMake((sender.tag - 100) * SCREEN_WIDTH, 0) animated:YES];
-        [UIView animateWithDuration:0.25 animations:^{
-            _lineView.frame = CGRectMake(sender.frame.origin.x, _lineView.frame.origin.y, sender.frame.size.width, _lineView.frame.size.height);
-        }];
-    }
 
-    
-    [_tableView reloadData];
-}*/
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    if (scrollView == _scrollView) {
-        //[self changeBtnFont:scrollView.contentOffset.x];
-        
     }
 }
 
@@ -217,14 +164,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

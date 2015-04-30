@@ -13,7 +13,7 @@
 #import "YTAboutViewController.h"
 #import "YTFeedBackViewController.h"
 #import "YTMallManageListViewController.h"
-
+#import "YTGuideViewController.h"
 @interface YTSettingViewController : UIViewController
 @property (nonatomic) BOOL isLatest;
 @end
