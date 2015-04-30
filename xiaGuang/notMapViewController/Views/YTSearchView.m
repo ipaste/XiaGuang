@@ -303,6 +303,9 @@ NSString *const kRightBarItemKey = @"rightBarItem";
 }
 
 -(void)clickCancelButton:(UIButton *)sender{
+    if ([_delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
+        [_delegate searchCancelButtonClicked];
+    }
     [self cancelAnimation:true completion:nil];
 }
 
