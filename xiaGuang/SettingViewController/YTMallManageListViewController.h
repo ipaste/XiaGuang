@@ -14,6 +14,6 @@
 #import "YTMallmanageCell.h"
 #import "YTMallDict.h"
 
-@interface YTMallManageListViewController : UIViewController
-
+@interface YTMallManageListViewController : UIViewController<YTMallManageDelegate>
++ (instancetype)shareMallListController;
 @end

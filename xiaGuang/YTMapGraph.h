@@ -16,6 +16,8 @@
 #import <PESGraph/PESGraphEdge.h>
 #import <PESGraph/PESGraphNode.h>
 
+#import "YTDataManager.h"
+
 #define kYTMapGraphProjectionPointKey  @"projectedPoint"
 #define kYTMapGraphProjectionNode1Key   @"node1"
 #define kYTMapGraphProjectionNode2Key   @"node2"

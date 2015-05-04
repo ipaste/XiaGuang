@@ -56,6 +56,7 @@
         _manager = _bluetoothManager.locationManager;
         _dataManager = [YTDataManager defaultDataManager];
         _dataManager.delegate = self;
+        [_dataManager refreshNetWorkState];
         _defaultCity = [YTCity defaultCity];
     }
     return self;
@@ -73,6 +74,7 @@
     [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
         _malls = malls.copy;
     }];
+    
     
     _manager.delegate = self;
     [_manager startUpdatingLocation];
@@ -394,9 +396,10 @@
         case YTNetworkSatusWWAN:
         {
             [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
-                _malls = malls.copy;
-                [_tableView reloadData];
-                
+                if (malls.count > 0){
+                    _malls = malls.copy;
+                    [_tableView reloadData];
+                }
             }];
         }
             break;

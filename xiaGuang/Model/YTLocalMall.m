@@ -15,6 +15,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     NSString *_tmpMallId;
     NSString *_tmpMallName;
     NSString *_regionIdentify;
+    NSString *_version;
     YTRegion *_region;
     CGFloat _offset;
     NSMutableArray *_tmpBlocks;
@@ -33,11 +34,12 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     if(findResultSet != nil){
         self = [super init];
         if(self){
-            _tmpMallId = [findResultSet stringForColumn:@"mallId"];
+            _tmpMallId = [NSString stringWithFormat:@"%d",[findResultSet intForColumn:@"mallId"]];
             _tmpMallName = [findResultSet stringForColumn:@"mallName"];
             _offset = [findResultSet doubleForColumn:@"offset"];
             _regionIdentify = [findResultSet stringForColumn:@"regionIdentify"];
-            _isShowPath = [findResultSet stringForColumn:@"path"] == 0 ? false:true;
+            _isShowPath = [findResultSet intForColumn:@"path"] == 0 ? false:true;
+            _version = [findResultSet stringForColumn:@"version"];
         }
     }
     return self;
@@ -49,6 +51,10 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
 
 -(NSString *)identifier{
     return _tmpMallId;
+}
+
+- (NSString *)version{
+    return _version;
 }
 
 -(NSArray *)blocks{

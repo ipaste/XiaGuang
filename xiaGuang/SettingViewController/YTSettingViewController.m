@@ -123,7 +123,7 @@
         switch (indexPath.row) {
             case 0:
             {
-                controller = [[YTMallManageListViewController alloc]init];
+                controller = [YTMallManageListViewController shareMallListController];
                 break;
             }
                 

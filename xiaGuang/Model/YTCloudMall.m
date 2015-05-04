@@ -39,14 +39,16 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 @synthesize merchants;
 
 -(id)initWithAVObject:(AVObject *)object{
-    
     self = [super init];
     if(self){
         _internalObject = object;
         _mallDict = [YTMallDict sharedInstance];
     }
     return self;
-    
+}
+
+-(AVFile *)getMallFile{
+    return _internalObject[@"source"][@"data"];
 }
 
 - (BOOL)isShowPath{
@@ -69,6 +71,10 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     return _internalObject.objectId;
 }
 
+- (NSString *)version{
+    return _internalObject[@"source"][@"version"];
+}
+
 -(NSArray *)blocks{
     if(_blocks == nil){
         _blocks = [[NSMutableArray alloc] init];
@@ -88,8 +94,8 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 - (YTRegion *)region{
     if (!_region) {
-        
-        _region = [[YTRegion alloc]initWithIdentify:[_internalObject[MALL_CLASS_REGION] integerValue]];
+        NSInteger identify = [_internalObject[MALL_CLASS_REGION][@"uniId"] integerValue];
+        _region = [[YTRegion alloc]initWithIdentify:identify];
     }
     return _region;
 }
@@ -115,44 +121,7 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
 }
 
 
--(void)iconsFromStartIndex:(int)start
-                     toEnd:(int)end
-                  callBack:(void (^)(NSArray *result,NSError *error))callback{
-    if(start == end){
-        callback(nil,nil);
-        return;
-    }
-    
-    if(_merchants.count < end){
-        callback(nil,nil);
-        return;
-    }
-    
-    NSMutableArray *resultArray = [NSMutableArray new];
-    __block int count = 0;
-    for(int i = start; i < MAXFLOAT; i++){
-        id<YTMerchant> tmpMerchant = [_merchants objectAtIndex:i] ;
-        [tmpMerchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-            if(error){
-                NSLog(@"getting thumbnail fail");
-                callback(nil,error);
-                return;
-            }
-            [resultArray addObject:result];
-            
-            if(count >= end - start - 1){
-                
-                callback(resultArray,nil);
-            }
-            
-            if (result == nil) {
-                count++;
-            }
-            
-        }];
-        
-    }
-}
+
 
 
 -(void)iconsFromStartIndex:(int)start

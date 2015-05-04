@@ -15,6 +15,8 @@
     NSMutableArray *_cells;
     NSArray *_allCells;
     YTMallDict *_mallDict;
+    YTDataManager *_dataManager;
+    YTCity *_city;
 }
 
 @property (nonatomic,strong) UIScrollView *scrollView;
@@ -25,21 +27,28 @@
 @end
 
 @implementation YTMallManageListViewController
-
++ (instancetype)shareMallListController{
+    static YTMallManageListViewController *mallListViewController;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mallListViewController = [[YTMallManageListViewController alloc]init];
+    });
+    return mallListViewController;
+}
 - (instancetype)init{
     self = [super init];
     if (self) {
-        
+        _dataManager = [YTDataManager defaultDataManager];
+        _mallDict = [YTMallDict sharedInstance];
+        _city = [YTCity defaultCity];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    YTCity *defaultCity = [YTCity defaultCity];
     _cells = [NSMutableArray array];
-    _mallDict = [YTMallDict sharedInstance];
-
+    
     _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.0, CGRectGetMaxY(self.navigationController.navigationBar.frame),CGRectGetWidth(self.view.frame) , SCROLL_HEIGHT)];
     _scrollView.delegate = self;
     _scrollView.backgroundColor = [UIColor colorWithString:@"f0f0f0"];
@@ -49,8 +58,8 @@
     
     _regions = [NSMutableArray new];
     [_regions addObject:@"全城"];
-    CGFloat width = defaultCity.regions.count + 1 > 6 ? SCREEN_WIDTH / 6:SCREEN_WIDTH / (defaultCity.regions.count + 1);
-    for (NSInteger index = 0; index < defaultCity.regions.count + 1; index++) {
+    CGFloat width = _city.regions.count + 1 > 6 ? SCREEN_WIDTH / 6:SCREEN_WIDTH / (_city.regions.count + 1);
+    for (NSInteger index = 0; index < _city.regions.count + 1; index++) {
         UIButton *regionButton = [[UIButton alloc]init];
         regionButton.frame = CGRectMake(width * index, 0, width, CGRectGetHeight(self.scrollView.frame));
         regionButton.backgroundColor = [UIColor clearColor];
@@ -62,7 +71,7 @@
         if (index == 0){
             [regionButton setTitle:_regions[index] forState:UIControlStateNormal];
         }else{
-            YTRegion *region = defaultCity.regions[index - 1];
+            YTRegion *region = _city.regions[index - 1];
             [regionButton setTitle:region.name forState:UIControlStateNormal];
             [_regions addObject:region];
         }
@@ -77,6 +86,15 @@
         for (YTCloudMall *mall in malls) {
             YTMallmanageCell *cell = [[YTMallmanageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
             cell.mall = mall;
+            cell.delegate = self;
+            YTLocalMall *tmpMall = [_mallDict changeMallObject:mall resultType:YTMallClassLocal];
+            if (tmpMall) {
+                if (![[tmpMall version] isEqualToString:[mall version]]) {
+                    cell.state = YTMallManageStateUpdata;
+                }else{
+                    cell.state = YTMallManageStateDownloaded;
+                }
+            }
             [_cells addObject:cell];
         }
         _allCells = _cells.copy;
@@ -145,6 +163,18 @@
 
     }
 }
+
+
+- (void)mallManageCell:(YTMallmanageCell *)cell downloadMallData:(YTCloudMall *)mall{
+    AVFile *file = [mall getMallFile];
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        [_dataManager downloadedData:data dataName:[mall mallName]];
+        [file clearCachedFile];
+    } progressBlock:^(NSInteger percentDone) {
+        [cell setProgress:percentDone];
+    }];
+}
+
 
 //返回按钮
 -(UIView *)leftBarButton{
