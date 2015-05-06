@@ -39,7 +39,7 @@
     beauty.text = @"丽人";
     beauty.subText =  @[@"全部",@"彩妆",@"美体",@"美容",@"美甲",@"美发"];
     beauty.image = [UIImage imageNamed:@"nav_ico_4"];
-    beauty.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
+    beauty.smallImage = [UIImage imageNamed:@"nav_ico_4small"];
     beauty.tintColor = [UIColor colorWithString:@"b2b2b2"];
     beauty.titleColor = [UIColor colorWithString:@"666666"];
     
@@ -172,7 +172,7 @@
     YTCategory *beauty = [[YTCategory alloc]init];
     beauty.text = @"丽人";
     beauty.image = [UIImage imageNamed:@"nav_ico_4"];
-    beauty.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
+    beauty.smallImage = [UIImage imageNamed:@"nav_ico_4small"];
     beauty.tintColor = [UIColor colorWithString:@"b2b2b2"];
     beauty.titleColor = [UIColor colorWithString:@"666666"];
     

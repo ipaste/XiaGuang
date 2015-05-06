@@ -46,9 +46,9 @@
     _title.text = self.category.text;
     _title.font = [UIFont systemFontOfSize:14];
     
-    UIImage *arrow = [UIImage imageNamed:@"type_img_arrow2"];
-    _accessory.frame = CGRectMake(CGRectGetMaxX(self.frame) - 15 - arrow.size.width, _icon.center.y - arrow.size.height / 2, arrow.size.width, arrow.size.height);
-    _accessory.image = arrow;
+//    UIImage *arrow = [UIImage imageNamed:@"type_img_arrow2"];
+//    _accessory.frame = CGRectMake(CGRectGetMaxX(self.frame) - 15 - arrow.size.width, _icon.center.y - arrow.size.height / 2, arrow.size.width, arrow.size.height);
+//    _accessory.image = arrow;
     
     UIImageView *background = [[UIImageView alloc]initWithFrame:self.bounds];
     background.image = [UIImage imageNamed:@"type_img_leftlist_un"];

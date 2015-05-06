@@ -34,14 +34,16 @@
     self = [super initWithFrame:frame];
     if (self) {
         _categoryView = [[UITableView alloc]init];
-        _subcategoryView = [[UITableView alloc]init];
+        _categoryView.showsVerticalScrollIndicator = false;
         _mallView = [[UITableView alloc]init];
+        _mallView.showsVerticalScrollIndicator = false;
         _floorView = [[UITableView alloc]init];
+        _floorView.showsVerticalScrollIndicator = false;
         
         [self addSubview:_floorView];
         [self addSubview:_mallView];
         [self addSubview:_categoryView];
-        [self addSubview:_subcategoryView];
+
         
         self.backgroundColor = [UIColor clearColor];
         self.hidden = YES;
@@ -59,7 +61,7 @@
 
 -(void)layoutSubviews{
     _categoryView.backgroundColor = [UIColor whiteColor];
-    _subcategoryView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"type_img_rightlist"]];
+
     self.layer.masksToBounds = YES;
 }
 
@@ -76,20 +78,13 @@
         _mallView.hidden = YES;
         _floorView.hidden = YES;
         _categoryView.hidden = NO;
-        _subcategoryView.hidden = NO;
-        _subcategoryView.delegate = self;
-        _subcategoryView.dataSource = self;
-        _categoryView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame) / 2, 5 * 44 + 22);
+        _categoryView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame) / 2,8 * 44);
         height = CGRectGetHeight(_categoryView.frame);
         _categoryView.delegate = self;
         _categoryView.dataSource = self;
         _mallView.delegate = nil;
         _mallView.dataSource = nil;
-        _subcategoryView.frame = CGRectMake(CGRectGetMaxX(_categoryView.frame), 0, CGRectGetWidth(_categoryView.frame), CGRectGetHeight(_categoryView.frame));
-        _subcategoryView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
-        _categoryObjects = [NSMutableArray arrayWithArray:[YTCategory allCategorys]];
-        [_categoryObjects insertObject:[YTCategory moreCategory] atIndex:0];
+        _categoryObjects = [NSMutableArray arrayWithArray:[YTCategory newAllCategorys]];
         [_categoryView reloadData];
     }else if (style == YTCategoryResultsStyleAllFloor){
         _categoryView.hidden = YES;
@@ -118,7 +113,7 @@
             }
             if (idx == [mall blocks].count - 1){
                 height = 44 * _floorObjects.count >  5 * 44 + 22 ?  5 * 44 + 22:44 * _floorObjects.count;
-                _floorView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
+                _floorView.frame = CGRectMake(CGRectGetWidth(self.bounds) / 2, 0, CGRectGetWidth(self.bounds) / 2, height);
                 [_floorView reloadData];
             }
         }];
@@ -127,8 +122,6 @@
         _mallView.hidden = NO;
         _floorView.hidden = YES;
         _categoryView.hidden = YES;
-        _subcategoryView.hidden = YES;
-        
         _categoryView.delegate = nil;
         _categoryView.dataSource = nil;
         _mallView.delegate = self;
@@ -144,7 +137,7 @@
         [_mallNames insertObject:@"全部商圈" atIndex:0];
         [_mallObjects insertObject:[NSNull null] atIndex:0];
         height = 44 * _mallObjects.count >  5 * 44 + 22 ?  5 * 44 + 22:44 * _mallObjects.count;
-        _mallView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), height);
+        _mallView.frame = CGRectMake(CGRectGetWidth(self.bounds) / 2, 0, CGRectGetWidth(self.bounds) / 2, height);
         [_mallView reloadData];
     }
     [UIView animateWithDuration:.5 animations:^{
@@ -157,9 +150,6 @@
     if ([tableView isEqual:_categoryView]) {
         return _categoryObjects.count;
     }
-    if ([tableView isEqual:_subcategoryView]) {
-        return _subObjects.count;
-    }
     if ([tableView isEqual:_mallView]) {
         return _mallObjects.count;
     }
@@ -171,40 +161,10 @@
         YTSelectCategoryViewCell *cell = [[YTSelectCategoryViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CategoryCell"];
         cell.category = _categoryObjects[indexPath.row];
         cell.isSelect = NO;
-        NSString *categoryKey = [[_Key componentsSeparatedByString:@"-"] lastObject];
+        NSString *categoryKey = _Key;
         if ([cell.category.text isEqualToString:categoryKey]) {
             cell.isSelect = YES;
             _curCategoryCell = cell;
-            if(![categoryKey isEqualToString:@"全部分类"]){
-                _subObjects = cell.category.subText;
-                
-            }else{
-                _subObjects = nil;
-            }
-            [_subcategoryView reloadData];
-        }
-        return cell;
-    }
-    
-    if ([tableView isEqual:_subcategoryView]) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SubCell"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SubCell"];
-            
-            cell.textLabel.textColor = [UIColor colorWithString:@"404040"];
-            cell.textLabel.font = [UIFont systemFontOfSize:14];
-            cell.backgroundColor = [UIColor clearColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
-        }
-        cell.textLabel.text = _subObjects[indexPath.row];
-        NSString *category = [[_Key componentsSeparatedByString:@"-"] lastObject];
-        NSString *subCategory = [[_Key componentsSeparatedByString:@"-"] firstObject];
-        if ([cell.textLabel.text isEqualToString:subCategory]) {
-            if ([category isEqualToString:_curCategoryCell.category.text]) {
-                cell.textLabel.textColor = [UIColor colorWithString:@"e95e37"];
-                _curSubCategoryCell = cell;
-            }
         }
         return cell;
     }
@@ -252,32 +212,13 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([tableView isEqual:_categoryView] && indexPath.row != 0) {
-        _curSubCategoryCell.textLabel.textColor = [UIColor colorWithString:@"404040"];
+    if ([tableView isEqual:_categoryView]) {
         _curCategoryCell.isSelect = NO;
         YTSelectCategoryViewCell *cell = (YTSelectCategoryViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.isSelect = YES;
         _curCategoryCell = cell;
-        _subObjects = cell.category.subText;
-        [_subcategoryView reloadData];
-    }else if ([tableView isEqual:_categoryView] && indexPath.row == 0){
-        _curSubCategoryCell.textLabel.textColor = [UIColor colorWithString:@"404040"];
-        _curCategoryCell.isSelect = NO;
-        YTSelectCategoryViewCell *cell = (YTSelectCategoryViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-        cell.isSelect = YES;
-        _curCategoryCell = cell;
-        
-        [self.delegate selectKey:cell.category.text];
-    }
-    
-    if ([tableView isEqual:_subcategoryView]) {
-        _curSubCategoryCell.textLabel.textColor = [UIColor colorWithString:@"404040"];
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        cell.textLabel.textColor = [UIColor colorWithString:@"e95e37"];
-        _curSubCategoryCell = cell;
-        NSString *key = [NSString stringWithFormat:@"%@-%@",cell.textLabel.text,_curCategoryCell.category.text];
-        
-        [self.delegate selectKey:key];
+        YTCategory *category = _categoryObjects[indexPath.row];
+        [self.delegate selectKey:category.text];
     }
     
     if ([tableView isEqual:_mallView]) {
