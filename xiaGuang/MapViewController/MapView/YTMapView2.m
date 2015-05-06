@@ -223,7 +223,7 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 
 #pragma mark RMMapViewDelegate methods
 -(void)doubleTapOnMap:(RMMapView *)map at:(CGPoint)point{
-    CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
+    //CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
     
     [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }

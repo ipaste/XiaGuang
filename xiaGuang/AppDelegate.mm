@@ -18,6 +18,7 @@
 @interface AppDelegate ()<YTGuideDelegate> {
     double _timeInToBackground;
     YTNavigationController *_navigation;
+    YTDataManager *_dataManager;
 }
 
 @end
@@ -37,6 +38,10 @@
     
     _timeInToBackground = 0;
     
+    _dataManager = [YTDataManager defaultDataManager];
+    
+    [_dataManager updateCloudData];
+    
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     id first = [userDefaults objectForKey:@"first"];
     if (!first) {
@@ -47,10 +52,12 @@
     }else{
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     }
+
+    [self.window makeKeyAndVisible];
+    
     
     double timeDifference = [[NSDate date]timeIntervalSinceReferenceDate] - startTime;
     
-    [self.window makeKeyAndVisible];
     if (timeDifference < 0.8) {
         [NSThread sleepForTimeInterval:0.3];
     }
@@ -82,8 +89,6 @@
         }
     }
     [NSThread sleepForTimeInterval:0.5];
-    
-    
 }
 
 

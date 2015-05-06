@@ -24,5 +24,6 @@
 
 -(id)initWithAVObject:(AVObject *)object;
 -(AVObject *)getCloudObj;
+-(AVFile *)getMallFile;
 -(YTLocalMall *)getLocalCopy DEPRECATED_ATTRIBUTE;
 @end

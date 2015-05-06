@@ -33,9 +33,7 @@
             YTRegion *region = [[YTRegion alloc]initWithSqlResultSet:result];
             [regions addObject:region];
         }
-        _regions = regions.copy;
-        [regions removeAllObjects];
-        regions = nil;
+        _regions = regions;
     }
     return _regions;
 }
