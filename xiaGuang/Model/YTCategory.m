@@ -20,7 +20,7 @@
     
     
     YTCategory *clothing = [[YTCategory alloc]init];
-    clothing.text = @"服装";
+    clothing.text = @"服饰";
     clothing.subText = @[@"全部",@"女装",@"男装",@"童装",@"内衣",@"运动"];
     clothing.image = [UIImage imageNamed:@"nav_ico_2"];
     clothing.smallImage = [UIImage imageNamed:@"nav_ico_2small"];
@@ -35,42 +35,57 @@
     entertainment.tintColor = [UIColor colorWithString:@"b2b2b2"];
     entertainment.titleColor = [UIColor colorWithString:@"666666"];
     
-    YTCategory *dessert = [[YTCategory alloc]init];
-    dessert.text = @"甜品";
-    dessert.subText = @[@"全部",@"饮品",@"甜点",@"面包",@"雪糕"];
-    dessert.image = [UIImage imageNamed:@"nav_ico_4"];
-    dessert.smallImage = [UIImage imageNamed:@"nav_ico_4small"];
-    dessert.tintColor = [UIColor colorWithString:@"b2b2b2"];
-    dessert.titleColor = [UIColor colorWithString:@"666666"];
-    
-    YTCategory *goods = [[YTCategory alloc]init];
-    goods.text = @"精品";
-    goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜"];
-    goods.image = [UIImage imageNamed:@"nav_ico_6"];
-    goods.smallImage = [UIImage imageNamed:@"nav_ico_6small"];
-    goods.tintColor = [UIColor colorWithString:@"b2b2b2"];
-    goods.titleColor = [UIColor colorWithString:@"666666"];
-    
     YTCategory *beauty = [[YTCategory alloc]init];
     beauty.text = @"丽人";
     beauty.subText =  @[@"全部",@"彩妆",@"美体",@"美容",@"美甲",@"美发"];
-    beauty.image = [UIImage imageNamed:@"nav_ico_5"];
+    beauty.image = [UIImage imageNamed:@"nav_ico_4"];
     beauty.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
     beauty.tintColor = [UIColor colorWithString:@"b2b2b2"];
     beauty.titleColor = [UIColor colorWithString:@"666666"];
     
+//    YTCategory *dessert = [[YTCategory alloc]init];
+//    dessert.text = @"甜品";
+//    dessert.subText = @[@"全部",@"饮品",@"甜点",@"面包",@"雪糕"];
+//    dessert.image = [UIImage imageNamed:@"nav_ico_4"];
+//    dessert.smallImage = [UIImage imageNamed:@"nav_ico_4small"];
+//    dessert.tintColor = [UIColor colorWithString:@"b2b2b2"];
+//    dessert.titleColor = [UIColor colorWithString:@"666666"];
     
-    YTCategory *children = [[YTCategory alloc]init];
-    children.text = @"亲子";
-    children.subText =  @[@"全部",@"玩具",@"孕婴",@"童装",@"童鞋"];
-    children.image = [UIImage imageNamed:@"nav_ico_7"];
-    children.smallImage = [UIImage imageNamed:@"nav_ico_7small"];
-    children.tintColor = [UIColor colorWithString:@"b2b2b2"];
-    children.titleColor = [UIColor colorWithString:@"666666"];
+    YTCategory *goods = [[YTCategory alloc]init];
+    goods.text = @"配饰";
+    goods.subText = @[@"全部",@"礼品",@"钟表",@"首饰",@"眼镜"];
+    goods.image = [UIImage imageNamed:@"nav_ico_5"];
+    goods.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
+    goods.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    goods.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *home = [[YTCategory alloc]init];
+    home.text = @"居家";
+    home.subText = @[@"全部",@"",@"",@"",@""];
+    home.image = [UIImage imageNamed:@"nav_ico_6"];
+    home.smallImage = [UIImage imageNamed:@"nav_ico_6small"];
+    home.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    home.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *service = [[YTCategory alloc]init];
+    service.text = @"服务";
+    service.subText = @[@"全部",@"",@"",@"",@"",];
+    service.image = [UIImage imageNamed:@"nav_ico_7"];
+    service.smallImage = [UIImage imageNamed:@"nav_ico_7small"];
+    service.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    service.titleColor = [UIColor colorWithString:@"666666"];
+    
+//    YTCategory *children = [[YTCategory alloc]init];
+//    children.text = @"亲子";
+//    children.subText =  @[@"全部",@"玩具",@"孕婴",@"童装",@"童鞋"];
+//    children.image = [UIImage imageNamed:@"nav_ico_7"];
+//    children.smallImage = [UIImage imageNamed:@"nav_ico_7small"];
+//    children.tintColor = [UIColor colorWithString:@"b2b2b2"];
+//    children.titleColor = [UIColor colorWithString:@"666666"];
     
     
 
-    NSArray *categorys = @[food,clothing,entertainment,dessert,goods,beauty,children];
+    NSArray *categorys = @[food,clothing,entertainment,beauty,goods,home,service];
     if (isMore) {
         NSMutableArray *mutableCategorys = [NSMutableArray arrayWithArray:categorys];
         [mutableCategorys addObject:[self moreCategory]];

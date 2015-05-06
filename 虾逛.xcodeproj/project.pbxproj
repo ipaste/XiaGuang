@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		406219281AF1315300E0A9A4 /* ad_banner01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 406219251AF1315300E0A9A4 /* ad_banner01.jpg */; };
+		406219291AF1315300E0A9A4 /* ad_banner02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 406219261AF1315300E0A9A4 /* ad_banner02.jpg */; };
+		4062192A1AF1315300E0A9A4 /* ad_banner03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 406219271AF1315300E0A9A4 /* ad_banner03.jpg */; };
 		4BBE78B237D5A241D65373FE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DCAE2C2A48A5B340C97B34E /* libPods.a */; };
 		78ADBEA41A09EA89000688E3 /* YTMatrixToolBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEA31A09EA89000688E3 /* YTMatrixToolBox.m */; };
 		78ADBEAA1A09EAC3000688E3 /* YTMotionDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADBEA71A09EAC3000688E3 /* YTMotionDetector.m */; };
@@ -230,6 +233,7 @@
 		D95B15531A072E57002077AD /* YTLocalParkingMarked.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15521A072E57002077AD /* YTLocalParkingMarked.m */; };
 		D95B15571A078403002077AD /* YTMallPositionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95B15561A078403002077AD /* YTMallPositionView.m */; };
 		D96030171A70D1C500B6DA80 /* YTStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D96030161A70D1C500B6DA80 /* YTStatusBar.m */; };
+		D96BCCA01AF1C3BE00EDCD04 /* YTadScrollAndPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = D96BCC9F1AF1C3BE00EDCD04 /* YTadScrollAndPageView.m */; };
 		D983BA7B1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D983BA7A1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m */; };
 		D992B0231A440F5300666AA0 /* img_default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D992B0221A440F5300666AA0 /* img_default.jpg */; };
 		D99EC7CA1A8C617A00CD52DB /* YTChineseTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D99EC7C91A8C617A00CD52DB /* YTChineseTool.m */; };
@@ -262,6 +266,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		406219251AF1315300E0A9A4 /* ad_banner01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ad_banner01.jpg; sourceTree = "<group>"; };
+		406219261AF1315300E0A9A4 /* ad_banner02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ad_banner02.jpg; sourceTree = "<group>"; };
+		406219271AF1315300E0A9A4 /* ad_banner03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ad_banner03.jpg; sourceTree = "<group>"; };
 		580FF728109B87AF3CDED053 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		6DCAE2C2A48A5B340C97B34E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		78ADBEA21A09EA89000688E3 /* YTMatrixToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTMatrixToolBox.h; sourceTree = "<group>"; };
@@ -660,6 +667,8 @@
 		D95B15561A078403002077AD /* YTMallPositionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPositionView.m; sourceTree = "<group>"; };
 		D96030151A70D1C500B6DA80 /* YTStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStatusBar.h; sourceTree = "<group>"; };
 		D96030161A70D1C500B6DA80 /* YTStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStatusBar.m; sourceTree = "<group>"; };
+		D96BCC9E1AF1C3BE00EDCD04 /* YTadScrollAndPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTadScrollAndPageView.h; sourceTree = "<group>"; };
+		D96BCC9F1AF1C3BE00EDCD04 /* YTadScrollAndPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTadScrollAndPageView.m; sourceTree = "<group>"; };
 		D983BA791ACABE7500AE5F64 /* ESTBeacon+YTExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESTBeacon+YTExtension.h"; sourceTree = "<group>"; };
 		D983BA7A1ACABE7500AE5F64 /* ESTBeacon+YTExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ESTBeacon+YTExtension.m"; sourceTree = "<group>"; };
 		D992B0221A440F5300666AA0 /* img_default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_default.jpg; sourceTree = "<group>"; };
@@ -839,6 +848,9 @@
 			isa = PBXGroup;
 			children = (
 				D92377771ADB9FF30017B1DE /* Guide */,
+				406219251AF1315300E0A9A4 /* ad_banner01.jpg */,
+				406219261AF1315300E0A9A4 /* ad_banner02.jpg */,
+				406219271AF1315300E0A9A4 /* ad_banner03.jpg */,
 				D992B0221A440F5300666AA0 /* img_default.jpg */,
 				AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */,
 				D9CAE85C1A52A8290053E758 /* bg_inner.jpg */,
@@ -1427,6 +1439,8 @@
 				D9441E221AE15B89008FE57E /* YTChoosRegionView.m */,
 				D9C049A31AE8D250002327C3 /* YTSaleView.h */,
 				D9C049A41AE8D250002327C3 /* YTSaleView.m */,
+				D96BCC9E1AF1C3BE00EDCD04 /* YTadScrollAndPageView.h */,
+				D96BCC9F1AF1C3BE00EDCD04 /* YTadScrollAndPageView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1625,8 +1639,10 @@
 				D92378021ADF6CF40017B1DE /* N_JINGJIBAINA_L1.mbtiles in Resources */,
 				D923780E1ADF6CF40017B1DE /* N_HAIANCHENG_WESTL2.mbtiles in Resources */,
 				D92378001ADF6CF40017B1DE /* N_YITIAN_L3.csv in Resources */,
+				406219281AF1315300E0A9A4 /* ad_banner01.jpg in Resources */,
 				D92377E51ADF6CF40017B1DE /* N_KKMALL_PARK-2.mbtiles in Resources */,
 				D92378131ADF6CF40017B1DE /* N_SHENGUOTOU_L1.mbtiles in Resources */,
+				406219291AF1315300E0A9A4 /* ad_banner02.jpg in Resources */,
 				D92377FD1ADF6CF40017B1DE /* N_YITIAN_B2.csv in Resources */,
 				D92377E71ADF6CF40017B1DE /* N_KKMALL_PARKB1J.mbtiles in Resources */,
 				D92377E01ADF6CF40017B1DE /* N_KKMALL_B1.mbtiles in Resources */,
@@ -1674,6 +1690,7 @@
 				D94C28321A0263CF009FF2F3 /* MJRefresh.bundle in Resources */,
 				D92378111ADF6CF40017B1DE /* N_HAIANCHENG_WESTPARK-2.mbtiles in Resources */,
 				D923780B1ADF6CF40017B1DE /* N_HAIANCHENG_EASTPARK-1.mbtiles in Resources */,
+				4062192A1AF1315300E0A9A4 /* ad_banner03.jpg in Resources */,
 				D923780A1ADF6CF40017B1DE /* N_HAIANCHENG_EASTL2.mbtiles in Resources */,
 				D92377F61ADF6CF40017B1DE /* N_KKMALL_L4.csv in Resources */,
 				D92377FF1ADF6CF40017B1DE /* N_YITIAN_L2.csv in Resources */,
@@ -1821,6 +1838,7 @@
 				AE630BE61A43EC9100A562AA /* BBTableView.m in Sources */,
 				D95B15491A0390C1002077AD /* YTUserDefaults.m in Sources */,
 				D94C28161A0263C6009FF2F3 /* YTSettingViewController.m in Sources */,
+				D96BCCA01AF1C3BE00EDCD04 /* YTadScrollAndPageView.m in Sources */,
 				D94C27AB1A02639F009FF2F3 /* YTExitAnnotation.m in Sources */,
 				D92D53AA1AA012B600DC0492 /* SBJsonUTF8Stream.m in Sources */,
 				D94C27A81A02639F009FF2F3 /* YTAnnotation.m in Sources */,
