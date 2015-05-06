@@ -35,6 +35,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     NetworkStatus _currentNetworkStatus;
     FMDatabase *_tmpDatabase;
     FMDatabase *_userDatabase;
+    FMDatabaseQueue *_queue;
     NSFileManager *_fileManager;
     NSUserDefaults *_userDefaults;
     NSString *_date;
@@ -104,6 +105,8 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         
         _tmpDatabase = [FMDatabase databaseWithPath:DB_PATH];
         _userDatabase = [FMDatabase databaseWithPath:USERDB_PATH];
+        _queue = [FMDatabaseQueue databaseQueueWithPath:DB_PATH];
+        
         [_tmpDatabase open];
         [_userDatabase open];
         
@@ -176,27 +179,29 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
 }
 
 - (void)downloadedData:(NSData *)data dataName:(NSString *)name{
-    NSString *dataFile = [CACHES_PATH stringByAppendingPathComponent:name];
-    [self unZipWithData:data path:[NSURL fileURLWithPath:dataFile]];
-    NSArray *subPath = [_fileManager subpathsAtPath:dataFile];
-    [subPath enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSString *path = obj;
-        if ([path hasSuffix:@"csv"]) {
-            if ([path hasPrefix:@"N_"]) {
-                [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path]  toPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *dataFile = [CACHES_PATH stringByAppendingPathComponent:name];
+        [self unZipWithData:data path:[NSURL fileURLWithPath:dataFile]];
+        NSArray *subPath = [_fileManager subpathsAtPath:dataFile];
+        [subPath enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSString *path = obj;
+            if ([path hasSuffix:@"csv"]) {
+                if ([path hasPrefix:@"N_"]) {
+                    [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path]  toPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
+                }else{
+                    [self updateXiaGuangDatabaseWithCsvPath:[dataFile stringByAppendingPathComponent:path]];
+                }
             }else{
-                [self updateXiaGuangDatabaseWithCsvPath:[dataFile stringByAppendingPathComponent:path]];
+                [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path] toPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
             }
-        }else{
-            [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path] toPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
-        }
-        
-        if (idx == subPath.count - 1) {
-            [[YTMallDict sharedInstance] refershLocalMall];
-        }
-        
-    }];
-    [_fileManager copyItemAtPath:DB_PATH toPath:@"/Users/YunTop/Desktop/xiaGuang_db" error:nil];
+            
+            if (idx == subPath.count - 1) {
+                [[YTMallDict sharedInstance] refershLocalMall];
+            }
+            
+        }];
+        [_fileManager copyItemAtPath:DB_PATH toPath:@"/Users/YunTop/Desktop/xiaGuang_db" error:nil];
+    });
 }
 
 
@@ -233,7 +238,10 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     if (contents.count > 1) {
         NSArray *fields = [contents.firstObject componentsSeparatedByString:@","];
         [contents removeObjectAtIndex:0];
-        [YTHandleCsv saveData:_tmpDatabase tableName:tableName fields:fields datas:contents.copy];
+        [_queue inDatabase:^(FMDatabase *db) {
+            
+            [YTHandleCsv saveData:_tmpDatabase tableName:tableName fields:fields datas:contents.copy];
+        }];
     }
     
     [[YTMallDict sharedInstance]refershLocalMall];
@@ -403,7 +411,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     NSString *identify = [NSString stringWithFormat:@"%@-%@",[beacon.major stringValue],[beacon.minor stringValue]];
     FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify FROM BeaconInfo WHERE identify = ?",identify];
     if ([result next]) {
-        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ?",_date,[beacon.batteryLevel stringValue]];
+        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ? WHERE identify = ?",_date,[beacon.batteryLevel stringValue],identify];
     }else{
         [_userDatabase executeUpdate:@"INSERT INTO BeaconInfo('identify','date','power') VALUES (?,?,?)",identify,_date,[beacon.batteryLevel stringValue]];
     }
