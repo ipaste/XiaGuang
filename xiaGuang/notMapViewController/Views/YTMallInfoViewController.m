@@ -118,7 +118,7 @@ static NSUInteger currentImgNum = 0;
     _categoryView = [[UIView alloc]init];
     _categoryView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _categoryView.clipsToBounds = YES;
-    _categorys = [YTCategory commonlyCategorysWithAddMore:YES];
+    _categorys = [YTCategory newAllCategorys];
         for (int i = 0; i < _categorys.count; i++) {
             UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 12 + i / 4  * 93, 50, 50)];
             YTCategory *category = _categorys[i];
@@ -129,11 +129,7 @@ static NSUInteger currentImgNum = 0;
             
             UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryBtn.frame) + 7, 50, 20)];
             categoryLabel.center = CGPointMake(categoryBtn.center.x, categoryLabel.center.y);
-            NSString *title = category.text;
-            if ([title isEqualToString:@"全部分类"]) {
-                title = @"其他";
-            }
-            categoryLabel.text = title;
+            categoryLabel.text = category.text;
             categoryLabel.tintColor = [UIColor colorWithString:@"808080"];
             categoryLabel.textAlignment = 1;
             categoryLabel.font = [UIFont systemFontOfSize:14];
@@ -318,6 +314,17 @@ static NSUInteger currentImgNum = 0;
 
 #pragma mark
 #pragma mark Custom method
+- (void)getActivity{
+    AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+    [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
+    AVQuery *query = [AVQuery queryWithClassName:@"MallActivity"];
+    [query whereKey:@"mall" matchesQuery:mallQuery];
+    query.limit = 5;
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+    }];
+}
+
 - (void)getHot{
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
     [query whereKeyExists:@"Icon"];

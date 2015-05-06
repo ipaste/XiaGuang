@@ -147,6 +147,66 @@
     return [allCategorys copy];
 }
 
++ (NSArray *)newAllCategorys{
+    YTCategory *food = [[YTCategory alloc]init];
+    food.text = @"美食";
+    food.image = [UIImage imageNamed:@"nav_ico_1"];
+    food.smallImage = [UIImage imageNamed:@"nav_ico_1small"];
+    food.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    food.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *clothing = [[YTCategory alloc]init];
+    clothing.text = @"服饰";
+    clothing.image = [UIImage imageNamed:@"nav_ico_2"];
+    clothing.smallImage = [UIImage imageNamed:@"nav_ico_2small"];
+    clothing.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    clothing.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *entertainment = [[YTCategory alloc]init];
+    entertainment.text = @"娱乐";
+    entertainment.image = [UIImage imageNamed:@"nav_ico_3"];
+    entertainment.smallImage = [UIImage imageNamed:@"nav_ico_3small"];
+    entertainment.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    entertainment.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *beauty = [[YTCategory alloc]init];
+    beauty.text = @"丽人";
+    beauty.image = [UIImage imageNamed:@"nav_ico_4"];
+    beauty.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
+    beauty.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    beauty.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *goods = [[YTCategory alloc]init];
+    goods.text = @"配饰";
+    goods.image = [UIImage imageNamed:@"nav_ico_5"];
+    goods.smallImage = [UIImage imageNamed:@"nav_ico_5small"];
+    goods.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    goods.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *home = [[YTCategory alloc]init];
+    home.text = @"居家";
+    home.image = [UIImage imageNamed:@"nav_ico_6"];
+    home.smallImage = [UIImage imageNamed:@"nav_ico_6small"];
+    home.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    home.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *service = [[YTCategory alloc]init];
+    service.text = @"服务";
+    service.image = [UIImage imageNamed:@"nav_ico_7"];
+    service.smallImage = [UIImage imageNamed:@"nav_ico_7small"];
+    service.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    service.titleColor = [UIColor colorWithString:@"666666"];
+    
+    YTCategory *other = [[YTCategory alloc]init];
+    other.text = @"其它";
+    other.image = [UIImage imageNamed:@"nav_ico_more_1"];
+    other.smallImage = [UIImage imageNamed:@"nav_ico_more_1small"];
+    other.tintColor = [UIColor colorWithString:@"b2b2b2"];
+    other.titleColor = [UIColor colorWithString:@"666666"];
+    return @[food,clothing,entertainment,beauty,goods,home,service,other];
+}
+
+
 +(CGFloat)calculateHeightForCategory:(YTCategory *)category{
     CGFloat height = 20;
     
