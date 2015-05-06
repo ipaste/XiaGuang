@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RMMBTilesSource.h"
+#import "YTDataManager.h"
 @interface RMMBTilesSource (YTExtension)
 
 - (id)initWithTileSetResourceInDocument:(NSString *)name ofType:(NSString *)extension;

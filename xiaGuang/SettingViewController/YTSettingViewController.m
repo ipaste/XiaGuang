@@ -49,8 +49,6 @@
             return 4;
     }
     return 0;
-    
-
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -63,7 +61,7 @@
     cell.selectedBackgroundView = selectView;
     cell.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
     cell.textLabel.textColor = [UIColor whiteColor];
-
+    
     if (indexPath.section == 10) {
         cell.textLabel.text = @"邀请好友使用虾逛";
         cell.imageView.image = [UIImage imageNamed:@"icon_1"];
@@ -80,7 +78,7 @@
         }
     }else if (indexPath.section == 1) {
         switch (indexPath.row) {
-
+                
             case 0:
                 cell.textLabel.text = @"给虾逛评分";
                 cell.imageView.image = [UIImage imageNamed:@"icon_4"];
@@ -117,7 +115,6 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     UIViewController *controller = nil;
     if (indexPath.section == 10) {
@@ -126,16 +123,17 @@
         switch (indexPath.row) {
             case 0:
             {
-               
+                controller = [YTMallManageListViewController shareMallListController];
+                break;
             }
-               
+                
             case 1:
             {
                 controller = [[YTGuideViewController alloc]init];
                 [self presentViewController:controller animated:false completion:nil];
                 return;
             }
-              
+                
         }
     }else if (indexPath.section == 1) {
         switch (indexPath.row) {
@@ -154,7 +152,7 @@
             case 2:
             {
                 controller = [[YTUserAgreementViewController alloc]init];
-               
+                
             }
                 break;
             case 3:
@@ -165,7 +163,7 @@
         }
     }
     
-     [self.navigationController pushViewController:controller animated:YES];
+    [self.navigationController pushViewController:controller animated:YES];
     
 }
 
@@ -186,9 +184,7 @@
 }
 
 -(void)dealloc{
-    for (UITableViewCell *tmpCell in [_tableView visibleCells]) {
-        //[tmpCell pop_removeAllAnimations];
-    }
+    
     NSLog(@"settingDealloc");
 }
 @end

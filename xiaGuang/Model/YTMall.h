@@ -26,6 +26,7 @@
 @property(nonatomic)CLLocationCoordinate2D coord;
 @property(nonatomic)BOOL isShowPath;
 @property(readonly ,nonatomic)YTRegion *region;
+@property (strong ,nonatomic) NSString *version;
 
 
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback;
@@ -33,12 +34,9 @@
 -(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback;
 
 -(void)iconsFromStartIndex:(int)start
-                     toEnd:(int)end
-                  callBack:(void (^)(NSArray *result,NSError *error))callback;
-
--(void)iconsFromStartIndex:(int)start
                 fetchCount:(int)numberOfIcons
                   callBack:(void (^)(NSArray *result,NSArray *merchants,NSError *error))callback;
 
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL isExistence))callBack;
+
 @end

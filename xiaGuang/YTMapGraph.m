@@ -45,9 +45,12 @@
 }
 
 - (BOOL)loadPESGraph:(NSString *)fileName {
-    NSString *file = [[NSBundle mainBundle] pathForResource:fileName ofType:@"csv"];
-    if (file == nil) {
-        return NO;
+    NSString *file = [[[YTDataManager defaultDataManager]mapPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",fileName,@"csv"]];
+    if (![[NSFileManager defaultManager]fileExistsAtPath:file]) {
+        file = [[NSBundle mainBundle] pathForResource:fileName ofType:@"csv"];
+        if (file == nil) {
+           return false;
+        }
     }
     
     NSString *content = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
