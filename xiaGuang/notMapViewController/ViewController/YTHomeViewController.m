@@ -82,7 +82,6 @@
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     _tableView.delegate = self;
     _tableView.rowHeight = 130;
-
     _tableView.scrollsToTop = false;
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.showsVerticalScrollIndicator = false;
@@ -215,9 +214,9 @@
                                  [self scroll];
                              } completion:^(BOOL finished) {
                                  CGFloat offsetY = _tableView.contentOffset.y;
-                                 if (offsetY >= _tableView.contentSize.height - _tableView.frame.size.height) {
+                                 if (offsetY >= _tableView.contentSize.height - _tableView.frame.size.height - 20) {
                                      _scrollDown = false;
-                                 }else if (offsetY <= -BLUR_HEIGHT + 5){
+                                 }else if (offsetY <= -BLUR_HEIGHT + 10){
                                      _scrollDown = true;
                                  }
                                  if(_shouldScroll){
@@ -246,6 +245,7 @@
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+
     if(!_shouldScroll){
         _shouldScroll = YES;
         [self test];
@@ -534,9 +534,9 @@
     
     if (_scroll) {
         CGFloat offsetY = _tableView.contentOffset.y;
-        if (offsetY >= _tableView.contentSize.height - _tableView.frame.size.height) {
+        if (offsetY >= _tableView.contentSize.height - _tableView.frame.size.height - 20) {
             _scrollDown = false;
-        }else if (offsetY <= -BLUR_HEIGHT + 5){
+        }else if (offsetY <= -BLUR_HEIGHT){
             _scrollDown = true;
         }
         [self test];

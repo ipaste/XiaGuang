@@ -71,7 +71,7 @@
         if (subKey == nil) {
             subKey = @"全部";
         }
-        _buttonName = [NSString stringWithFormat:@"%@-%@",subKey,key];
+        _buttonName = [NSString stringWithFormat:@"%@",key];
     }
     
     
@@ -155,9 +155,7 @@
                     [_curSelectButton setTitle:key forState:UIControlStateDisabled];
                     [_curSelectButton setTitle:key forState:UIControlStateNormal];
                 }
-                category = [[tempButton.titleLabel.text componentsSeparatedByString:@"-"] lastObject];
-                subCategory = [[tempButton.titleLabel.text componentsSeparatedByString:@"-"] firstObject];
-                
+                category = tempButton.titleLabel.text;
                 break;
             case 1:
             {
@@ -203,14 +201,6 @@
             }
                 break;
         }
-    }
-    
-    if ([category isEqualToString:@"全部分类"]) {
-        category = @"全部";
-        subCategory = @"全部";
-    }
-    if ([subCategory isEqualToString:@"全部"]) {
-        subCategory = @"全部";
     }
     
     

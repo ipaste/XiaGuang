@@ -23,7 +23,7 @@
 #import "YTResultsViewController.h"
 #import "YTMapViewController2.h"
 #import "YTStateView.h"
-
-@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate>
+#import "YTadScrollAndPageView.h"
+@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate,UIScrollViewDelegate>
 - (instancetype)initWithMallIdentify:(NSString *)identify;
 @end

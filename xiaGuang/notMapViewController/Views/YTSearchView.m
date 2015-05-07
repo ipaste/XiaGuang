@@ -31,7 +31,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     YTSearchDetailsView *_detailsView;
     CGFloat _searchBarWidth;
     CGFloat _searchTextFieldWidth;
-    __weak NSMutableDictionary *_object;
+    NSMutableDictionary *_object;
 }
 @end
 @implementation YTSearchView
@@ -137,7 +137,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     }
     
     if (_isAddInNavigationBar) {
-        _object = [NSMutableDictionary new];
+        _object = [NSMutableDictionary dictionary];
         for (UIView *view = [self superview]; view; view = view.superview) {
             UIResponder *responder = [view nextResponder];
             if ([responder isKindOfClass:[UINavigationController class]]) {
@@ -205,10 +205,12 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     if (_searchBar.hidden){
         _searchBar.hidden = false;
     }
-    self.hidden = false;
+    
     if (_displayFirstResponder) {
         [_searchBar becomeFirstResponder];
     }
+    
+    self.hidden = false;
 }
 
 - (void)hideSearchViewWithAnimation:(BOOL)animation{
@@ -364,6 +366,11 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     return [[contentView subviews] firstObject];
 }
 
+
+- (void)removeFromSuperview{
+    [super removeFromSuperview];
+    [_object removeAllObjects];
+}
 
 -(void)dealloc{
     [_detailsView removeFromSuperview];

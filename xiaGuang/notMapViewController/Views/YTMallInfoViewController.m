@@ -12,26 +12,35 @@
 #define HEAD_HEIGHT 35
 #define DEFAULT_ANIMTAION_TIME 0.5
 
-NSString *const kMerchantCellIdentify = @"MerchantCell";
+#define SCREEN_WIDTH [[UIScreen mainScreen] bounds].size.width
+#define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
-@interface YTMallInfoViewController (){
+NSString *const kMerchantCellIdentify = @"MerchantCell";
+static NSUInteger currentImgNum = 0;
+
+@interface YTMallInfoViewController ()<YTscrollViewDelegate>{
     UIImageView *_searchBackgroundView;
+    UIImageView *_activityImgView;
     UIScrollView *_scrollView;
+    YTadScrollAndPageView *_adView;
     UITableView *_tableView;
     UIButton *_leftBarButton;
     UIButton *_rightBarButton;
     UIButton *_leftButton;
     UIButton *_rightButton;
+    UIButton *_scrollButton;
     UIView *_saleView;
     UIView *_categoryView;
+    UIView *_lineView;
     UIView *_loadingView;
     YTSearchView *_searchView;
     YTStateView *_stateView;
-    
+    BOOL isChange;
     NSArray *_sales;
     NSArray *_categorys;
     NSArray *_hots;
     NSTimeInterval _loadingTime;
+    BOOL flag;
     id <YTMall> _mall;
     YTMallDict *_mallDict;
     YTDataManager *_dataManager;
@@ -73,7 +82,6 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     _loadingTime = [[NSDate date]timeIntervalSinceReferenceDate];
     
     [_searchView addInNavigationBar:self.navigationController.navigationBar show:false];
-    
     _scrollView = [[UIScrollView alloc]init];
     _scrollView.backgroundColor = [UIColor clearColor];
     _scrollView.showsVerticalScrollIndicator = false;
@@ -106,24 +114,22 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     [_rightButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     [self.view addSubview:_rightButton];
     
+    //放置8个button
     _categoryView = [[UIView alloc]init];
     _categoryView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
-    _categorys = [YTCategory commonlyCategorysWithAddMore:YES];
+    _categoryView.clipsToBounds = YES;
+    _categorys = [YTCategory newAllCategorys];
     for (int i = 0; i < _categorys.count; i++) {
-        UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 15 + i / 4  * 93, 50, 50)];
+        UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 12 + i / 4  * 93, 50, 50)];
         YTCategory *category = _categorys[i];
         [categoryBtn setImage:category.image forState:UIControlStateNormal];
         [categoryBtn addTarget:self action:@selector(jumpToCategory:) forControlEvents:UIControlEventTouchUpInside];
         categoryBtn.tag = i;
         [_categoryView addSubview:categoryBtn];
         
-        UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryBtn.frame) + 8, 50, 20)];
+        UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryBtn.frame) + 7, 50, 20)];
         categoryLabel.center = CGPointMake(categoryBtn.center.x, categoryLabel.center.y);
-        NSString *title = category.text;
-        if ([title isEqualToString:@"全部分类"]) {
-            title = @"更多";
-        }
-        categoryLabel.text = title;
+        categoryLabel.text = category.text;
         categoryLabel.tintColor = [UIColor colorWithString:@"808080"];
         categoryLabel.textAlignment = 1;
         categoryLabel.font = [UIFont systemFontOfSize:14];
@@ -131,6 +137,31 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     }
     [_scrollView addSubview:_categoryView];
     
+    //categoryView尺寸控制按钮
+    _scrollButton = [[UIButton alloc]init];
+    _scrollButton.backgroundColor = [UIColor whiteColor];
+    [_scrollButton setImage:[UIImage imageNamed:@"icon_h"] forState:UIControlStateNormal];
+    [_scrollButton setImage:[UIImage imageNamed:@"icon_up"] forState:UIControlStateSelected];
+    [_scrollButton addTarget:self action:@selector(addCategory:) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:_scrollButton];
+    
+    //放置滚动图片
+    NSMutableArray *adArr = [NSMutableArray array];
+    for (int i=1; i<4; i++) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"ad_banner0%i.jpg",i]];
+        [adArr addObject:imageView];
+    }
+    _adView = [[YTadScrollAndPageView alloc]init];
+    _adView.backgroundColor = [UIColor whiteColor];
+    [_adView setImgArr:adArr];
+    [_adView shouldAutoShow:YES];
+    _adView.delegate = self;
+    [_scrollView addSubview:_adView];
+    
+    _activityImgView = [[UIImageView alloc]init];
+    _activityImgView.image = [UIImage imageNamed:@"flag_zhu"];
+    [_scrollView addSubview:_activityImgView];
     
     _tableView = [[UITableView alloc]init];
     _tableView.delegate = self;
@@ -206,25 +237,46 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     frame = _categoryView.frame;
     frame.origin = CGPointZero;
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = 200;
+    frame.size.height = 101;
     _categoryView.frame = frame;
+    
+    frame = _scrollButton.frame;
+    frame.origin.x = 0;
+    frame.origin.y = CGRectGetMaxY(_categoryView.frame);
+    frame.size.width = CGRectGetWidth(_categoryView.frame);
+    frame.size.height = 15.0;
+    _scrollButton.frame = frame;
+    
+    frame = _adView.frame;
+    frame.origin.x = 0;
+    frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
+    frame.size.width = CGRectGetWidth(_scrollView.frame);
+    frame.size.height = 130;
+    _adView.frame = frame;
+    
+    frame = _activityImgView.frame;
+    frame.origin.x = CGRectGetWidth(_adView.frame) - 55.0;
+    frame.origin.y = CGRectGetMaxY(_scrollButton.frame) +10;
+    frame.size.width = 55.0;
+    frame.size.height = 55.0;
+    _activityImgView.frame = frame;
     
     frame = _saleView.frame;
     frame.origin.x = 0;
-    frame.origin.y = CGRectGetMaxY(_categoryView.frame) + 10;
+    frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
     frame.size.width = CGRectGetWidth(_scrollView.frame);
     frame.size.height = 165;
     _saleView.frame = frame;
     
-    
     frame = _tableView.frame;
     frame.origin.x = 0;
-    frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_categoryView.frame) + 10;
-    frame.size.width = CGRectGetWidth(self.view.frame);
+    frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
+    frame.size.width = CGRectGetWidth(self.view.frame) + 10;
     frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
     _tableView.frame = frame;
     _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
 }
+
 
 #pragma mark
 #pragma mark NavigationBar Handle
@@ -262,6 +314,17 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 
 #pragma mark
 #pragma mark Custom method
+- (void)getActivity{
+    AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+    [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
+    AVQuery *query = [AVQuery queryWithClassName:@"MallActivity"];
+    [query whereKey:@"mall" matchesQuery:mallQuery];
+    query.limit = 5;
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+    }];
+}
+
 - (void)getHot{
     AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
     if ([_mall isMemberOfClass:[YTCloudMall class]]) {
@@ -329,7 +392,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
             _stateView.type = YTStateTypeNoNetWork;
         }
     }];
-
+    
     
 }
 
@@ -398,18 +461,120 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
         [self presentViewController:mapVC animated:YES completion:nil];
     }
 }
-
+//button调整页面
 -(void)jumpToCategory:(UIButton *)sender{
     YTCategory *category = _categorys[sender.tag];
-    if (sender.tag == _categorys.count - 1) {
-        YTMoreCategoryViewController *moreVC = [[YTMoreCategoryViewController alloc]init];
-        moreVC.mall = _mall;
-        moreVC.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:moreVC animated:YES];
-    }else{
-        YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:_mall andResutsKey:category.text];
-        [self.navigationController pushViewController:resultsVC animated:YES];
+    
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:_mall andResutsKey:category.text];
+    [self.navigationController pushViewController:resultsVC animated:YES];
+    
+}
+
+// scrollButton点击触发功能
+- (void)addCategory:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    if (sender.selected == YES) {
+        CGRect frame = _scrollView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_leftButton.frame) + 8;
+        frame.size.width = CGRectGetWidth(self.view.frame);
+        frame.size.height = CGRectGetHeight(self.view.frame) - frame.origin.y;
+        _scrollView.frame = frame;
+        
+        frame = _categoryView.frame;
+        frame.origin = CGPointZero;
+        frame.size.width = CGRectGetWidth(self.view.frame);
+        frame.size.height = 190;
+        _categoryView.frame = frame;
+        
+        frame = _scrollButton.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_categoryView.frame);
+        frame.size.width = CGRectGetWidth(_categoryView.frame);
+        frame.size.height = 15.0;
+        _scrollButton.frame = frame;
+        
+        frame = _adView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
+        frame.size.width = CGRectGetWidth(_scrollView.frame);
+        frame.size.height = 130;
+        _adView.frame = frame;
+        
+        frame = _activityImgView.frame;
+        frame.origin.x = CGRectGetWidth(_adView.frame) - 55.0;
+        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) +10;
+        frame.size.width = 55.0;
+        frame.size.height = 55.0;
+        _activityImgView.frame = frame;
+        
+        frame = _saleView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
+        frame.size.width = CGRectGetWidth(_scrollView.frame);
+        frame.size.height = 165;
+        _saleView.frame = frame;
+        
+        frame = _tableView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
+        frame.size.width = CGRectGetWidth(self.view.frame) + 10;
+        frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
+        _tableView.frame = frame;
+        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
+    } else if (sender.selected == NO) {
+        CGRect frame = _scrollView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_leftButton.frame) + 8;
+        frame.size.width = CGRectGetWidth(self.view.frame);
+        frame.size.height = CGRectGetHeight(self.view.frame) - frame.origin.y;
+        _scrollView.frame = frame;
+        
+        frame = _categoryView.frame;
+        frame.origin = CGPointZero;
+        frame.size.width = CGRectGetWidth(self.view.frame);
+        frame.size.height = 101;
+        _categoryView.frame = frame;
+        
+        frame = _scrollButton.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_categoryView.frame);
+        frame.size.width = CGRectGetWidth(_categoryView.frame);
+        frame.size.height = 15.0;
+        _scrollButton.frame = frame;
+        
+        frame = _adView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
+        frame.size.width = CGRectGetWidth(_scrollView.frame);
+        frame.size.height = 130;
+        _adView.frame = frame;
+        
+        frame = _activityImgView.frame;
+        frame.origin.x = CGRectGetWidth(_adView.frame) - 55.0;
+        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) +10;
+        frame.size.width = 55.0;
+        frame.size.height = 55.0;
+        _activityImgView.frame = frame;
+        
+        frame = _saleView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
+        frame.size.width = CGRectGetWidth(_scrollView.frame);
+        frame.size.height = 165;
+        _saleView.frame = frame;
+        
+        frame = _tableView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
+        frame.size.width = CGRectGetWidth(self.view.frame) + 10;
+        frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
+        _tableView.frame = frame;
+        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
+        
     }
+    
+    
 }
 
 - (void)touchEndWithSaleView:(YTSaleView *)saleView{

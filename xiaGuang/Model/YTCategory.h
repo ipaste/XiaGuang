@@ -19,4 +19,7 @@
 +(NSArray *)allCategorys;
 +(YTCategory *)moreCategory;
 +(CGFloat)calculateHeightForCategory:(YTCategory *)category;
+
+
++ (NSArray *)newAllCategorys;
 @end
