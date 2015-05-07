@@ -32,7 +32,7 @@
     return self;
 }
 
--(instancetype)initWithDaZhongDianPing:(NSDictionary *)dictionary{
+- (instancetype)initWithDaZhongDianPing:(NSDictionary *)dictionary{
     self = [super init];
     if (self) {
         _dzdpDictionary = dictionary;
