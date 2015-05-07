@@ -10,6 +10,8 @@
 #import "YTMallDict.h"
 #import "YTMallPositionViewController.h"
 #import "YTPreferential.h"
+
+#import "YTMallActivity.h"
 #import "YTSaleView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "YTMoreCategoryViewController.h"
