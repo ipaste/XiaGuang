@@ -17,7 +17,6 @@
 #define TABLEVIEW_HEAD 110.0f
 @interface YTSearchViewController ()<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate>{
     UITableView *_tableView;
-    
     YTPageControl *_pageControl;
     YTSearchView *_searchView;
     NSArray *_categorys;
@@ -34,7 +33,7 @@
     [super viewDidLoad];
     [self defaultNavigation];
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    //_tableView.tableHeaderView = [self tableHeadView];
+   // _tableView.tableHeaderView = [self tableHeadView];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.showsVerticalScrollIndicator = NO;
@@ -44,7 +43,7 @@
     [self.view addSubview:_tableView];
     
     
-    _categorys = [YTCategory allCategorys];
+    _categorys = [YTCategory newAllCategorys];
     
     _isManualSwitch = YES;
     _searchView = [[YTSearchView alloc]initWithMall:nil placeholder:@"搜索" indent:YES];
@@ -78,7 +77,7 @@
     scrollView.contentOffset = CGPointMake(1 * CGRectGetWidth(scrollView.frame) , 0);
     
     
-    _images = @[@"home3_img_pic@2x.jpg",@"home3_img_pic3@2x.jpg",@"home3_img_pic4@2x.jpg"];
+    _images = @[@"ad_banner01.jpg",@"ad_banner02.jpg",@"ad_banner03.jpg"];
     _slideImageViews = [NSMutableArray array];
     
     for (int i = 0 ; i < 3; i++) {
@@ -101,7 +100,7 @@
     [background addSubview:_pageControl];
     [background addSubview:lineView];
     
-  //  [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:scrollView repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:scrollView repeats:YES];
     return background;
 }
 

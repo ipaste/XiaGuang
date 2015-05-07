@@ -234,13 +234,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         query.limit = number;
         query.skip = skip;
         if (_ids == nil) {
-            if (_subCategory != nil) {
-                [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_subCategory];
-            }else{
-                if (_category != nil){
-                    [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
-                }
-            }
+            [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
         }else{
             if (_ids.count <= 0 || _ids == nil) {
                 block(nil);
@@ -259,8 +253,9 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         if (_mallId != nil) {
             NSNumber *tmpId = [NSNumber numberWithInteger:[_mallId integerValue]];
             [mallObject whereKey:MALL_CLASS_LOCALID equalTo:tmpId];
+            [mallObject whereKey:@"ready" equalTo:@YES];
         }else{
-            //[mallObject whereKey:MALL_CLASS_LOCALID lessThanOrEqualTo:_mallDict.localMallMaxId];
+            [mallObject whereKey:@"ready" equalTo:@YES];
         }
         [query whereKey:@"mall" matchesQuery:mallObject];
         
@@ -350,21 +345,9 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     [_merchants removeAllObjects];
     [_tableView reloadData];
     
-    _subCategory = subCategory;
-    
-    if ([category isEqualToString:@"全部"]) {
-        _category = nil;
-    }else{
-        _category = category;
-    }
-    if ([subCategory isEqualToString:@"全部"]) {
-        _subCategory = nil;
-    }else{
-        _subCategory = subCategory;
-    }
+    _category = category;
     _mallId = malluniId;
     _floorId = floorUniId;
-    _isCategory = YES;
     
     [self getMerchantsWithSkip:0 numbers:10 andBlock:^(NSArray *merchants) {
         _merchants = [NSMutableArray arrayWithArray:merchants];

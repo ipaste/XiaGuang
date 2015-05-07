@@ -87,7 +87,7 @@ static NSUInteger currentImgNum = 0;
     _scrollView.showsVerticalScrollIndicator = false;
     _scrollView.scrollEnabled = false;
     [self.view addSubview:_scrollView];
-
+    
     _leftButton = [[UIButton alloc]init];
     _leftButton.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
     [_leftButton setTitle:@"商圈位置" forState:UIControlStateNormal];
@@ -113,31 +113,31 @@ static NSUInteger currentImgNum = 0;
     [_rightButton.layer setCornerRadius:2.5];
     [_rightButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     [self.view addSubview:_rightButton];
-
-//放置8个button
+    
+    //放置8个button
     _categoryView = [[UIView alloc]init];
     _categoryView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _categoryView.clipsToBounds = YES;
     _categorys = [YTCategory newAllCategorys];
-        for (int i = 0; i < _categorys.count; i++) {
-            UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 12 + i / 4  * 93, 50, 50)];
-            YTCategory *category = _categorys[i];
-            [categoryBtn setImage:category.image forState:UIControlStateNormal];
-            [categoryBtn addTarget:self action:@selector(jumpToCategory:) forControlEvents:UIControlEventTouchUpInside];
-            categoryBtn.tag = i;
-            [_categoryView addSubview:categoryBtn];
-            
-            UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryBtn.frame) + 7, 50, 20)];
-            categoryLabel.center = CGPointMake(categoryBtn.center.x, categoryLabel.center.y);
-            categoryLabel.text = category.text;
-            categoryLabel.tintColor = [UIColor colorWithString:@"808080"];
-            categoryLabel.textAlignment = 1;
-            categoryLabel.font = [UIFont systemFontOfSize:14];
-            [_categoryView addSubview:categoryLabel];
-        }
+    for (int i = 0; i < _categorys.count; i++) {
+        UIButton *categoryBtn = [[UIButton alloc]initWithFrame:CGRectMake(15 + i % 4 * 80, 12 + i / 4  * 93, 50, 50)];
+        YTCategory *category = _categorys[i];
+        [categoryBtn setImage:category.image forState:UIControlStateNormal];
+        [categoryBtn addTarget:self action:@selector(jumpToCategory:) forControlEvents:UIControlEventTouchUpInside];
+        categoryBtn.tag = i;
+        [_categoryView addSubview:categoryBtn];
+        
+        UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(categoryBtn.frame) + 7, 50, 20)];
+        categoryLabel.center = CGPointMake(categoryBtn.center.x, categoryLabel.center.y);
+        categoryLabel.text = category.text;
+        categoryLabel.tintColor = [UIColor colorWithString:@"808080"];
+        categoryLabel.textAlignment = 1;
+        categoryLabel.font = [UIFont systemFontOfSize:14];
+        [_categoryView addSubview:categoryLabel];
+    }
     [_scrollView addSubview:_categoryView];
     
-//categoryView尺寸控制按钮
+    //categoryView尺寸控制按钮
     _scrollButton = [[UIButton alloc]init];
     _scrollButton.backgroundColor = [UIColor whiteColor];
     [_scrollButton setImage:[UIImage imageNamed:@"icon_h"] forState:UIControlStateNormal];
@@ -145,6 +145,16 @@ static NSUInteger currentImgNum = 0;
     [_scrollButton addTarget:self action:@selector(addCategory:) forControlEvents:UIControlEventTouchUpInside];
     [_scrollView addSubview:_scrollButton];
     
+<<<<<<< HEAD
+=======
+    //放置滚动图片
+    NSMutableArray *adArr = [NSMutableArray array];
+    for (int i=1; i<4; i++) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"ad_banner0%i.jpg",i]];
+        [adArr addObject:imageView];
+    }
+>>>>>>> 830d257c5afea0343ab8673c3cdf1a4c9c865bd4
     _adView = [[YTadScrollAndPageView alloc]init];
     _adView.backgroundColor = [UIColor whiteColor];
     [_adView shouldAutoShow:YES];
@@ -416,7 +426,7 @@ static NSUInteger currentImgNum = 0;
             _stateView.type = YTStateTypeNoNetWork;
         }
     }];
-
+    
     
 }
 
@@ -487,15 +497,10 @@ static NSUInteger currentImgNum = 0;
 //button跳转页面
 -(void)jumpToCategory:(UIButton *)sender{
     YTCategory *category = _categorys[sender.tag];
-    if (sender.tag == _categorys.count - 1) {
-        YTMoreCategoryViewController *moreVC = [[YTMoreCategoryViewController alloc]init];
-        moreVC.mall = _mall;
-        moreVC.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:moreVC animated:YES];
-    }else{
-        YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:_mall andResutsKey:category.text];
-        [self.navigationController pushViewController:resultsVC animated:YES];
-    }
+    
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:_mall andResutsKey:category.text];
+    [self.navigationController pushViewController:resultsVC animated:YES];
+    
 }
 
 // scrollButton点击触发功能
@@ -605,6 +610,7 @@ static NSUInteger currentImgNum = 0;
         frame.size.height = 55.0;
         _activityImgView.frame = frame;
         
+<<<<<<< HEAD
         if (_adView.hidden == YES && _activityImgView.hidden == YES) {
             frame = _saleView.frame;
             frame.origin.x = 0;
@@ -639,6 +645,23 @@ static NSUInteger currentImgNum = 0;
             
         }
 
+=======
+        frame = _saleView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
+        frame.size.width = CGRectGetWidth(_scrollView.frame);
+        frame.size.height = 165;
+        _saleView.frame = frame;
+        
+        frame = _tableView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
+        frame.size.width = CGRectGetWidth(self.view.frame) + 10;
+        frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
+        _tableView.frame = frame;
+        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
+        
+>>>>>>> 830d257c5afea0343ab8673c3cdf1a4c9c865bd4
     }
     
     
