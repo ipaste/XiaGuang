@@ -176,7 +176,7 @@ static NSUInteger currentImgNum = 0;
         if (isExistence) {
             _saleView = [[UIView alloc]init];
             _saleView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
-            
+            _saleView.alpha = 0;
             UIImage *titleImage = [UIImage imageNamed:@"title_disco"];
             UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, titleImage.size.width, titleImage.size.height)];
             titleImageView.image = titleImage;
@@ -406,7 +406,7 @@ static NSUInteger currentImgNum = 0;
         }else{
             time = dispatch_time(DISPATCH_TIME_NOW, 0);
         }
-        
+        _saleView.alpha = 1;
         dispatch_after(time, dispatch_get_main_queue(), ^{
             [_stateView stopAnimation];
             [_stateView removeFromSuperview];
