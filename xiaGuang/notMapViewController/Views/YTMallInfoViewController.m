@@ -145,16 +145,7 @@ static NSUInteger currentImgNum = 0;
     [_scrollButton addTarget:self action:@selector(addCategory:) forControlEvents:UIControlEventTouchUpInside];
     [_scrollView addSubview:_scrollButton];
     
-<<<<<<< HEAD
-=======
-    //放置滚动图片
-    NSMutableArray *adArr = [NSMutableArray array];
-    for (int i=1; i<4; i++) {
-        UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"ad_banner0%i.jpg",i]];
-        [adArr addObject:imageView];
-    }
->>>>>>> 830d257c5afea0343ab8673c3cdf1a4c9c865bd4
+
     _adView = [[YTadScrollAndPageView alloc]init];
     _adView.backgroundColor = [UIColor whiteColor];
     [_adView shouldAutoShow:YES];
@@ -610,7 +601,7 @@ static NSUInteger currentImgNum = 0;
         frame.size.height = 55.0;
         _activityImgView.frame = frame;
         
-<<<<<<< HEAD
+
         if (_adView.hidden == YES && _activityImgView.hidden == YES) {
             frame = _saleView.frame;
             frame.origin.x = 0;
@@ -645,23 +636,6 @@ static NSUInteger currentImgNum = 0;
             
         }
 
-=======
-        frame = _saleView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
-        frame.size.width = CGRectGetWidth(_scrollView.frame);
-        frame.size.height = 165;
-        _saleView.frame = frame;
-        
-        frame = _tableView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
-        frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-        frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-        _tableView.frame = frame;
-        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-        
->>>>>>> 830d257c5afea0343ab8673c3cdf1a4c9c865bd4
     }
     
     

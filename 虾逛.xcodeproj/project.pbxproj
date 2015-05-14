@@ -662,6 +662,7 @@
 		D95B15561A078403002077AD /* YTMallPositionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPositionView.m; sourceTree = "<group>"; };
 		D96030151A70D1C500B6DA80 /* YTStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStatusBar.h; sourceTree = "<group>"; };
 		D96030161A70D1C500B6DA80 /* YTStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStatusBar.m; sourceTree = "<group>"; };
+		D96B64CE1B020EA8007478CB /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		D96BCC9E1AF1C3BE00EDCD04 /* YTadScrollAndPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTadScrollAndPageView.h; sourceTree = "<group>"; };
 		D96BCC9F1AF1C3BE00EDCD04 /* YTadScrollAndPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTadScrollAndPageView.m; sourceTree = "<group>"; };
 		D983BA791ACABE7500AE5F64 /* ESTBeacon+YTExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESTBeacon+YTExtension.h"; sourceTree = "<group>"; };
@@ -990,6 +991,7 @@
 		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D96B64CE1B020EA8007478CB /* libsqlite3.0.dylib */,
 				D9EB25581AAE8FA300210056 /* WebKit.framework */,
 				AE7AB1B01A511F4E00E3A16F /* AdSupport.framework */,
 				6DCAE2C2A48A5B340C97B34E /* libPods.a */,
