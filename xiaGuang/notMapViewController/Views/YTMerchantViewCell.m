@@ -18,8 +18,6 @@
     UIImageView *_preferentialImageView;
     UIImageView *_soleImageView;
     UIImageView *_otherImageView;
-    NSMutableArray *_subCategoryImageView;
-    NSMutableArray *_subCategoryLabel;
     id<YTMerchant> _oldMerchant;
 }
 @end
@@ -41,25 +39,13 @@
         _iconView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 15, MERCHANT_ICON_SIZE, MERCHANT_ICON_SIZE)];
         _iconView.image = [UIImage imageNamed:@"imgshop_default"];
         
-        _merchantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_iconView.frame) + 15.0f, CGRectGetMinY(_iconView.frame), 150, 17)];
+        _merchantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_iconView.frame) + 15.0f, CGRectGetMinY(_iconView.frame) + 10, 150, 17)];
         
-        _addressLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_merchantNameLabel.frame), CGRectGetMaxY(_merchantNameLabel.frame) + 5, 150, 14)];
-        
+        _addressLable = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMinX(_merchantNameLabel.frame), CGRectGetMaxY(_merchantNameLabel.frame) + 10, 150, 14)];
         
         _line = [[UIView alloc]init];
         
-        _subCategoryImageView = [NSMutableArray array];
-        _subCategoryLabel = [NSMutableArray array];
-        
-        for (int i = 0; i < 3; i++) {
-            UIImageView *subCategory = [[UIImageView alloc]init];
-            [self addSubview:subCategory];
-            [_subCategoryImageView addObject:subCategory];
-            
-            UILabel *subLabel = [[UILabel alloc]init];
-            [subCategory addSubview:subLabel];
-            [_subCategoryLabel addObject:subLabel];
-        }
+
         self.titleColor = [UIColor colorWithString:@"e95e37"];
         
         UIImage *preferentialImage = [UIImage imageNamed:@"flag"];
@@ -108,6 +94,7 @@
 -(void)setMerchant:(id<YTMerchant>)merchant{
     _soleImageView.hidden = true;
     _otherImageView.hidden = true;
+    _iconView.image = [UIImage imageNamed:@"imgshop_default"];
     _merchantNameLabel.text = [merchant merchantName];
     CGSize size = [[merchant merchantName] boundingRectWithSize:CGSizeMake(MAXFLOAT, CGRectGetHeight(_merchantNameLabel.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName :_merchantNameLabel.font} context:nil].size;
     
@@ -133,7 +120,7 @@
             _otherImageView.hidden = false;
             if (cloudMerchant.isSole){
                 CGRect frame = _otherImageView.frame;
-                frame.origin = CGPointMake(CGRectGetMaxX(_soleImageView.frame) + 5, CGRectGetMinY(_otherImageView.frame));
+                frame.origin = CGPointMake(CGRectGetMaxX(_soleImageView.frame) + 5, CGRectGetMinY(_soleImageView.frame));
                 _otherImageView.frame = frame;
             }else{
                 CGRect frame = _otherImageView.frame;
@@ -147,54 +134,14 @@
     
     _addressLable.text = [merchant address];
     
-    _iconView.image = [UIImage imageNamed:@"imgshop_default"];
+    
     [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-        _iconView.image = result;
+        if (result){
+            _iconView.image = result;
+        }
     }];
     
-    NSArray *subType = [merchant type];
-    if (subType.count > 0 && subType != nil){
-        UIImageView *beforeImageView = nil;
-        for (int i = 0; i < _subCategoryImageView.count; i++) {
-            UIImageView *imageView = _subCategoryImageView[i];
-            if ( i < subType.count ) {
-                imageView.hidden = NO;
-                NSString *typeName = subType[i];
-                CGRect frame = CGRectMake(0, CGRectGetMaxY(_addressLable.frame) + 8, 0, 16);;
-                UIImage *image = nil;
-                if (typeName.length > 2) {
-                    frame.origin.x = CGRectGetMaxX(beforeImageView.frame) == 0 ? CGRectGetMinX(_addressLable.frame):CGRectGetMaxX(beforeImageView.frame) + 5;
-                    frame.size.width = 60;
-                    image = [UIImage imageNamed:@"shop_img_label_4"];
-                }else{
-                    frame.origin.x = CGRectGetMaxX(beforeImageView.frame) == 0 ? CGRectGetMinX(_addressLable.frame):CGRectGetMaxX(beforeImageView.frame) + 5;
-                    frame.size.width = 42;
-                    image = [UIImage imageNamed:@"shop_img_label_2"];
-                }
-                
-                imageView.image = image;
-                imageView.frame = frame;
-                beforeImageView = imageView;
-                
-                UILabel *label = _subCategoryLabel[i];
-                label.text = subType[i];
-                label.frame = imageView.bounds;
-                label.font = [UIFont systemFontOfSize:10];
-                label.textAlignment = 1;
-                label.textColor = [UIColor colorWithString:@"e95e37"];
-            }else{
-                imageView.hidden = YES;
-            }
-        }
-    }else{
-        for (int i = 0 ; i < _subCategoryImageView.count; i++) {
-            UIImageView *imageView = _subCategoryImageView[i];
-            UILabel *label = _subCategoryLabel[i];
-            imageView.hidden = YES;
-            label.hidden = YES;
-        }
-        
-    }
+
     _merchant = merchant;
 }
 

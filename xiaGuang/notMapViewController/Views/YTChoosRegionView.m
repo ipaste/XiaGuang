@@ -54,7 +54,7 @@
         CGRect frame = self.frame;
         frame.size.height = height + 20;
         self.frame = frame;
-        self.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
+        self.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.95];
     }
     return self;
 }

@@ -10,7 +10,7 @@
 
 @implementation YTHandleCsv
 + (void)saveData:(FMDatabase *)database tableName:(NSString *)tableName fields:(NSArray *)fields datas:(NSArray *)datas{
-    [datas enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    for (NSString *obj in datas) {
         if ([obj isEqualToString:@""]) {
             return ;
         }
@@ -36,33 +36,35 @@
             //插入数据
             sql = [NSMutableString stringWithFormat:@"INSERT INTO %@%@ VALUES(",tableName,fields];
         }
-    
-            FMResultSet *tmpResult = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@",tableName]];
-            [tmpResult next];
-            for (NSInteger index = 0 ;index < contents.count;index++) {
-                NSString *key = fields[index];
-                id value = contents[index];
-                id object = [tmpResult objectForColumnName:key];
-                if ([object isKindOfClass:[NSNumber class]]) {
-                    value = [NSNumber numberWithFloat:[value floatValue]];
-                }else if ([object isKindOfClass:[NSString class]]){
-                    value = [NSString stringWithFormat:@"\"%@\"",value];
-                }
-                if (isUpdata) {
-                    [sql appendFormat:@"%@ = %@,",key,value];
-                }else{
-                    [sql appendFormat:@"%@,",value];
-                }
+        
+        FMResultSet *tmpResult = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@",tableName]];
+        [tmpResult next];
+        for (NSInteger index = 0 ;index < contents.count;index++) {
+            NSString *key = fields[index];
+            id value = contents[index];
+            id object = [tmpResult objectForColumnName:key];
+            if ([object isKindOfClass:[NSNumber class]]) {
+                value = [NSNumber numberWithFloat:[value floatValue]];
+            }else if ([object isKindOfClass:[NSString class]]){
+                value = [NSString stringWithFormat:@"\"%@\"",value];
             }
-            [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
-            if (isUpdata){
-                [sql appendFormat:@" WHERE %@ = %@",identify,contents[index]];
+            if (isUpdata) {
+                [sql appendFormat:@"%@ = %@,",key,value];
             }else{
-                [sql appendFormat:@")"];
+                [sql appendFormat:@"%@,",value];
             }
-            
+        }
+        [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
+        
+        if (isUpdata){
+            [sql appendFormat:@" WHERE %@ = %@",identify,contents[index]];
+        }else{
+            [sql appendFormat:@")"];
+        }
+        [sql stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        
         [database executeUpdate:sql];
-    }];
+    }
     
 }
 @end

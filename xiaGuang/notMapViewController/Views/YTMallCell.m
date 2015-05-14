@@ -89,7 +89,9 @@
 }
 
 -(void)setIsPreferential:(BOOL)isPreferential{
-    _discoImageView.hidden = !isPreferential;
-    _isPreferential = isPreferential;
+    if (_isFetch) {
+        _discoImageView.hidden = !isPreferential;
+        _isPreferential = isPreferential;
+    }
 }
 @end

@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     NSString *_mallId;
     NSString *_floorId;
     NSArray *_ids;
+    NSMutableArray *_currentMerchantUniIds;
     NSMutableArray *_merchants;
     
     YTCategoryResultsView *_categoryResultsView;
@@ -109,6 +110,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         self.navigationItem.title = @"搜索结果";
     }
     
+    _currentMerchantUniIds = [NSMutableArray array];
+    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:[self leftBarButton]];
     
     _mallDict = [YTMallDict sharedInstance];
@@ -139,7 +142,6 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         _categoryResultsView = [[YTCategoryResultsView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 40) andmall:_mall categoryKey:_category subCategory:_subCategory];
         _categoryResultsView.delegate = self;
         [self.view addSubview:_categoryResultsView];
-        
     }
     
     self.view.layer.contents = (id)[UIImage imageNamed:@"bg_inner.jpg"].CGImage;
@@ -172,8 +174,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                 _merchants = [NSMutableArray arrayWithArray:merchants];
                 if (_ids) {
                     id<YTMerchant> tmpMerchant = [merchants firstObject];
-                    _subCategory = [[tmpMerchant type] lastObject];
-                    _category = [[tmpMerchant type] firstObject];
+                    _category = [tmpMerchant type];
                     [_categoryResultsView setKey:_category subKey:_subCategory];
                 }
             }
@@ -230,6 +231,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     if (_type == YTResultsTypeResults) {
         AVQuery *query = [AVQuery queryWithClassName:MERCHANT_CLASS_NAME];
         [query orderByAscending:@"name"];
+        [query whereKeyExists:@"Icon"];
         [query includeKey:@"mall,floor"];
         query.limit = number;
         query.skip = skip;
@@ -294,7 +296,10 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                 if(merchants.count < number){
                     AVQuery *merchantQuery = [AVQuery queryWithClassName:@"Merchant"];
                     [merchantQuery whereKey:@"has_deal" equalTo:@YES];
+                    [merchantQuery orderByAscending:@"name"];
                     [merchantQuery whereKey:@"mall" matchesQuery:mallObject];
+                    [merchantQuery whereKey:@"uniId" notContainedIn:_currentMerchantUniIds];
+                    [merchantQuery whereKeyExists:@"Icon"];
                     merchantQuery.limit = number - merchants.count;
                     merchantQuery.skip = _dealCount;
                     [merchantQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -333,8 +338,12 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     
     id <YTMerchant> merchant = _merchants[indexPath.row];
     
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self == %@",[merchant uniId]];
+    id <YTMerchant> tmpMerchant = [_currentMerchantUniIds filteredArrayUsingPredicate:predicate].firstObject;
+    if (tmpMerchant == nil){
+        [_currentMerchantUniIds addObject:[merchant uniId]];
+    }
     cell.merchant = merchant;
-    
     return cell;
 }
 

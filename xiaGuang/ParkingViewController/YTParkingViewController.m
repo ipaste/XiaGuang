@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTNavigationBar *_navigationBar;
     YTZoomStepper *_zoomStepper;
     
+    
     UIView *_shadeView;
     UIView *_beforeMarkView;
     UILabel *_firstLabel;
@@ -36,6 +37,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     YTBluetoothManager *_bluetoothManager;
     YTCurrentParkingButton *_currentParkingButton;
     YTMoveCurrentLocationButton *_moveCurrentLocationButton;
+    YTSwitchFloorView *_floorView;
     
     BOOL _bluetoothOn;
     BOOL _initializationComplete;
@@ -107,6 +109,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     [self createNavigationBar];
     [self createMapView];
+    [self createSwitchFloorView];
     [self createMarkView];
     [self createZoomStepper];
     [self createFunctionButton];
@@ -270,6 +273,12 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     
     [self changeLabel:_state];
     
+}
+
+-(void)createSwitchFloorView{
+    _floorView = [[YTSwitchFloorView alloc]initWithPosition:CGPointMake(CGRectGetMaxX(_mapView.frame) - 59, CGRectGetMinY(_mapView.frame) + 10)  AndCurrentMajorArea:_locatorMajorArea];
+    _floorView.userInteractionEnabled = false;
+    [self.view addSubview:_floorView];
 }
 -(void)createShadeView{
     _shadeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame))];
@@ -447,8 +456,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             [_timer invalidate];
             _timer = nil;
             if (![_tmpMarker whetherMark]) {
+                [_floorView promptFloorChange:[_currenDisplayMajorArea floor]];
                 [self notMarkStateWithAnimation:animation];
             }else{
+                [_floorView promptFloorChange:[[_tmpMarker majorArea] floor]];
                 [self markedStateWithAnimation:animation];
             }
             [self normalStateWithAnimation:animation];
@@ -463,6 +474,8 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
             }else{
                 [self parkingMarkedShowInMap:YES];
             }
+            
+            [_floorView promptFloorChange:[[_tmpMarker majorArea] floor]];
             _timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(updateParkingChargeLabel:) userInfo:nil repeats:YES];
             [self markedStateWithAnimation:animation];
             break;
@@ -478,6 +491,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                 [self parkingMarkedShowInMap:NO];
                 [_tmpMarker clearParkingInfo];
             }
+            [_floorView promptFloorChange:[_currenDisplayMajorArea floor]];
             [self notMarkStateWithAnimation:animation];
             if (_userMinorArea == nil || ![[_userMinorArea majorArea] isParking]) {
                 [self normalStateWithAnimation:animation];

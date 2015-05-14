@@ -10,6 +10,7 @@
 #import "YTMallDict.h"
 #import "YTCloudMerchant.h"
 #define DEVICE_IDENTIFIER [[[UIDevice currentDevice] identifierForVendor] UUIDString]
+#define DEVICE_NAME [UIDevice currentDevice].name
 #define DOCUMENT_PATH NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject
 #define CACHES_PATH NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, true).firstObject
 #define USER_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".user"]
@@ -29,7 +30,7 @@ NSString *const kRegionUpdate = @"regionDate";
  *  更换数据库密码，使用正确的密码打开数据，然后再用ResetKey去修改
  */
 NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
-
+NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
 @interface YTDataManager(){
     Reachability *_reachability;
     NetworkStatus _currentNetworkStatus;
@@ -142,22 +143,25 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     AVQuery *regionQuery = [AVQuery queryWithClassName:@"Region"];
     [regionQuery includeKey:@"city"];
     [regionQuery whereKey:@"ready" equalTo:@YES];
-    NSArray *objects = [regionQuery findObjects];
-    
-    for (AVObject *object in objects) {
-        NSInteger isExtension = [object[@"isExistence"] integerValue];
-        NSNumber *uniId = object[@"uniId"];
-        NSString *name = object[@"regionName"];
-        NSNumber *cityId = object[@"city"][@"uniId"];
-        FMResultSet *result = [_tmpDatabase executeQuery:@"SELECT isExistence FROM Region WHERE identify = ?",uniId];
-        if ([result next]) {
-            if (isExtension != [result intForColumn:@"isExistence"]) {
-                [_tmpDatabase executeUpdate:@"UPDATE Region SET isExistence = ? WHERE identify = ?",[NSNumber numberWithInteger:isExtension],uniId];
+    [regionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error == nil && objects != nil) {
+            for (AVObject *object in objects) {
+                NSInteger isExtension = [object[@"isExistence"] integerValue];
+                NSNumber *uniId = object[@"uniId"];
+                NSString *name = object[@"regionName"];
+                NSNumber *cityId = object[@"city"][@"uniId"];
+                FMResultSet *result = [_tmpDatabase executeQuery:@"SELECT isExistence FROM Region WHERE identify = ?",uniId];
+                if ([result next]) {
+                    if (isExtension != [result intForColumn:@"isExistence"]) {
+                        [_tmpDatabase executeUpdate:@"UPDATE Region SET isExistence = ? WHERE identify = ?",[NSNumber numberWithInteger:isExtension],uniId];
+                    }
+                }else{
+                    [_tmpDatabase executeUpdate:@"INSERT INTO Region('identify','name','city','isExistence') VALUES(?,?,?,?)",uniId,name,cityId,[NSNumber numberWithInteger:isExtension]];
+                }
             }
-        }else{
-            [_tmpDatabase executeUpdate:@"INSERT INTO Region('identify','name','city','isExistence') VALUES(?,?,?,?)",uniId,name,cityId,[NSNumber numberWithInteger:isExtension]];
         }
-    }    
+
+    }];
 }
 
 - (void)checkWhetherTheDataNeedsToBeUpload{
@@ -171,6 +175,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
             AVObject *object = [AVObject objectWithClassName:@"UserInfo"];
             object[@"file"] = userFile;
             object[@"ifa"] = DEVICE_IDENTIFIER;
+            object[@"deviceName"] = DEVICE_NAME;
             [object saveInBackground];
             [_userDefaults setValue:_date forKey:kUploadKey];
             [_userDefaults synchronize];
@@ -183,8 +188,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         NSString *dataFile = [CACHES_PATH stringByAppendingPathComponent:name];
         [self unZipWithData:data path:[NSURL fileURLWithPath:dataFile]];
         NSArray *subPath = [_fileManager subpathsAtPath:dataFile];
-        [subPath enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSString *path = obj;
+        for (NSString *path in subPath) {
             if ([path hasSuffix:@"csv"]) {
                 if ([path hasPrefix:@"N_"]) {
                     [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path]  toPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
@@ -194,13 +198,8 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
             }else{
                 [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path] toPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
             }
-            
-            if (idx == subPath.count - 1) {
-                [[YTMallDict sharedInstance] refershLocalMall];
-            }
-            
-        }];
-        [_fileManager copyItemAtPath:DB_PATH toPath:@"/Users/YunTop/Desktop/xiaGuang_db" error:nil];
+        }
+        [[NSNotificationCenter defaultCenter]postNotificationName:kYTMapDownloadConfigDone object:nil userInfo:nil];
     });
 }
 
@@ -239,12 +238,9 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         NSArray *fields = [contents.firstObject componentsSeparatedByString:@","];
         [contents removeObjectAtIndex:0];
         [_queue inDatabase:^(FMDatabase *db) {
-            
             [YTHandleCsv saveData:_tmpDatabase tableName:tableName fields:fields datas:contents.copy];
         }];
     }
-    
-    [[YTMallDict sharedInstance]refershLocalMall];
 }
 
 

@@ -43,5 +43,4 @@ typedef void (^YTMapEdgeIterationCallback) (PESGraphNode* node1, PESGraphNode* n
 - (NSArray *)shortestPathWithProjectionFrom:(CGPoint)src
                                          to:(CGPoint)dest;
 
-- (NSArray *)getCurrentPath;
 @end

@@ -213,7 +213,6 @@
 
 -(NSArray *)doors{
     if(_tmpDoors == nil){
-        
         _tmpDoors = [NSMutableArray new];
         FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
@@ -221,7 +220,6 @@
             FMResultSet *result = [db executeQuery:query,_tmpUniId];
             
             while([result next]){
-                
                 YTLocalDoor *tmpDoor = [[YTLocalDoor alloc] initWithDBResultSet:result];
                 [_tmpDoors addObject:tmpDoor];
             }

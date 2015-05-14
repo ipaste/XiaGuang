@@ -80,7 +80,6 @@
         
         PESGraphNode *node2 = [self makeNodeWithPoint:adjustedCoord2];
         
-        NSString *edgeId = components[0];
         
         double weight = sqrt(pow(adjustedCoord2.x - adjustedCoord1.x, 2) +
                              pow(adjustedCoord2.y - adjustedCoord1.y, 2));
@@ -98,9 +97,6 @@
 - (CGPoint)projectPoint:(CGPoint)point
                  toNode:(PESGraphNode *)node1
                 andNode:(PESGraphNode *)node2 {
-    
-    double x = 0;
-    double y = 0;
     
     double x1 = [node1.additionalData[@"x"] doubleValue];
     double y1 = [node1.additionalData[@"y"] doubleValue];

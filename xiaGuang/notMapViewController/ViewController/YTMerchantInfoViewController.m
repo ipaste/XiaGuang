@@ -30,6 +30,10 @@
     NSArray *_preferentials;
     NSArray *_otherPreferentials;
     UIScrollView *_scrollView;
+    YTStateView *_stateView;
+    NSTimeInterval _loadingTime;
+    BOOL _isOtherLoadingDone;
+    BOOL _isSaleLoadingDone;
 }
 @end
 
@@ -38,6 +42,8 @@
 -(id)initWithMerchant:(id <YTMerchant>)merchant{
     if (self = [super init]) {
         _merchant = merchant;
+        _isOtherLoadingDone = false;
+        _isSaleLoadingDone = false;
     }
     return self;
 }
@@ -71,14 +77,6 @@
     _merchantName = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_merchantLogo.frame) + 10, CGRectGetWidth(self.view.frame), 17)];
     [_merchantInfoView addSubview:_merchantName];
     
-    _category = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_merchantName.frame) + 10, 42, 16)];
-    [_merchantInfoView addSubview:_category];
-    
-    
-    _subCategory = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetMinY(_category.frame), CGRectGetWidth(_category.frame),     CGRectGetHeight(_category.frame))];
-    [_merchantInfoView addSubview:_subCategory];
-
-    
     CGSize textSize = [[_merchant address] boundingRectWithSize:CGSizeMake(200, CGRectGetWidth(self.view.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
     _addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame),textSize.height)];
     
@@ -98,7 +96,7 @@
     UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
     imageView.frame = CGRectMake(15, 6, image.size.width, image.size.height);
     [_discountHeadView addSubview:imageView];
-    [_scrollView addSubview:_discountHeadView];
+    [_scrollView insertSubview:_discountHeadView belowSubview:_merchantInfoView];
     
     _discountTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 20)];
     _discountTableView.rowHeight = 95;
@@ -108,7 +106,7 @@
     _discountTableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"shop_img_inforbg2"]];
     _discountTableView.delegate = self;
     _discountTableView.dataSource = self;
-    [_scrollView addSubview:_discountTableView];
+    [_scrollView insertSubview:_discountTableView belowSubview:_merchantInfoView];
     
    // other
     _otherDiscountHeadView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 30)];
@@ -118,7 +116,7 @@
     UIImageView *otherImageView = [[UIImageView alloc]initWithImage:otherImage];
     otherImageView.frame = CGRectMake(15, 6, otherImage.size.width, otherImage.size.height);
     [_otherDiscountHeadView addSubview:otherImageView];
-    [_scrollView addSubview:_otherDiscountHeadView];
+    [_scrollView insertSubview:_otherDiscountHeadView belowSubview:_merchantInfoView];
     
     
     _otherDiscountTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 20)];
@@ -129,9 +127,7 @@
     _otherDiscountTableView.backgroundColor = _discountTableView.backgroundColor;
     _otherDiscountTableView.delegate = self;
     _otherDiscountTableView.dataSource = self;
-    [_scrollView addSubview:_otherDiscountTableView];
-    
-   
+    [_scrollView insertSubview:_otherDiscountTableView belowSubview:_merchantInfoView];
     
     _promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,CGRectGetMaxY(_merchantInfoView.frame), CGRectGetWidth(self.view.frame), 20)];
     _promptLabel.text = @"亲,暂时没有优惠信息";
@@ -146,31 +142,48 @@
     _promptBackground.hidden = true;
     [_scrollView insertSubview:_promptBackground atIndex:0];
     
+    _stateView = [[YTStateView alloc]initWithStateType:YTStateTypeLoading];
+    [_stateView startAnimation];
+    [_scrollView insertSubview:_stateView belowSubview:_merchantInfoView];
+    _loadingTime = [[NSDate date]timeIntervalSinceReferenceDate];
     
     //优惠专区
     [_merchant existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         if (isExistence){
-            [((YTCloudMerchant *)_merchant)  getSolePreferentials:^(NSArray *preferentials, NSError *error) {
+            YTCloudMerchant *merchant = (YTCloudMerchant *)_merchant;
+            if (!merchant.isOther) {
+                _isOtherLoadingDone = true;
+            }
+            if (!merchant.isSole) {
+                _isSaleLoadingDone = true;
+            }
+            
+            [merchant  getSolePreferentials:^(NSArray *preferentials, NSError *error) {
                 _preferentials = preferentials;
                 CGRect frame = _discountTableView.frame;
                 frame.size = CGSizeMake(CGRectGetWidth(_discountTableView.frame), 95 * _preferentials.count);
                 _discountTableView.frame = frame;
                 [_discountTableView reloadData];
+                _isSaleLoadingDone = true;
                 [self reloadUI];
             }];
             
-            
-            [((YTCloudMerchant *)_merchant) getOtherPreferentials:^(NSArray *preferentials, NSError *error) {
+            [merchant getOtherPreferentials:^(NSArray *preferentials, NSError *error) {
                 _otherPreferentials = preferentials;
                 CGRect frame = _otherDiscountTableView.frame;
                 frame.size = CGSizeMake(CGRectGetWidth(_otherDiscountTableView.frame), 95 * _otherPreferentials.count);
                 _otherDiscountTableView.frame = frame; 
                 [_otherDiscountTableView reloadData];
+                _isOtherLoadingDone = true;
                 [self reloadUI];
             }];
         }else{
             _promptLabel.hidden = false;
             _promptBackground.hidden = false;
+            _isOtherLoadingDone = true;
+            _isSaleLoadingDone = true;
+            [_stateView stopAnimation];
+            [_stateView removeFromSuperview];
         }
     }];
 }
@@ -178,7 +191,7 @@
 -(void)jumpToMap:(id)button{
     YTLocalMerchantInstance *targetMerchantInstance = [(YTCloudMerchant *)_merchant getLocalMerchantInstance];
     if(targetMerchantInstance == nil){
-        [[[UIAlertView alloc]initWithTitle:@"对不起" message:@"当前商铺没有进入数据库" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles: nil] show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载更新地图" cancelButtonTitle:@"确定"] show];
         return;
     }
     YTMapViewController2 *mapVC = [[YTMapViewController2 alloc] initWithMerchant:targetMerchantInstance];
@@ -204,25 +217,9 @@
     _merchantName.textColor = [UIColor colorWithString:@"404040"];
     _merchantName.textAlignment = 1;
     _merchantName.text = [_merchant merchantName];
+
     
-    _category.center = CGPointMake(self.view.center.x - CGRectGetWidth(_category.frame) / 2 - 5, _category.center.y);
-    
-    [_category setBackgroundImage:[UIImage imageNamed:@"shop_img_label_2"] forState:UIControlStateNormal];
-    [_category setTitle:[[_merchant type] firstObject] forState:UIControlStateNormal];
-    [_category setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
-    [_category.titleLabel setFont:[UIFont systemFontOfSize:10]];
-    _category.userInteractionEnabled = NO;
-    
-    
-    _subCategory.center = CGPointMake(self.view.center.x + CGRectGetWidth(_subCategory.frame) / 2 + 5, _subCategory.center.y);
-    [_subCategory setBackgroundImage:[UIImage imageNamed:@"shop_img_label_2"] forState:UIControlStateNormal];
-    [_subCategory setTitle:[[_merchant type] lastObject] forState:UIControlStateNormal];
-    [_subCategory setTitleColor:[UIColor colorWithString:@"e95e37"] forState:UIControlStateNormal];
-    [_subCategory.titleLabel setFont:[UIFont systemFontOfSize:10]];
-    _subCategory.userInteractionEnabled = NO;
-    
-    
-    _addressLabel.center = CGPointMake(CGRectGetWidth(self.view.frame) / 2,CGRectGetMaxY(_category.frame) + CGRectGetHeight(_addressLabel.frame));
+    _addressLabel.center = CGPointMake(CGRectGetWidth(self.view.frame) / 2,CGRectGetMaxY(_merchantName.frame) + CGRectGetHeight(_addressLabel.frame));
     _addressLabel.font = [UIFont systemFontOfSize:12];
     _addressLabel.textAlignment = 1;
     _addressLabel.textColor = [UIColor colorWithString:@"999999"];;
@@ -244,6 +241,13 @@
     frame.size.height = CGRectGetMaxY(_jumpToMapButton.frame) + 19;
     _merchantInfoView.frame = frame;
  
+    
+    frame = _stateView.frame;
+    frame.origin.x = 0;
+    frame.origin.y = CGRectGetMaxY(_merchantInfoView.frame) + 10;
+    frame.size.width = CGRectGetWidth(self.view.frame);
+    frame.size.height = CGRectGetHeight(self.view.frame) - CGRectGetMinY(frame);
+    _stateView.frame = frame;
     
     CGFloat height = CGRectGetHeight([UIScreen mainScreen].bounds);
     if (height < 568) {
@@ -327,6 +331,16 @@
 }
 
 - (void)reloadUI{
+    if (_isOtherLoadingDone && _isSaleLoadingDone) {
+        dispatch_time_t time =  dispatch_time(DISPATCH_TIME_NOW, 0);
+        if ([[NSDate date]timeIntervalSinceReferenceDate] - _loadingTime < 2) time = dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC);
+        dispatch_after(time, dispatch_get_main_queue(), ^{
+            [_stateView stopAnimation];
+            [_stateView removeFromSuperview];
+        });
+        
+    }
+    
     CGRect frame = _otherDiscountHeadView.frame;
     if (_preferentials.count <= 0 ) {
         _discountHeadView.hidden = true;

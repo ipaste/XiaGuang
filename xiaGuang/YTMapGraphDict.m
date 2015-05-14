@@ -40,7 +40,10 @@
     if(graph == nil){
         
         graph = [[YTMapGraph alloc] initWithMajorArea:majorArea mapView:mapView];
-        [_idToGraph setObject:graph forKey:[majorArea identifier]];
+        
+        if (graph) {
+             [_idToGraph setObject:graph forKey:[majorArea identifier]];
+        }
     }
     
     return graph;

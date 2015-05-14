@@ -16,7 +16,6 @@
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
 NSString *const kMerchantCellIdentify = @"MerchantCell";
-static NSUInteger currentImgNum = 0;
 
 @interface YTMallInfoViewController ()<YTscrollViewDelegate>{
     UIImageView *_searchBackgroundView;
@@ -36,6 +35,7 @@ static NSUInteger currentImgNum = 0;
     YTSearchView *_searchView;
     YTStateView *_stateView;
     NSMutableArray *_adArr;
+    NSMutableArray *_saleViews;
     NSArray *_sales;
     NSArray *_categorys;
     NSArray *_hots;
@@ -135,7 +135,7 @@ static NSUInteger currentImgNum = 0;
         categoryLabel.font = [UIFont systemFontOfSize:14];
         [_categoryView addSubview:categoryLabel];
     }
-   
+    
     
     //categoryView尺寸控制按钮
     _scrollButton = [[UIButton alloc]init];
@@ -144,7 +144,7 @@ static NSUInteger currentImgNum = 0;
     [_scrollButton setImage:[UIImage imageNamed:@"icon_h"] forState:UIControlStateSelected];
     [_scrollButton setImage:[UIImage imageNamed:@"icon_up"] forState:UIControlStateNormal];
     [_scrollButton addTarget:self action:@selector(addCategory:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     _tableView = [[UITableView alloc]init];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -156,7 +156,6 @@ static NSUInteger currentImgNum = 0;
     
     [_mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         if (isExistence) {
-            
             _saleView = [[UIView alloc]init];
             _saleView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
             _saleView.alpha = 0;
@@ -174,15 +173,16 @@ static NSUInteger currentImgNum = 0;
             [more setImageEdgeInsets:UIEdgeInsetsMake(0, 66, 0, 0)];
             [more addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
             [_saleView addSubview:more];
-            [_scrollView addSubview:_saleView];
-            
+            [_scrollView insertSubview:_saleView belowSubview:_stateView];
+            _saleViews = [NSMutableArray array];
             for (NSInteger index = 0;index < 3;index++){
                 YTSaleView *saleView = [[YTSaleView alloc]initWithFrame:CGRectMake(index * (CGRectGetWidth(self.view.frame) / 3), CGRectGetMaxY(titleImageView.frame), CGRectGetWidth(self.view.frame) / 3, 130)];
                 saleView.delegate = self;
                 saleView.tag = index;
-                saleView.tag = index;
+                [_saleViews addObject:saleView];
                 [_saleView addSubview:saleView];
             }
+            [self.view setNeedsLayout];
         }
     }];
     
@@ -316,6 +316,7 @@ static NSUInteger currentImgNum = 0;
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
     query.limit = 10;
     [query whereKeyExists:@"Icon"];
+    [query whereKey:@"uniId" notEqualTo:@"0"];
     [query whereKey:@"mall" matchesQuery:mallQuery];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -360,10 +361,6 @@ static NSUInteger currentImgNum = 0;
                         _adView.delegate = self;
                         [_adView setImgArr:adMallImg];
                         [_scrollView insertSubview:_adView belowSubview:_stateView];
-                        
-                        _activityImgView = [[UIImageView alloc]init];
-                        _activityImgView.image = [UIImage imageNamed:@"flag_zhu"];
-                        [_scrollView insertSubview:_activityImgView belowSubview:_stateView];
                     }
                     [self.view setNeedsLayout];
                     
@@ -425,9 +422,9 @@ static NSUInteger currentImgNum = 0;
         }else{
             time = dispatch_time(DISPATCH_TIME_NOW, 0);
         }
-
+        
         _saleView.alpha = 1;
-
+        
         dispatch_after(time, dispatch_get_main_queue(), ^{
             [_stateView stopAnimation];
             [_stateView removeFromSuperview];
@@ -437,21 +434,17 @@ static NSUInteger currentImgNum = 0;
 }
 
 - (void)reloadSaleData{
-    [_saleView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass:[YTSaleView class]] && [(UIView *)obj tag] <= _sales.count - 1) {
-            YTSaleView *saleView = obj;
+    for (YTSaleView *saleView in _saleViews) {
+        if (saleView.tag < _sales.count) {
             YTPreferential *preferential = _sales[saleView.tag];
             [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
-                if (merchant) {
-                    [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-                        if (!error) {
-                            [saleView setSaleViewWithMerchantImage:result merchantName:[merchant merchantName] saleInfo:[preferential preferentialInfo] isSole:[preferential type]];
-                        }
-                    }];
-                }
+                [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+                    [saleView setSaleViewWithMerchantImage:result merchantName:[merchant merchantName] saleInfo:[preferential preferentialInfo] isSole:[preferential type]];
+                }];
             }];
         }
-    }];
+    }
+    
 }
 
 #pragma mark
@@ -471,11 +464,14 @@ static NSUInteger currentImgNum = 0;
     id <YTFloor> floor = nil;
     YTLocalMall *localmall = [_mallDict changeMallObject:_mall resultType:YTMallClassLocal];
     if (localmall == nil){
-        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载地图" cancelButtonTitle:@"确定"] show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载更新地图" cancelButtonTitle:@"确定"] show];
         return;
     }
-    NSArray * temp = [[[localmall blocks] objectAtIndex:0] floors];
-    floor = [temp objectAtIndex:0];
+    FMResultSet *result = [_dataManager.database executeQuery:@"select * from Floor where mallId = ?",localmall.identifier];
+    if ([result next]) {
+        floor = [[YTLocalFloor alloc]initWithDBResultSet:result];
+    }
+    
     if (floor != nil) {
         YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
         mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -494,25 +490,21 @@ static NSUInteger currentImgNum = 0;
 // scrollButton点击触发功能
 - (void)addCategory:(UIButton *)sender {
     sender.selected = !sender.selected;
-    if (sender.selected) {
-        
-    }else{
-    
-    }
-    
     [self.view setNeedsLayout];
 }
 
 - (void)touchEndWithSaleView:(YTSaleView *)saleView{
-    YTPreferential *preferential = _sales[saleView.tag];
-    [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
-        if (merchant == nil){
-            return ;
-        }
-        [_dataManager saveMerchantInfo:merchant];
-        YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
-        [self.navigationController pushViewController:merchantInfoVC animated:YES];
-    }];
+    if (saleView.tag <= _sales.count - 1) {
+        YTPreferential *preferential = _sales[saleView.tag];
+        [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
+            if (merchant == nil){
+                return ;
+            }
+            [_dataManager saveMerchantInfo:merchant];
+            YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
+            [self.navigationController pushViewController:merchantInfoVC animated:YES];
+        }];
+    }
 }
 
 
@@ -526,7 +518,7 @@ static NSUInteger currentImgNum = 0;
 #pragma mark
 #pragma mark TableView Handle
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    return _hots.count > 0 && _hots.count < 10 ? _hots.count:10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

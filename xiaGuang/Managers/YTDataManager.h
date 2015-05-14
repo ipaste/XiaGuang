@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, YTNetworkSatus) {
     YTNetworkSatusWWAN
 };
 
+extern NSString *const kYTMapDownloadConfigDone;
+
 @class YTDataManager;
 
 @protocol YTDataManagerDelegate <NSObject>
