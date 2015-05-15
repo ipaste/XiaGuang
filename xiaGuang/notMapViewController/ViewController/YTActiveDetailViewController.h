@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
+#import "YTStateView.h"
+#import "YTMallActivity.h"
 @interface YTActiveDetailViewController : UIViewController
-
+@property (strong ,nonatomic) NSArray *activitys;
+@property (nonatomic) NSInteger selectedActivity;
 @end

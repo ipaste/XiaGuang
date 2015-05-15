@@ -34,7 +34,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     UIView *_loadingView;
     YTSearchView *_searchView;
     YTStateView *_stateView;
-    NSMutableArray *_adArr;
+    NSMutableArray *_acitvitys;
     NSMutableArray *_saleViews;
     NSArray *_sales;
     NSArray *_categorys;
@@ -56,6 +56,8 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     if (self) {
         _mallDict = [YTMallDict sharedInstance];
         _mall = [_mallDict getMallFromIdentifier:identify];
+        
+        _acitvitys = [NSMutableArray array];
         if ([_mall isMemberOfClass:[YTLocalMall class]]) {
             _mall = [_mallDict changeMallObject:_mall resultType:YTMallClassCloud];
         }
@@ -151,6 +153,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     [_adView shouldAutoShow:YES];
     _adView.delegate = self;
     [_scrollView addSubview:_adView];
+    
     _adView.hidden = YES;
     
     _activityImgView = [[UIImageView alloc]init];
@@ -350,9 +353,23 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 }
 
 - (void)getActivity{
+   
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+   // NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shenzhen"];
+   // [formatter setTimeZone:timeZone];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    // 时间戳转时间
+    NSDate *date = [formatter dateFromString:@"2015-05-15"];
+    
+    // 时间转时间戳
+    NSString *timeStamp = [NSString stringWithFormat:@"%f",[date timeIntervalSince1970]];
+    NSLog(@"%@",timeStamp);
+
     AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
     [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
     AVQuery *query = [AVQuery queryWithClassName:@"MallActivity"];
+    //[query orderByAscending:@"startTimeStamp"];
+    //[query whereKey:@"endTimeStamp" greaterThanOrEqualTo:[NSNumber numberWithInteger:timeStamp.integerValue]];
     [query whereKey:@"mall" matchesQuery:mallQuery];
     query.limit = 5;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -360,6 +377,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
             NSMutableArray *adMallImg = [NSMutableArray new];
             for (AVObject *object in objects) {
                 YTMallActivity *activity = [[YTMallActivity alloc]initWithCloudObject:object];
+                [_acitvitys addObject:activity];
                 [activity getActivityImgWithCallBack:^(UIImage *result, NSError *error) {
                     if (!error) {
                         UIImageView *imageView = [[UIImageView alloc] init];
@@ -464,10 +482,6 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     
 }
 
-- (void)Actiondo:(UITapGestureRecognizer *)tapGesture {
-    YTActiveDetailViewController *detail = [[YTActiveDetailViewController alloc]init];
-    [self.navigationController pushViewController:detail animated:YES];
-}
 
 #pragma mark
 #pragma mark Button Method
@@ -673,6 +687,13 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     }
 }
 
+- (void)didClickPage:(YTadScrollAndPageView *)view atIndex:(NSInteger)index{
+    YTActiveDetailViewController *detailViewController = [[YTActiveDetailViewController alloc]init];
+    detailViewController.activitys = _acitvitys;
+    detailViewController.selectedActivity = index;
+    [self.navigationController pushViewController:detailViewController animated:true];
+}
+
 
 #pragma mark
 #pragma mark SearchView Handle
@@ -710,7 +731,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     }
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *background = [[UIView alloc]init];
     UIImage *hotImage = [UIImage imageNamed:@"title_hotbrand"];
     UIImageView *hotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, hotImage.size.width, 27)];
@@ -719,9 +740,11 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     return background;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 36;
 }
+
+
 #pragma mark
 #pragma mark Remove searchView else memory leak or viewController not destruction
 - (void)dealloc{

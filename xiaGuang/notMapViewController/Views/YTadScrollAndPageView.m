@@ -39,6 +39,9 @@
         _adScrollView.backgroundColor = [UIColor whiteColor];
         [self addSubview:_adScrollView];
         
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectedMallActivity:)];
+        [_adScrollView addGestureRecognizer:tap];
+        
         _pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0.0,CGRectGetMaxY(_adScrollView.frame) -19.0, 12.0, 12.0)];
         _pageControl.userInteractionEnabled = NO;
         _pageControl.currentPageIndicatorTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"dot_on"]];
@@ -81,27 +84,18 @@
     _leftView.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 130);
     _midView.frame = CGRectMake(SCREEN_WIDTH, 0.0, SCREEN_WIDTH, 130);
     _rightView.frame = CGRectMake(SCREEN_WIDTH *2, 0.0, SCREEN_WIDTH, 130);
-    _leftView.userInteractionEnabled = YES;
-    _midView.userInteractionEnabled = YES;
-    _rightView.userInteractionEnabled = YES;
     
     
     [_adScrollView addSubview:_leftView];
     [_adScrollView addSubview:_midView];
     [_adScrollView addSubview:_rightView];
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(Actiondo:)];
-    [_adScrollView addGestureRecognizer:tapGesture];
     
     _pageControl.currentPage = _currentPage;
     
     _adScrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
 }
 
-- (void)Actiondo:(UITapGestureRecognizer *)tapGesture {
-    NSLog(@".......");
-    YTActiveDetailViewController *detail = [[YTActiveDetailViewController alloc]init];
-}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [_adTimer invalidate];
@@ -141,6 +135,7 @@
     }
 }
 
+
 - (void)showNextImg {
     if (_currentPage == _imgArr.count -1) {
         _currentPage = 0;
@@ -148,6 +143,14 @@
         _currentPage ++;
     }
     [self reloadData];
+}
+
+
+
+- (void)selectedMallActivity:(UITapGestureRecognizer *)tap {
+    if ([self.delegate respondsToSelector:@selector(didClickPage:atIndex:)]){
+        [self.delegate didClickPage:self atIndex:_currentPage];
+    }
 }
 
 @end

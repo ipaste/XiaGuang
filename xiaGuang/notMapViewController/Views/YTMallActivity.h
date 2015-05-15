@@ -18,4 +18,5 @@
 - (instancetype)initWithCloudObject:(AVObject *)object;
 - (void)getMallInstanceWithCallBack:(void (^)(YTCloudMall * mall))callBack;
 - (void)getActivityImgWithCallBack:(void (^)(UIImage *result,NSError *error))callBack;
+- (void)getActivityDetailWithCallBack:(void (^)(UIImage *detailImage,NSError *error))callBack;
 @end
