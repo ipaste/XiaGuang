@@ -247,6 +247,11 @@
 		D9C35B381AB19C430001E389 /* YTMajorAreaDict.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35B371AB19C430001E389 /* YTMajorAreaDict.m */; };
 		D9C35B3B1AB2D0260001E389 /* YTMallDict.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35B3A1AB2D0260001E389 /* YTMallDict.m */; };
 		D9C35B541AB6C1F20001E389 /* YTDeadReckoning.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C35B531AB6C1F20001E389 /* YTDeadReckoning.m */; };
+		D9C9E79A1B0441EB00276FDE /* YTActiveDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C9E7991B0441EB00276FDE /* YTActiveDetailViewController.m */; };
+		D9C9E79D1B04525200276FDE /* YTActiveDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C9E79C1B04525200276FDE /* YTActiveDetailCell.m */; };
+		D9C9E7A71B04AB4600276FDE /* details_03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9C9E7A41B04AB4600276FDE /* details_03.jpg */; };
+		D9C9E7A81B04AB4600276FDE /* details_02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9C9E7A51B04AB4600276FDE /* details_02.jpg */; };
+		D9C9E7A91B04AB4600276FDE /* details_01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9C9E7A61B04AB4600276FDE /* details_01.jpg */; };
 		D9CAE85D1A52A8290053E758 /* bg_inner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9CAE85C1A52A8290053E758 /* bg_inner.jpg */; };
 		D9CAE8601A53A52D0053E758 /* YTBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CAE85F1A53A52D0053E758 /* YTBlockView.m */; };
 		D9DF8C201AEDF3C700DA09A7 /* YTMallmanageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DF8C1D1AEDF3C700DA09A7 /* YTMallmanageCell.m */; };
@@ -660,6 +665,7 @@
 		D95B15561A078403002077AD /* YTMallPositionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallPositionView.m; sourceTree = "<group>"; };
 		D96030151A70D1C500B6DA80 /* YTStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTStatusBar.h; sourceTree = "<group>"; };
 		D96030161A70D1C500B6DA80 /* YTStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTStatusBar.m; sourceTree = "<group>"; };
+		D96B64CE1B020EA8007478CB /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		D96BCC9E1AF1C3BE00EDCD04 /* YTadScrollAndPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTadScrollAndPageView.h; sourceTree = "<group>"; };
 		D96BCC9F1AF1C3BE00EDCD04 /* YTadScrollAndPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTadScrollAndPageView.m; sourceTree = "<group>"; };
 		D983BA791ACABE7500AE5F64 /* ESTBeacon+YTExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESTBeacon+YTExtension.h"; sourceTree = "<group>"; };
@@ -699,6 +705,13 @@
 		D9C35B3A1AB2D0260001E389 /* YTMallDict.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTMallDict.m; sourceTree = "<group>"; };
 		D9C35B521AB6C1F20001E389 /* YTDeadReckoning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTDeadReckoning.h; sourceTree = "<group>"; };
 		D9C35B531AB6C1F20001E389 /* YTDeadReckoning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTDeadReckoning.m; sourceTree = "<group>"; };
+		D9C9E7981B0441EB00276FDE /* YTActiveDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTActiveDetailViewController.h; sourceTree = "<group>"; };
+		D9C9E7991B0441EB00276FDE /* YTActiveDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTActiveDetailViewController.m; sourceTree = "<group>"; };
+		D9C9E79B1B04525200276FDE /* YTActiveDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTActiveDetailCell.h; sourceTree = "<group>"; };
+		D9C9E79C1B04525200276FDE /* YTActiveDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTActiveDetailCell.m; sourceTree = "<group>"; };
+		D9C9E7A41B04AB4600276FDE /* details_03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = details_03.jpg; sourceTree = "<group>"; };
+		D9C9E7A51B04AB4600276FDE /* details_02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = details_02.jpg; sourceTree = "<group>"; };
+		D9C9E7A61B04AB4600276FDE /* details_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = details_01.jpg; sourceTree = "<group>"; };
 		D9CAE85C1A52A8290053E758 /* bg_inner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg_inner.jpg; sourceTree = "<group>"; };
 		D9CAE85E1A53A52D0053E758 /* YTBlockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTBlockView.h; sourceTree = "<group>"; };
 		D9CAE85F1A53A52D0053E758 /* YTBlockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTBlockView.m; sourceTree = "<group>"; };
@@ -858,6 +871,9 @@
 		AE24A8601A02431700A0CE91 /* pics */ = {
 			isa = PBXGroup;
 			children = (
+				D9C9E7A41B04AB4600276FDE /* details_03.jpg */,
+				D9C9E7A51B04AB4600276FDE /* details_02.jpg */,
+				D9C9E7A61B04AB4600276FDE /* details_01.jpg */,
 				D92377771ADB9FF30017B1DE /* Guide */,
 				D992B0221A440F5300666AA0 /* img_default.jpg */,
 				AE24A8631A02431700A0CE91 /* nav_bg_pic.jpg */,
@@ -1004,6 +1020,7 @@
 		C24C7B38DA5A13A70A15E2FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D96B64CE1B020EA8007478CB /* libsqlite3.0.dylib */,
 				D9EB25581AAE8FA300210056 /* WebKit.framework */,
 				AE7AB1B01A511F4E00E3A16F /* AdSupport.framework */,
 				6DCAE2C2A48A5B340C97B34E /* libPods.a */,
@@ -1410,6 +1427,8 @@
 				D9EB25561AADA6DE00210056 /* YTH5ViewController.m */,
 				D92377831ADBBFF80017B1DE /* YTGuideViewController.h */,
 				D92377841ADBBFF80017B1DE /* YTGuideViewController.m */,
+				D9C9E7981B0441EB00276FDE /* YTActiveDetailViewController.h */,
+				D9C9E7991B0441EB00276FDE /* YTActiveDetailViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1454,6 +1473,8 @@
 				D9441E221AE15B89008FE57E /* YTChoosRegionView.m */,
 				D9C049A31AE8D250002327C3 /* YTSaleView.h */,
 				D9C049A41AE8D250002327C3 /* YTSaleView.m */,
+				D9C9E79B1B04525200276FDE /* YTActiveDetailCell.h */,
+				D9C9E79C1B04525200276FDE /* YTActiveDetailCell.m */,
 				D96BCC9E1AF1C3BE00EDCD04 /* YTadScrollAndPageView.h */,
 				D96BCC9F1AF1C3BE00EDCD04 /* YTadScrollAndPageView.m */,
 			);
@@ -1644,6 +1665,7 @@
 			files = (
 				D92378161ADF6CF40017B1DE /* N_SHENGUOTOU_PARK-2.mbtiles in Resources */,
 				D9A209C11AFC572400C23D5A /* N_HAIANCHENG_WESTL2.csv in Resources */,
+				D9C9E7A71B04AB4600276FDE /* details_03.jpg in Resources */,
 				D9A209B51AFC56D400C23D5A /* N_SHENGUOTOU_B1.csv in Resources */,
 				D92377FE1ADF6CF40017B1DE /* N_YITIAN_L1.csv in Resources */,
 				D92377F41ADF6CF40017B1DE /* N_KKMALL_L2.csv in Resources */,
@@ -1700,6 +1722,8 @@
 				D9A209B61AFC56D400C23D5A /* N_SHENGUOTOU_L1.csv in Resources */,
 				D92378031ADF6CF40017B1DE /* N_JINGJIBAINA_L2.mbtiles in Resources */,
 				D92377EA1ADF6CF40017B1DE /* N_HUANLEHAIAN.csv in Resources */,
+				D9C9E7A81B04AB4600276FDE /* details_02.jpg in Resources */,
+				D9C9E7A91B04AB4600276FDE /* details_01.jpg in Resources */,
 				D92378181ADF6CF40017B1DE /* N_YITIAN_B2.mbtiles in Resources */,
 				D92377E81ADF6CF40017B1DE /* N_KKMALL_PARKL2J.mbtiles in Resources */,
 				D92378151ADF6CF40017B1DE /* N_SHENGUOTOU_L3.mbtiles in Resources */,
@@ -1770,6 +1794,7 @@
 				D94C27C21A02639F009FF2F3 /* YTSubPrompt.m in Sources */,
 				D94C27AD1A02639F009FF2F3 /* YTUserAnnotation.m in Sources */,
 				D94C27C31A02639F009FF2F3 /* YTSwitchBlockView.m in Sources */,
+				D9C9E79D1B04525200276FDE /* YTActiveDetailCell.m in Sources */,
 				D94C283C1A0263CF009FF2F3 /* UIView+MJExtension.m in Sources */,
 				D94C27B11A02639F009FF2F3 /* YTMerchantPoi.m in Sources */,
 				D94C280C1A0263C6009FF2F3 /* YTMoreCategoryViewCell.m in Sources */,
@@ -1818,6 +1843,7 @@
 				D94C27FE1A0263C6009FF2F3 /* YTHomeViewController.m in Sources */,
 				AE24A89F1A02432000A0CE91 /* YTCloudMerchant.m in Sources */,
 				D93CE4BD19FA5825004128FD /* AppDelegate.mm in Sources */,
+				D9C9E79A1B0441EB00276FDE /* YTActiveDetailViewController.m in Sources */,
 				D923781F1ADF802B0017B1DE /* YTDataManager.m in Sources */,
 				D9C35B541AB6C1F20001E389 /* YTDeadReckoning.m in Sources */,
 				D92D53A91AA012B600DC0492 /* SBJsonTokeniser.m in Sources */,

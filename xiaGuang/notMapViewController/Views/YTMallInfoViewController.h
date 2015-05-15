@@ -26,6 +26,7 @@
 #import "YTMapViewController2.h"
 #import "YTStateView.h"
 #import "YTadScrollAndPageView.h"
-@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate,UIScrollViewDelegate>
+#import "YTActiveDetailViewController.h"
+@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate,UIScrollViewDelegate,YTscrollViewDelegate>
 - (instancetype)initWithMallIdentify:(NSString *)identify;
 @end

@@ -12,6 +12,8 @@
 
 #define MALLACTIVITY_KEY_ACTIVITY @"activity"
 #define MALLACTIVITY_KEY_MALL @"mall"
+#define MALLACTIVITY_KEY_ACITVITYDETAIL @"activityDetailImage"
+
 
 @implementation YTMallActivity
 {
@@ -56,6 +58,20 @@
         callBack(nil,error);
     }
     
+}
+
+- (void)getActivityDetailWithCallBack:(void (^)(UIImage *detailImage,NSError *error))callBack{
+    AVFile *file = _object[MALLACTIVITY_KEY_ACITVITYDETAIL];
+    if (file) {
+        [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (!error) {
+                callBack([UIImage imageWithData:data],nil);
+            }
+        }];
+    }else {
+        NSError *error = [NSError errorWithDomain:@"com.xiaShopping" code:400 userInfo:nil];
+        callBack(nil,error);
+    }
 }
 
 - (NSArray *)shopIdFromBusinesses:(NSArray *)businesses
