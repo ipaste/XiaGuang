@@ -126,6 +126,8 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
             [self checkWhetherTheDataNeedsToBeUpload];
         }
         
+        [_fileManager copyItemAtPath:DB_PATH toPath:@"Users/YunTop/Desktop/highGuang" error:nil];
+        
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:MAP_PATH]];
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:MAPPATH_PATH]];
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -230,7 +232,6 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
             return;
         }
     }
-    
     content = [content stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableArray *contents = [NSMutableArray arrayWithArray:[content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]];
 

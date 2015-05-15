@@ -12,7 +12,7 @@
 + (void)saveData:(FMDatabase *)database tableName:(NSString *)tableName fields:(NSArray *)fields datas:(NSArray *)datas{
     for (NSString *obj in datas) {
         if ([obj isEqualToString:@""]) {
-            return ;
+            continue;
         }
         
         NSMutableString *sql = nil;
@@ -63,7 +63,9 @@
         }
         [sql stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         
-        [database executeUpdate:sql];
+        if ([database executeUpdate:sql]){
+            NSLog(@"地图更新成功");
+        };
     }
     
 }

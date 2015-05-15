@@ -228,8 +228,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             _toolbar.hidden = NO;
             
             if(_type == YTMapViewControllerTypeNavigation){
-                
-                
                 if(_toolbar == nil){
                     [self createBlurMenuWithCallBack:^{
                         [UIView animateWithDuration:0.5 animations:^{
@@ -1728,6 +1726,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     else{
         local = [_mallDict changeMallObject:selected resultType:YTMallClassLocal];
     }
+    
     id<YTBlock> firstBlock = [[local blocks] objectAtIndex:0];
     id<YTFloor> firstFloor = [[firstBlock floors] objectAtIndex:0];
     _majorArea = [[firstFloor majorAreas] objectAtIndex:0];

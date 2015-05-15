@@ -57,6 +57,10 @@ typedef void(^YTExistenceOfPreferentialInformationCallBack)(BOOL isExistence);
     return [result intForColumn:@"path"] == 0 ? false:true;
 }
 
+- (NSString *)uniId{
+    return ((NSNumber *)_internalObject[MALL_CLASS_LOCALID]).stringValue;
+}
+
 - (CLLocationCoordinate2D)coord{
     NSNumber *latitude = _internalObject[@"latitude"];
     NSNumber *longitude = _internalObject[@"longitude"];

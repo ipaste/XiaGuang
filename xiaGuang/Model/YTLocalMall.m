@@ -45,11 +45,15 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return self;
 }
 
--(NSString *)mallName{
+- (NSString *)mallName{
     return _tmpMallName;
 }
 
--(NSString *)identifier{
+- (NSString *)identifier{
+    return _tmpMallId;
+}
+
+- (NSString *)uniId{
     return _tmpMallId;
 }
 
@@ -57,7 +61,7 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
     return _version;
 }
 
--(NSArray *)blocks{
+- (NSArray *)blocks{
     
     if(_tmpBlocks == nil){
         
