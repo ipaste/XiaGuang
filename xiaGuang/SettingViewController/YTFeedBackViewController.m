@@ -49,6 +49,7 @@
     }
     AVObject *feedBack = [[AVObject alloc] initWithClassName:@"Feedback"];
     [feedBack setObject:_textView.text forKey:@"feedBack"];
+    [feedBack setObject:[UIDevice currentDevice].name forKey:@"deviceName"];
     [feedBack saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if(error){
             NSLog(@"error uploading feedback");

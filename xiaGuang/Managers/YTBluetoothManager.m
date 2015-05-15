@@ -49,7 +49,6 @@ NSString *const YTBluetoothStateHasChangedNotification = @"TBluetoothStateHasCha
         _isReceivedMessage = YES;
         _locationManager = [[CLLocationManager alloc]init];
         if ([[[UIDevice currentDevice]systemVersion] hasPrefix:@"8"]){
-            [_locationManager requestAlwaysAuthorization];
             [_locationManager requestWhenInUseAuthorization];
         }
     }

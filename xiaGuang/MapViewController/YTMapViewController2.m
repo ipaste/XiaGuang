@@ -648,8 +648,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_switchFloorView redrawWithMajorArea:_curDisplayedMajorArea];
 }
 
-
-
 -(void)createNavigationView{
     _navigationView = [[YTNavigationView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 ,  CGRectGetWidth(_mapView.frame), 80)];
     _navigationView.hidden = YES;
@@ -975,9 +973,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 -(void)searchCancelButtonClicked{
     _navigationBar.hidden = false;
     [_searchView hideSearchViewWithAnimation:YES];
-    /*if(_activePoiMajorArea != nil){
-     [self cancelCommonPoiState];
-     }*/
 }
 
 -(void)selectedUniIds:(NSArray *)uniIds{
@@ -1374,8 +1369,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 }
 #pragma mark DetailsView delegate
 -(void)navigatingToPoiSourceClicked:(id<YTPoiSource>)merchantLocation{
-    _navigationView.hidden = NO;
-    NSString *message = nil;
+    _navigationView.hidden = false;
+    
     [AVAnalytics event:@"开始导航" label:[merchantLocation name]];
     if(_userMinorArea == nil){
         
@@ -1421,6 +1416,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         _shownCallout = NO;
         _poiButton.hidden = YES;
         _moveTargetButton.hidden = NO;
+        _detailsView.hidden = true;
     }];
 }
 
@@ -1499,14 +1495,6 @@ typedef NS_ENUM(NSInteger, YTMessageType){
         frame.origin.y += HOISTING_HEIGHT;
         _changeFloorIndicator.frame = frame;
         
-        //        frame = _switchBlockView.frame;
-        //        frame.origin.y += 44;
-        //        _switchBlockView.frame = frame;
-        //
-        //        frame = _switchFloorView.frame;
-        //        frame.origin.y += 44;
-        //        _switchFloorView.frame = frame;
-        
         frame = _selectedPoiButton.frame;
         frame.origin.y += HOISTING_HEIGHT;
         _selectedPoiButton.frame = frame;
@@ -1515,7 +1503,8 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     } completion:^(BOOL finished) {
         _detailsView.frame = CGRectMake(CGRectGetMinX(_mapView.frame), CGRectGetHeight(self.view.frame), CGRectGetWidth(_mapView.frame), 80);
         _navigationView.frame =CGRectMake(CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 80 ,  CGRectGetWidth(_mapView.frame), 80);
-        _navigationView.hidden = YES;
+        _navigationView.hidden = true;
+        _detailsView.hidden = false;
         _selectedPoi = nil;
         _poiButton.hidden = NO;
         _moveTargetButton.hidden = YES;
@@ -1852,7 +1841,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     if (!_navigationView.isNavigating || _type != YTMapViewControllerTypeFloor) {
         _navigationBar.titleName = [aMall mallName];
         _targetMall = aMall;
-        [_mapView setMapOffset:[_targetMall offset]];
+        [_mapView setMapOffset:[aMall offset]];
         [self createSearchView];
     }
 }

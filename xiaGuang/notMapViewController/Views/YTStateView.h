@@ -16,9 +16,9 @@ typedef NS_ENUM(NSInteger, YTStateType) {
     YTStateTypeNotFound
 };
 
+
 @interface YTStateView : UIView
 @property (assign ,nonatomic) YTStateType type;
-
 
 /**
  *  初始化方法
@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, YTStateType) {
  *  @return 返回一个YTStateView对象
  */
 - (instancetype)initWithStateType:(YTStateType)type;
+
 
 /**
  *  开始显示加载图片，当Type为YTStateTypeLoading的时候可用

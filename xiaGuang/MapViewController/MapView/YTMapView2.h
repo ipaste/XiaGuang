@@ -77,7 +77,7 @@ typedef enum : NSUInteger {
 -(void)superHighlightPoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePoi:(YTPoi *)poi animated:(BOOL)animated;
 -(void)hidePois:(NSArray *)pois animated:(BOOL)animated;
--(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
+-(BOOL)showPathFromCoord1:(CLLocationCoordinate2D)c1
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea;
 -(void)removePath;

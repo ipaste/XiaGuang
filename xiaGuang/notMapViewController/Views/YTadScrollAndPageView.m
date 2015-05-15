@@ -10,8 +10,8 @@
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
 #import "YTadScrollAndPageView.h"
-
-@interface YTadScrollAndPageView () {
+#import "YTActiveDetailViewController.h"
+@interface YTadScrollAndPageView ()<UIGestureRecognizerDelegate> {
     UIView *_leftView;
     UIView *_midView;
     UIView *_rightView;
@@ -81,13 +81,26 @@
     _leftView.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 130);
     _midView.frame = CGRectMake(SCREEN_WIDTH, 0.0, SCREEN_WIDTH, 130);
     _rightView.frame = CGRectMake(SCREEN_WIDTH *2, 0.0, SCREEN_WIDTH, 130);
+    _leftView.userInteractionEnabled = YES;
+    _midView.userInteractionEnabled = YES;
+    _rightView.userInteractionEnabled = YES;
+    
+    
     [_adScrollView addSubview:_leftView];
     [_adScrollView addSubview:_midView];
     [_adScrollView addSubview:_rightView];
     
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(Actiondo:)];
+    [_adScrollView addGestureRecognizer:tapGesture];
+    
     _pageControl.currentPage = _currentPage;
     
     _adScrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
+}
+
+- (void)Actiondo:(UITapGestureRecognizer *)tapGesture {
+    NSLog(@".......");
+    YTActiveDetailViewController *detail = [[YTActiveDetailViewController alloc]init];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {

@@ -16,6 +16,8 @@
 #import <PESGraph/PESGraphEdge.h>
 #import <PESGraph/PESGraphNode.h>
 
+#import "YTDataManager.h"
+
 #define kYTMapGraphProjectionPointKey  @"projectedPoint"
 #define kYTMapGraphProjectionNode1Key   @"node1"
 #define kYTMapGraphProjectionNode2Key   @"node2"
@@ -41,5 +43,4 @@ typedef void (^YTMapEdgeIterationCallback) (PESGraphNode* node1, PESGraphNode* n
 - (NSArray *)shortestPathWithProjectionFrom:(CGPoint)src
                                          to:(CGPoint)dest;
 
-- (NSArray *)getCurrentPath;
 @end

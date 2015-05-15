@@ -56,6 +56,7 @@
         _manager = _bluetoothManager.locationManager;
         _dataManager = [YTDataManager defaultDataManager];
         _dataManager.delegate = self;
+        [_dataManager refreshNetWorkState];
         _defaultCity = [YTCity defaultCity];
     }
     return self;
@@ -69,10 +70,12 @@
     [self.view addSubview:_backgroundImageView];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(detectedBluetoothStateHasChanged:) name:YTBluetoothStateHasChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshData:) name:kYTMapDownloadConfigDone object:nil];
     
     [_mallDict getAllLocalMallWithCallBack:^(NSArray *malls) {
         _malls = malls.copy;
     }];
+    
     
     _manager.delegate = self;
     [_manager startUpdatingLocation];
@@ -145,6 +148,8 @@
     _transitionToolbar.translucent = YES;
     _transitionToolbar.alpha = 0;
     [self.view addSubview:_transitionToolbar];
+    
+    
 }
 
 
@@ -179,15 +184,8 @@
                         [messageBox show];
                         [messageBox callBack:^(NSInteger tag) {
                             if (tag == 1){
-                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                    id<YTFloor> floor = [_mallDict firstFloorFromMallLocalId:mallLocalDBId];
-                                    YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
-                                    YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]initWithMallIdentify:mallId];
-                                    [self.navigationController pushViewController:mallInfoVC animated:false];
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        [mallInfoVC presentViewController:mapVC animated:false completion:nil];
-                                    });
-                                });
+                                YTMallInfoViewController *mallInfoVC = [[YTMallInfoViewController alloc]initWithMallIdentify:mallId];
+                                [self.navigationController pushViewController:mallInfoVC animated:false];
                             }
                         }];
                     }
@@ -394,9 +392,10 @@
         case YTNetworkSatusWWAN:
         {
             [_mallDict getAllCloudMallWithCallBack:^(NSArray *malls) {
-                _malls = malls.copy;
-                [_tableView reloadData];
-                
+                if (malls.count > 0){
+                    _malls = malls.copy;
+                    [_tableView reloadData];
+                }
             }];
         }
             break;
@@ -539,6 +538,12 @@
         [self test];
     }
     
+}
+
+- (void)refreshData:(NSNotification *)notification{
+    [_mallDict refershLocalMall];
+    [_mapViewController removeFromParentViewController];
+    _mapViewController = nil;
 }
 
 -(BOOL)prefersStatusBarHidden{

@@ -45,9 +45,12 @@
 }
 
 - (BOOL)loadPESGraph:(NSString *)fileName {
-    NSString *file = [[NSBundle mainBundle] pathForResource:fileName ofType:@"csv"];
-    if (file == nil) {
-        return NO;
+    NSString *file = [[[YTDataManager defaultDataManager]mapPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",fileName,@"csv"]];
+    if (![[NSFileManager defaultManager]fileExistsAtPath:file]) {
+        file = [[NSBundle mainBundle] pathForResource:fileName ofType:@"csv"];
+        if (file == nil) {
+           return false;
+        }
     }
     
     NSString *content = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
@@ -77,7 +80,6 @@
         
         PESGraphNode *node2 = [self makeNodeWithPoint:adjustedCoord2];
         
-        NSString *edgeId = components[0];
         
         double weight = sqrt(pow(adjustedCoord2.x - adjustedCoord1.x, 2) +
                              pow(adjustedCoord2.y - adjustedCoord1.y, 2));
@@ -95,9 +97,6 @@
 - (CGPoint)projectPoint:(CGPoint)point
                  toNode:(PESGraphNode *)node1
                 andNode:(PESGraphNode *)node2 {
-    
-    double x = 0;
-    double y = 0;
     
     double x1 = [node1.additionalData[@"x"] doubleValue];
     double y1 = [node1.additionalData[@"y"] doubleValue];

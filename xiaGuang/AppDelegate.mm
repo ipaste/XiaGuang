@@ -18,6 +18,7 @@
 @interface AppDelegate ()<YTGuideDelegate> {
     double _timeInToBackground;
     YTNavigationController *_navigation;
+    YTDataManager *_dataManager;
 }
 
 @end
@@ -37,6 +38,10 @@
     
     _timeInToBackground = 0;
     
+    _dataManager = [YTDataManager defaultDataManager];
+    
+    [_dataManager updateCloudData];
+    
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     id first = [userDefaults objectForKey:@"first"];
     if (!first) {
@@ -48,9 +53,11 @@
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     }
     
+    [self.window makeKeyAndVisible];
+    
+    
     double timeDifference = [[NSDate date]timeIntervalSinceReferenceDate] - startTime;
     
-    [self.window makeKeyAndVisible];
     if (timeDifference < 0.8) {
         [NSThread sleepForTimeInterval:0.3];
     }
@@ -73,17 +80,16 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     double now = [[NSDate date] timeIntervalSinceReferenceDate];
-    if (now - _timeInToBackground >= 10 * 60) { // 30 minutes wait
-        id currentViewController = [[self.window subviews][0] nextResponder];
-        if ([currentViewController isMemberOfClass:[YTNavigationController class]]) {
-            [(UINavigationController *)currentViewController popToRootViewControllerAnimated:false];
+    
+    if (now - _timeInToBackground >= 30 * 60){//30 * 60  30 minutes wait
+        UIViewController *currentViewController = ((YTNavigationController *)self.window.rootViewController).visibleViewController;
+        if (currentViewController.navigationController != nil) {
+            [(UINavigationController *)currentViewController.navigationController popToRootViewControllerAnimated:false];
         }else{
             [(UIViewController *)currentViewController dismissViewControllerAnimated:false completion:nil];
         }
     }
     [NSThread sleepForTimeInterval:0.5];
-    
-    
 }
 
 
@@ -150,15 +156,6 @@
 -(void)dismissGuideViewController{
     self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];
     [self.window makeKeyAndVisible];
-}
-
--(void)initialization{
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject;
-    NSString *currentPath = [path stringByAppendingPathComponent:@"current"];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([fileManager fileExistsAtPath:currentPath]) {
-        [fileManager removeItemAtPath:currentPath error:nil];
-    }
 }
 
     

@@ -16,9 +16,8 @@
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
 NSString *const kMerchantCellIdentify = @"MerchantCell";
-static NSUInteger currentImgNum = 0;
 
-@interface YTMallInfoViewController ()<YTscrollViewDelegate>{
+@interface YTMallInfoViewController (){
     UIImageView *_searchBackgroundView;
     UIImageView *_activityImgView;
     UIScrollView *_scrollView;
@@ -36,11 +35,11 @@ static NSUInteger currentImgNum = 0;
     YTSearchView *_searchView;
     YTStateView *_stateView;
     NSMutableArray *_adArr;
+    NSMutableArray *_saleViews;
     NSArray *_sales;
     NSArray *_categorys;
     NSArray *_hots;
     NSTimeInterval _loadingTime;
-    BOOL flag;
     id <YTMall> _mall;
     YTMallDict *_mallDict;
     YTDataManager *_dataManager;
@@ -86,7 +85,7 @@ static NSUInteger currentImgNum = 0;
     _scrollView.backgroundColor = [UIColor clearColor];
     _scrollView.showsVerticalScrollIndicator = false;
     _scrollView.scrollEnabled = false;
-    [self.view addSubview:_scrollView];
+    
     
     _leftButton = [[UIButton alloc]init];
     _leftButton.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
@@ -99,7 +98,7 @@ static NSUInteger currentImgNum = 0;
     [_leftButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
     [_leftButton.layer setCornerRadius:2.5];
     [_leftButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    [self.view addSubview:_leftButton];
+    
     
     _rightButton = [[UIButton alloc]init];
     _rightButton.backgroundColor = [UIColor colorWithString:@"ebebeb" alpha:0.2];
@@ -112,7 +111,7 @@ static NSUInteger currentImgNum = 0;
     [_rightButton.titleLabel setFont:[UIFont systemFontOfSize:15]];
     [_rightButton.layer setCornerRadius:2.5];
     [_rightButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    [self.view addSubview:_rightButton];
+    
     
     //放置8个button
     _categoryView = [[UIView alloc]init];
@@ -135,17 +134,18 @@ static NSUInteger currentImgNum = 0;
         categoryLabel.font = [UIFont systemFontOfSize:14];
         [_categoryView addSubview:categoryLabel];
     }
-    [_scrollView addSubview:_categoryView];
+    
     
     //categoryView尺寸控制按钮
     _scrollButton = [[UIButton alloc]init];
     _scrollButton.backgroundColor = [UIColor whiteColor];
-    [_scrollButton setImage:[UIImage imageNamed:@"icon_h"] forState:UIControlStateNormal];
-    [_scrollButton setImage:[UIImage imageNamed:@"icon_up"] forState:UIControlStateSelected];
+    _scrollButton.selected = true;
+    [_scrollButton setImage:[UIImage imageNamed:@"icon_h"] forState:UIControlStateSelected];
+    [_scrollButton setImage:[UIImage imageNamed:@"icon_up"] forState:UIControlStateNormal];
     [_scrollButton addTarget:self action:@selector(addCategory:) forControlEvents:UIControlEventTouchUpInside];
-    [_scrollView addSubview:_scrollButton];
     
-
+    
+    
     _adView = [[YTadScrollAndPageView alloc]init];
     _adView.backgroundColor = [UIColor whiteColor];
     [_adView shouldAutoShow:YES];
@@ -165,14 +165,13 @@ static NSUInteger currentImgNum = 0;
     _tableView.rowHeight = ROW_HEIGHT;
     _tableView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [_scrollView addSubview:_tableView];
+    
     
     [_mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         if (isExistence) {
-            
             _saleView = [[UIView alloc]init];
             _saleView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
-            
+            _saleView.alpha = 0;
             UIImage *titleImage = [UIImage imageNamed:@"title_disco"];
             UIImageView *titleImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, titleImage.size.width, titleImage.size.height)];
             titleImageView.image = titleImage;
@@ -187,18 +186,25 @@ static NSUInteger currentImgNum = 0;
             [more setImageEdgeInsets:UIEdgeInsetsMake(0, 66, 0, 0)];
             [more addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
             [_saleView addSubview:more];
-            [_scrollView addSubview:_saleView];
-            
+            [_scrollView insertSubview:_saleView belowSubview:_stateView];
+            _saleViews = [NSMutableArray array];
             for (NSInteger index = 0;index < 3;index++){
                 YTSaleView *saleView = [[YTSaleView alloc]initWithFrame:CGRectMake(index * (CGRectGetWidth(self.view.frame) / 3), CGRectGetMaxY(titleImageView.frame), CGRectGetWidth(self.view.frame) / 3, 130)];
                 saleView.delegate = self;
                 saleView.tag = index;
-                saleView.tag = index;
+                [_saleViews addObject:saleView];
                 [_saleView addSubview:saleView];
             }
+            [self.view setNeedsLayout];
         }
     }];
     
+    [self.view addSubview:_scrollView];
+    [self.view addSubview:_leftButton];
+    [self.view addSubview:_rightButton];
+    [_scrollView addSubview:_categoryView];
+    [_scrollView addSubview:_scrollButton];
+    [_scrollView addSubview:_tableView];
     [_scrollView addSubview:_stateView];
     
     [self getHot];
@@ -234,7 +240,7 @@ static NSUInteger currentImgNum = 0;
     frame = _categoryView.frame;
     frame.origin = CGPointZero;
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = 101;
+    frame.size.height = _scrollButton.selected == true ? 101:190;
     _categoryView.frame = frame;
     
     frame = _scrollButton.frame;
@@ -258,23 +264,20 @@ static NSUInteger currentImgNum = 0;
     frame.size.height = 55.0;
     _activityImgView.frame = frame;
     
-    if (_adView.hidden ==YES && _activityImgView.hidden == YES) {
-        frame = _saleView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
-        //frame.origin.y = _adView != nil ? CGRectGetMaxY(_adView.frame) + 10: CGRectGetMaxY(_scrollButton.frame) + 10;
-        frame.size.width = CGRectGetWidth(_scrollView.frame);
-        frame.size.height = 165;
-        _saleView.frame = frame;
-        
-        frame = _tableView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_scrollButton.frame) + 10;
-        frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-        frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-        _tableView.frame = frame;
-        _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-    }
+    frame = _saleView.frame;
+    frame.origin.x = 0;
+    frame.origin.y = _adView != nil ? CGRectGetMaxY(_adView.frame) + 10: CGRectGetMaxY(_scrollButton.frame) + 10;
+    frame.size.width = CGRectGetWidth(_scrollView.frame);
+    frame.size.height = 165;
+    _saleView.frame = frame;
+    
+    frame = _tableView.frame;
+    frame.origin.x = 0;
+    frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_scrollButton.frame) + 10;
+    frame.size.width = CGRectGetWidth(self.view.frame) + 10;
+    frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
+    _tableView.frame = frame;
+    _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
 }
 
 
@@ -316,8 +319,18 @@ static NSUInteger currentImgNum = 0;
 #pragma mark Custom method
 
 - (void)getHot{
+    AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
+    if ([_mall isMemberOfClass:[YTCloudMall class]]) {
+        [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
+    }else{
+        [mallQuery whereKey:MALL_CLASS_LOCALID equalTo:[NSNumber numberWithInteger:[[_mall localDB] integerValue]]];
+    }
+    
     AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+    query.limit = 10;
     [query whereKeyExists:@"Icon"];
+    [query whereKey:@"uniId" notEqualTo:@"0"];
+    [query whereKey:@"mall" matchesQuery:mallQuery];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSMutableArray *hotMerchants = [NSMutableArray new];
@@ -353,29 +366,24 @@ static NSUInteger currentImgNum = 0;
                         imageView.image = result;
                         [adMallImg addObject:imageView];
                     }
+                    
+                    if (adMallImg.count == objects.count){
+                        _adView = [[YTadScrollAndPageView alloc]init];
+                        _adView.backgroundColor = [UIColor whiteColor];
+                        [_adView shouldAutoShow:YES];
+                        _adView.delegate = self;
+                        [_adView setImgArr:adMallImg];
+                        [_scrollView insertSubview:_adView belowSubview:_stateView];
+                    }
+                    [self.view setNeedsLayout];
+                    
                 }];
             }
-            _activityImgView.hidden = NO;
-            _adView.hidden = NO;
-            [_adView setImgArr:adMallImg];
-            if (_activityImgView.hidden ==NO && _adView.hidden == NO) {
-                CGRect frame = _saleView.frame;
-                frame = _saleView.frame;
-                frame.origin.x = 0;
-                frame.origin.y = _adView != nil ? CGRectGetMaxY(_adView.frame) + 10: CGRectGetMaxY(_scrollButton.frame) + 10;
-                frame.size.width = CGRectGetWidth(_scrollView.frame);
-                frame.size.height = 165;
-                _saleView.frame = frame;
-                
-                frame = _tableView.frame;
-                frame.origin.x = 0;
-                frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
-                frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-                frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-                _tableView.frame = frame;
-                _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-
-            }
+        }
+        //临时添加
+        else if (objects.count <= 0){
+            _adView = nil;
+            [self.view setNeedsLayout];
         }
     }];
 }
@@ -431,6 +439,9 @@ static NSUInteger currentImgNum = 0;
         }else{
             time = dispatch_time(DISPATCH_TIME_NOW, 0);
         }
+        
+        _saleView.alpha = 1;
+        
         dispatch_after(time, dispatch_get_main_queue(), ^{
             [_stateView stopAnimation];
             [_stateView removeFromSuperview];
@@ -440,21 +451,22 @@ static NSUInteger currentImgNum = 0;
 }
 
 - (void)reloadSaleData{
-    [_saleView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass:[YTSaleView class]] && [(UIView *)obj tag] <= _sales.count - 1) {
-            YTSaleView *saleView = obj;
+    for (YTSaleView *saleView in _saleViews) {
+        if (saleView.tag < _sales.count) {
             YTPreferential *preferential = _sales[saleView.tag];
             [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
-                if (merchant) {
-                    [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
-                        if (!error) {
-                            [saleView setSaleViewWithMerchantImage:result merchantName:[merchant merchantName] saleInfo:[preferential preferentialInfo] isSole:[preferential type]];
-                        }
-                    }];
-                }
+                [merchant getThumbNailWithCallBack:^(UIImage *result, NSError *error) {
+                    [saleView setSaleViewWithMerchantImage:result merchantName:[merchant merchantName] saleInfo:[preferential preferentialInfo] isSole:[preferential type]];
+                }];
             }];
         }
-    }];
+    }
+    
+}
+
+- (void)Actiondo:(UITapGestureRecognizer *)tapGesture {
+    YTActiveDetailViewController *detail = [[YTActiveDetailViewController alloc]init];
+    [self.navigationController pushViewController:detail animated:YES];
 }
 
 #pragma mark
@@ -468,17 +480,21 @@ static NSUInteger currentImgNum = 0;
 -(void)more:(UIButton *)sender{
     YTResultsViewController *resultVC = [[YTResultsViewController alloc]initWithPreferntialInMall:_mall];
     [self.navigationController pushViewController:resultVC animated:true];
+    
 }
 
 - (void)jumpToFloorMap:(UIButton *)sender{
     id <YTFloor> floor = nil;
     YTLocalMall *localmall = [_mallDict changeMallObject:_mall resultType:YTMallClassLocal];
     if (localmall == nil){
-        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载地图" cancelButtonTitle:@"确定"] show];
+        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载更新地图" cancelButtonTitle:@"确定"] show];
         return;
     }
-    NSArray * temp = [[[localmall blocks] objectAtIndex:0] floors];
-    floor = [temp objectAtIndex:0];
+    FMResultSet *result = [_dataManager.database executeQuery:@"select * from Floor where mallId = ?",localmall.identifier];
+    if ([result next]) {
+        floor = [[YTLocalFloor alloc]initWithDBResultSet:result];
+    }
+    
     if (floor != nil) {
         YTMapViewController2 *mapVC = [[YTMapViewController2 alloc]initWithFloor:floor];
         mapVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -497,6 +513,7 @@ static NSUInteger currentImgNum = 0;
 // scrollButton点击触发功能
 - (void)addCategory:(UIButton *)sender {
     sender.selected = !sender.selected;
+
     if (sender.selected == YES) {
         CGRect frame = _scrollView.frame;
         frame.origin.x = 0;
@@ -638,19 +655,22 @@ static NSUInteger currentImgNum = 0;
 
     }
     
-    
+    [self.view setNeedsLayout];
+
 }
 
 - (void)touchEndWithSaleView:(YTSaleView *)saleView{
-    YTPreferential *preferential = _sales[saleView.tag];
-    [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
-        if (merchant == nil){
-            return ;
-        }
-        [_dataManager saveMerchantInfo:merchant];
-        YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
-        [self.navigationController pushViewController:merchantInfoVC animated:YES];
-    }];
+    if (saleView.tag <= _sales.count - 1) {
+        YTPreferential *preferential = _sales[saleView.tag];
+        [preferential getMerchantInstanceWithCallBack:^(YTCloudMerchant *merchant) {
+            if (merchant == nil){
+                return ;
+            }
+            [_dataManager saveMerchantInfo:merchant];
+            YTMerchantInfoViewController *merchantInfoVC = [[YTMerchantInfoViewController alloc]initWithMerchant:merchant];
+            [self.navigationController pushViewController:merchantInfoVC animated:YES];
+        }];
+    }
 }
 
 
@@ -664,7 +684,7 @@ static NSUInteger currentImgNum = 0;
 #pragma mark
 #pragma mark TableView Handle
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    return _hots.count > 0 && _hots.count < 10 ? _hots.count:10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

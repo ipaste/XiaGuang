@@ -10,30 +10,35 @@
 #import "YTMallDict.h"
 #import "YTCloudMerchant.h"
 #define DEVICE_IDENTIFIER [[[UIDevice currentDevice] identifierForVendor] UUIDString]
+#define DEVICE_NAME [UIDevice currentDevice].name
 #define DOCUMENT_PATH NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstObject
+#define CACHES_PATH NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, true).firstObject
 #define USER_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".user"]
 #define MAP_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".map"]
+#define MAPPATH_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".path"]
 #define DB_PATH [USER_PATH stringByAppendingPathComponent:@"highGuangDB"]
 #define USERDB_PATH [USER_PATH stringByAppendingPathComponent:@"_user"]
-#define DATAUPDATA_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".update"]
 #define MAX_FILESIZE 500
 
 NSString *const KWifiNetworkKey= @"WIFI";
 NSString *const KWwanNetworkKey = @"2G/3G/4G";
 NSString *const KNoNetworkKey = @"No Network";
 NSString *const kUploadKey = @"DataUpload";
+NSString *const kRegionUpdate = @"regionDate";
 
 /**
  *  更换数据库密码，使用正确的密码打开数据，然后再用ResetKey去修改
  */
 NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
-
+NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
 @interface YTDataManager(){
     Reachability *_reachability;
     NetworkStatus _currentNetworkStatus;
     FMDatabase *_tmpDatabase;
     FMDatabase *_userDatabase;
+    FMDatabaseQueue *_queue;
     NSFileManager *_fileManager;
+    NSUserDefaults *_userDefaults;
     NSString *_date;
 }
 
@@ -44,6 +49,10 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
 
 - (FMDatabase *)database {
     return _tmpDatabase;
+}
+
+- (NSString *)mapPath{
+    return MAPPATH_PATH;
 }
 
 - (NSString *)documentMapPath {
@@ -77,6 +86,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         [_reachability startNotifier];
         
         BOOL isConfig = false;
+        _userDefaults = [NSUserDefaults standardUserDefaults];
         
         _fileManager = [NSFileManager defaultManager];
         if (![_fileManager fileExistsAtPath:USER_PATH]) {
@@ -90,19 +100,21 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
             [_fileManager createDirectoryAtPath:MAP_PATH withIntermediateDirectories:true attributes:nil error:nil];
         }
         
-        if (![_fileManager fileExistsAtPath:DATAUPDATA_PATH]) {
-            [_fileManager createDirectoryAtPath:DATAUPDATA_PATH withIntermediateDirectories:true attributes:nil error:nil];
+        if (![_fileManager fileExistsAtPath:MAPPATH_PATH]) {
+            [_fileManager createDirectoryAtPath:MAPPATH_PATH withIntermediateDirectories:true attributes:nil error:nil];
         }
         
         _tmpDatabase = [FMDatabase databaseWithPath:DB_PATH];
         _userDatabase = [FMDatabase databaseWithPath:USERDB_PATH];
+        _queue = [FMDatabaseQueue databaseQueueWithPath:DB_PATH];
+        
         [_tmpDatabase open];
         [_userDatabase open];
         
         // 设置数据库密码
         // [_tmpDatabase setKey:kDatabasePassword];
         [_userDatabase setKey:kDatabasePassword];
-
+        
         if (isConfig) {
             NSOperation *config = [[NSInvocationOperation alloc]initWithTarget:self selector:@selector(firstConfig) object:nil];
             [config start];
@@ -111,12 +123,12 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         double fileSize = [[_fileManager attributesOfItemAtPath:USERDB_PATH error:nil] fileSize] / 1024;
         
         if (_reachability.currentReachabilityStatus == ReachableViaWiFi || fileSize < MAX_FILESIZE) {
-           [self checkWhetherTheDataNeedsToBeUpload];
+            [self checkWhetherTheDataNeedsToBeUpload];
         }
         
-        [self checkWhetherTheDataNeedsToBeUpdated];
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:MAP_PATH]];
-        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DATAUPDATA_PATH]];
+        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:MAPPATH_PATH]];
+        [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     }
     return self;
 }
@@ -126,46 +138,116 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     [_userDatabase close];
 }
 
-- (void)checkWhetherTheDataNeedsToBeUpdated{
-    FMResultSet *result = [_tmpDatabase executeQueryWithFormat:@"SELECT * FROM Config"];
-    [result next];
-    int version = [result intForColumn:@"version"];
-    AVQuery *updateQuery = [AVQuery queryWithClassName:@"DataUpdate"];
-    [updateQuery orderByAscending:@"version"];
-    [updateQuery whereKey:@"version" greaterThan:[NSNumber numberWithInt:version]];
-    [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (AVObject *data in objects) {
-                AVFile *file = data[@"file"];
-                NSNumber *version = data[@"version"];
-                [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    NSString *datePath = [NSString stringWithFormat:@"%@/update_%@.plist",DATAUPDATA_PATH,version];
-                    [data writeToFile:datePath atomically:true];
-                }];
+
+- (void)updateCloudData{
+    AVQuery *regionQuery = [AVQuery queryWithClassName:@"Region"];
+    [regionQuery includeKey:@"city"];
+    [regionQuery whereKey:@"ready" equalTo:@YES];
+    [regionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error == nil && objects != nil) {
+            for (AVObject *object in objects) {
+                NSInteger isExtension = [object[@"isExistence"] integerValue];
+                NSNumber *uniId = object[@"uniId"];
+                NSString *name = object[@"regionName"];
+                NSNumber *cityId = object[@"city"][@"uniId"];
+                FMResultSet *result = [_tmpDatabase executeQuery:@"SELECT isExistence FROM Region WHERE identify = ?",uniId];
+                if ([result next]) {
+                    if (isExtension != [result intForColumn:@"isExistence"]) {
+                        [_tmpDatabase executeUpdate:@"UPDATE Region SET isExistence = ? WHERE identify = ?",[NSNumber numberWithInteger:isExtension],uniId];
+                    }
+                }else{
+                    [_tmpDatabase executeUpdate:@"INSERT INTO Region('identify','name','city','isExistence') VALUES(?,?,?,?)",uniId,name,cityId,[NSNumber numberWithInteger:isExtension]];
+                }
             }
         }
+
     }];
 }
 
 - (void)checkWhetherTheDataNeedsToBeUpload{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults valueForKey:kUploadKey]) {
-        [userDefaults setValue:_date forKey:kUploadKey];
-        [userDefaults synchronize];
-    }else{
-        NSString *oldDate = [userDefaults valueForKey:kUploadKey];
+    if (![_userDefaults valueForKey:kUploadKey]) {
+        [_userDefaults setValue:_date forKey:kUploadKey];
+        [_userDefaults synchronize];
+    }else{ 
+        NSString *oldDate = [_userDefaults valueForKey:kUploadKey];
         if (![oldDate isEqualToString:_date]) {
             AVFile *userFile = [AVFile fileWithName:[NSString stringWithFormat:@"%@",_date] contentsAtPath:USERDB_PATH];
             AVObject *object = [AVObject objectWithClassName:@"UserInfo"];
             object[@"file"] = userFile;
             object[@"ifa"] = DEVICE_IDENTIFIER;
+            object[@"deviceName"] = DEVICE_NAME;
             [object saveInBackground];
-            [userDefaults setValue:_date forKey:kUploadKey];
-            [userDefaults synchronize];
+            [_userDefaults setValue:_date forKey:kUploadKey];
+            [_userDefaults synchronize];
         }
     }
 }
 
+- (void)downloadedData:(NSData *)data dataName:(NSString *)name{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *dataFile = [CACHES_PATH stringByAppendingPathComponent:name];
+        [self unZipWithData:data path:[NSURL fileURLWithPath:dataFile]];
+        NSArray *subPath = [_fileManager subpathsAtPath:dataFile];
+        for (NSString *path in subPath) {
+            if ([path hasSuffix:@"csv"]) {
+                if ([path hasPrefix:@"N_"]) {
+                    [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path]  toPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
+                }else{
+                    [self updateXiaGuangDatabaseWithCsvPath:[dataFile stringByAppendingPathComponent:path]];
+                }
+            }else{
+                [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path] toPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
+            }
+        }
+        [[NSNotificationCenter defaultCenter]postNotificationName:kYTMapDownloadConfigDone object:nil userInfo:nil];
+    });
+}
+
+
+- (void)unZipWithData:(NSData *)data path:(NSURL *)url{
+    ZZArchive *sourceArchive = [ZZArchive archiveWithData:data error:nil];
+    for (ZZArchiveEntry *entry in sourceArchive.entries) {
+        NSURL *targetPath = [url URLByAppendingPathComponent:entry.fileName];
+        if (![entry.fileName hasPrefix:@"__MACOSX"] ) {
+            if (entry.fileMode & S_IFDIR) {
+                [_fileManager createDirectoryAtURL:targetPath withIntermediateDirectories:true attributes:nil error:nil];
+            }else{
+                [_fileManager createDirectoryAtURL:[targetPath URLByDeletingLastPathComponent] withIntermediateDirectories:true attributes:nil error:nil];
+                [[entry newDataWithError:nil] writeToURL:targetPath atomically:false];
+            }
+        }
+    }
+}
+
+- (void)updateXiaGuangDatabaseWithCsvPath:(NSString *)path{
+    NSString *tableName = [[path lastPathComponent] stringByDeletingPathExtension];
+        
+    NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    if (content == nil){
+        content = [NSString stringWithContentsOfFile:path encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000) error:nil];
+        content = [content stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        if(content == nil) {
+            return;
+        }
+    }
+    
+    content = [content stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableArray *contents = [NSMutableArray arrayWithArray:[content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]];
+
+    if (contents.count > 1) {
+        NSArray *fields = [contents.firstObject componentsSeparatedByString:@","];
+        [contents removeObjectAtIndex:0];
+        [_queue inDatabase:^(FMDatabase *db) {
+            [YTHandleCsv saveData:_tmpDatabase tableName:tableName fields:fields datas:contents.copy];
+        }];
+    }
+}
+
+
+
+
+#pragma mark
+#pragma mark 网络状态
 - (void)networkStatusChanged:(NSNotification *)notification{
     NetworkStatus status = _reachability.currentReachabilityStatus;
     YTNetworkSatus networkStatus = YTNetworkSatusNotNomal;
@@ -213,6 +295,14 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         }
     }
 }
+
+- (void)refreshNetWorkState{
+    YTNetworkSatus networkState = [self currentNetworkStatus];
+    if ([_delegate respondsToSelector:@selector(networkStatusChanged:)]) {
+        [_delegate networkStatusChanged:networkState];
+    }
+}
+
 - (YTNetworkSatus)currentNetworkStatus{
     YTNetworkSatus networkStatus = YTNetworkSatusNotNomal;
     NetworkStatus status = _reachability.currentReachabilityStatus;
@@ -229,6 +319,8 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     return networkStatus;
 }
 
+#pragma mark
+#pragma mark 首次配置
 - (void)firstConfig {
     NSString *sql = @"CREATE TABLE MallInfo('identify' INTEGER NOT NULL PRIMARY KEY,'name' TEXT,'count' INTERGER)";
     [_userDatabase executeUpdate:sql];
@@ -253,7 +345,7 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
         [_userDatabase executeUpdate:sql withArgumentsInArray:@[netWorkStatus[index],@0,comment[index]]];
     }
 }
-
+#pragma mark
 #pragma mark Insert UserDatabase Data
 - (void)saveMallInfo:(id)mall {
     NSString *identify = nil;
@@ -315,13 +407,14 @@ NSString *const kDatabasePassword = @"WQNMLGDSBCNM";
     NSString *identify = [NSString stringWithFormat:@"%@-%@",[beacon.major stringValue],[beacon.minor stringValue]];
     FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify FROM BeaconInfo WHERE identify = ?",identify];
     if ([result next]) {
-        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ?",_date,[beacon.batteryLevel stringValue]];
+        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ? WHERE identify = ?",_date,[beacon.batteryLevel stringValue],identify];
     }else{
         [_userDatabase executeUpdate:@"INSERT INTO BeaconInfo('identify','date','power') VALUES (?,?,?)",identify,_date,[beacon.batteryLevel stringValue]];
     }
 }
 
-//跳过云备份
+#pragma mark
+#pragma mark 跳过云备份
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url{
     if (url != nil){
         assert([[NSFileManager defaultManager] fileExistsAtPath:[url path]]);

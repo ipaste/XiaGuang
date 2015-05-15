@@ -42,16 +42,10 @@
 
 
 
--(NSArray *)type{
+-(NSString *)type{
     NSString *type = _object[MERCHANT_CLASS_TYPE_KEY];
-    if (type.length <= 0 || type == nil) {
-        return nil;
-    }
-    NSMutableArray *types = [NSMutableArray arrayWithArray:[type componentsSeparatedByString:@" "]];
-    if ([[types lastObject] isEqualToString:@""]) {
-        [types removeLastObject];
-    }
-    return types;
+
+    return type;
 }
 
 -(NSString *)shortName{

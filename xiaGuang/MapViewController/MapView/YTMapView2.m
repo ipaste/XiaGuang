@@ -9,7 +9,6 @@
 #import "YTMapView2.h"
 
 @implementation YTMapView2{
-    
     RMMapView *_internalMapView;
     YTAnnotationSource *_annotationSource;
     YTMapViewDetailState _detailState;
@@ -223,7 +222,7 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
 
 #pragma mark RMMapViewDelegate methods
 -(void)doubleTapOnMap:(RMMapView *)map at:(CGPoint)point{
-    CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
+    //CLLocationCoordinate2D coord = [map pixelToCoordinate:point];
     
     [self.delegate mapView:self doubleTapOnMap:[_internalMapView pixelToCoordinate:point]];
 }
@@ -321,7 +320,7 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
     
 }
 
--(void)showPathFromCoord1:(CLLocationCoordinate2D)c1
+-(BOOL)showPathFromCoord1:(CLLocationCoordinate2D)c1
                  toCoord2:(CLLocationCoordinate2D)c2
              forMajorArea:(id<YTMajorArea>)majorArea{
     
@@ -336,8 +335,12 @@ forMinorAreaPoi:(YTMinorAreaPoi *)minorPoi
         _majorArea = majorArea;
         if(_pathAnnotation != nil){
             [_internalMapView addAnnotation:_pathAnnotation];
+            return true;
+        }else{
+            return false;
         }
     }
+    return false;
 }
 
 -(void)removePath{

@@ -63,6 +63,7 @@
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
         query.maxCacheAge = 24 * 3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+        [query includeKey:@"region,source"];
         [query whereKey:MALL_CLASS_LOCALID notEqualTo:@""];
         [query whereKeyExists:MALL_CLASS_LOCALID];
         [query whereKey:@"ready" equalTo:@YES];

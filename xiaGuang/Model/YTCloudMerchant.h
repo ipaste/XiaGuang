@@ -18,7 +18,7 @@
 #define MERCHANT_CLASS_UNIID_KEY @"uniId"
 #define MERCHANT_CLASS_SHORTNAME_KEY @"shortName"
 #define MERCHANT_CLASS_ADDRESS_KEY @"address"
-#define MERCHANT_CLASS_TYPE_KEY @"type"
+#define MERCHANT_CLASS_TYPE_KEY @"new_type"
 #define MERCHANT_CLASS_ICON_KEY @"Icon"
 #define MERCHANT_CLASS_FLOOR_KEY @"floor"
 

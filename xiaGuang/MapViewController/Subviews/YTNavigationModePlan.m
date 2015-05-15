@@ -52,6 +52,7 @@
         instrunction.mainInstruction = @"请乘坐电梯";
         instrunction.leftInstruction = [NSString stringWithFormat:@"你在%@",[[[_userMinorArea majorArea] floor] floorName]];
         instrunction.rightInstruction = [NSString stringWithFormat:@"终点在%@",[[[_targetPoiSource majorArea] floor] floorName]];
+       
         
     }
     

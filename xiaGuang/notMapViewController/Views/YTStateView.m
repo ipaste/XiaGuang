@@ -105,7 +105,7 @@
     }
 }
 - (void)stopAnimation{
-    if (_type = YTStateTypeLoading) {
+    if (_type == YTStateTypeLoading) {
         _showImageView.alpha = 0;
         [_showImageView stopAnimating];
     }

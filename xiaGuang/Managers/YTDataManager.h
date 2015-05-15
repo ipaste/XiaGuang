@@ -11,12 +11,16 @@
 #import "Reachability.h"
 #import "FMDB.h"
 #import "ESTBeacon.h"
+#import "YTHandleCsv.h"
+#import "zipzap.h"
 
 typedef NS_ENUM(NSInteger, YTNetworkSatus) {
     YTNetworkSatusNotNomal = 0,
     YTNetworkSatusWifi,
     YTNetworkSatusWWAN
 };
+
+extern NSString *const kYTMapDownloadConfigDone;
 
 @class YTDataManager;
 
@@ -35,6 +39,7 @@ typedef NS_ENUM(NSInteger, YTNetworkSatus) {
 
 @property (weak ,nonatomic)id<YTDataManagerDelegate> delegate;
 @property (readonly ,nonatomic) FMDatabase *database;
+@property (readonly ,nonatomic) NSString *mapPath;
 @property (readonly ,nonatomic) NSString *documentMapPath;
 @property (readonly ,nonatomic) NSString *date;
 /**
@@ -43,6 +48,19 @@ typedef NS_ENUM(NSInteger, YTNetworkSatus) {
  *  @return 返回默认的数据管理对象
  */
 + (instancetype)defaultDataManager;
+
+/**
+ *  更新必要的数据
+ */
+- (void)updateCloudData;
+
+/**
+ *  处理已经下载的数据
+ *
+ *  @param data 下载在内存中的数据
+ *  @param name 数据名称
+ */
+- (void)downloadedData:(NSData *)data dataName:(NSString *)name;
 
 /**
  *  往收集用户信息库里面记录一个商家信息
@@ -73,6 +91,11 @@ typedef NS_ENUM(NSInteger, YTNetworkSatus) {
  *  @param beacon 扫描到的Beacon对象
  */
 - (void)saveBeaconInfo:(ESTBeacon *)beacon;
+
+/**
+ *  刷新网络状态
+ */
+- (void)refreshNetWorkState;
 
 /**
  *  获取当前网络状态

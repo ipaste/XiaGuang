@@ -164,7 +164,7 @@
                      //NSLog(@"%d. major:%@,minor:%@,old:%@,distance:%@",idx,beacon.major,beacon.minor,beacon.distance,dict[@"distance"]);
                     
                     if (idx == _bufferBeacon.count -1) {
-                       // NSLog(@"==========     我是分割线 ==========");
+                       // NSLog(@"==========   我是分割线 ==========");
                         // notify all listeners
                         for (id<YTBeaconManagerUpdateListener> listener in _listeners) {
                             [listener YTBeaconManager:self rangedObjects:_bufferBeacon];
