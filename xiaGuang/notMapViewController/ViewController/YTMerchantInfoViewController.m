@@ -191,7 +191,14 @@
 -(void)jumpToMap:(id)button{
     YTLocalMerchantInstance *targetMerchantInstance = [(YTCloudMerchant *)_merchant getLocalMerchantInstance];
     if(targetMerchantInstance == nil){
-        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载更新地图" cancelButtonTitle:@"确定"] show];
+        YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"" Message:@"该商城地图还未下载,需要跳转至地图管理页面下载吗"];
+        [messageBox show];
+        [messageBox callBack:^(NSInteger tag) {
+            if (tag == 1){
+                UIViewController *controller = [YTMallManageListViewController shareMallListController];
+                [self.navigationController pushViewController:controller animated:true];
+            }
+        }];
         return;
     }
     YTMapViewController2 *mapVC = [[YTMapViewController2 alloc] initWithMerchant:targetMerchantInstance];

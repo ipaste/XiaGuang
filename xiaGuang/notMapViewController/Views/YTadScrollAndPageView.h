@@ -8,22 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol YTscrollViewDelegate;
+@protocol YTScrollViewDelegate;
 
-@interface YTadScrollAndPageView : UIView<UIScrollViewDelegate> {
-    __unsafe_unretained id <YTscrollViewDelegate> _delegate;
-}
-@property (nonatomic,assign) id <YTscrollViewDelegate> delegate;
-
-@property (nonatomic,assign) NSInteger currentPage;
-@property (nonatomic,strong) NSMutableArray *imgArr;
-@property (nonatomic,strong) UIScrollView *adScrollView;
+@interface YTadScrollAndPageView : UIView
+@property (nonatomic,assign) id <YTScrollViewDelegate> delegate;
+@property (nonatomic,strong) NSArray *images;
 @property (nonatomic,strong) UIPageControl *pageControl;
 
--(void)shouldAutoShow:(BOOL)shouldStart;
 @end
 
-@protocol YTscrollViewDelegate <NSObject>
+@protocol YTScrollViewDelegate <NSObject>
 
 @optional
 - (void)didClickPage:(YTadScrollAndPageView *)view atIndex:(NSInteger)index;

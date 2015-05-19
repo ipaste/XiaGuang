@@ -67,7 +67,6 @@
 
 -(UIView *)tableHeadView{
     UIView *background = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), TABLEVIEW_HEAD)];
-    
     UIScrollView *scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), TABLEVIEW_HEAD)];
     scrollView.contentSize = CGSizeMake(3 * CGRectGetWidth(scrollView.frame), CGRectGetHeight(scrollView.frame));
     scrollView.tag = 2;
@@ -75,8 +74,7 @@
     scrollView.delegate = self;
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.contentOffset = CGPointMake(1 * CGRectGetWidth(scrollView.frame) , 0);
-    
-    
+
     _images = @[@"ad_banner01.jpg",@"ad_banner02.jpg",@"ad_banner03.jpg"];
     _slideImageViews = [NSMutableArray array];
     
@@ -162,6 +160,11 @@
 
 -(void)selectedUniIds:(NSArray *)uniIds{
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:nil andResultsLocalDBIds:uniIds];
+    [self.navigationController pushViewController:resultsVC animated:YES];
+}
+
+-(void)selectedKey:(NSString *)key{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithMall:nil Key:key];
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
 

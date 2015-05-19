@@ -51,8 +51,6 @@
     if(findResultSet != nil){
         self = [super init];
         if(self){
-            
-            
             _tmpMallId = [findResultSet stringForColumn:@"mallId"];
             _tmpMerchantInstanceId = [findResultSet stringForColumn:@"merchantInstanceId"];
             

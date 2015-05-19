@@ -25,6 +25,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     NSString *_subCategory;
     NSString *_mallId;
     NSString *_floorId;
+    NSString *_key;
     NSArray *_ids;
     NSMutableArray *_currentMerchantUniIds;
     NSMutableArray *_merchants;
@@ -101,6 +102,23 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     return self;
 }
 
+-(instancetype)initWithMall:(id<YTMall>)mall Key:(NSString *)key{
+    self = [super init];
+    if (self) {
+        _mall = mall;
+        if (mall) {
+            if ([mall isMemberOfClass:[YTCloudMall class]]) {
+                _mallId = [mall localDB];
+            }else{
+                _mallId = [mall identifier];
+            }
+        }
+        _type = YTResultsTypeResults;
+        _key = key;
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -167,6 +185,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     _reachability = [Reachability reachabilityWithHostname:@"www.leancloud.cn"];
     _stateView = [[YTStateView alloc]initWithStateType:YTStateTypeLoading];
     [_tableView addSubview:_stateView];
+    
     if ([_reachability isReachable]){
         [_stateView startAnimation];
         [self getMerchantsWithSkip:0  numbers:10  andBlock:^(NSArray *merchants) {
@@ -235,14 +254,19 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         [query includeKey:@"mall,floor"];
         query.limit = number;
         query.skip = skip;
-        if (_ids == nil) {
-            [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
+        
+        if (_key != nil) {
+            [query whereKey:@"name" equalTo:_key];
         }else{
-            if (_ids.count <= 0 || _ids == nil) {
-                block(nil);
-                return;
+            if (_ids == nil) {
+                [query whereKey:MERCHANT_CLASS_TYPE_KEY containsString:_category];
+            }else{
+                if (_ids.count <= 0 || _ids == nil) {
+                    block(nil);
+                    return;
+                }
+                [query whereKey:MERCHANT_CLASS_UNIID_KEY containedIn:_ids];
             }
-            [query whereKey:MERCHANT_CLASS_UNIID_KEY containedIn:_ids];
         }
         
         if (_floorId != nil) {
@@ -299,7 +323,6 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
                     [merchantQuery orderByAscending:@"name"];
                     [merchantQuery whereKey:@"mall" matchesQuery:mallObject];
                     [merchantQuery whereKey:@"uniId" notContainedIn:_currentMerchantUniIds];
-                    [merchantQuery whereKeyExists:@"Icon"];
                     merchantQuery.limit = number - merchants.count;
                     merchantQuery.skip = _dealCount;
                     [merchantQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -318,6 +341,8 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
         
     }
 }
+
+
 
 #pragma mark - Table view data source
 
@@ -350,6 +375,7 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
 -(void)reloadData{
     [_tableView reloadData];
 }
+
 -(void)searchKeyForCategoryTitle:(NSString *)category subCategoryTitle:(NSString *)subCategory mallUniId:(NSString *)malluniId floorUniId:(NSString *)floorUniId{
     [_merchants removeAllObjects];
     [_tableView reloadData];
@@ -357,10 +383,19 @@ typedef NS_ENUM(NSUInteger, YTResultsType) {
     _category = category;
     _mallId = malluniId;
     _floorId = floorUniId;
+    _stateView.alpha = 1;
+    _stateView.type = YTStateTypeLoading;
+    [_stateView startAnimation];
     
     [self getMerchantsWithSkip:0 numbers:10 andBlock:^(NSArray *merchants) {
-        _merchants = [NSMutableArray arrayWithArray:merchants];
-        [self reloadData];
+        if (merchants.count > 0) {
+            _merchants = [NSMutableArray arrayWithArray:merchants];
+            [self reloadData];
+            _stateView.alpha = 0;
+        }else{
+            _stateView.type = YTStateTypeNotFound;
+        }
+         [_stateView stopAnimation];
     }];
 }
 

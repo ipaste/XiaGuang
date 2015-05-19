@@ -10,7 +10,7 @@
 #import "YTMallDict.h"
 #import "YTMallPositionViewController.h"
 #import "YTPreferential.h"
-
+#import "YTMallManageListViewController.h"
 #import "YTMallActivity.h"
 #import "YTSaleView.h"
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
@@ -27,6 +27,6 @@
 #import "YTStateView.h"
 #import "YTadScrollAndPageView.h"
 #import "YTActiveDetailViewController.h"
-@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate,UIScrollViewDelegate,YTscrollViewDelegate>
+@interface YTMallInfoViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,YTSearchViewDelegate,YTSaleDelegate,UIScrollViewDelegate,YTScrollViewDelegate>
 - (instancetype)initWithMallIdentify:(NSString *)identify;
 @end

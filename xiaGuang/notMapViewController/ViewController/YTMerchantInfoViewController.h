@@ -10,6 +10,7 @@
 #import "YTMerchant.h"
 #import "YTH5ViewController.h"
 #import "YTStateView.h"
+#import "YTMallManageListViewController.h"
 @interface YTMerchantInfoViewController : UIViewController
 -(id)initWithMerchant:(id <YTMerchant>)merchant;
 @end

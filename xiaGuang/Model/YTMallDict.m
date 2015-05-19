@@ -64,6 +64,7 @@
         query.maxCacheAge = 24 * 3600;
         query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         [query includeKey:@"region,source"];
+        [query orderByAscending:@"queue"];
         [query whereKey:MALL_CLASS_LOCALID notEqualTo:@""];
         [query whereKeyExists:MALL_CLASS_LOCALID];
         [query whereKey:@"ready" equalTo:@YES];
@@ -93,7 +94,7 @@
     if (!_localMalls) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSMutableArray *malls = [NSMutableArray array];
-            FMResultSet *result = [_db executeQuery:@"select * from Mall"];
+            FMResultSet *result = [_db executeQuery:@"select * from Mall where isNavi = ?", [NSNumber numberWithInteger:1]];
             while ([result next]) {
                 YTLocalMall *mall = [[YTLocalMall alloc]initWithDBResultSet:result];
                 [malls addObject:mall];
@@ -105,7 +106,6 @@
                 }
             });
         });
-        
     }else{
         if (callBack != nil) {
             callBack(_localMalls);
@@ -141,7 +141,12 @@
                 if (localMall.count > 0) {
                     mall = localMall[0];
                 }else{
-                    mall = nil;
+                   FMResultSet *result = [[YTDataManager defaultDataManager].database executeQuery:@"SELECT * FROM Mall WHERE mallId = ?",[NSNumber numberWithInteger:[mall localDB].integerValue]];
+                    if ([result next]){
+                        mall = [[YTLocalMall alloc]initWithDBResultSet:result];
+                    }else{
+                        mall = nil;
+                    }
                 }
                 return mall;
             }

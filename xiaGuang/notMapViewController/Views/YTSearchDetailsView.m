@@ -91,23 +91,6 @@
         
         _majorAreaIds = [self getMajorAreaId:_mall];
         
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            FMDatabase *db = [YTDataManager defaultDataManager].database;
-//            _pinyingSearchSource = [NSMutableArray array];
-//            if (_majorAreaIds != nil){
-//                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance where majo rArea in ? ",_majorAreaIds];
-//                while ([results next]) {
-//                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
-//                }
-//            }else{
-//                FMResultSet *results = [db executeQuery:@"select distinct merchantInstanceName from merchantInstance"];
-//                while ([results next]) {
-//                    [_pinyingSearchSource addObject:[results stringForColumnIndex:0]];
-//                }
-//            }
-//            
-//        });
-        
     }
     return self;
     
@@ -164,11 +147,13 @@
 
         }else{
             AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
+            AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
             if (_mall){
-                AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
                 [mallQuery whereKey:@"localId" equalTo:[NSNumber numberWithInteger:[_mall uniId].integerValue]];
-                [query whereKey:@"mall" matchesQuery:mallQuery];
             }
+            [mallQuery whereKey:@"ready" equalTo:@YES];
+            [query whereKey:@"mall" matchesQuery:mallQuery];
+            
             query.limit = 40;
             NSString *regex = [NSString stringWithFormat:@".*?%@",keyWord];
             [query whereKey:@"name" matchesRegex:regex modifiers:@"i"];
@@ -190,7 +175,7 @@
                             YTCloudMerchant *merchant = objects.firstObject;
                             NSInteger index = [results indexOfObject:merchant];
                             NSMutableArray *tmpUniIds = [NSMutableArray arrayWithArray:[uniIds objectAtIndex:index]];
-                            [tmpUniIds addObject:merchant];
+                            [tmpUniIds addObject:[tmpMerchant uniId]];
                             uniIds[index] = tmpUniIds.copy;
                         }
                     }else{
@@ -258,14 +243,7 @@
             historycell.textLabel.text = @"暂无历史";
             historycell.selectionStyle = UITableViewCellSelectionStyleNone;
         }else{
-            id merchant = _recordObjects[indexPath.row];
-            NSString *merchantName = nil;
-            if  ([merchant isMemberOfClass:[YTLocalMerchantInstance class]]){
-                merchantName = [(YTLocalMerchantInstance *)merchant merchantLocationName];
-            }else{
-                merchantName = [(YTCloudMerchant *)merchant merchantName];
-            }
-            historycell.textLabel.text = merchantName;
+            historycell.textLabel.text = _recordObjects[indexPath.row];
         }
         return historycell;
     }else{
@@ -308,15 +286,10 @@
         if (_recordObjects.count <= 0){
             return;
         }
-        id recordMerchant =  _recordObjects[indexPath.row];
-        NSArray *uniIds = nil;
-        if ([recordMerchant isMemberOfClass:[YTLocalMerchantInstance class]]){
-            
-        }else{
-            uniIds = @[[(YTCloudMerchant *)recordMerchant uniId]];
-        }
-        
-        [self.delegate selectSearchResultsWithUniIds:uniIds];
+        id key =  _recordObjects[indexPath.row];
+        _scrollView.hidden = NO;
+        _searchResultstableView.hidden = YES;
+        [self.delegate selectedSeachKey:key];
         
     }else if([tableView isEqual:_searchResultstableView]){
         NSMutableArray *history = [NSMutableArray arrayWithArray:[_fileManager readDataWithFileName:@"history"]];
@@ -333,9 +306,13 @@
             }else{
                 merchantName = [(YTCloudMerchant *)merchant merchantName];
             }
-            [history insertObject:merchantName atIndex:0];
-            [_fileManager saveWithData:history andCreateFileName:@"history"];
-            [self setHistoricalRecordNames:history];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self == %@",merchant];
+            history = [NSMutableArray arrayWithArray:[history filteredArrayUsingPredicate:predicate]];
+            if (history.firstObject == nil) {
+                [history insertObject:merchantName atIndex:0];
+                [_fileManager saveWithData:history andCreateFileName:@"history"];
+                [self setHistoricalRecordNames:history];
+            }
             _scrollView.hidden = NO;
             _searchResultstableView.hidden = YES;
             [self.delegate selectSearchResultsWithUniIds:_unIds[indexPath.row]];
@@ -440,50 +417,13 @@
     if (recordNames.count <= 0){
         return;
     }
-    if ([_mall isMemberOfClass:[YTLocalMall class]]){
-        FMDatabase *db = [YTDataManager defaultDataManager].database;
-        NSMutableArray *tmpRecord = [NSMutableArray array];
-        for (NSString *merchantName in recordNames) {
-            FMResultSet *result = nil;
-            result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ? ",merchantName];
-            if ([result next]){
-                YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc]initWithDBResultSet:result];
-                [tmpRecord addObject:tmpMerchantInstance];
-            }
-            _recordObjects = tmpRecord.copy;
-            
-            
-        }
-        if (_historyTableView != nil){
-            CGRect frame = _historyTableView.frame;
-            frame.size.height = tmpRecord.count * HISTORYTABLECELL_HEIGHT + 35;
-            _historyTableView.frame = frame;
-        }
-        
-        _recordObjects = [tmpRecord copy];
-        [_historyTableView reloadData];
-    }else{
-        AVQuery *query = [AVQuery queryWithClassName:@"Merchant"];
-        [query whereKey:@"name" containedIn:recordNames];
-        [query selectKeys:@[@"uniId",@"name"]];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            NSMutableArray *merchants = [NSMutableArray array];
-            for (AVObject *object in objects) {
-                [merchants addObject:[[YTCloudMerchant alloc]initWithAVObject:object]];
-            }
-            
-            if (_historyTableView != nil){
-                CGRect frame = _historyTableView.frame;
-                frame.size.height = merchants.count * HISTORYTABLECELL_HEIGHT + 35;
-                _historyTableView.frame = frame;
-            }
-            
-            _recordObjects = [merchants copy];
-            
-            [_historyTableView reloadData];
-            
-        }];
+    _recordObjects = recordNames;
+    if (_historyTableView != nil){
+        CGRect frame = _historyTableView.frame;
+        frame.size.height = _recordObjects.count * HISTORYTABLECELL_HEIGHT + 35;
+        _historyTableView.frame = frame;
     }
+    [_historyTableView reloadData];
 }
 
 - (void)getHotSearch{
@@ -533,13 +473,6 @@
         [self getHotSearch];
     }
     
-}
-
-- (NSString *)getPinyin:(NSString *)str{
-    CFMutableStringRef string  = CFStringCreateMutableCopy(NULL, 0, (__bridge CFStringRef)str);
-    CFStringTransform(string, NULL, kCFStringTransformMandarinLatin, false);
-    CFStringTransform(string, NULL, kCFStringTransformStripDiacritics, NO);
-    return (__bridge NSString *)string;
 }
 
 -(void)dealloc{

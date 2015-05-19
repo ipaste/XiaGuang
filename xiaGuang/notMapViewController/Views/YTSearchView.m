@@ -28,6 +28,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     BOOL _displayFirstResponder;
     BOOL _isIndent;
     BOOL _isHide;
+    BOOL _isReduce;
     YTSearchDetailsView *_detailsView;
     CGFloat _searchBarWidth;
     CGFloat _searchTextFieldWidth;
@@ -42,6 +43,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     if (self) {
         CGFloat searchBarX = 5;
         _isHide = true;
+        _isReduce = true;
         _searchBarWidth =  CGRectGetWidth(self.frame) - 40;
         CGFloat cancelX = CGRectGetWidth(self.frame) - 40;
         if (indent) {
@@ -236,7 +238,10 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     }
     [UIView animateWithDuration:.2 animations:^{
         
-        _searchTextFieldWidth -= 5;
+        if (_isReduce) {
+            _isReduce = false;
+            _searchTextFieldWidth = _searchTextFieldWidth - 5;
+        }
         
         CGRect frame;
         frame = _searchTextField.frame;
@@ -273,6 +278,8 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     }
 }
 
+
+
 -(void)searchBar:(UISearchBar *)searchBar dealWithTextChange:(NSString *)searchText{
     searchBar.text = searchText;
     if (searchText.length <= 0) {
@@ -297,6 +304,14 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     }
     [self cancelAnimation:false completion:nil];
     [self.delegate selectedUniIds:uniIds];
+}
+
+- (void)selectedSeachKey:(NSString *)key{
+    if ([self.delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
+        [self.delegate searchCancelButtonClicked];
+    }
+    [self cancelAnimation:false completion:nil];
+    [self.delegate selectedKey:key];
 }
 
 #pragma mark clear按钮 cancel按钮

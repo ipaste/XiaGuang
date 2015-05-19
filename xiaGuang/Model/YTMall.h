@@ -22,6 +22,7 @@
 @property(weak,nonatomic)NSArray *merchantLocations;
 @property(weak,nonatomic)NSArray *merchants;
 @property(weak,nonatomic)NSString *uniId;
+@property(nonatomic)BOOL isNavi;
 @property(nonatomic)CGFloat offset;
 @property(nonatomic)CLLocationCoordinate2D coord;
 @property(nonatomic)BOOL isShowPath;

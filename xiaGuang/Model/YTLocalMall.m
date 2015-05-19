@@ -12,6 +12,7 @@
 typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UIImage *background,NSError *error);
 @implementation YTLocalMall{
     BOOL _isShowPath;
+    BOOL _isNavi;
     NSString *_tmpMallId;
     NSString *_tmpMallName;
     NSString *_regionIdentify;
@@ -40,9 +41,14 @@ typedef void(^YTGetTitleImageAndBackgroundImageCallBack)(UIImage *titleImage,UII
             _regionIdentify = [findResultSet stringForColumn:@"regionIdentify"];
             _isShowPath = [findResultSet intForColumn:@"path"] == 0 ? false:true;
             _version = [findResultSet stringForColumn:@"version"];
+            _isNavi = [findResultSet intForColumn:@"isNavi"] == 0 ? false:true;
         }
     }
     return self;
+}
+
+-(BOOL)isNavi{
+    return _isNavi;
 }
 
 - (NSString *)mallName{

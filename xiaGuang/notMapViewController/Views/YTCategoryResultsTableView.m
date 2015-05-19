@@ -117,7 +117,7 @@
                 [_floorView reloadData];
             }
         }];
-        
+    
     }else if (style == YTCategoryResultsStyleAllMall){
         _mallView.hidden = NO;
         _floorView.hidden = YES;
@@ -144,6 +144,7 @@
         frame.size.height = height;
         self.frame = frame;
     }];
+
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

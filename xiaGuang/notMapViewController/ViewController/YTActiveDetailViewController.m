@@ -18,6 +18,7 @@
     YTStateView *_stateView;
     NSMutableArray *_activityImages;
     NSTimeInterval _loadingTime;
+    NSInteger _count;
 }
 
 @end
@@ -82,7 +83,7 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     [cell addSubview:_activityImages[indexPath.row]];
-
+    
     return cell;
 }
 
@@ -104,33 +105,18 @@
 
 - (void)setActivitys:(NSArray *)activitys{
     _loadingTime = [[NSDate date] timeIntervalSinceReferenceDate];
-    __block NSInteger count = 0;
-    for (YTMallActivity *activity in activitys) {
-        [activity getActivityDetailWithCallBack:^(UIImage *detailImage, NSError *error) {
-            count++;
-            if (detailImage != nil){
-                CGFloat scale = detailImage.size.width / CGRectGetWidth(self.view.frame);
-                CGFloat pw = detailImage.size.width / scale;
-                CGFloat ph = detailImage.size.height / scale;
-                UIImageView *imageView = [[UIImageView alloc]initWithImage:detailImage];
-                imageView.frame = CGRectMake(0, 0, pw, ph);
-                [_activityImages addObject:imageView];
-            }
-            
-            if (count == activitys.count) {
-                dispatch_time_t time =  dispatch_time(DISPATCH_TIME_NOW, 0);
-                if ([[NSDate date]timeIntervalSinceReferenceDate] - _loadingTime < 2) time = dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC);
-                dispatch_after(time, dispatch_get_main_queue(), ^{
-                    [_mainTableView reloadData];
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectedActivity inSection:0];
-                    [_mainTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:false];
-                    [_stateView stopAnimation];
-                    [_stateView removeFromSuperview];
-                });
-            }
-        }];
-    }
     _activitys = activitys;
+    [self loadImageWithCallBack:^{
+        dispatch_time_t time =  dispatch_time(DISPATCH_TIME_NOW, 0);
+        if ([[NSDate date]timeIntervalSinceReferenceDate] - _loadingTime < 2) time = dispatch_time(DISPATCH_TIME_NOW,NSEC_PER_SEC);
+        dispatch_after(time, dispatch_get_main_queue(), ^{
+            [_mainTableView reloadData];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectedActivity inSection:0];
+            [_mainTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:false];
+            [_stateView stopAnimation];
+            [_stateView removeFromSuperview];
+        });
+    }];
 }
 
 -(UIView *)leftBarButton{
@@ -140,6 +126,30 @@
     [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
     return button;
+}
+
+- (void)loadImageWithCallBack:(void (^)())callBack{
+    YTMallActivity *activity = _activitys[_activityImages.count];
+    [activity getActivityDetailWithCallBack:^(UIImage *detailImage, NSError *error) {
+        if (detailImage != nil){
+            CGFloat scale = detailImage.size.width / CGRectGetWidth(self.view.frame);
+            CGFloat pw = detailImage.size.width / scale;
+            CGFloat ph = detailImage.size.height / scale;
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:detailImage];
+            imageView.frame = CGRectMake(0, 0, pw, ph);
+            [_activityImages addObject:imageView];
+        }
+        if (_activityImages.count == _activitys.count) {
+            UIImage *image = _activityImages[0];
+            [_activityImages  removeObjectAtIndex:0];
+            [_activityImages addObject:image];
+            callBack();
+            return;
+        }
+        
+        [self loadImageWithCallBack:callBack];
+        
+    }];
 }
 
 -(void)back:(UIButton *)sender{

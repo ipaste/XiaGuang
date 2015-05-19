@@ -16,6 +16,7 @@
 -(void)startSearch;
 @required
 -(void)selectedUniIds:(NSArray *)uniIds;
+-(void)selectedKey:(NSString *)key;
 @end
 
 @interface YTSearchView : UIView

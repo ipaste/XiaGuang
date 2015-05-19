@@ -973,23 +973,10 @@ typedef NS_ENUM(NSInteger, YTMessageType){
     [_searchView hideSearchViewWithAnimation:YES];
 }
 
--(void)selectedUniIds:(NSArray *)uniIds{
-    if (uniIds.count <= 0) {
-        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"%@ 中没有这个商家",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
-        
-        return;
-    }
-    if (uniIds.count >= 2){
-        _multipleView =  [[YTMultipleMerchantView alloc]initWithUniIds:uniIds delegate:self];
-        [_multipleView showInView:self.view];
-        return;
-    }
-    
+- (void)selectedKey:(NSString *)key{
     FMDatabase *db = [YTDataManager defaultDataManager].database;
-    if([db open]){
-        NSString *uniId = [uniIds firstObject];
-        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",uniId];
-        [result next];
+    FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where merchantInstanceName = ?",key];
+    if ([result next]) {
         
         YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
         
@@ -1017,6 +1004,59 @@ typedef NS_ENUM(NSInteger, YTMessageType){
             [self showCallOut];
         }
         
+    }else{
+        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"%@ 中没有这个商家",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
+        return;
+    }
+    
+    if(_activePoiMajorArea != nil){
+        [self cancelCommonPoiState];
+    }
+
+}
+
+-(void)selectedUniIds:(NSArray *)uniIds{
+    if (uniIds.count <= 0) {
+        [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"%@ 中没有这个商家",[_targetMall mallName]] cancelButtonTitle:@"知道了"]show];
+        return;
+    }
+    if (uniIds.count >= 2){
+        _multipleView =  [[YTMultipleMerchantView alloc]initWithUniIds:uniIds delegate:self];
+        [_multipleView showInView:self.view];
+        return;
+    }
+    
+    FMDatabase *db = [YTDataManager defaultDataManager].database;
+    if([db open]){
+        NSString *uniId = [uniIds firstObject];
+        FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ? ",uniId];
+        if ([result next]){
+            YTLocalMerchantInstance *tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
+            
+            id<YTMajorArea> tmpMajorArea = [tmpMerchantInstance majorArea];
+            
+            if(_selectedPoi != nil){
+                [_mapView hidePoi:_selectedPoi animated:NO];
+            }
+            _selectedPoi = [tmpMerchantInstance producePoi];
+            [_detailsView setCommonPoi:[_selectedPoi sourceModel]];
+            
+            if (![[_curDisplayedMajorArea identifier]isEqualToString:[tmpMajorArea identifier]]) {
+                [self switchFloor:[tmpMajorArea floor] hideCallOut:NO];
+                
+                //switchFloor will empty _selectedPoi rehighlight here
+                _selectedPoi = [tmpMerchantInstance producePoi];
+                [_mapView highlightPoi:_selectedPoi animated:YES];
+                
+            }else{
+                [_mapView highlightPoi:_selectedPoi animated:YES];
+            }
+            [_mapView setCenterCoordinate:[tmpMerchantInstance coordinate] animated:YES];
+            
+            if(!_shownCallout){
+                [self showCallOut];
+            }
+        }
     }
     if(_activePoiMajorArea != nil){
         [self cancelCommonPoiState];

@@ -19,9 +19,8 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 
 @interface YTMallInfoViewController (){
     UIImageView *_searchBackgroundView;
-    UIImageView *_activityImgView;
     UIScrollView *_scrollView;
-    YTadScrollAndPageView *_adView;
+    YTadScrollAndPageView *_activityView;
     UITableView *_tableView;
     UIButton *_leftBarButton;
     UIButton *_rightBarButton;
@@ -34,17 +33,20 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     UIView *_loadingView;
     YTSearchView *_searchView;
     YTStateView *_stateView;
-    NSMutableArray *_acitvitys;
+    NSMutableArray *_activitys;
     NSMutableArray *_saleViews;
     NSArray *_sales;
     NSArray *_categorys;
     NSArray *_hots;
     NSTimeInterval _loadingTime;
+    BOOL flag;
     id <YTMall> _mall;
     YTMallDict *_mallDict;
     YTDataManager *_dataManager;
     
     YTMallPositionViewController *_poisitionViewController;
+    
+    CGSize _activitSize;
 }
 
 @end
@@ -56,8 +58,8 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     if (self) {
         _mallDict = [YTMallDict sharedInstance];
         _mall = [_mallDict getMallFromIdentifier:identify];
-        
-        _acitvitys = [NSMutableArray array];
+        _activitys = [NSMutableArray array];
+        _activitSize = CGSizeZero;
         if ([_mall isMemberOfClass:[YTLocalMall class]]) {
             _mall = [_mallDict changeMallObject:_mall resultType:YTMallClassCloud];
         }
@@ -146,21 +148,6 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     [_scrollButton setImage:[UIImage imageNamed:@"icon_up"] forState:UIControlStateNormal];
     [_scrollButton addTarget:self action:@selector(addCategory:) forControlEvents:UIControlEventTouchUpInside];
     
-    
-    
-    _adView = [[YTadScrollAndPageView alloc]init];
-    _adView.backgroundColor = [UIColor whiteColor];
-    [_adView shouldAutoShow:YES];
-    _adView.delegate = self;
-    [_scrollView addSubview:_adView];
-    
-    _adView.hidden = YES;
-    
-    _activityImgView = [[UIImageView alloc]init];
-    _activityImgView.image = [UIImage imageNamed:@"flag_zhu"];
-    [_scrollView addSubview:_activityImgView];
-    _activityImgView.hidden = YES;
-
     _tableView = [[UITableView alloc]init];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -169,6 +156,10 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     _tableView.backgroundColor = [UIColor colorWithString:@"f0f0f0" alpha:0.85];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
+    
+    _activityView = [[YTadScrollAndPageView alloc]init];
+    _activityView.backgroundColor =  [UIColor clearColor];
+    _activityView.delegate = self;
     
     [_mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
         if (isExistence) {
@@ -208,6 +199,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     [_scrollView addSubview:_categoryView];
     [_scrollView addSubview:_scrollButton];
     [_scrollView addSubview:_tableView];
+     [_scrollView addSubview:_activityView];
     [_scrollView addSubview:_stateView];
     
     [self getHot];
@@ -253,23 +245,16 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     frame.size.height = 15.0;
     _scrollButton.frame = frame;
     
-    frame = _adView.frame;
+    frame = _activityView.frame;
     frame.origin.x = 0;
-    frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
-    frame.size.width = CGRectGetWidth(_scrollView.frame);
-    frame.size.height = 130;
-    _adView.frame = frame;
-    
-    frame = _activityImgView.frame;
-    frame.origin.x = CGRectGetWidth(_adView.frame) - 55.0;
-    frame.origin.y = CGRectGetMaxY(_scrollButton.frame) +10;
-    frame.size.width = 55.0;
-    frame.size.height = 55.0;
-    _activityImgView.frame = frame;
-    
+    frame.origin.y =  _activitSize.width == 0 ?  CGRectGetMaxY(_scrollButton.frame) : CGRectGetMaxY(_scrollButton.frame) + 10;
+    frame.size.width = _activitSize.width;
+    frame.size.height = _activitSize.height;
+    _activityView.frame = frame;
+
     frame = _saleView.frame;
     frame.origin.x = 0;
-    frame.origin.y = _adView != nil ? CGRectGetMaxY(_adView.frame) + 10: CGRectGetMaxY(_scrollButton.frame) + 10;
+    frame.origin.y = CGRectGetMaxY(_activityView.frame) + 10;
     frame.size.width = CGRectGetWidth(_scrollView.frame);
     frame.size.height = 165;
     _saleView.frame = frame;
@@ -353,55 +338,18 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 }
 
 - (void)getActivity{
-   
-    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-   // NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shenzhen"];
-   // [formatter setTimeZone:timeZone];
-    [formatter setDateFormat:@"yyyy-MM-dd"];
-    // 时间戳转时间
-    NSDate *date = [formatter dateFromString:@"2015-05-15"];
-    
-    // 时间转时间戳
-    NSString *timeStamp = [NSString stringWithFormat:@"%f",[date timeIntervalSince1970]];
-    NSLog(@"%@",timeStamp);
-
     AVQuery *mallQuery = [AVQuery queryWithClassName:@"Mall"];
     [mallQuery whereKey:@"objectId" equalTo:[_mall identifier]];
     AVQuery *query = [AVQuery queryWithClassName:@"MallActivity"];
-    //[query orderByAscending:@"startTimeStamp"];
-    //[query whereKey:@"endTimeStamp" greaterThanOrEqualTo:[NSNumber numberWithInteger:timeStamp.integerValue]];
     [query whereKey:@"mall" matchesQuery:mallQuery];
     query.limit = 5;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error && objects.count > 0) {
-            NSMutableArray *adMallImg = [NSMutableArray new];
             for (AVObject *object in objects) {
                 YTMallActivity *activity = [[YTMallActivity alloc]initWithCloudObject:object];
-                [_acitvitys addObject:activity];
-                [activity getActivityImgWithCallBack:^(UIImage *result, NSError *error) {
-                    if (!error) {
-                        UIImageView *imageView = [[UIImageView alloc] init];
-                        imageView.image = result;
-                        [adMallImg addObject:imageView];
-                    }
-                    
-                    if (adMallImg.count == objects.count){
-                        _adView = [[YTadScrollAndPageView alloc]init];
-                        _adView.backgroundColor = [UIColor whiteColor];
-                        [_adView shouldAutoShow:YES];
-                        _adView.delegate = self;
-                        [_adView setImgArr:adMallImg];
-                        [_scrollView insertSubview:_adView belowSubview:_stateView];
-                    }
-                    [self.view setNeedsLayout];
-                    
-                }];
+                [_activitys addObject:activity];
             }
-        }
-        //临时添加
-        else if (objects.count <= 0){
-            _adView = nil;
-            [self.view setNeedsLayout];
+            [self reloadActivity];
         }
     }];
 }
@@ -479,9 +427,40 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
             }];
         }
     }
-    
 }
 
+- (void)reloadActivity{
+    [self orderGetImageWithCallBack:^(NSArray *results) {
+        [_activityView setImages:results];
+        [self.view setNeedsLayout];
+    }];
+}
+
+- (void)orderGetImageWithCallBack:(void (^)(NSArray *results))callBack{
+    static NSInteger count = 0;
+    static NSArray *images;
+    YTMallActivity *activity = _activitys[count];
+    [activity getActivityImgWithCallBack:^(UIImage *result, NSError *error) {
+        if (!error) {
+            NSMutableArray *old =  images == nil ? [NSMutableArray array]:[NSMutableArray arrayWithArray:images];
+            CGFloat scale = result.size.width / CGRectGetWidth(self.view.frame);
+            CGFloat pw = result.size.width / scale;
+            CGFloat ph = result.size.height / scale;
+            _activitSize = CGSizeMake(pw, ph);
+            [old addObject:result];
+            images = old.copy;
+        }
+        count++;
+        if (_activitys.count == images.count) {
+            callBack(images.copy);
+            images = nil;
+            return ;
+        }
+        [self orderGetImageWithCallBack:callBack];
+    }];
+    
+
+}
 
 #pragma mark
 #pragma mark Button Method
@@ -494,14 +473,20 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 -(void)more:(UIButton *)sender{
     YTResultsViewController *resultVC = [[YTResultsViewController alloc]initWithPreferntialInMall:_mall];
     [self.navigationController pushViewController:resultVC animated:true];
-    
 }
 
 - (void)jumpToFloorMap:(UIButton *)sender{
     id <YTFloor> floor = nil;
     YTLocalMall *localmall = [_mallDict changeMallObject:_mall resultType:YTMallClassLocal];
     if (localmall == nil){
-        [[[YTMessageBox alloc]initWithTitle:@"" Message:@"很抱歉，该商城地图还未下载，请前往地图管理中下载更新地图" cancelButtonTitle:@"确定"] show];
+        YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"" Message:@"该商城地图还未下载,需要跳转至地图管理页面下载吗"];
+        [messageBox show];
+        [messageBox callBack:^(NSInteger tag) {
+            if (tag == 1){
+                UIViewController *controller = [YTMallManageListViewController shareMallListController];
+                [self.navigationController pushViewController:controller animated:true];
+            }
+        }];
         return;
     }
     FMResultSet *result = [_dataManager.database executeQuery:@"select * from Floor where mallId = ?",localmall.identifier];
@@ -518,7 +503,6 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 //button跳转页面
 -(void)jumpToCategory:(UIButton *)sender{
     YTCategory *category = _categorys[sender.tag];
-    
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:_mall andResutsKey:category.text];
     [self.navigationController pushViewController:resultsVC animated:YES];
     
@@ -527,150 +511,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 // scrollButton点击触发功能
 - (void)addCategory:(UIButton *)sender {
     sender.selected = !sender.selected;
-
-    if (sender.selected == YES) {
-        CGRect frame = _scrollView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_leftButton.frame) + 8;
-        frame.size.width = CGRectGetWidth(self.view.frame);
-        frame.size.height = CGRectGetHeight(self.view.frame) - frame.origin.y;
-        _scrollView.frame = frame;
-        
-        frame = _categoryView.frame;
-        frame.origin = CGPointZero;
-        frame.size.width = CGRectGetWidth(self.view.frame);
-        frame.size.height = 190;
-        _categoryView.frame = frame;
-        
-        frame = _scrollButton.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_categoryView.frame);
-        frame.size.width = CGRectGetWidth(_categoryView.frame);
-        frame.size.height = 15.0;
-        _scrollButton.frame = frame;
-        
-        frame = _adView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
-        frame.size.width = CGRectGetWidth(_scrollView.frame);
-        frame.size.height = 130;
-        _adView.frame = frame;
-        
-        frame = _activityImgView.frame;
-        frame.origin.x = CGRectGetWidth(_adView.frame) - 55.0;
-        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) +10;
-        frame.size.width = 55.0;
-        frame.size.height = 55.0;
-        _activityImgView.frame = frame;
-        
-        if (_adView.hidden == YES && _activityImgView.hidden == YES) {
-            frame = _saleView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
-            frame.size.width = CGRectGetWidth(_scrollView.frame);
-            frame.size.height = 165;
-            _saleView.frame = frame;
-            
-            frame = _tableView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_scrollButton.frame) + 10;
-            frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-            frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-            _tableView.frame = frame;
-            _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-
-        }else if (_adView.hidden ==NO  && _activityImgView.hidden == NO) {
-            frame = _saleView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
-            frame.size.width = CGRectGetWidth(_scrollView.frame);
-            frame.size.height = 165;
-            _saleView.frame = frame;
-            
-            frame = _tableView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
-            frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-            frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-            _tableView.frame = frame;
-            _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-
-        }
-        
-    } else if (sender.selected == NO) {
-        CGRect frame = _scrollView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_leftButton.frame) + 8;
-        frame.size.width = CGRectGetWidth(self.view.frame);
-        frame.size.height = CGRectGetHeight(self.view.frame) - frame.origin.y;
-        _scrollView.frame = frame;
-        
-        frame = _categoryView.frame;
-        frame.origin = CGPointZero;
-        frame.size.width = CGRectGetWidth(self.view.frame);
-        frame.size.height = 101;
-        _categoryView.frame = frame;
-        
-        frame = _scrollButton.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_categoryView.frame);
-        frame.size.width = CGRectGetWidth(_categoryView.frame);
-        frame.size.height = 15.0;
-        _scrollButton.frame = frame;
-        
-        frame = _adView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
-        frame.size.width = CGRectGetWidth(_scrollView.frame);
-        frame.size.height = 130;
-        _adView.frame = frame;
-        
-        frame = _activityImgView.frame;
-        frame.origin.x = CGRectGetWidth(_adView.frame) - 55.0;
-        frame.origin.y = CGRectGetMaxY(_scrollButton.frame) +10;
-        frame.size.width = 55.0;
-        frame.size.height = 55.0;
-        _activityImgView.frame = frame;
-        
-
-        if (_adView.hidden == YES && _activityImgView.hidden == YES) {
-            frame = _saleView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = CGRectGetMaxY(_scrollButton.frame) + 10;
-            frame.size.width = CGRectGetWidth(_scrollView.frame);
-            frame.size.height = 165;
-            _saleView.frame = frame;
-            
-            frame = _tableView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_scrollButton.frame) + 10;
-            frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-            frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-            _tableView.frame = frame;
-            _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-            
-        }else if (_adView.hidden ==NO  && _activityImgView.hidden == NO) {
-            frame = _saleView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = CGRectGetMaxY(_adView.frame) + 10;
-            frame.size.width = CGRectGetWidth(_scrollView.frame);
-            frame.size.height = 165;
-            _saleView.frame = frame;
-            
-            frame = _tableView.frame;
-            frame.origin.x = 0;
-            frame.origin.y = _saleView != nil ? CGRectGetMaxY(_saleView.frame) + 10:CGRectGetMaxY(_adView.frame) + 10;
-            frame.size.width = CGRectGetWidth(self.view.frame) + 10;
-            frame.size.height = ROW_HEIGHT * 10 + HEAD_HEIGHT;
-            _tableView.frame = frame;
-            _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), CGRectGetMaxY(_tableView.frame));
-            
-        }
-
-    }
-    
     [self.view setNeedsLayout];
-
 }
 
 - (void)touchEndWithSaleView:(YTSaleView *)saleView{
@@ -689,7 +530,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 
 - (void)didClickPage:(YTadScrollAndPageView *)view atIndex:(NSInteger)index{
     YTActiveDetailViewController *detailViewController = [[YTActiveDetailViewController alloc]init];
-    detailViewController.activitys = _acitvitys;
+    detailViewController.activitys = _activitys;
     detailViewController.selectedActivity = index;
     [self.navigationController pushViewController:detailViewController animated:true];
 }
@@ -699,6 +540,11 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 #pragma mark SearchView Handle
 - (void)selectedUniIds:(NSArray *)uniIds{
     YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithSearchInMall:_mall andResultsLocalDBIds:uniIds];
+    [self.navigationController pushViewController:resultsVC animated:YES];
+}
+
+- (void)selectedKey:(NSString *)key{
+    YTResultsViewController *resultsVC = [[YTResultsViewController alloc]initWithMall:_mall Key:key];
     [self.navigationController pushViewController:resultsVC animated:YES];
 }
 
@@ -731,7 +577,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     }
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *background = [[UIView alloc]init];
     UIImage *hotImage = [UIImage imageNamed:@"title_hotbrand"];
     UIImageView *hotImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, hotImage.size.width, 27)];
@@ -740,11 +586,9 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
     return background;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 36;
 }
-
-
 #pragma mark
 #pragma mark Remove searchView else memory leak or viewController not destruction
 - (void)dealloc{

@@ -13,8 +13,10 @@
 @protocol YTSearchDetailsDelegate <NSObject>
 @required
 -(void)selectSearchResultsWithUniIds:(NSArray *)uniIds;
+-(void)selectedSeachKey:(NSString *)key;
 -(void)cancelSearchInput;
 @end
+
 @interface YTSearchDetailsView : UIView
 
 @property (weak,nonatomic)id<YTSearchDetailsDelegate> delegate;

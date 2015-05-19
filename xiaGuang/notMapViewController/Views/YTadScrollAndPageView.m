@@ -11,14 +11,16 @@
 
 #import "YTadScrollAndPageView.h"
 #import "YTActiveDetailViewController.h"
-@interface YTadScrollAndPageView ()<UIGestureRecognizerDelegate> {
-    UIView *_leftView;
-    UIView *_midView;
-    UIView *_rightView;
-    UIImage *_activeImg;
-    UIImage *_inactiveImg;
+@interface YTadScrollAndPageView ()<UIScrollViewDelegate> {
+    UIScrollView *_scrollerView;
     
-    NSTimer *_adTimer;
+    NSArray *_images;
+    
+    NSMutableArray *_imageViews;
+    
+    NSTimer *_timer;
+    
+    BOOL _isManualSwitch;
 }
 
 @end
@@ -29,128 +31,149 @@
     self = [super initWithFrame:frame];
     
     if (self) {
-        _adScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH,130)];
-        _adScrollView.delegate = self;
-        _adScrollView.contentSize = CGSizeMake(SCREEN_WIDTH *3, 0.0);
-        _adScrollView.showsHorizontalScrollIndicator = NO;
-        _adScrollView.showsVerticalScrollIndicator = NO;
-        _adScrollView.pagingEnabled = YES;
-        _adScrollView.bounces = NO;
-        _adScrollView.backgroundColor = [UIColor whiteColor];
-        [self addSubview:_adScrollView];
+        _images = [NSMutableArray array];
+        _imageViews = [NSMutableArray array];
+        
+        _scrollerView = [[UIScrollView alloc]init];
+        _scrollerView.showsHorizontalScrollIndicator = NO;
+        _scrollerView.showsVerticalScrollIndicator = NO;
+        _scrollerView.pagingEnabled = YES;
+        _scrollerView.userInteractionEnabled = true;
+        _scrollerView.delegate = self;
+        _scrollerView.backgroundColor = [UIColor clearColor];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectedMallActivity:)];
-        [_adScrollView addGestureRecognizer:tap];
+        [_scrollerView addGestureRecognizer:tap];
         
-        _pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0.0,CGRectGetMaxY(_adScrollView.frame) -19.0, 12.0, 12.0)];
-        _pageControl.userInteractionEnabled = NO;
+        _pageControl = [[UIPageControl alloc]init];
+        _pageControl.userInteractionEnabled = false;
         _pageControl.currentPageIndicatorTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"dot_on"]];
         _pageControl.pageIndicatorTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"dot_off"]];
-        [self addSubview:_pageControl];
+    
+        for (NSInteger index = 0; index < 3; index++) {
+            UIImageView *imageView = [[UIImageView alloc]init];
+            [_imageViews addObject:imageView];
+            [_scrollerView addSubview:imageView];
+        }
+        
+        [self addSubview:_scrollerView];
+        [self insertSubview:_pageControl aboveSubview:_scrollerView];
+    
+        _isManualSwitch = true;
+        _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:_scrollerView repeats:true];
     }
     return self;
 }
 
-- (void)setImgArr:(NSMutableArray *)imgArr {
-    if (imgArr) {
-        _imgArr = imgArr;
-        _currentPage = 0;
-        _pageControl.numberOfPages = _imgArr.count;
+- (void)layoutSubviews{
+    CGRect frame = _scrollerView.frame;
+    frame.origin.x = 0;
+    frame.origin.y = 0;
+    frame.size.width = CGRectGetWidth(self.frame);
+    frame.size.height = CGRectGetHeight(self.frame);
+    _scrollerView.frame = frame;
+    
+    frame = _pageControl.frame;
+    frame.origin.x = 0;
+    frame.origin.y = CGRectGetHeight(self.frame) - 20;
+    frame.size.width  = CGRectGetWidth(self.frame) / 2;
+    frame.size.height = 20;
+    _pageControl.frame = frame;
+    
+    for (NSInteger index = 0; index < _imageViews.count; index++) {
+        UIImageView *imageView = _imageViews[index];
+        CGRect frame = imageView.frame;
+        frame.origin.x = index * CGRectGetWidth(self.frame);
+        frame.origin.y = 0;
+        frame.size.width = CGRectGetWidth(self.frame);
+        frame.size.height = CGRectGetHeight(self.frame);
+        imageView.frame = frame;
     }
-    [self reloadData];
-}
-
-- (void)reloadData {
-    [_leftView removeFromSuperview];
-    [_midView removeFromSuperview];
-    [_rightView removeFromSuperview];
+ 
     
-    if (_currentPage == 0) {
-        _leftView = [_imgArr lastObject];
-        _midView = [_imgArr objectAtIndex:_currentPage];
-        _rightView = [_imgArr objectAtIndex:_currentPage+1];
-    }
-    else if (_currentPage == _imgArr.count -1) {
-        _leftView = [_imgArr objectAtIndex:_currentPage -1];
-        _midView = [_imgArr objectAtIndex:_currentPage];
-        _rightView = [_imgArr firstObject];
-    }
-    else {
-        _leftView = [_imgArr objectAtIndex:_currentPage -1];
-        _midView = [_imgArr objectAtIndex:_currentPage];
-        _rightView = [_imgArr objectAtIndex:_currentPage +1];
-    }
+    _pageControl.center = CGPointMake(CGRectGetWidth(self.frame) / 2, _pageControl.center.y);
     
-    _leftView.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 130);
-    _midView.frame = CGRectMake(SCREEN_WIDTH, 0.0, SCREEN_WIDTH, 130);
-    _rightView.frame = CGRectMake(SCREEN_WIDTH *2, 0.0, SCREEN_WIDTH, 130);
+    _scrollerView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) * _imageViews.count, CGRectGetHeight(self.frame));
     
-    
-    [_adScrollView addSubview:_leftView];
-    [_adScrollView addSubview:_midView];
-    [_adScrollView addSubview:_rightView];
-    
-    
-    _pageControl.currentPage = _currentPage;
-    
-    _adScrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
+    _scrollerView.contentOffset = CGPointMake(CGRectGetWidth(_scrollerView.frame), 0);
 }
 
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [_adTimer invalidate];
-    _adTimer = nil;
-    _adTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(showNextImg) userInfo:nil repeats:YES];
+-(void)setImages:(NSArray *)images{
+    if (images == nil) {
+        return;
+    }
+    _pageControl.currentPage = 0;
+    _pageControl.numberOfPages = images.count;
+    _images  = images.copy;
+    [self setNeedsLayout];
     
-    float x = _adScrollView.contentOffset.x;
-    if (x <=0) {
-        if (_currentPage -1 <0) {
-            _currentPage = _imgArr.count -1;
-        }else {
-            _currentPage --;
-        }
+    if (images.count == 1) {
+        _scrollerView.scrollEnabled = false;
     }
     
-    if (x >= SCREEN_WIDTH *2) {
-        if (_currentPage == _imgArr.count -1) {
-            _currentPage = 0;
-        } else {
-            _currentPage ++;
-        }
-    }
-    [self reloadData];
-}
-
-- (void)shouldAutoShow:(BOOL)shouldStart {
-    if (shouldStart) {
-        if (!_adTimer) {
-            _adTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(showNextImg) userInfo:nil repeats:YES];
-        }
-    }
-    else {
-        if (_adTimer.isValid) {
-            [_adTimer invalidate];
-            _adTimer = nil;
+    for (NSInteger index = 0; index < _imageViews.count; index++) {
+        UIImageView *imageView = _imageViews[index];
+        if (index < _images.count) {
+            imageView.image = _images[index];
+        }else{
+            imageView.image = _images[0];
         }
     }
 }
 
-
-- (void)showNextImg {
-    if (_currentPage == _imgArr.count -1) {
-        _currentPage = 0;
-    } else {
-        _currentPage ++;
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (_isManualSwitch) {
+        [self toggleBanner:scrollView];
     }
-    [self reloadData];
 }
 
+
+-(void)bannerSwitch:(NSTimer *)timer{
+    _isManualSwitch = NO;
+    UIScrollView *scrollView = timer.userInfo;
+    [UIView animateWithDuration:0.5 animations:^{
+        scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x + CGRectGetWidth(scrollView.frame), scrollView.contentOffset.y);
+    } completion:^(BOOL finished) {
+        [self toggleBanner:scrollView];
+        _isManualSwitch = YES;
+    }];
+}
+
+- (void)toggleBanner:(UIScrollView *)scrollView{
+    BOOL isSwitch = false;
+    if (scrollView.contentOffset.x / scrollView.frame.size.width == 0 ) {
+        //上一张
+        _pageControl.currentPage = _pageControl.currentPage - 1 < 0 ? _images.count : _pageControl.currentPage - 1;
+        scrollView.contentOffset = CGPointMake(CGRectGetWidth(scrollView.frame), 0);
+        isSwitch = true;
+    }else if (scrollView.contentOffset.x / scrollView.frame.size.width == 2){
+        //下一张
+        _pageControl.currentPage = _pageControl.currentPage + 1 > _images.count - 1 ? 0 : _pageControl.currentPage + 1;
+        scrollView.contentOffset = CGPointMake(CGRectGetWidth(scrollView.frame), 0);
+        isSwitch = true;
+    }
+
+    if (isSwitch) {
+        for (int i = 0; i < _imageViews.count; i++) {
+            UIImageView *curImageView = _imageViews[i];
+            int num =  (i % _images.count + (int)_pageControl.currentPage) % _images.count;
+            curImageView.image = _images[num];
+        }
+    }
+}
 
 
 - (void)selectedMallActivity:(UITapGestureRecognizer *)tap {
     if ([self.delegate respondsToSelector:@selector(didClickPage:atIndex:)]){
-        [self.delegate didClickPage:self atIndex:_currentPage];
+        [self.delegate didClickPage:self atIndex:_pageControl.currentPage];
     }
+}
+
+
+- (void)removeFromSuperview{
+    [super removeFromSuperview];
+    [_timer invalidate];
 }
 
 @end

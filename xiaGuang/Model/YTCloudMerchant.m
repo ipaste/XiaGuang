@@ -99,10 +99,8 @@
     if(_tmpMerchantInstance == nil){
         FMDatabase *db = [YTDataManager defaultDataManager].database;
         if([db open]){
-            
             FMResultSet *result = [db executeQuery:@"select * from MerchantInstance where uniId = ?",_object[@"uniId"]];
             [result next];
-            
             _tmpMerchantInstance = [[YTLocalMerchantInstance alloc] initWithDBResultSet:result];
         }
     }
@@ -112,6 +110,7 @@
 -(NSString *)uniId{
     return _object[@"uniId"];
 }
+
 
 -(void)existenceOfPreferentialInformationQueryMall:(void (^)(BOOL))callBack{
 
