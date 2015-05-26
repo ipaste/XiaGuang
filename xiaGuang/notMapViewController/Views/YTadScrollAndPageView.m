@@ -47,6 +47,7 @@
         
         _pageControl = [[UIPageControl alloc]init];
         _pageControl.userInteractionEnabled = false;
+        //小黑点选中跟未选中的颜色
         _pageControl.currentPageIndicatorTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"dot_on"]];
         _pageControl.pageIndicatorTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"dot_off"]];
     
@@ -58,7 +59,7 @@
         
         [self addSubview:_scrollerView];
         [self insertSubview:_pageControl aboveSubview:_scrollerView];
-    
+        
         _isManualSwitch = true;
         _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bannerSwitch:) userInfo:_scrollerView repeats:true];
     }
@@ -122,7 +123,7 @@
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (_isManualSwitch) {
         [self toggleBanner:scrollView];
     }
@@ -144,9 +145,10 @@
     BOOL isSwitch = false;
     if (scrollView.contentOffset.x / scrollView.frame.size.width == 0 ) {
         //上一张
-        _pageControl.currentPage = _pageControl.currentPage - 1 < 0 ? _images.count : _pageControl.currentPage - 1;
+        _pageControl.currentPage = _pageControl.currentPage - 1 < 0 ? _images.count: _pageControl.currentPage - 1;
         scrollView.contentOffset = CGPointMake(CGRectGetWidth(scrollView.frame), 0);
         isSwitch = true;
+        
     }else if (scrollView.contentOffset.x / scrollView.frame.size.width == 2){
         //下一张
         _pageControl.currentPage = _pageControl.currentPage + 1 > _images.count - 1 ? 0 : _pageControl.currentPage + 1;

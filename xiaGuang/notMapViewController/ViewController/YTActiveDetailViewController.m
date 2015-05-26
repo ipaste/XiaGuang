@@ -97,6 +97,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 - (void)setSelectedActivity:(NSInteger)selectedActivity{
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:selectedActivity inSection:0];
     [_mainTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:true];
@@ -118,16 +119,7 @@
         });
     }];
 }
-
--(UIView *)leftBarButton{
-    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
-    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
-    return button;
-}
-
+//回调
 - (void)loadImageWithCallBack:(void (^)())callBack{
     YTMallActivity *activity = _activitys[_activityImages.count];
     [activity getActivityDetailWithCallBack:^(UIImage *detailImage, NSError *error) {
@@ -150,6 +142,15 @@
         [self loadImageWithCallBack:callBack];
         
     }];
+}
+
+-(UIView *)leftBarButton{
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 35, 20, 20, 20)];
+    [button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"icon_backOn"] forState:UIControlStateHighlighted];
+    return button;
 }
 
 -(void)back:(UIButton *)sender{

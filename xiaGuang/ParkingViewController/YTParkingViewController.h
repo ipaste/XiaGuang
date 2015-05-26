@@ -29,4 +29,5 @@
 
 @interface YTParkingViewController : UIViewController<YTNavigationBarDelegate,YTMapViewDelegate,YTZoomStepperDelegate,YTCurrentParkingDelegate,YTMoveCurrentLocationDelegate,YTBeaconManagerDelegate,YTMessageBoxDelegate,YTNavigationDelegate,YTBeaconBasedLocatorDelegate>
 -(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea;
+
 @end

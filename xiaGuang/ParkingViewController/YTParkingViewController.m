@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     id<YTMajorArea> _locatorMajorArea;
 }
 
--(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea{
+-(instancetype)initWithMinorArea:(id<YTMinorArea>)minorArea {
     self = [super init];
     if (self) {
         if ([[minorArea majorArea]isParking]) {
@@ -133,11 +133,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         if ([_tmpMarker whetherMark]) {
             state = YTParkingStateMarked;
         }
-    }else{
+    }else {
         [self userMoveToMinorArea:_userMinorArea];
     }
     [self setParkingState:state animation:NO];
-    
     _beacons = [NSMutableArray array];
     _initializationComplete = YES;
 }
@@ -280,6 +279,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _floorView.userInteractionEnabled = false;
     [self.view addSubview:_floorView];
 }
+
 -(void)createShadeView{
     _shadeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_navigationBar.frame), CGRectGetHeight(self.view.frame))];
     _shadeView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
@@ -324,6 +324,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }];
     
 }
+
 #pragma mark parkingButton
 -(void)createParkingButton{
     _parkingImageUnable = [UIImage imageNamed:@"parking_img_markUnable"];
@@ -344,24 +345,32 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _promptLable.lineBreakMode = NSLineBreakByWordWrapping;
     _promptLable.numberOfLines = 2;
     _promptLable.textColor = [UIColor colorWithString:@"c8c8c8"];
+    //_promptLable.textColor = [UIColor blackColor];
     _promptLable.font = [UIFont systemFontOfSize:13];
     _promptLable.text = @"检测到您未开蓝牙或不在商城内,实时定位请到达商城后打开蓝牙";
     [self.view addSubview:_promptLable];
 }
 
 -(void)markedButtonClicked:(UIButton *)sender{
-    if (_userMinorArea == nil){
-        
+    
+    if (_userMinorArea == nil) {
+        if ((sender.selected = YES)) {
+            _promptLable.alpha = 1;
+        }
         return;
     }
+    
     if(_userCoordintate.latitude != -888){
         _carCoordinate = _userCoordintate;
     }
     else{
         _carCoordinate = [_userMinorArea coordinate];
     }
+    
     [self setParkingState:YTParkingStateMarked animation:YES];
 }
+
+
 
 #pragma mark bluetoothState
 -(void)bluetoothStateChange:(NSNotification *)notification{
@@ -463,7 +472,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                 [self markedStateWithAnimation:animation];
             }
             [self normalStateWithAnimation:animation];
-            
             break;
         case YTParkingStateMarked:
             if (![_tmpMarker whetherMark]) {
@@ -502,26 +510,28 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     _state = state;
     
 }
+
 -(void)normalStateWithAnimation:(BOOL)animation{
     if (animation) {
         [UIView animateWithDuration:0.5 animations:^{
             _shadeView.alpha = 1;
             _promptLable.alpha = 1;
             _parkingView.alpha = 1;
-            [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateNormal];
-            [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateHighlighted];
+            //[_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateNormal];
+            //[_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateHighlighted];
         } completion:^(BOOL finished) {
             [self parkingCurrentPoiShowInMap:NO animation:NO];
         }];
     }else{
         _shadeView.alpha = 1;
-        _promptLable.alpha = 1;
+        _promptLable.alpha = 0;
         _parkingView.alpha = 1;
-        [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateNormal];
-        [_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateHighlighted];
+        //[_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateNormal];
+        //[_parkingView setBackgroundImage:_parkingImageUnable forState:UIControlStateHighlighted];
         [self parkingCurrentPoiShowInMap:NO animation:NO];
     }
 }
+
 -(void)markedStateWithAnimation:(BOOL)animation{
     
     [self changeLabel:YTParkingStateMarked];
@@ -552,6 +562,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }
     
 }
+
 -(void)notMarkStateWithAnimation:(BOOL)animation{
     [self changeLabel:YTParkingStateNotMark];
     [_parkingView setBackgroundImage:_parkingImageUn forState:UIControlStateNormal];
@@ -638,6 +649,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 -(void)moveToBeacon:(ESTBeacon *)beacon{
     
     id<YTMinorArea> tmpMinorArea =  [self getMinorArea:beacon];
+    
     if (![[tmpMinorArea majorArea] isParking] || tmpMinorArea == nil){
         if ([[[[[[_userMinorArea majorArea]floor]block]mall]identifier] isEqualToString:[[[[[tmpMinorArea majorArea] floor] block] mall] identifier]]) {
             [[[YTMessageBox alloc]initWithTitle:@"虾逛提示" Message:[NSString stringWithFormat:@"您已经走出了停车场"] cancelButtonTitle:@"知道了"]show];
@@ -649,7 +661,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         _userMinorArea = nil;
         return;
     }
-    
+
     if (![[tmpMinorArea identifier]isEqualToString:[_userMinorArea identifier]] || _userMinorArea == nil) {
         _userMinorArea = tmpMinorArea;
         if (_state == YTParkingStateNormal) {
@@ -664,6 +676,10 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 //        }
     }
     
+    if (tmpMinorArea != nil) {
+        _userMinorArea = tmpMinorArea;
+        [self setParkingState:YTParkingStateMarked animation:YES];
+    }
 }
 
 -(void)rangedObjects:(NSArray *)objects{
@@ -727,7 +743,6 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
     }
     
     [self refreshLocatorIfNeeded];
-    
     
     
     BOOL showCurrenPoi = NO;
@@ -916,7 +931,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
 }
 
 -(void)refreshLocatorWithMapView:(RMMapView *)aMapView
-                       majorArea:(id<YTMajorArea>)aMajorArea{
+                       majorArea:(id<YTMajorArea>)aMajorArea {
     
     if(_locator == nil){
         [_beaconManager removeListener:_locator];

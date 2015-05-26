@@ -437,8 +437,9 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 }
 
 - (void)orderGetImageWithCallBack:(void (^)(NSArray *results))callBack{
-    static NSInteger count = 0;
+    static NSInteger count =0;
     static NSArray *images;
+    
     YTMallActivity *activity = _activitys[count];
     [activity getActivityImgWithCallBack:^(UIImage *result, NSError *error) {
         if (!error) {
@@ -459,7 +460,6 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
         [self orderGetImageWithCallBack:callBack];
     }];
     
-
 }
 
 #pragma mark
@@ -530,7 +530,9 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 
 - (void)didClickPage:(YTadScrollAndPageView *)view atIndex:(NSInteger)index{
     YTActiveDetailViewController *detailViewController = [[YTActiveDetailViewController alloc]init];
+    //传入图片
     detailViewController.activitys = _activitys;
+    //选中图片与跳转页面显示相同
     detailViewController.selectedActivity = index;
     [self.navigationController pushViewController:detailViewController animated:true];
 }
