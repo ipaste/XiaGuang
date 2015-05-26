@@ -146,9 +146,9 @@
 }
 
 - (void)setProgress:(NSInteger)value{
-    _downloadPrg.progress = value % 100 == 0 ? 1:value % 100;
-    _progressLabel.text = [NSString stringWithFormat:@"%ld%%",value];
-    if (value == 100){
+    _downloadPrg.progress = value / 120.0;
+    _progressLabel.text = [NSString stringWithFormat:@"%.0lf%%",_downloadPrg.progress * 100];
+    if (value == 120){
         self.state = YTMallManageStateDownloaded;
         [self stopDownload];
     }

@@ -13,6 +13,7 @@
 #import "UIColor+ExtensionColor_UIImage+ExtensionImage.h"
 #import "YTMallmanageCell.h"
 #import "YTMallDict.h"
+#import "YTMessageBox.h"
 
 @interface YTMallManageListViewController : UIViewController<YTMallManageDelegate>
 + (instancetype)shareMallListController;

@@ -30,6 +30,7 @@
 @property (strong ,nonatomic) NSString *version;
 
 
+
 -(void)getPosterTitleImageAndBackground:(void(^)(UIImage *titleImage,UIImage *background,NSError *error))callback;
 
 -(void)getMallBasicMallInfoWithCallBack:(void(^)(NSString *mallName,NSString *address,CLLocationCoordinate2D coord,NSError *error))callback;

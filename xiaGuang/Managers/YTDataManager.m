@@ -72,6 +72,22 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
     return dataManager;
 }
 
++ (void)unZipWithData:(NSData *)data path:(NSURL *)path{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    ZZArchive *sourceArchive = [ZZArchive archiveWithData:data error:nil];
+    for (ZZArchiveEntry *entry in sourceArchive.entries) {
+        NSURL *targetPath = [path URLByAppendingPathComponent:entry.fileName];
+        if (![entry.fileName hasPrefix:@"__MACOSX"] ) {
+            if (entry.fileMode & S_IFDIR) {
+                [fileManager createDirectoryAtURL:targetPath withIntermediateDirectories:true attributes:nil error:nil];
+            }else{
+                [fileManager createDirectoryAtURL:[targetPath URLByDeletingLastPathComponent] withIntermediateDirectories:true attributes:nil error:nil];
+                [[entry newDataWithError:nil] writeToURL:targetPath atomically:false];
+            }
+        }
+    }
+}
+
 - (instancetype)init{
     self = [super init];
     if (self) {
@@ -126,7 +142,7 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
             [self checkWhetherTheDataNeedsToBeUpload];
         }
         
-        [_fileManager copyItemAtPath:DB_PATH toPath:@"Users/YunTop/Desktop/highGuang" error:nil];
+        //[_fileManager copyItemAtPath:DB_PATH toPath:@"/Users/YunTop/Desktop/highGuang" error:nil];
         
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:MAP_PATH]];
         [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:MAPPATH_PATH]];
@@ -185,40 +201,32 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
     }
 }
 
-- (void)downloadedData:(NSData *)data dataName:(NSString *)name{
+- (void)downloadedData:(NSData *)data dataName:(NSString *)name block:(YTDataDownloadBlock)block{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *dataFile = [CACHES_PATH stringByAppendingPathComponent:name];
-        [self unZipWithData:data path:[NSURL fileURLWithPath:dataFile]];
-        NSArray *subPath = [_fileManager subpathsAtPath:dataFile];
+        NSString *unZipPath = [CACHES_PATH stringByAppendingPathComponent:name];
+        [YTDataManager unZipWithData:data path:[NSURL fileURLWithPath:unZipPath]];
+        NSArray *subPath = [_fileManager subpathsAtPath:unZipPath];
         for (NSString *path in subPath) {
             if ([path hasSuffix:@"csv"]) {
                 if ([path hasPrefix:@"N_"]) {
-                    [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path]  toPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
+                    [_fileManager removeItemAtPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
+                    [_fileManager copyItemAtPath:[unZipPath stringByAppendingPathComponent:path]  toPath:[MAPPATH_PATH stringByAppendingPathComponent:path] error:nil];
                 }else{
-                    [self updateXiaGuangDatabaseWithCsvPath:[dataFile stringByAppendingPathComponent:path]];
+                    [self updateXiaGuangDatabaseWithCsvPath:[unZipPath stringByAppendingPathComponent:path]];
                 }
             }else{
-                [_fileManager copyItemAtPath:[dataFile stringByAppendingPathComponent:path] toPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
+                [_fileManager removeItemAtPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
+                [_fileManager copyItemAtPath:[unZipPath stringByAppendingPathComponent:path] toPath:[MAP_PATH stringByAppendingPathComponent:path] error:nil];
             }
         }
-        [[NSNotificationCenter defaultCenter]postNotificationName:kYTMapDownloadConfigDone object:nil userInfo:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (block) {
+                block(true);
+            }
+            [[NSNotificationCenter defaultCenter]postNotificationName:kYTMapDownloadConfigDone object:nil userInfo:nil];
+        });
+        
     });
-}
-
-
-- (void)unZipWithData:(NSData *)data path:(NSURL *)url{
-    ZZArchive *sourceArchive = [ZZArchive archiveWithData:data error:nil];
-    for (ZZArchiveEntry *entry in sourceArchive.entries) {
-        NSURL *targetPath = [url URLByAppendingPathComponent:entry.fileName];
-        if (![entry.fileName hasPrefix:@"__MACOSX"] ) {
-            if (entry.fileMode & S_IFDIR) {
-                [_fileManager createDirectoryAtURL:targetPath withIntermediateDirectories:true attributes:nil error:nil];
-            }else{
-                [_fileManager createDirectoryAtURL:[targetPath URLByDeletingLastPathComponent] withIntermediateDirectories:true attributes:nil error:nil];
-                [[entry newDataWithError:nil] writeToURL:targetPath atomically:false];
-            }
-        }
-    }
 }
 
 - (void)updateXiaGuangDatabaseWithCsvPath:(NSString *)path{
@@ -232,6 +240,7 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
             return;
         }
     }
+    
     content = [content stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableArray *contents = [NSMutableArray arrayWithArray:[content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]];
 

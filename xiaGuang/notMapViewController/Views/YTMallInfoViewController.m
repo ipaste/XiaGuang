@@ -454,6 +454,7 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
         if (_activitys.count == images.count) {
             callBack(images.copy);
             images = nil;
+            count = 0;
             return ;
         }
         [self orderGetImageWithCallBack:callBack];
@@ -476,6 +477,11 @@ NSString *const kMerchantCellIdentify = @"MerchantCell";
 }
 
 - (void)jumpToFloorMap:(UIButton *)sender{
+    if (((YTCloudMall *)_mall).isLoading){
+        YTMessageBox *messageBox = [[YTMessageBox alloc]initWithTitle:@"" Message:@"该商城地图正在下载，请稍后" cancelButtonTitle:@"确定"];
+        [messageBox show];
+        return;
+    }
     id <YTFloor> floor = nil;
     YTLocalMall *localmall = [_mallDict changeMallObject:_mall resultType:YTMallClassLocal];
     if (localmall == nil){

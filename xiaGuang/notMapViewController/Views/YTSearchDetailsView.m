@@ -448,7 +448,7 @@
             for (int i = 0 ; i < objects.count; i++) {
                 AVObject *object = objects[i];
                 id<YTMerchant> merchant = [[YTCloudMerchant alloc]initWithAVObject:object];
-                UIButton *hotButton = [[UIButton alloc]initWithFrame:CGRectMake(14.5  + i % 3 * 100 , 35 + i / 3 * 50, 90, 45)];
+                UIButton *hotButton = [[UIButton alloc]initWithFrame:CGRectMake(14.5  + i % 3 * 100 , 35 + i / 3 * 50, 90, 35)];
                 [hotButton setTitle:[merchant shortName] forState:UIControlStateNormal];
                 [hotButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                 [hotButton setBackgroundColor:colors[i]];

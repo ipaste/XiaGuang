@@ -14,6 +14,7 @@
 @interface YTMallManageListViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>{
     NSMutableArray *_cells;
     NSArray *_allCells;
+    NSOperationQueue *_queue;
     YTMallDict *_mallDict;
     YTDataManager *_dataManager;
     YTCity *_city;
@@ -23,7 +24,7 @@
 @property (nonatomic,strong) UIScrollView *mainScrollView;
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) UIView *lineView;
-@property (nonatomic,retain)NSMutableArray *regions;
+@property (nonatomic,retain) NSMutableArray *regions;
 @end
 
 @implementation YTMallManageListViewController
@@ -137,6 +138,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     return [UIView new];
 }
+
 - (void)clickSwitchRegion:(UIButton *)sender{
     CGRect frame = _lineView.frame;
     frame.origin.x = CGRectGetMinX(sender.frame);
@@ -160,19 +162,30 @@
                 [_tableView reloadData];
             }
         }];
-
     }
 }
 
 
 - (void)mallManageCell:(YTMallmanageCell *)cell downloadMallData:(YTCloudMall *)mall{
-    AVFile *file = [mall getMallFile];
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        [_dataManager downloadedData:data dataName:[mall mallName]];
-        [file clearCachedFile];
-    } progressBlock:^(NSInteger percentDone) {
-        [cell setProgress:percentDone];
+    if (_queue == nil) {
+        _queue = [[NSOperationQueue alloc]init];
+        _queue.maxConcurrentOperationCount = 3;
+    }
+    mall.isLoading = true;
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        AVFile *file = [mall getMallFile];
+        [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            [_dataManager downloadedData:data dataName:[mall mallName] block:^(BOOL complete) {
+                mall.isLoading = false;
+                [cell setProgress:120];
+                [file clearCachedFile];
+            }];
+        } progressBlock:^(NSInteger percentDone) {
+            [cell setProgress:percentDone];
+        }];
     }];
+    [_queue addOperation:operation];
+    
 }
 
 

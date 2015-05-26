@@ -14,6 +14,7 @@
     UIImageView *_titleImageView;
     UIImageView *_cellBackground;
     UIImageView *_discoImageView;
+    UIImageView *_naviImageView;
     BOOL _isFetch;
 }
 @end
@@ -39,11 +40,18 @@
         _discoImageView.image = [UIImage imageNamed:@"ico_disco"];
         _discoImageView.frame = CGRectMake(CGRectGetMaxX(_mallBackgroundView.frame) - 65, 10, 65, 21);
         _discoImageView.hidden = true;
-
+        
+        _naviImageView = [[UIImageView alloc]init];
+        _naviImageView.image = [UIImage imageNamed:@"flag_nav"];
+        _naviImageView.frame = CGRectMake(CGRectGetMaxX(_mallBackgroundView.frame) - 27, 4, 20, 55);
+        _naviImageView.hidden = false;
+        
+        
         [self addSubview:_mallBackgroundView];
         [self addSubview:_titleImageView];
         [self addSubview:_cellBackground];
         [self addSubview:_discoImageView];
+        [self addSubview:_naviImageView];
     }
     
     return self;
@@ -67,23 +75,23 @@
     _titleImageView.image = nil;
     _isFetch = false;
     
+    _naviImageView.hidden = true;
+    
     [mall getPosterTitleImageAndBackground:^(UIImage *titleImage, UIImage *background, NSError *error) {
-
         if (!error) {
             _titleImageView.image = titleImage;
             
             _mallBackgroundView.image = background;
             
-            _isFetch = true;
+            _naviImageView.hidden = ![mall isNavi];
             
-            [mall existenceOfPreferentialInformationQueryMall:^(BOOL isExistence) {
-                self.isPreferential = isExistence;
-            }];
+            _isFetch = true;
         }
-        
     }];
+    
     _mall = mall;
 }
+
 -(BOOL)isFetch{
     return _isFetch;
 }

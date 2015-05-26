@@ -98,7 +98,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     
     //clearButton
     UIImage *rightImage = [UIImage imageNamed:@"search_ico_delete_un"];
-  
+    
     _searchClearButton.frame = CGRectMake(_searchTextFieldWidth - rightImage.size.width - 5, 0, rightImage.size.width, rightImage.size.height);
     
     [_searchClearButton setImage:rightImage forState:UIControlStateNormal];
@@ -237,26 +237,29 @@ NSString *const kRightBarItemKey = @"rightBarItem";
         _searchTextFieldWidth = CGRectGetWidth(_searchTextField.frame);
     }
     [UIView animateWithDuration:.2 animations:^{
-        
         if (_isReduce) {
             _isReduce = false;
+          
             _searchTextFieldWidth = _searchTextFieldWidth - 5;
+            
+            
         }
         
         CGRect frame;
-        frame = _searchTextField.frame;
-        frame.size.width = _searchTextFieldWidth;
-        _searchTextField.frame = frame;
-        
-        
+        if (_isAddInNavigationBar) {
+            frame = _searchTextField.frame;
+            frame.size.width = _searchTextFieldWidth;
+            _searchTextField.frame = frame;
+            
+            frame = _searchBar.frame;
+            frame.origin.x = 5;
+            frame.size.width = _searchTextFieldWidth;
+            _searchBar.frame = frame;
+            
+        }
         frame = self.frame;
         frame.origin.x = 0;
         self.frame = frame;
-        
-        frame = _searchBar.frame;
-        frame.origin.x = 5;
-        frame.size.width = _searchTextFieldWidth;
-        _searchBar.frame = frame;
         
         frame = _cancelButton.frame;
         if ([[UIDevice currentDevice].systemVersion hasPrefix:@"8"]){
@@ -270,6 +273,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
         _cancelButton.hidden = NO;
         
     }];
+    
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
@@ -323,7 +327,9 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     if ([_delegate respondsToSelector:@selector(searchCancelButtonClicked)]){
         [_delegate searchCancelButtonClicked];
     }
+
     [self cancelAnimation:true completion:nil];
+    
 }
 
 -(void)cancelAnimation:(BOOL)animation completion:(void (^)(void))completion{
@@ -331,7 +337,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
         UIViewController *viewController = _object[kViewControllerKey];
         viewController.navigationItem.title = _object[kNavigationTitleKey];
         viewController.navigationItem.leftBarButtonItem = _object[kLeftBarItemKey];
-        viewController.navigationItem.rightBarButtonItem = _object[kRightBarItemKey]; 
+        viewController.navigationItem.rightBarButtonItem = _object[kRightBarItemKey];
     }
     self.hidden = _isHide;
     _cancelButton.hidden = true;
@@ -342,7 +348,9 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     if (animation) {
         duration = .2;
     }
-    _searchTextFieldWidth += 5;
+    if (_isAddInNavigationBar) {
+        _searchTextFieldWidth += 5;
+    }
     
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = _searchTextField.frame;

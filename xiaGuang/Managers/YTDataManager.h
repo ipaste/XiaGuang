@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger, YTNetworkSatus) {
 
 extern NSString *const kYTMapDownloadConfigDone;
 
+typedef void(^YTDataDownloadBlock)(BOOL complete);
+
 @class YTDataManager;
 
 @protocol YTDataManagerDelegate <NSObject>
@@ -50,6 +52,14 @@ extern NSString *const kYTMapDownloadConfigDone;
 + (instancetype)defaultDataManager;
 
 /**
+ *  解压Zip文件
+ *
+ *  @param data Zip的数据文件
+ *  @param path 解压的路径
+ */
++ (void)unZipWithData:(NSData *)data path:(NSURL *)path;
+
+/**
  *  更新必要的数据
  */
 - (void)updateCloudData;
@@ -59,8 +69,10 @@ extern NSString *const kYTMapDownloadConfigDone;
  *
  *  @param data 下载在内存中的数据
  *  @param name 数据名称
+ *  @param block 更新完数据回调
  */
-- (void)downloadedData:(NSData *)data dataName:(NSString *)name;
+- (void)downloadedData:(NSData *)data dataName:(NSString *)name block:(YTDataDownloadBlock)block;
+
 
 /**
  *  往收集用户信息库里面记录一个商家信息

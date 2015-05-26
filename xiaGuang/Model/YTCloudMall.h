@@ -21,6 +21,7 @@
 #define MALL_CLASS_REGION @"region"
 
 @interface YTCloudMall : NSObject<YTMall,DPRequestDelegate>
+@property (nonatomic) BOOL isLoading;
 
 -(id)initWithAVObject:(AVObject *)object;
 -(AVObject *)getCloudObj;

@@ -61,13 +61,13 @@
 - (void)getAllCloudMallWithCallBack:(void (^)(NSArray *malls))callBack{
     if (!_cloudMalls) {
         AVQuery *query = [AVQuery queryWithClassName:@"Mall"];
-        query.maxCacheAge = 24 * 3600;
-        query.cachePolicy = kAVCachePolicyCacheElseNetwork;
+       // query.maxCacheAge = 24 * 3600;
+       // query.cachePolicy = kAVCachePolicyCacheElseNetwork;
         [query includeKey:@"region,source"];
         [query orderByAscending:@"queue"];
         [query whereKey:MALL_CLASS_LOCALID notEqualTo:@""];
         [query whereKeyExists:MALL_CLASS_LOCALID];
-        [query whereKey:@"ready" equalTo:@YES];
+        //[query whereKey:@"ready" equalTo:@YES];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error && objects.count > 0) {
                 NSMutableArray *malls = [NSMutableArray array];
