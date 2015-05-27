@@ -239,10 +239,7 @@ NSString *const kRightBarItemKey = @"rightBarItem";
     [UIView animateWithDuration:.2 animations:^{
         if (_isReduce) {
             _isReduce = false;
-          
             _searchTextFieldWidth = _searchTextFieldWidth - 5;
-            
-            
         }
         
         CGRect frame;

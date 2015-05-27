@@ -650,8 +650,7 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
         return;
     }
 
-    
-    
+
     if (![[tmpMinorArea identifier]isEqualToString:[_userMinorArea identifier]] || _userMinorArea == nil) {
         _userMinorArea = tmpMinorArea;
         if (_state == YTParkingStateNormal) {
@@ -661,11 +660,9 @@ typedef NS_ENUM(NSInteger, YTParkingState) {
                 [self setParkingState:YTParkingStateNotMark animation:YES];
             }
         }
-//        if (_initializationComplete){
-//            [self userMoveToMinorArea:tmpMinorArea];
-//        }
     }
     
+
     
 }
 

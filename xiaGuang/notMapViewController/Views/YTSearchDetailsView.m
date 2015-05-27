@@ -87,6 +87,14 @@
         _searchResultstableView.hidden = YES;
         [self addSubview:_searchResultstableView];
         
+        _notLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,100, CGRectGetWidth(_searchResultstableView.frame), 45)];
+        _notLabel.font = [UIFont systemFontOfSize:20];
+        _notLabel.textColor = [UIColor colorWithString:@"c8c8c8"];
+        _notLabel.text = @"无结果";
+        _notLabel.textAlignment = 1;
+        _notLabel.hidden = YES;
+        [_searchResultstableView addSubview:_notLabel];
+        
         self.hidden = YES;
         
         _majorAreaIds = [self getMajorAreaId:_mall];

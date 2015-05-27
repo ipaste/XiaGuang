@@ -81,6 +81,7 @@
 -(void)layoutSubviews{
     CGSize textSize = [_progressLabel.text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_progressLabel.font} context:nil].size;
     CGSize nameSize = [_mallLabel.text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_mallLabel.font} context:nil].size;
+
     
     CGRect frame = _selectView.frame;
     frame.origin.x = 0;
