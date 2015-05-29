@@ -18,6 +18,7 @@
 #define MAPPATH_PATH [DOCUMENT_PATH stringByAppendingPathComponent:@".path"]
 #define DB_PATH [USER_PATH stringByAppendingPathComponent:@"highGuangDB"]
 #define USERDB_PATH [USER_PATH stringByAppendingPathComponent:@"_user"]
+#define BUNDLE_DBPATH [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"highGuangDB"]
 #define MAX_FILESIZE 500
 
 NSString *const KWifiNetworkKey= @"WIFI";
@@ -25,6 +26,7 @@ NSString *const KWwanNetworkKey = @"2G/3G/4G";
 NSString *const KNoNetworkKey = @"No Network";
 NSString *const kUploadKey = @"DataUpload";
 NSString *const kRegionUpdate = @"regionDate";
+NSString *const kFirstKey = @"YTDataManager_firstKey";
 
 /**
  *  更换数据库密码，使用正确的密码打开数据，然后再用ResetKey去修改
@@ -105,10 +107,21 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
         _userDefaults = [NSUserDefaults standardUserDefaults];
         
         _fileManager = [NSFileManager defaultManager];
+        
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        
+        id firstKey = [userDefaults objectForKey:kFirstKey];
+        
+        if (!firstKey) {
+            [_fileManager removeItemAtPath:USER_PATH error:nil];
+            [userDefaults setObject:@YES forKey:kFirstKey];
+            [userDefaults synchronize];
+        }
+        
+  
         if (![_fileManager fileExistsAtPath:USER_PATH]) {
             [_fileManager createDirectoryAtPath:USER_PATH withIntermediateDirectories:true attributes:nil error:nil];
-            NSString *bundleDB = [[NSBundle mainBundle]pathForAuxiliaryExecutable:@"highGuangDB"];
-            [_fileManager copyItemAtPath:bundleDB toPath:DB_PATH error:nil];
+            [_fileManager copyItemAtPath:BUNDLE_DBPATH toPath:DB_PATH error:nil];
             isConfig = true;
         }
         
@@ -247,8 +260,9 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
     if (contents.count > 1) {
         NSArray *fields = [contents.firstObject componentsSeparatedByString:@","];
         [contents removeObjectAtIndex:0];
+        
         [_queue inDatabase:^(FMDatabase *db) {
-            [YTHandleCsv saveData:_tmpDatabase tableName:tableName fields:fields datas:contents.copy];
+           [YTHandleCsv saveData:_tmpDatabase tableName:tableName fields:fields datas:contents.copy];
         }];
     }
 }
@@ -354,6 +368,8 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
     for (int index = 0; index < 3; index++){
         [_userDatabase executeUpdate:sql withArgumentsInArray:@[netWorkStatus[index],@0,comment[index]]];
     }
+    
+
 }
 #pragma mark
 #pragma mark Insert UserDatabase Data

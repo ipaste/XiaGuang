@@ -48,6 +48,8 @@
         [userDefaults setObject:@YES forKey:@"first"];
         YTGuideViewController *guideVC = [[YTGuideViewController alloc]init];
         guideVC.delegate = self;
+        
+        
         self.window.rootViewController = guideVC;
     }else{
         self.window.rootViewController = [[YTNavigationController alloc]initWithCreateHomeViewController];

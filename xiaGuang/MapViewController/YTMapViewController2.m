@@ -1283,7 +1283,7 @@ typedef NS_ENUM(NSInteger, YTMessageType){
 
     id<YTMajorArea> majorArea = [[[[block floors] firstObject] majorAreas] firstObject];
     if (![[block blockName] isEqualToString:[[[_curDisplayedMajorArea floor]block] blockName]]) {
-        if(_shownCallout && [_mapView currentState] == YTMapViewDetailStateNormal){
+        if(_shownCallout && [_mapView currentState] != YTMapViewDetailStateNavigating){
             _selectedPoi = nil;
             [self hideCallOut];
         }

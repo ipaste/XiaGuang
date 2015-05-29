@@ -542,7 +542,7 @@
 
 - (void)refreshData:(NSNotification *)notification{
     [_mallDict refershLocalMall];
-    [_mapViewController removeFromParentViewController];
+    [_mapViewController dismissViewControllerAnimated:false completion:nil];
     _mapViewController = nil;
 }
 

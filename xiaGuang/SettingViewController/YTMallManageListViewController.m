@@ -143,7 +143,6 @@
     CGRect frame = _lineView.frame;
     frame.origin.x = CGRectGetMinX(sender.frame);
     _lineView.frame = frame;
-    
     if (sender.tag == 0) {
         _cells = [NSMutableArray arrayWithArray:_allCells];
         [_tableView reloadData];
@@ -169,9 +168,10 @@
 - (void)mallManageCell:(YTMallmanageCell *)cell downloadMallData:(YTCloudMall *)mall{
     if (_queue == nil) {
         _queue = [[NSOperationQueue alloc]init];
-        _queue.maxConcurrentOperationCount = 3;
+        _queue.maxConcurrentOperationCount = 1;
     }
     mall.isLoading = true;
+    
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         AVFile *file = [mall getMallFile];
         [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -179,6 +179,8 @@
                 mall.isLoading = false;
                 [cell setProgress:120];
                 [file clearCachedFile];
+                [operation cancel];
+                
             }];
         } progressBlock:^(NSInteger percentDone) {
             [cell setProgress:percentDone];

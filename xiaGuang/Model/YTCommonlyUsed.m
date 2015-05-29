@@ -38,6 +38,6 @@
     YTCommonlyUsed *subway = [[YTCommonlyUsed alloc]init];
     subway.name = @"地铁";
     subway.icon = [UIImage imageNamed:@"nav_ico_19"];
-    return @[entrance,wc,escalator,elevator,frontDesk,subway];
+    return @[entrance,wc,escalator,elevator,frontDesk];
 }
 @end
