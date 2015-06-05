@@ -35,7 +35,10 @@
     
     YTMapGraph *_mapGraph;
     
-    BOOL _isRefresh;
+    BOOL _isRefresh;// switch for using deadreckoning
+    
+    __block NSDictionary *_projectionResult;
+    
 }
 
 - (NSArray *)prepareDistances:(NSArray *)beacons;
@@ -61,6 +64,8 @@
         
         _distDict = [[NSMutableDictionary alloc] init];
         
+        _projectionResult = [[NSMutableDictionary alloc] init];
+        
         _kalmanFilterBot = [[YTKalmanFilteredPositionBot alloc] initWithTimeUpdateInterval:0.1
                                                                                    mapView:_mapView];
         
@@ -71,7 +76,7 @@
         
         _queue = dispatch_queue_create("bigbadboy",DISPATCH_QUEUE_CONCURRENT);
         
-       // _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
+        _inertia = [[YTDeadReckoning alloc] initWithMapView:_mapView majorArea:_majorArea];
         _inertia.mapMeterPerPixel = 1;
         _inertia.mapNorthOffset = offset;
         _inertia.delegate = self;
@@ -95,11 +100,8 @@
     dispatch_async(_queue, ^{
         
         
-        double start = [[NSDate date] timeIntervalSinceReferenceDate];
+//        double start = [[NSDate date] timeIntervalSinceReferenceDate];
         NSValue *pos = [_positionBot locateMeWithDistances:distances accuracy:0.00001];
-        
-        
-        double end = 0.0;
         
         if (pos == nil) {
             return;
@@ -111,15 +113,32 @@
         
         position = [_boundingBox updateAndGetCurrentPoint:position];
         
-        NSValue *value = [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
+        _projectionResult = [_mapGraph projectToGraphFromPoint:position];
+        
+        NSValue *value = _projectionResult[@"projectedPoint"];
+        
+        //to estimate the direction of the path
+        PESGraphNode *node1 = _projectionResult[@"node1"];
+        PESGraphNode *node2 = _projectionResult[@"node2"];
+        
+        CGPoint point1, point2;
+        point1.x = [node1.additionalData[@"x"] doubleValue];
+        point1.y = [node1.additionalData[@"y"] doubleValue];
+        
+        point2.x = [node2.additionalData[@"x"] doubleValue];
+        point2.y = [node2.additionalData[@"y"] doubleValue];
+        
+//        NSValue *value = [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
         
         if (value != nil) {
-          position =  [value CGPointValue];
+            position =  [value CGPointValue];
         }
         
         _inertia.startPoint = position;
+        _inertia.pathDirection = atan2(point1.y-point2.y, point1.x-point2.x);
         
-        if ( !_isRefresh) {
+        //if _isRefresh is false, deadreckoning is on
+        if ( _isRefresh) {
             [self positionUpdating:position];
         }
     
@@ -128,6 +147,14 @@
 
 -(void)positionUpdating:(CGPoint )position {
     //_isRefresh = false;
+    
+//    NSLog(@"output location: %f, %f", position.x, position.y);
+    
+    NSValue *value = [_mapGraph projectToGraphFromPoint:position][@"projectedPoint"];
+    
+    if (value != nil) {
+        position =  [value CGPointValue];
+    }
 
     if (fabs(position.x) != INFINITY && fabs(position.y) != INFINITY && position.x != 0 && position.y != 0) {
     
@@ -269,6 +296,9 @@
     NSLog(@"locator destroyed");
     
     [_kalmanFilterBot stop];
+    
+    [_inertia stopSensorReading];
+    
     //dispatch_suspend(_queue);
     
     //dispatch_cancel(_queue);

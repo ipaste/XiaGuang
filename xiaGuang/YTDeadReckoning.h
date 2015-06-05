@@ -54,6 +54,8 @@
 
 @property(nonatomic) CGPoint newPosition;
 
+@property(nonatomic) double pathDirection;
+
 - (id)initWithMapView:(RMMapView *)mapView
             majorArea:(id<YTMajorArea>)majorArea;
 

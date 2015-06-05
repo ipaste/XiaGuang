@@ -58,6 +58,8 @@
     finalLat = loc.latitude;
     finalLong = loc.longitude;
     
+    
+    //interesting here
     if (finalLat <= -WORLD_LAT) {
         finalLat = finalLat + 0.1;
     }

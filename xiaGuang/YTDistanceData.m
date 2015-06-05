@@ -22,11 +22,13 @@
                       y:(double)y
                distance:(double)distance {
     self = [super init];
+    
     if (self) {
         _x = x;
         _y = y;
         _distance = distance;
     }
+    
     return self;
 }
 
