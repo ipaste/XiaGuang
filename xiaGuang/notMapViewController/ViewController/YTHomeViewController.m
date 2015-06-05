@@ -224,7 +224,7 @@
     }
 }
 
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     _shouldScroll = NO;
     [_tableView.layer removeAllAnimations];
     
@@ -406,21 +406,21 @@
 }
 
 -(void)rangedObjects:(NSArray *)objects{
-    if(objects.count > 0){
-        ESTBeacon *beacon = nil;
-        double minDistance = MAXFLOAT;
-        for (NSDictionary *beaconInfo in objects) {
-            double beaconDistance = [beaconInfo[@"distance"] doubleValue];
-            if (beaconDistance < minDistance) {
-                beacon = beaconInfo[@"Beacon"];
-                minDistance = beaconDistance;
-            }
-        }
-        _recordMinorArea = [self getMinorArea:beacon];
-    }
-    else{
-        _recordMinorArea = nil;
-    }
+//    if(objects.count > 0){
+//        ESTBeacon *beacon = nil;
+//        double minDistance = MAXFLOAT;
+//        for (NSDictionary *beaconInfo in objects) {
+//            double beaconDistance = [beaconInfo[@"distance"] doubleValue];
+//            if (beaconDistance < minDistance) {
+//                beacon = beaconInfo[@"Beacon"];
+//                minDistance = beaconDistance;
+//            }
+//        }
+//        _recordMinorArea = [self getMinorArea:beacon];
+//    }
+//    else{
+//        _recordMinorArea = nil;
+//    }
 }
 
 -(void)noBeaconsFound{

@@ -68,7 +68,6 @@
         
         _kalmanFilterBot = [[YTKalmanFilteredPositionBot alloc] initWithTimeUpdateInterval:0.1
                                                                                    mapView:_mapView];
-        
         _positionBot = [[YTPositionBot alloc] init];
         
         _boundingBox = [[YTDistanceBoundingBox alloc] initWithMapView:_mapView
@@ -96,7 +95,7 @@
          rangedObjects:(NSArray *)objects {
     
     NSArray *distances = [self prepareDistances:objects];
-    
+
     dispatch_async(_queue, ^{
         
         
@@ -138,7 +137,7 @@
         _inertia.pathDirection = atan2(point1.y-point2.y, point1.x-point2.x);
         
         //if _isRefresh is false, deadreckoning is on
-        if ( _isRefresh) {
+        if (_isRefresh) {
             [self positionUpdating:position];
         }
     

@@ -115,7 +115,6 @@
     if (_bufferBeacon == nil) {
         _bufferBeacon = [NSMutableArray array];
         [beacons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [_dataManager saveBeaconInfo:obj];
             NSNumber *distance = ((ESTBeacon *)obj).distance;
             if (![distance isEqualToNumber:@-1] && [distance doubleValue] < MAX_DISTANCE) {
                 NSDictionary *beaconDict = @{@"Beacon":obj,@"time":[NSDate date],@"distance":distance};
@@ -133,7 +132,6 @@
         }];
     }else{
         [beacons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [_dataManager saveBeaconInfo:obj];
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.Beacon.minor == %@ AND self.Beacon.major == %@",((ESTBeacon *)obj).minor,((ESTBeacon *)obj).major];
             NSArray *beaconSoure = [_bufferBeacon filteredArrayUsingPredicate:predicate];
             if (beaconSoure.count > 0){

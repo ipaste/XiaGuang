@@ -239,87 +239,99 @@
     gravityInfo:(CMAcceleration)gravityData
   directionInfo:(double)directionData{
     
+    __block double direction = directionData;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        double _gravity = (gravityData.x*userAccData.x + gravityData.y*userAccData.y + gravityData.z*userAccData.z);
+        
+        //   if (_lastGravity != 0) {
+        //       _gravity = [self smoothing:_gravity lastData:_lastGravity];
+        //    }
+        
+        _lastGravity = _gravity;
+        
+        if (_gravity >= stepDetectThreshold) {
+            _currentStep = 1;
+            
+        } else {
+            _currentStep = 0;
+            
+        }
+        
+        //change to the same range [0, 2*pi]
+        _pathDirection = fmod(_pathDirection+2*M_PI, 2*M_PI);
+        double _pathDirectionReverse = fmod(_pathDirection+M_PI, M_PI);
+        
+        BOOL directionFlag = false;
+        
+        //check whether the device direction is the same as path direction
+        if( fabs(directionData - _pathDirection) < directionDiffThreshold ){
+            
+            direction = _pathDirection;
+            
+            directionFlag = true;
+            
+        }else if( fabs(directionData - _pathDirectionReverse ) < directionDiffThreshold){
+            
+            direction = _pathDirectionReverse;
+            
+            directionFlag = true;
+        }
+        
+        
+        if ((_currentStep - _lastStep) == 1 && directionFlag) {
+            
+            _stepCount++;
+            
+            NSLog(@"New step");
+            
+            //estimate the next step
+            if ( CGPointEqualToPoint(_startPoint, _startPointBuffer)) {//no gps/BLE update
+                
+                [self locationParticleFilter:NO directionData:directionData];
+                
+            }else{//with gps/BLE update
+                
+                _startPointBuffer = _startPoint;
+                
+                [self locationParticleFilter:YES directionData:directionData];
+                
+            }
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //optional, check first
+                if ([self.delegate respondsToSelector:@selector(positionUpdating:)]) {
+                    
+                    //remark the new position
+                    _lastPosition = _newPosition;
+                    
+                    [self.delegate positionUpdating:_newPosition];
+                    
+                    NSLog(@"new position:%f, %f", _newPosition.x, _newPosition.y);
+                }
+            });
+            
+        }else{
+            
+            //optional, check first
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.delegate respondsToSelector:@selector(positionUpdating:)]) {
+                    [self.delegate positionUpdating:_lastPosition];
+                   // NSLog(@"last position:%f, %f", _lastPosition.x, _lastPosition.y);
+                }
+            });
+            
+            
+        }
+        
+        _lastStep = _currentStep;
+        
+    });
+    
     //double _gravity = sqrt(pow(userAccData.x, 2) + pow(userAccData.y, 2) + pow(userAccData.z, 2));
     
     //use the accelaration only in the gravity direction
-    double _gravity = (gravityData.x*userAccData.x + gravityData.y*userAccData.y + gravityData.z*userAccData.z);
     
-    //   if (_lastGravity != 0) {
-    //       _gravity = [self smoothing:_gravity lastData:_lastGravity];
-    //    }
-    
-    _lastGravity = _gravity;
-    
-    if (_gravity >= stepDetectThreshold) {
-        _currentStep = 1;
-        
-    } else {
-        _currentStep = 0;
-        
-    }
-    
-    //change to the same range [0, 2*pi]
-    _pathDirection = fmod(_pathDirection+2*M_PI, 2*M_PI);
-    double _pathDirectionReverse = fmod(_pathDirection+M_PI, M_PI);
-    
-    BOOL directionFlag = false;
-
-    //check whether the device direction is the same as path direction
-    if( fabs(directionData - _pathDirection) < directionDiffThreshold ){
-    
-        directionData = _pathDirection;
-        
-        directionFlag = true;
-        
-    }else if( fabs(directionData - _pathDirectionReverse ) < directionDiffThreshold){
-    
-        directionData = _pathDirectionReverse;
-        
-        directionFlag = true;
-    }
-
-
-    if ((_currentStep - _lastStep) == 1 && directionFlag) {
-        
-        _stepCount++;
-        
-        NSLog(@"New step");
-        
-        //estimate the next step
-        if ( CGPointEqualToPoint(_startPoint, _startPointBuffer)) {//no gps/BLE update
-            
-            [self locationParticleFilter:NO directionData:directionData];
-            
-        }else{//with gps/BLE update
-            
-            _startPointBuffer = _startPoint;
-            
-            [self locationParticleFilter:YES directionData:directionData];
-            
-        }
-        
-        //optional, check first
-        if ([self.delegate respondsToSelector:@selector(positionUpdating:)]) {
-            
-            //remark the new position
-            _lastPosition = _newPosition;
-            
-            [self.delegate positionUpdating:_newPosition];
-            
-            NSLog(@"new position:%f, %f", _newPosition.x, _newPosition.y);
-        }
-        
-    }else{
-        
-        //optional, check first
-        if ([self.delegate respondsToSelector:@selector(positionUpdating:)]) {
-            [self.delegate positionUpdating:_lastPosition];
-            NSLog(@"last position:%f, %f", _lastPosition.x, _lastPosition.y);
-        }
-        
-    }
-    
-    _lastStep = _currentStep;
     
     return _stepCount;
 }
