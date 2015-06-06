@@ -14,7 +14,7 @@
 
 #define kRadToDeg   57.2957795
 
-#define stepLen 0.80 //unit: meters
+#define stepLen 1.80 //unit: meters
 
 #define alphaTracker 0.23 //smoothing factor, cutoff frequency 3Hz
 
@@ -22,13 +22,13 @@
 
 #define particleNum 20 //number of particles in particle filter
 
-#define distanceThreshold 10 //unit: meters, distance threshold for new start point of DR
+#define distanceThreshold 20 //unit: meters, distance threshold for new start point of DR
 
 #define resampleRatio 0.8 //resample ratio for particle filter
 
-#define directionDiffThreshold M_PI/6 //direction difference threshold
+#define directionDiffThreshold M_PI/4 //direction difference threshold
 
-#define outlierCounterThreshold 5 // count the outliers of abnormal estimation
+#define outlierCounterThreshold 2 // count the outliers of abnormal estimation
 
 
 @implementation YTDeadReckoning{
@@ -99,6 +99,7 @@
         
     }
     
+    //update the distance threshold
     _distanceThresholdSquare = [YTCanonicalCoordinate worldToCanonicalDistance:distanceThreshold
                                                                        mapView:_mapView
                                                                      majorArea:_majorArea];
@@ -206,6 +207,13 @@
                 _lastPosition = _startPoint;//mark the new start position
                 
                 _startPointBuffer = CGPointZero;
+                
+                //change the start point of all particles to the new point
+                
+                for (int i=0; i<particleNum; i++) {
+                    _positions[i] = _startPoint;
+                }
+
                 
             }else{//to avoid abnormal start point interference
                 
@@ -321,7 +329,7 @@
                 }
             });
             
-            
+        
         }
         
         _lastStep = _currentStep;
@@ -358,7 +366,7 @@
         double weightBuffer = 0;
         for (int i=0; i<particleNum; i++) {
             
-            double distanceSqure = pow(_positions[i].x - _refPoint.x, 2)+pow(_positions[i].y - _refPoint.y, 2);
+            double distanceSqure = pow(_positions[i].x - _refPoint.x,2)+pow(_positions[i].y - _refPoint.y,2);
             
             if (distanceSqure > _distanceThresholdSquare) {
                 _particleWeight[i] = 0;

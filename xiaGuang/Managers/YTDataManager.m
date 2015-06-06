@@ -430,13 +430,13 @@ NSString *const kYTMapDownloadConfigDone = @"mapDownloadConfigDone";
 }
 
 -(void)saveBeaconInfo:(ESTBeacon *)beacon {
-    NSString *identify = [NSString stringWithFormat:@"%@-%@",[beacon.major stringValue],[beacon.minor stringValue]];
-    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify FROM BeaconInfo WHERE identify = ?",identify];
-    if ([result next]) {
-        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ? WHERE identify = ?",_date,[beacon.batteryLevel stringValue],identify];
-    }else{
-        [_userDatabase executeUpdate:@"INSERT INTO BeaconInfo('identify','date','power') VALUES (?,?,?)",identify,_date,[beacon.batteryLevel stringValue]];
-    }
+//    NSString *identify = [NSString stringWithFormat:@"%@-%@",[beacon.major stringValue],[beacon.minor stringValue]];
+//    FMResultSet *result = [_userDatabase executeQuery:@"SELECT identify FROM BeaconInfo WHERE identify = ?",identify];
+//    if ([result next]) {
+//        [_userDatabase executeUpdate:@"UPDATE BeaconInfo SET date = ? , power = ? WHERE identify = ?",_date,[beacon.batteryLevel stringValue],identify];
+//    }else{
+//        [_userDatabase executeUpdate:@"INSERT INTO BeaconInfo('identify','date','power') VALUES (?,?,?)",identify,_date,[beacon.batteryLevel stringValue]];
+//    }
 }
 
 #pragma mark

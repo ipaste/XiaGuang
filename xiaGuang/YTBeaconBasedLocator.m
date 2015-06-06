@@ -133,6 +133,8 @@
             position =  [value CGPointValue];
         }
         
+        NSLog(@"before DR: %f, %f", position.x, position.y);
+        
         _inertia.startPoint = position;
         _inertia.pathDirection = atan2(point1.y-point2.y, point1.x-point2.x);
         
@@ -154,6 +156,8 @@
     if (value != nil) {
         position =  [value CGPointValue];
     }
+    
+    NSLog(@"after DR: %f, %f", position.x, position.y);
 
     if (fabs(position.x) != INFINITY && fabs(position.y) != INFINITY && position.x != 0 && position.y != 0) {
     
