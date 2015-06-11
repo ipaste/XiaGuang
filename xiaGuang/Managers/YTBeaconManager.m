@@ -76,6 +76,7 @@
 //        tmpPaid.minor = @5025;
 //        [_whitelist setObject:tmpPaid forKey:[NSString stringWithFormat:@"%@-%@",tmpPaid.major,tmpPaid.minor]];
         _listeners = [NSHashTable weakObjectsHashTable];
+
     }
     return self;
 }
@@ -97,7 +98,7 @@
     
     _aprilRegion = [[ESTBeaconRegion alloc] initWithProximityUUID:aprilBrotherId identifier:@"us"];
     _mircoChatRegion = [[ESTBeaconRegion alloc] initWithProximityUUID:mircoChatId identifier:@"WX"];
-    
+
     [_estimoteBeaconManager startRangingBeaconsInRegion:_aprilRegion];
     [_estimoteBeaconManager startRangingBeaconsInRegion:_mircoChatRegion];
     _readbeacons = nil;
