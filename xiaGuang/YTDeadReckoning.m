@@ -22,13 +22,13 @@
 
 #define particleNum 20 //number of particles in particle filter
 
-#define distanceThreshold 20 //unit: meters, distance threshold for new start point of DR
+#define distanceThreshold 25 //unit: meters, distance threshold for new start point of DR
 
 #define resampleRatio 0.8 //resample ratio for particle filter
 
 #define directionDiffThreshold M_PI/4 //direction difference threshold
 
-#define outlierCounterThreshold 2 // count the outliers of abnormal estimation
+#define outlierCounterThreshold 3 // count the outliers of abnormal estimation
 
 
 @implementation YTDeadReckoning{
@@ -120,15 +120,15 @@
     _motionManager = [[CMMotionManager alloc]init];
     
     //mag data
-    _motionManager.magnetometerUpdateInterval = 0.2;
-    [_motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMMagnetometerData *magData, NSError *error) {
-        if (error) {
-            NSLog(@"Magnetometer Error: %@", error);
-            
-        } else {
-            [self outputMagData:magData];
-        }
-    }];
+//    _motionManager.magnetometerUpdateInterval = 0.2;
+//    [_motionManager startMagnetometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMMagnetometerData *magData, NSError *error) {
+//        if (error) {
+//            NSLog(@"Magnetometer Error: %@", error);
+//            
+//        } else {
+//            [self outputMagData:magData];
+//        }
+//    }];
     
     //motion data
     _motionManager.deviceMotionUpdateInterval = 0.2;
@@ -149,7 +149,7 @@
 -(void)stopSensorReading{
     
     [_motionManager stopDeviceMotionUpdates];
-    [_motionManager stopMagnetometerUpdates];
+//    [_motionManager stopMagnetometerUpdates];
     [_locationManger stopUpdatingHeading];
     
 }
@@ -197,7 +197,7 @@
         _refPoint = _startPoint;
         
         //check whether need to update the location with new start point
-        if( (_startPoint.x-_lastPosition.x)*(_startPoint.x-_lastPosition.x)+(_startPoint.y-_lastPosition.y)*(_startPoint.y-_lastPosition.y) > _distanceThresholdSquare){
+        if( pow((_startPoint.x-_lastPosition.x), 2)+pow((_startPoint.y-_lastPosition.y), 2)> _distanceThresholdSquare){
             
             //abnormal continue
             _outlierCounter++;
@@ -214,12 +214,10 @@
                     _positions[i] = _startPoint;
                 }
 
-                
             }else{//to avoid abnormal start point interference
                 
                 _refPoint = _lastPosition;
             }
-            
             
         }else{
             
@@ -235,19 +233,24 @@
 }
 
 
--(void)outputMagData:(CMMagnetometerData *)magData{
-    
-    //NSLog(@"direciton: %f", magData.magneticField.x);
-    //_currentDirection = (magData.magneticField.y+90)/kRadToDeg;
-    
-    _magData = magData;
-}
+//-(void)outputMagData:(CMMagnetometerData *)magData{
+//    
+//    //NSLog(@"direciton: %f", magData.magneticField.x);
+//    //_currentDirection = (magData.magneticField.y+90)/kRadToDeg;
+//    
+//    _magData = magData;
+//}
 
 -(int)stepCount:(CMAcceleration)userAccData
     gravityInfo:(CMAcceleration)gravityData
   directionInfo:(double)directionData{
     
     __block double direction = directionData;
+    
+    
+    //double _gravity = sqrt(pow(userAccData.x, 2) + pow(userAccData.y, 2) + pow(userAccData.z, 2));
+    
+    //use the accelaration only in the gravity direction
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         double _gravity = (gravityData.x*userAccData.x + gravityData.y*userAccData.y + gravityData.z*userAccData.z);
         
@@ -335,10 +338,6 @@
         _lastStep = _currentStep;
         
     });
-    
-    //double _gravity = sqrt(pow(userAccData.x, 2) + pow(userAccData.y, 2) + pow(userAccData.z, 2));
-    
-    //use the accelaration only in the gravity direction
     
     
     return _stepCount;
